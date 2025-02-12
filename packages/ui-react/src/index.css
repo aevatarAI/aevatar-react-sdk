@@ -1,4 +1,19 @@
-:root {
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme) prefix(sdk);
+/* @import "tailwindcss/preflight.css" layer(base); */
+@import "tailwindcss/utilities.css" layer(utilities) prefix(sdk);
+
+@layer theme {
+  :root {
+    --sdk-color-red-500: oklch(0.971 0.013 17.38);
+  }
+}
+@layer utilities {
+  .sdk\:text-red-500 {
+    color: var(--sdk-color-red-500);
+  }
+}
+/* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -65,4 +80,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */

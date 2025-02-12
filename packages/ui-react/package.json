@@ -10,7 +10,8 @@
       "types": "./dist/types/index.d.ts",
       "import": "./dist/index.es.js",
       "require": "./dist/index.cjs.js"
-    }
+    },
+    "./ui-react.css": "./dist/ui-react.css"
   },
   "scripts": {
     "dev": "vite --host",
@@ -35,5 +36,8 @@
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.0.6"
   }
 }

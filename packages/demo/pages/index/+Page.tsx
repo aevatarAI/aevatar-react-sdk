@@ -1,5 +1,6 @@
 import { clientOnly } from "vike-react/clientOnly";
 import { MyButton } from "@aevatar-react-sdk/ui-react";
+import "@aevatar-react-sdk/ui-react/ui-react.css";
 
 const LoginButton = clientOnly(
   () => import("../../components/auth/LoginButton")
