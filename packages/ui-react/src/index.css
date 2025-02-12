@@ -5,7 +5,7 @@
 
 @layer theme {
   :root {
-    --sdk-color-red-500: oklch(0.971 0.013 17.38);
+    --sdk-color-red-500: #f87171;
   }
 }
 @layer utilities {
