@@ -15,7 +15,15 @@ const ScanCard: React.FC<ScanCardProps> = ({
 
   return (
     <>
-      <Handle type="target" position={Position.Left} />
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{
+          background: "green",
+          width: 10,
+          height: 10,
+        }}
+      />
       <div className="bg-gray-900 text-white p-4 rounded-lg shadow-lg w-64 border border-gray-700">
         <h2 className="text-lg font-semibold">twitter scan</h2>
         <p className="text-gray-400 text-sm">id: 3</p>
@@ -55,7 +63,16 @@ const ScanCard: React.FC<ScanCardProps> = ({
           </span>
         </div>
       </div>
-      <Handle type="source" position={Position.Right} id="b" />
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="b"
+        style={{
+          background: "green",
+          width: 10,
+          height: 10,
+        }}
+      />
     </>
   );
 };

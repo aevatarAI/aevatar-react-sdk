@@ -79,6 +79,7 @@ const DnDFlow = () => {
     [screenToFlowPosition, type]
   );
   const nodeTypes = useMemo(() => ({ ScanCard: ScanCardNode }), []);
+
   return (
     <div className="dndflow">
       <Sidebar />
@@ -93,6 +94,12 @@ const DnDFlow = () => {
           onDragOver={onDragOver}
           fitView
           nodeTypes={nodeTypes}
+          defaultEdgeOptions={{ type: "smoothstep" }}
+          connectionLineStyle={{
+            strokeDasharray: "5 5",
+            stroke: "gray",
+            strokeWidth: 2,
+          }}
           style={{ backgroundColor: "#F7F9FB" }}
         >
           <Controls />
