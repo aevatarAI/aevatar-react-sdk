@@ -5,6 +5,7 @@ import { aevatarAI } from "../../utils";
 import { loadingAtom } from "../../state/atoms";
 import { useAtom } from "jotai";
 import MyGAevatar from ".";
+import React from "react";
 
 vi.mock("../../utils", () => ({
   aevatarAI: {
@@ -46,14 +47,12 @@ describe("MyGAevatar", () => {
           bio: "this is a lively and adorable physicist",
           topic: ["aelf.pdf", "Agent1.pdf", "aelf1.pdf", "Agent.pdf"],
         },
-        businessAgentGrainId: "8c2baec4-3eca-4403-a113-b05942412770",
         agentGuid: "",
+        businessAgentGrainId: "",
       },
     ]);
 
-    render(
-      <MyGAevatar onEditGaevatar={onEditGaevatarMock} />
-    );
+    render(<MyGAevatar onEditGaevatar={onEditGaevatarMock} />);
 
     // expect(screen.getByTestId("page-loading")).toBeInTheDocument();
 
@@ -69,9 +68,7 @@ describe("MyGAevatar", () => {
   it("should show empty state when no gAevatar is returned", async () => {
     vi.mocked(aevatarAI.services.agent.getAgents).mockResolvedValue([]);
 
-    render(
-      <MyGAevatar userAddress="test-user" onEditGaevatar={onEditGaevatarMock} />
-    );
+    render(<MyGAevatar onEditGaevatar={onEditGaevatarMock} />);
 
     await waitFor(() =>
       expect(aevatarAI.services.agent.getAgents).toHaveBeenCalled()
@@ -84,7 +81,6 @@ describe("MyGAevatar", () => {
   it("should call onNewGAevatar when new g-aevatar button is clicked", () => {
     render(
       <MyGAevatar
-        userAddress="test-user"
         onEditGaevatar={onEditGaevatarMock}
         onNewGAevatar={onNewGAevatarMock}
       />
@@ -106,18 +102,15 @@ describe("MyGAevatar", () => {
           bio: "this is a lively and adorable physicist",
           topic: ["aelf.pdf", "Agent1.pdf", "aelf1.pdf", "Agent.pdf"],
         },
-        businessAgentGrainId: "8c2baec4-3eca-4403-a113-b05942412770",
         agentGuid: "",
-        grainId: ""
+        businessAgentGrainId: "",
       },
     ]);
-    render(
-      <MyGAevatar onEditGaevatar={onEditGaevatarMock} onNewGAevatar={onNewGAevatarMock} />
-    );
+
+    render(<MyGAevatar onEditGaevatar={onEditGaevatarMock} />);
 
     await waitFor(() =>
       expect(aevatarAI.services.agent.getAgents).toHaveBeenCalled()
-    );
     );
 
     fireEvent.click(screen.getByRole("img"));

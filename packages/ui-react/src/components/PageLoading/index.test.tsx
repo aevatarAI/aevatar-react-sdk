@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import PageLoading from "../PageLoading";
 import { useAtom } from "jotai";
+import React from "react";
 
 vi.mock("jotai", async (importOriginal) => {
   const actual: any = await importOriginal();

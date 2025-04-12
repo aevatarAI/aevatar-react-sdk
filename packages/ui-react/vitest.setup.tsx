@@ -1,4 +1,6 @@
 import "@testing-library/jest-dom/vitest";
+import '@testing-library/jest-dom';
+
 import React from "react";
 import { TextDecoder } from "node:util";
 import type { ApolloQueryResult } from "@apollo/client/core/types";

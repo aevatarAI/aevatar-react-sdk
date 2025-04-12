@@ -140,7 +140,11 @@ function EditGAevatarInnerCom({
     return (
       <div className="sdk:flex sdk:items-center sdk:gap-[16px]">
         {onBack && (
-          <BackArrow role="img" className="cursor-pointer" onClick={onBack} />
+          <BackArrow
+            role="img"
+            className="cursor-pointer"
+            onClick={() => onBack?.()}
+          />
         )}
         <span className="sdk:hidden sdk:sm:inline-block">
           g-aevatars configuration

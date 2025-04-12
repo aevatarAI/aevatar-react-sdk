@@ -31,12 +31,17 @@ export default function WorkflowDialog({
           height={24}
         />
       </DialogClose>
-      <WorkflowAevatarEdit
-        isNew={isNew}
-        agentItem={agentItem}
-        nodeId={nodeId}
-        onGaevatarChange={onGaevatarChange}
-      />
+      <div className="sdk:overflow-auto sdk:h-full sdk:flex sdk:flex-col sdk:gap-[23px] sdk:w-full">
+        <DialogTitle className="sdk:pb-[23px] sdk:text-[15px] sdk:font-syne sdk:font-semibold sdk:border-b sdk:border-[#303030]">
+          <p>g-agent configuration</p>
+        </DialogTitle>
+        <WorkflowAevatarEdit
+          isNew={isNew}
+          agentItem={agentItem}
+          nodeId={nodeId}
+          onGaevatarChange={onGaevatarChange}
+        />
+      </div>
     </DialogPrimitive.Content>
   );
 }

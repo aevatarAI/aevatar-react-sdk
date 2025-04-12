@@ -33,13 +33,14 @@ export default function AevatarCardInner({
   );
 
   const propertiesInfo = useMemo(
-    () => jsonSchemaParse(agentInfo.propertyJsonSchema, agentInfo.properties),
+    () => jsonSchemaParse(agentInfo?.propertyJsonSchema, agentInfo?.properties),
     [agentInfo]
   );
 
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
+      data-testid='aevatar-card'
       onClick={() => {
         onClick?.(agentInfo, isNew, nodeId);
       }}>

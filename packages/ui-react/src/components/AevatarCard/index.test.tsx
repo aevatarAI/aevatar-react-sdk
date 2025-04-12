@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import AevatarCard from "./index";
 import React from "react";
+import '@testing-library/jest-dom';
 
 const mockAgentInfo: IAgentInfoDetail = {
   id: "123",

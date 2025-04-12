@@ -2,6 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import EditGAevatar from "../EditGAevatar";
 import { useAtom } from "jotai";
+import React from "react";
 
 vi.mock("../../utils", () => ({
   aevatarAI: {

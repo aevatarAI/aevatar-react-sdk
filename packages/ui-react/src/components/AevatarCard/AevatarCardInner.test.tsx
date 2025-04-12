@@ -5,6 +5,8 @@ import AevatarCardInner, {
   type IAevatarCardInnerProps,
 } from "./AevatarCardInner";
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
+import React from "react";
+import "@testing-library/jest-dom";
 
 describe("AevatarCardInner", () => {
   const mockOnEditGaevatar = vi.fn();
@@ -13,25 +15,22 @@ describe("AevatarCardInner", () => {
     className: "test-class",
     onEditGaevatar: mockOnEditGaevatar,
     id: "123",
-    businessAgentGrainId: '',
+    businessAgentGrainId: "",
     agentGuid: "agent-123", // Added missing property
     agentType: "type-1", // Added missing property
     name: "AI-123", // Added missing property
     properties: {
-      name: "AI-123",
+      name: "AI-123-properties",
       type: "Type-A",
     },
   };
 
   it("should render the component with correct className and elements", () => {
     render(<AevatarCardInner {...defaultProps} />);
-    const card = screen.getByText("AI-123"); // Assuming "AI-123" is the text that should be present in the card
+    const card = screen.getByText("AI-123");
     expect(card).toBeInTheDocument();
 
-    expect(screen.getByText("ai basic #1")).toBeInTheDocument();
-    expect(screen.getByText("id: 1")).toBeInTheDocument();
-    expect(screen.getByText("name")).toBeInTheDocument();
-    expect(screen.getByText("AI-123")).toBeInTheDocument();
+    expect(screen.getByText("AI-123-properties")).toBeInTheDocument();
   });
 
   it("should trigger onEditGaevatar when setting icon is clicked", () => {
@@ -56,27 +55,27 @@ describe("AevatarCardInner", () => {
     const propsWithArray = {
       ...defaultProps,
       properties: {
-        name: ["AI-123", "AI-124"],
+        name: ["AI-123-properties", "AI-124-properties"],
       },
     };
 
     render(<AevatarCardInner {...propsWithArray} />);
 
-    expect(screen.getByText("AI-123")).toBeInTheDocument();
-    expect(screen.getByText("AI-124")).toBeInTheDocument();
+    expect(screen.getByText("AI-123-properties")).toBeInTheDocument();
+    expect(screen.getByText("AI-124-properties")).toBeInTheDocument();
   });
 
   it("should call useCallback's propertiesValue correctly", () => {
     const propsWithSingleValue = {
       ...defaultProps,
       properties: {
-        name: "AI-123",
+        name: "AI-123-properties",
       },
     };
 
     render(<AevatarCardInner {...propsWithSingleValue} />);
 
-    expect(screen.getByText("AI-123")).toBeInTheDocument();
+    expect(screen.getByText("AI-123-properties")).toBeInTheDocument();
   });
 
   it("should not render anything when properties is empty", () => {

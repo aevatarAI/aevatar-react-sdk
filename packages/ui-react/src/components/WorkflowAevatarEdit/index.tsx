@@ -228,166 +228,159 @@ export default function WorkflowAevatarEdit({
   );
 
   return (
-    <div className="sdk:overflow-auto sdk:h-full sdk:flex sdk:flex-col sdk:gap-[23px] sdk:w-full">
-      <DialogTitle className="sdk:pb-[23px] sdk:text-[15px] sdk:font-syne sdk:font-semibold sdk:border-b sdk:border-[#303030]">
-        <p>g-agent configuration</p>
-      </DialogTitle>
-      <div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className={clsx(" sdk:bg-[#141415]")}>
-              <div className="sdk:flex sdk:flex-col sdk:gap-y-[24px]  sdk:items-start sdk:content-start sdk:self-stretch">
-                <FormField
-                  key={"agentName"}
-                  control={form.control}
-                  defaultValue={agentItem?.name}
-                  name={"agentName"}
-                  render={({ field }) => (
-                    <FormItem aria-labelledby="agentNameLabel">
-                      <FormLabel id="agentNameLabel">g-aevatar name</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="atomic-aevatar name"
-                          {...field}
-                          value={field?.value}
-                          onChange={field?.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="agentType"
-                  defaultValue={agentItem?.agentType}
-                  disabled={true}
-                  render={({ field }) => (
-                    <FormItem aria-labelledby="agentTypeLabel">
-                      <FormLabel id="agentTypeLabel">
-                        *Atomic-aevatars Type
-                      </FormLabel>
-                      <Select
+    <div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className={clsx(" sdk:bg-[#141415]")}>
+            <div className="sdk:flex sdk:flex-col sdk:gap-y-[24px]  sdk:items-start sdk:content-start sdk:self-stretch">
+              <FormField
+                key={"agentName"}
+                control={form.control}
+                defaultValue={agentItem?.name}
+                name={"agentName"}
+                render={({ field }) => (
+                  <FormItem aria-labelledby="agentNameLabel">
+                    <FormLabel id="agentNameLabel">g-aevatar name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="atomic-aevatar name"
+                        {...field}
                         value={field?.value}
-                        disabled={field?.disabled}
-                        // onValueChange={(values) => {
-                        //   onAgentTypeChange(values, field);
-                        // }}
-                      >
-                        <FormControl>
-                          <SelectTrigger aria-disabled={field?.disabled}>
-                            <SelectValue placeholder="Select" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className="sdk:w-[192px]!">
-                          {agentTypeList.map((agentType) => (
-                            <SelectItem key={agentType} value={agentType}>
-                              {agentType}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {JSONSchemaProperties?.map((item, index) => {
-                  const name = item[0];
-                  const propertyInfo = item[1];
-
-                  let type = propertyInfo.type;
-                  if (!type) return null;
-                  if (typeof propertyInfo.type === "string")
-                    type = [propertyInfo.type];
-
-                  const value = item[1]?.value;
-                  const key = `${name}-${index}`;
-                  if (propertyInfo.enum) {
-                    return (
-                      <FormField
-                        key={key}
-                        control={form.control}
-                        defaultValue={value}
-                        name={name}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{name}</FormLabel>
-
-                            <Select
-                              value={field?.value}
-                              disabled={field?.disabled}
-                              onValueChange={field.onChange}>
-                              <FormControl>
-                                <SelectTrigger aria-disabled={field?.disabled}>
-                                  <SelectValue placeholder="Select" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent className="sdk:w-[192px]!">
-                                {propertyInfo?.["x-enumNames"]?.map(
-                                  (enumValue) => (
-                                    <SelectItem
-                                      key={enumValue}
-                                      value={enumValue}>
-                                      {enumValue}
-                                    </SelectItem>
-                                  )
-                                )}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                        onChange={field?.onChange}
                       />
-                    );
-                  }
-                  if (
-                    type.includes("string") ||
-                    type.includes("number") ||
-                    type.includes("integer")
-                  ) {
-                    return (
-                      <FormField
-                        key={key}
-                        control={form.control}
-                        defaultValue={value}
-                        name={name}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{name}</FormLabel>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="agentType"
+                defaultValue={agentItem?.agentType}
+                disabled={true}
+                render={({ field }) => (
+                  <FormItem aria-labelledby="agentTypeLabel">
+                    <FormLabel id="agentTypeLabel">
+                      *Atomic-aevatars Type
+                    </FormLabel>
+                    <Select
+                      value={field?.value}
+                      disabled={field?.disabled}
+                      // onValueChange={(values) => {
+                      //   onAgentTypeChange(values, field);
+                      // }}
+                    >
+                      <FormControl>
+                        <SelectTrigger aria-disabled={field?.disabled}>
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="sdk:w-[192px]!">
+                        {agentTypeList.map((agentType) => (
+                          <SelectItem key={agentType} value={agentType}>
+                            {agentType}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {JSONSchemaProperties?.map((item, index) => {
+                const name = item[0];
+                const propertyInfo = item[1];
+
+                let type = propertyInfo.type;
+                if (!type) return null;
+                if (typeof propertyInfo.type === "string")
+                  type = [propertyInfo.type];
+
+                const value = item[1]?.value;
+                const key = `${name}-${index}`;
+                if (propertyInfo.enum) {
+                  return (
+                    <FormField
+                      key={key}
+                      control={form.control}
+                      defaultValue={value}
+                      name={name}
+                      render={({ field }) => (
+                        <FormItem aria-labelledby={name}>
+                          <FormLabel id={name}>{name}</FormLabel>
+
+                          <Select
+                            value={field?.value}
+                            disabled={field?.disabled}
+                            onValueChange={field.onChange}>
                             <FormControl>
-                              <Input
-                                // placeholder="atomic-aevatar name"
-                                {...field}
-                              />
+                              <SelectTrigger aria-disabled={field?.disabled}>
+                                <SelectValue placeholder="Select" />
+                              </SelectTrigger>
                             </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    );
-                  }
-                })}
-              </div>
+                            <SelectContent className="sdk:w-[192px]!">
+                              {propertyInfo?.["x-enumNames"]?.map(
+                                (enumValue) => (
+                                  <SelectItem key={enumValue} value={enumValue}>
+                                    {enumValue}
+                                  </SelectItem>
+                                )
+                              )}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  );
+                }
+                if (
+                  type.includes("string") ||
+                  type.includes("number") ||
+                  type.includes("integer")
+                ) {
+                  return (
+                    <FormField
+                      key={key}
+                      control={form.control}
+                      defaultValue={value}
+                      name={name}
+                      render={({ field }) => (
+                        <FormItem aria-labelledby={name}>
+                          <FormLabel id={name}>{name}</FormLabel>
+                          <FormControl>
+                            <Input
+                              // placeholder="atomic-aevatar name"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  );
+                }
+              })}
             </div>
-            <Button
-              key={"save"}
-              className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[192px]"
-              type="submit">
-              {btnLoading && (
-                <Loading
-                  key={"save"}
-                  className={clsx("aevatarai-loading-icon")}
-                  style={{ width: 14, height: 14 }}
-                />
-              )}
-              <span className="sdk:text-center sdk:font-syne sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
-                save
-              </span>
-            </Button>
-          </form>
-        </Form>
-      </div>
+          </div>
+          <Button
+            key={"save"}
+            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[192px]"
+            type="submit">
+            {btnLoading && (
+              <Loading
+                key={"save"}
+                className={clsx("aevatarai-loading-icon")}
+                style={{ width: 14, height: 14 }}
+              />
+            )}
+            <span className="sdk:text-center sdk:font-syne sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
+              save
+            </span>
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 }

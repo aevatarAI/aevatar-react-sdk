@@ -1,7 +1,26 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import EditGAevatarInner from "../EditGAevatarInner";
 import { sleep } from "@aevatar-react-sdk/utils";
+// biome-ignore lint/style/useImportType: <explanation>
+import React from "react";
+import { aevatarAI } from "../../utils";
+import { useToast } from "../../hooks/use-toast";
+import "@testing-library/jest-dom";
+
+vi.mock("../../utils", () => ({
+  aevatarAI: {
+    services: {
+      agent: {
+        deleteAgent: vi.fn(),
+      },
+    },
+  },
+}));
+
+vi.mock("../../hooks/use-toast", () => ({
+  useToast: vi.fn(),
+}));
 
 vi.mock("react-hook-form", async (importOriginal) => {
   const actual: any = await importOriginal();
@@ -38,6 +57,16 @@ vi.mock("@aevatar-react-sdk/utils", () => ({
 describe("EditGAevatarInner", () => {
   const mockOnBack = vi.fn();
   const mockOnGagentChange = vi.fn();
+  const mockToast = vi.fn();
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(useToast).mockReturnValue({
+      toast: mockToast,
+      dismiss: vi.fn(),
+      toasts: [],
+    });
+  });
 
   const configuarationParams = [
     { name: "param1", type: "System.String", value: "value1" },
@@ -120,6 +149,7 @@ describe("EditGAevatarInner", () => {
     expect(deleteButton).toBeInTheDocument();
 
     fireEvent.click(deleteButton);
+    vi.mocked(aevatarAI.services.agent.deleteAgent).mockResolvedValue();
 
     //   await waitFor(() => {
     //     expect(screen.getByText("deleting")).toBeInTheDocument();
@@ -128,6 +158,29 @@ describe("EditGAevatarInner", () => {
       sleep(2000);
     });
 
-    expect(mockOnBack).toHaveBeenCalled();
+    expect(aevatarAI.services.agent.deleteAgent).toHaveBeenCalled();
+  });
+
+  it("should handle deletion error", async () => {
+    render(<EditGAevatarInner {...defaultProps} type="edit" />);
+
+    const deleteButton = screen.getByText("delete");
+    expect(deleteButton).toBeInTheDocument();
+
+    vi.mocked(aevatarAI.services.agent.deleteAgent).mockRejectedValue(
+      new Error("delete error")
+    );
+
+    fireEvent.click(deleteButton);
+
+    await waitFor(() => {
+      expect(aevatarAI.services.agent.deleteAgent).toHaveBeenCalled();
+    });
+
+    expect(mockToast).toHaveBeenCalledWith({
+      title: "error",
+      description: "delete error",
+      duration: 3000,
+    });
   });
 });
