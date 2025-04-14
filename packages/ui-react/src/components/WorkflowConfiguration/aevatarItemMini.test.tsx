@@ -23,17 +23,17 @@ vi.mock("../../assets/svg/new-aevatarItem-hover.svg?react", () => ({
 }));
 
 describe("AevatarItem Component", () => {
-  it("renders as a 'new aevatar' when isnew is true", () => {
+  it("renders as a 'new agent' when isnew is true", () => {
     render(<AevatarItem isnew name="New Aevatar" />);
-
+    screen.debug();
     // Check that the new aevatar icons render
     expect(screen.getByTestId("new-aevatar-item-icon")).toBeInTheDocument();
     expect(
       screen.getByTestId("new-aevatar-item-hover-icon")
     ).toBeInTheDocument();
 
-    // Check that the "new g-aevatar" text renders
-    expect(screen.getByText("new g-aevatar")).toBeInTheDocument();
+    // Check that the "new agent" text renders
+    expect(screen.getByText("+ new agent")).toBeInTheDocument();
   });
 
   it("renders name and agentType when isnew is false", () => {

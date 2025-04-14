@@ -51,10 +51,10 @@ describe("WorkflowAevatarEdit Component", () => {
     );
 
     // Agent name input
-    expect(screen.getByLabelText("g-aevatar name")).toBeInTheDocument();
+    expect(screen.getByLabelText("agent name")).toBeInTheDocument();
 
     // Agent type select
-    expect(screen.getByLabelText("*Atomic-aevatars Type")).toBeInTheDocument();
+    expect(screen.getByLabelText("agent Type")).toBeInTheDocument();
 
     // Dynamic fields
     expect(screen.getByLabelText("property1")).toBeInTheDocument();
