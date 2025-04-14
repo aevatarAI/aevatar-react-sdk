@@ -75,10 +75,10 @@ describe("MyGAevatar", () => {
     );
 
     expect(screen.getByTestId("empty-icon")).toBeInTheDocument();
-    expect(screen.getByText("new g-aevatar")).toBeInTheDocument();
+    expect(screen.getByText("new agent")).toBeInTheDocument();
   });
 
-  it("should call onNewGAevatar when new g-aevatar button is clicked", () => {
+  it("should call onNewGAevatar when new agent button is clicked", () => {
     render(
       <MyGAevatar
         onEditGaevatar={onEditGaevatarMock}
@@ -86,7 +86,7 @@ describe("MyGAevatar", () => {
       />
     );
 
-    fireEvent.click(screen.getByText("new g-aevatar"));
+    fireEvent.click(screen.getByText("new agent"));
 
     expect(onNewGAevatarMock).toHaveBeenCalled();
   });

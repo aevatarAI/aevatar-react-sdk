@@ -10,24 +10,46 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { useCallback } from "react";
+import { useToast } from "../../hooks/use-toast";
 
 interface IProps {
   isnew?: boolean;
   agentType?: string;
   disabled?: boolean;
   name?: string;
+  className?: string;
   onDragStart?: (event: React.DragEvent<HTMLDivElement>) => void;
   draggable?: boolean;
 }
 export default function AevatarItem(props: IProps) {
-  const { isnew, agentType, name, onDragStart, draggable, disabled } = props;
+  const {
+    isnew,
+    agentType,
+    name,
+    onDragStart,
+    draggable,
+    disabled,
+    className,
+  } = props;
+  const { toast } = useToast();
+  const onAevatarItemClick = useCallback(() => {
+    toast({
+      description:
+        "drag and drop g-agents onto the canvas to build your workflow",
+    });
+  }, [toast]);
+
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
       className={clsx(
-        "sdk:relative sdk:w-[124px] sdk:h-[45px] sdk:cursor-pointer sdk:group",
-        disabled && "sdk:cursor-not-allowed!"
+        "sdk:relative sdk:w-[124px] sdk:h-[45px] sdk:cursor-grab sdk:active:cursor-grabbing sdk:group",
+        disabled && "sdk:cursor-not-allowed! opacity-50",
+        className
       )}
       onDragStart={onDragStart}
+      onClick={onAevatarItemClick}
       draggable={disabled ? false : draggable}>
       {isnew ? (
         <>
@@ -52,7 +74,7 @@ export default function AevatarItem(props: IProps) {
                 "sdk:workflow-new-aevatar-item",
                 disabled && "sdk:workflow-new-aevatar-item-disabled"
               )}>
-              new g-aevatar
+              + new agent
             </p>
           </div>
         </>

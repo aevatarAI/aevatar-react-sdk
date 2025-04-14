@@ -12,10 +12,13 @@
     content: "";
     border-left: 15px solid transparent;
   }
+  .sdk\:cutCorner:hover:before {
+    border-bottom: 15px solid var(--sdk-border-color);
+  }
   @media (hover: hover) {
-    .sdk\:hover\:cutCorner-border:hover:before {
+    /* .sdk\:cutCorner-border::before {
       border-bottom: 15px solid var(--sdk-border-color);
-    }
+    } */
   }
   .sdk\:cutCorner:after {
     position: absolute;

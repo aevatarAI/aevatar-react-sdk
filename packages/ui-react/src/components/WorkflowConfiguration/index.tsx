@@ -50,12 +50,14 @@ const WorkflowConfiguration = ({
 }: IWorkflowConfigurationProps) => {
   const [container, setContainer] = React.useState(null);
   const { toast } = useToast();
-  const [open, setOpen] = useState(false);
+  const [editAgentOpen, setEditAgentOpen] = useState(false);
   const [selectAgentInfo, setSelectAgentInfo] = useState<{
     agent: Partial<IAgentInfoDetail>;
     isNew?: boolean;
     nodeId: string;
   }>();
+
+  console.log(open, "open==edit-agent");
 
   const [unsavedModal, setUnsavedModal] = useState(false);
 
@@ -68,7 +70,7 @@ const WorkflowConfiguration = ({
   const onClickWorkflowItem = useCallback(
     (data: Partial<IAgentInfoDetail>, isNew: boolean, nodeId: string) => {
       setSelectAgentInfo({ agent: data, isNew, nodeId });
-      setOpen(true);
+      setEditAgentOpen(true);
     },
     []
   );
@@ -128,7 +130,7 @@ const WorkflowConfiguration = ({
           });
           return [...newNodeList];
         });
-        setOpen(false);
+        setEditAgentOpen(false);
         await sleep(50);
         setSelectAgentInfo(undefined);
         return result;
@@ -208,7 +210,10 @@ const WorkflowConfiguration = ({
               <Button
                 variant="default"
                 onClick={onSave}
-                className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:h-[30px]">
+                className={clsx(
+                  "sdk:workflow-title-button-save sdk:cursor-pointer sdk:h-[30px]",
+                  editAgentOpen && 'sdk:workflow-title-button-save-disabled'
+                )}>
                 {btnLoading && (
                   <Loading
                     key={"save"}
@@ -235,7 +240,7 @@ const WorkflowConfiguration = ({
 
             {/* Main Content */}
             <main className="sdk:flex-1 sdk:flex sdk:flex-col sdk:items-center sdk:justify-center sdk:relative">
-              <Dialog open={open} onOpenChange={setOpen}>
+              <Dialog open={editAgentOpen} onOpenChange={setEditAgentOpen}>
                 <Workflow
                   editWorkflow={editWorkflow}
                   gaevatarList={sidebarConfig?.gaevatarList}
@@ -244,7 +249,7 @@ const WorkflowConfiguration = ({
                   onNodesChanged={onNodesChanged}
                 />
                 <DialogPortal container={container} asChild>
-                  <DialogOverlay />
+                  {/* <DialogOverlay /> */}
                   <WorkflowDialog
                     agentItem={selectAgentInfo?.agent}
                     isNew={selectAgentInfo?.isNew}

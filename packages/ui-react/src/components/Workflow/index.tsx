@@ -14,6 +14,7 @@ import {
   useEdgesState,
   Controls,
   useReactFlow,
+  MarkerType,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
@@ -191,8 +192,6 @@ export const Workflow = forwardRef(
       return result.flat();
     }, [nodes, edges]);
 
-    console.log(nodes, "nodes===getWorkUnitRelations");
-
     useImperativeHandle(
       ref,
       () => ({
@@ -208,7 +207,14 @@ export const Workflow = forwardRef(
         setEdges(
           (eds) =>
             addEdge(
-              { ...params, style: { strokeWidth: 2, stroke: "#B9B9B9" } },
+              {
+                ...params,
+                markerEnd: { type: MarkerType.ArrowClosed },
+                style: {
+                  strokeWidth: 2,
+                  stroke: "#B9B9B9",
+                },
+              },
               eds
             ) as any
         ),

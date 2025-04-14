@@ -240,7 +240,7 @@ export default function WorkflowAevatarEdit({
                 name={"agentName"}
                 render={({ field }) => (
                   <FormItem aria-labelledby="agentNameLabel">
-                    <FormLabel id="agentNameLabel">g-aevatar name</FormLabel>
+                    <FormLabel id="agentNameLabel">agent name</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="atomic-aevatar name"
@@ -260,9 +260,7 @@ export default function WorkflowAevatarEdit({
                 disabled={true}
                 render={({ field }) => (
                   <FormItem aria-labelledby="agentTypeLabel">
-                    <FormLabel id="agentTypeLabel">
-                      *Atomic-aevatars Type
-                    </FormLabel>
+                    <FormLabel id="agentTypeLabel">agent Type</FormLabel>
                     <Select
                       value={field?.value}
                       disabled={field?.disabled}

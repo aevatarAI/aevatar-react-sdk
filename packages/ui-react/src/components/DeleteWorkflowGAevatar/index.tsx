@@ -16,7 +16,7 @@ export default function DeleteWorkflowGAevatar({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Delete
-          className="sdk:cursor-pointer"
+          className="sdk:cursor-pointer sdk:text-[#606060]"
           onClick={(e) => {
             e.stopPropagation();
           }}

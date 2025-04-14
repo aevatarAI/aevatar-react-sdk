@@ -17,7 +17,7 @@ export interface IAevatarCardInnerProps {
 }
 
 export default function AevatarCardInner({
-  className,
+  className = "",
   isNew,
   onClick,
   deleteNode,
@@ -40,12 +40,12 @@ export default function AevatarCardInner({
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
-      data-testid='aevatar-card'
+      data-testid="aevatar-card"
       onClick={() => {
         onClick?.(agentInfo, isNew, nodeId);
       }}>
       <div
-        className={`sdk:aevatar-item-background sdk:w-[234px] sdk:cutCorner sdk:hover:border sdk:hover:cutCorner-border sdk:workflow-common-border ${className}`}>
+        className={`sdk:aevatar-item-background sdk:w-[234px] sdk:cutCorner sdk:border sdk:border-[#141415] sdk:cutCorner-border sdk:hover:border-[#303030] ${className}`}>
         <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
           <div className="sdk:flex sdk:justify-between sdk:items-center sdk:pb-[9px]">
             <div className="sdk:flex sdk:font-syne sdk:text-white sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:lowercase ">{`${
@@ -56,7 +56,7 @@ export default function AevatarCardInner({
               <DeleteWorkflowGAevatar handleDeleteClick={handleDeleteClick} />
             ) : (
               <Delete
-                className="sdk:cursor-pointer"
+                className="sdk:cursor-pointer sdk:text-[#606060]"
                 onClick={handleDeleteClick}
               />
             )}
@@ -65,7 +65,7 @@ export default function AevatarCardInner({
             {agentInfo?.agentType ?? "--"}
           </div>
         </div>
-        <div className="sdk:pb-[16px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
+        <div className="sdk:font-pro sdk:pb-[16px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
           {(propertiesInfo ?? []).map((item: [string, JSONSchemaType<any>]) => (
             <div key={item?.[0]} className={clsx(isNew && "sdk:w-full")}>
               <div className="sdk:text-[var(--sdk-gray-text)] sdk:text-[11px] sdk:pb-[10px]">

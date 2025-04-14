@@ -25,6 +25,7 @@ export default function AevatarItem4Workflow({
         position={Position.Left}
         style={{
           background: "#53FF8A",
+          border: "1px solid #B9B9B9",
           width: 10,
           height: 10,
         }}
@@ -42,6 +43,7 @@ export default function AevatarItem4Workflow({
         id="b"
         style={{
           background: "#53FF8A",
+          border: "1px solid #B9B9B9",
           width: 10,
           height: 10,
         }}

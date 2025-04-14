@@ -17,7 +17,7 @@ const ToastViewport = React.forwardRef<
   <ToastViewportEle
     ref={ref}
     className={cn(
-      "sdk:fixed sdk:top-0 sdk:bg-[#141415] sdk:z-[100] sdk:flex sdk:max-h-screen sdk:w-full sdk:flex-col-reverse sdk:sm:p-0 sdk:sm:bottom-[22px] sdk:sm:right-[30px] sdk:sm:top-auto sdk:sm:flex-col sdk:md:max-w-[420px]",
+      "sdk:fixed sdk:top-0 sdk:left-1/2 sdk:-translate-x-1/2 sdk:bg-[#141415] sdk:w-auto sdk:z-[100] sdk:flex sdk:flex-col sdk:sm:top-auto sdk:sm:bottom-[22px] sdk:sm:right-[30px] sdk:sm:left-auto sdk:sm:-translate-x-0 sdk:sm:max-w-[420px] sdk:max-h-screen",
       className
     )}
     {...props}
@@ -26,7 +26,7 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const toastVariants = cva(
-  "sdk:group sdk:pointer-events-auto sdk:relative sdk:flex sdk:w-full sdk:items-center sdk:justify-between sdk:space-x-4 sdk:overflow-hidden sdk:rounded-md sdk:border sdk:p-6 sdk:pr-8 sdk:sm:p-[20px] sdk:shadow-lg sdk:transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
+  "sdk:group sdk:pointer-events-auto sdk:relative sdk:flex sdk:w-full sdk:items-center sdk:justify-between sdk:space-x-4 sdk:overflow-hidden sdk:rounded-md sdk:border sdk:p-[20px] sdk:shadow-lg sdk:transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
   {
     variants: {
       variant: {
