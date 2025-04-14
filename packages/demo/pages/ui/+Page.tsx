@@ -70,7 +70,9 @@ export default function UI() {
     setStage(Stage.editGAevatar);
   }, []);
 
-  const onAuthFinish = useCallback(() => {}, []);
+  const onAuthFinish = useCallback(() => {
+    setShowAction(true);
+  }, []);
 
   const onShowGaevatar = useCallback(() => {
     setStage(Stage.myGAevatar);

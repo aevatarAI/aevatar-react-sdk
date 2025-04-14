@@ -1,6 +1,6 @@
 import { useConnectWallet } from "@aelf-web-login/wallet-adapter-react";
 import { useCallback, useEffect } from "react";
-import { aevatarAI, ConfigProvider } from "@aevatar-react-sdk/ui-react";
+import { aevatarAI, Button, ConfigProvider } from "@aevatar-react-sdk/ui-react";
 import { useAuthToken } from "../../hooks/useAuthToken";
 
 export default function AuthButton({ onFinish }: { onFinish: () => void }) {
@@ -27,9 +27,9 @@ export default function AuthButton({ onFinish }: { onFinish: () => void }) {
 
   return (
     <div className="flex gap-10">
-      <button type="button" onClick={onGetAuthToken}>
+      <Button type="button" onClick={onGetAuthToken}>
         AuthButton
-      </button>
+      </Button>
 
       <button type="button" onClick={getList}>
         getAllAgentsConfiguration
