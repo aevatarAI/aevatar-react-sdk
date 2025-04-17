@@ -34,7 +34,7 @@ export default function DeleteWorkflowGAevatar({
           <DeleteTip />
 
           <div className="sdk:text-center sdk:font-syne sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:lowercase sdk:text-white">
-            Are you sure you want to delete this g-aevatar?
+            Are you sure you want to delete this g-agent?
           </div>
         </div>
         <div className="sdk:flex sdk:justify-between sdk:items-start sdk:self-stretch sdk:pt-[28px] sdk:gap-[14px]">

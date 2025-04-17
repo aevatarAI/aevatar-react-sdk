@@ -84,7 +84,7 @@ describe("EditGAevatarInner", () => {
   it("should render the form and initial elements correctly", () => {
     render(<EditGAevatarInner {...defaultProps} />);
 
-    expect(screen.getByText("g-aevatars configuration")).toBeInTheDocument();
+    expect(screen.getByText("g-agents configuration")).toBeInTheDocument();
     expect(screen.getByText("create")).toBeInTheDocument();
 
     expect(screen.getByLabelText("*Atomic-aevatars Type")).toBeInTheDocument();

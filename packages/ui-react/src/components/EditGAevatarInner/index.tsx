@@ -147,7 +147,7 @@ function EditGAevatarInnerCom({
           />
         )}
         <span className="sdk:hidden sdk:sm:inline-block">
-          g-aevatars configuration
+          g-agents configuration
         </span>
         <span className="sdk:inline-block sdk:sm:hidden">configuration</span>
       </div>
@@ -359,12 +359,14 @@ function EditGAevatarInnerCom({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="sdk:h-full sdk:flex sdk:flex-col"
+        onSubmit={form.handleSubmit(onSubmit)}>
         <CommonHeader leftEle={leftEle} rightEle={rightEle} />
         <div
           className={clsx(
-            "sdk:max-w-[352px] sdk:m-auto sdk:bg-[#141415] sdk:pt-[22px] sdk:pb-[14px]",
-            "sdk:md:max-w-[361px] sdk:md:pt-[0]"
+            "sdk:flex-1 sdk:w-full sdk:m-auto sdk:bg-[#141415] sdk:pt-[22px] sdk:pb-[14px]",
+            "sdk:md:pt-[0] sdk:md:px-[40px]"
           )}>
           <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-white sdk:self-stretch">
             <div className="sdk:text-black sdk:font-syne sdk:text-sm sdk:font-semibold sdk:leading-normal sdk:lowercase">
@@ -374,7 +376,7 @@ function EditGAevatarInnerCom({
               Manage your aevatar settings and preferences
             </div>
           </div>
-          <div className="sdk:flex sdk:flex-col sdk:gap-y-[22px] sdk:p-[16px_16px_6px_16px] sdk:items-start sdk:content-start sdk:self-stretch">
+          <div className="sdk:md:w-[360px] sdk:m-auto sdk:flex sdk:flex-col sdk:gap-y-[22px] sdk:p-[16px_16px_6px_16px] sdk:items-start sdk:content-start sdk:self-stretch">
             <FormField
               control={form.control}
               name="agentType"

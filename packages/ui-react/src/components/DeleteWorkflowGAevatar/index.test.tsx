@@ -43,7 +43,7 @@ describe("DeleteWorkflowGAevatar Component", () => {
 
     // Ensure the dialog content is visible
     expect(
-      screen.getByText("Are you sure you want to delete this g-aevatar?")
+      screen.getByText("Are you sure you want to delete this g-agent?")
     ).toBeInTheDocument();
   });
 
@@ -55,7 +55,7 @@ describe("DeleteWorkflowGAevatar Component", () => {
 
     // Ensure the dialog content is visible
     expect(
-      screen.getByText("Are you sure you want to delete this g-aevatar?")
+      screen.getByText("Are you sure you want to delete this g-agent?")
     ).toBeInTheDocument();
 
     // Click the close icon
@@ -63,7 +63,7 @@ describe("DeleteWorkflowGAevatar Component", () => {
 
     // Ensure the dialog content is no longer visible
     expect(
-      screen.queryByText("Are you sure you want to delete this g-aevatar?")
+      screen.queryByText("Are you sure you want to delete this g-agent?")
     ).not.toBeInTheDocument();
   });
 
@@ -75,7 +75,7 @@ describe("DeleteWorkflowGAevatar Component", () => {
 
     // Ensure the dialog content is visible
     expect(
-      screen.getByText("Are you sure you want to delete this g-aevatar?")
+      screen.getByText("Are you sure you want to delete this g-agent?")
     ).toBeInTheDocument();
 
     // Click the cancel button
@@ -83,7 +83,7 @@ describe("DeleteWorkflowGAevatar Component", () => {
 
     // Ensure the dialog content is no longer visible
     expect(
-      screen.queryByText("Are you sure you want to delete this g-aevatar?")
+      screen.queryByText("Are you sure you want to delete this g-agent?")
     ).not.toBeInTheDocument();
   });
 
@@ -111,7 +111,7 @@ describe("DeleteWorkflowGAevatar Component", () => {
 //     screen.debug();
 //     // Ensure the dialog content is no longer visible
 //     expect(
-//       screen.queryByText("Are you sure you want to delete this g-aevatar?")
+//       screen.queryByText("Are you sure you want to delete this g-aevaagenttar?")
 //     ).not.toBeInTheDocument();
 //   });
 });

@@ -115,7 +115,7 @@ describe("WorkflowAevatarEdit Component", () => {
   //   );
 
   //   // Fill out form fields
-  //   fireEvent.change(screen.getByLabelText("g-aevatar name"), {
+  //   fireEvent.change(screen.getByLabelText("g-agent name"), {
   //     target: { value: "New Agent" },
   //   });
 
@@ -161,7 +161,7 @@ describe("WorkflowAevatarEdit Component", () => {
   //   );
 
   //   // Fill out form fields
-  //   fireEvent.change(screen.getByLabelText("g-aevatar name"), {
+  //   fireEvent.change(screen.getByLabelText("g-agent name"), {
   //     target: { value: "Agent Name" },
   //   });
 
