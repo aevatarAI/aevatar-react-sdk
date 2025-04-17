@@ -1,5 +1,19 @@
 # @aevatar-react-sdk/ui-react
 
+## 0.3.0
+
+### Minor Changes
+
+- e73b565: change style
+
+### Patch Changes
+
+- Updated dependencies [e73b565]
+  - @aevatar-react-sdk/services@0.3.0
+  - @aevatar-react-sdk/utils@0.3.0
+  - @aevatar-react-sdk/core@0.3.0
+  - @aevatar-react-sdk/types@0.3.0
+
 ## 0.2.1
 
 ### Patch Changes
