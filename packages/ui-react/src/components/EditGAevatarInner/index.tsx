@@ -28,6 +28,7 @@ import type { JSONSchemaType } from "../types";
 import { useToast } from "../../hooks/use-toast";
 import { handleErrorMessage } from "../../utils/error";
 import ErrorBoundary from "../AevatarErrorBoundary";
+import { Textarea } from "../ui/textarea";
 
 export type TEditGaevatarSuccessType = "create" | "edit" | "delete";
 
@@ -476,11 +477,7 @@ function EditGAevatarInnerCom({
                   />
                 );
               }
-              if (
-                type.includes("string") ||
-                type.includes("number") ||
-                type.includes("integer")
-              ) {
+              if (type.includes("number") || type.includes("integer")) {
                 return (
                   <FormField
                     key={key}
@@ -492,6 +489,29 @@ function EditGAevatarInnerCom({
                         <FormLabel>{name}</FormLabel>
                         <FormControl>
                           <Input
+                            // placeholder="atomic-aevatar name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                );
+              }
+
+              if (type.includes("string")) {
+                return (
+                  <FormField
+                    key={key}
+                    control={form.control}
+                    defaultValue={value}
+                    name={name}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{name}</FormLabel>
+                        <FormControl>
+                          <Textarea
                             // placeholder="atomic-aevatar name"
                             {...field}
                           />
