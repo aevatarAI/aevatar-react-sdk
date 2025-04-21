@@ -1,5 +1,16 @@
 # @aevatar-react-sdk/utils
 
+## 0.3.1-alpha.0
+
+### Minor Changes
+
+- change input to textaere
+
+### Patch Changes
+
+- Updated dependencies
+  - @aevatar-react-sdk/types@0.3.1-alpha.0
+
 ## 0.3.0
 
 ### Minor Changes
