@@ -57,7 +57,7 @@ export default function AevatarCardInner({
                 <div
                   className="sdk:p-[4px] sdk:bg-[#303030] sdk:text-[11px] sdk:text-white sdk:font-pro"
                   key={info}>
-                  {info}
+                  {typeof info === 'object' ? JSON.stringify(info) : info}
                 </div>
               ))}
             </div>

@@ -137,7 +137,7 @@ export default function MyGAevatar({
             className={clsx(
               "sdk:grid sdk:grid-cols-1 sdk:place-items-center sdk:pt-[23px] sdk:gap-[20px]",
               "sdk:md:grid-cols-3 sdk:md:max-w-[762px] sdk:md:pt-[0] sdk:mx-auto",
-              "sdk:aevatarai-gaevatar-list"
+              "aevatarai-gaevatar-list"
             )}>
             {gAevatarList?.map((gAevatar, index) => (
               <AevatarCard

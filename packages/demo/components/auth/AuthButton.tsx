@@ -16,7 +16,7 @@ export default function AuthButton({ onFinish }: { onFinish: () => void }) {
 
   const onGetAuthToken = useCallback(async () => {
     await getAuthToken();
-    onFinish();
+    onFinish?.();
   }, [getAuthToken, onFinish]);
 
   const getList = useCallback(async () => {
