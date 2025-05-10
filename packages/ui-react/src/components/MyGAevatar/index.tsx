@@ -96,9 +96,9 @@ export default function MyGAevatar({
       <Button
         className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]"
         onClick={onNewGAevatar}>
-        <AddIcon style={{ width: 14, height: 14 }} />
+        <AddIcon className="text-[#606060]" style={{ width: 14, height: 14 }} />
         <span className="sdk:text-center sdk:font-syne sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
-          new g-aevatar
+          new g-agent
         </span>
       </Button>
     ),
@@ -113,7 +113,7 @@ export default function MyGAevatar({
       )}
       style={{ height, width }}>
       <CommonHeader
-        leftEle={"my g-aevatars"}
+        leftEle={"my g-agents"}
         rightEle={
           gAevatarList &&
           (maxGAevatarCount ? maxGAevatarCount >= gAevatarList.length : true) &&
@@ -137,7 +137,7 @@ export default function MyGAevatar({
             className={clsx(
               "sdk:grid sdk:grid-cols-1 sdk:place-items-center sdk:pt-[23px] sdk:gap-[20px]",
               "sdk:md:grid-cols-3 sdk:md:max-w-[762px] sdk:md:pt-[0] sdk:mx-auto",
-              "sdk:aevatarai-gaevatar-list"
+              "aevatarai-gaevatar-list"
             )}>
             {gAevatarList?.map((gAevatar, index) => (
               <AevatarCard

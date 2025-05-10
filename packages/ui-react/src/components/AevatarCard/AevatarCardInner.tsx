@@ -16,7 +16,7 @@ export default function AevatarCardInner({
   const propertiesInfo = useMemo(() => {
     let _properties: Record<string, string[] | string>;
     try {
-      _properties = JSON.parse(properties as any);
+      _properties = JSON.parse((properties ?? "{}") as any);
       // biome-ignore lint/correctness/noUnusedVariables: <explanation>
     } catch (error) {
       _properties = properties;
@@ -57,7 +57,13 @@ export default function AevatarCardInner({
                 <div
                   className="sdk:p-[4px] sdk:bg-[#303030] sdk:text-[11px] sdk:text-white sdk:font-pro"
                   key={info}>
-                  {info}
+                  {typeof info === 'object' ? (
+                    <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0 }}>
+                      {JSON.stringify(info, null, 2)}
+                    </pre>
+                  ) : (
+                    info
+                  )}
                 </div>
               ))}
             </div>

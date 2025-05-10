@@ -24,10 +24,13 @@ import { sleep } from "@aevatar-react-sdk/utils";
 import Loading from "../../assets/svg/loading.svg?react";
 
 import { aevatarAI } from "../../utils";
-import type { JSONSchemaType } from "../types";
 import { useToast } from "../../hooks/use-toast";
 import { handleErrorMessage } from "../../utils/error";
 import ErrorBoundary from "../AevatarErrorBoundary";
+import { Textarea } from "../ui/textarea";
+import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
+import { validateSchemaField } from "../../utils/jsonSchemaValidate";
+import ArrayField from "./ArrayField";
 
 export type TEditGaevatarSuccessType = "create" | "edit" | "delete";
 
@@ -147,37 +150,160 @@ function EditGAevatarInnerCom({
           />
         )}
         <span className="sdk:hidden sdk:sm:inline-block">
-          g-aevatars configuration
+          g-agents configuration
         </span>
         <span className="sdk:inline-block sdk:sm:hidden">configuration</span>
       </div>
     );
   }, [onBack]);
 
-  const JSONSchemaProperties: [string, JSONSchemaType<any>][] = useMemo(() => {
-    const jsonSchema = JSON.parse(jsonSchemaString ?? "{}");
+  // Recursively render schema fields
+  const renderSchemaField = (name: string, schema: any, parentName = "", label?: string) => {
+    const fieldName = parentName ? `${parentName}.${name}` : name;
 
-    const _properties = jsonSchema?.properties;
-    if (!_properties) return [];
+    // enum
+    if (schema.enum) {
+      return (
+        <FormField
+          key={fieldName}
+          control={form.control}
+          defaultValue={schema.value}
+          name={fieldName}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{label ?? name}</FormLabel>
+              <Select
+                value={field?.value}
+                disabled={field?.disabled}
+                onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger aria-disabled={field?.disabled}>
+                    <SelectValue placeholder="Select" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {(schema["x-enumNames"] || schema.enum).map(
+                    (enumValue: any, idx: number) => (
+                      <SelectItem key={enumValue} value={enumValue}>
+                        {enumValue}
+                      </SelectItem>
+                    )
+                  )}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      );
+    }
+    // array
+    if (schema.type === "array" && schema.itemsSchema) {
+      console.log(fieldName, name, "fieldName==");
+      return (
+        <ArrayField
+          key={fieldName}
+          name={name}
+          schema={schema}
+          value={form.watch(fieldName) || []}
+          onChange={(v) => form.setValue(fieldName, v)}
+          label={name}
+          renderItem={(item, idx, onItemChange, onDelete) =>
+            renderSchemaField(String(idx), schema.itemsSchema, fieldName, `${name}-${idx}`)
+          }
+        />
+      );
+    }
+    // object
+    if (schema.type === "object" && schema.children) {
+      return (
+        <div key={fieldName} className="sdk:w-full sdk:mb-2">
+          <FormLabel>{label ?? name}</FormLabel>
+          <div className="sdk:pl-4">
+            {schema.children.map(([childName, childSchema]: [string, any]) =>
+              renderSchemaField(childName, childSchema, fieldName)
+            )}
+          </div>
+        </div>
+      );
+    }
+    // file
+    if (schema.type === "file") {
+      // TODO: Implement file upload control
+      return (
+        <FormField
+          key={fieldName}
+          control={form.control}
+          defaultValue={schema.value}
+          name={fieldName}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{label ?? name}</FormLabel>
+              <FormControl>
+                <Input type="file" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      );
+    }
+    // string/number/boolean
+    if (schema.type === "string") {
+      return (
+        <FormField
+          key={fieldName}
+          control={form.control}
+          defaultValue={schema.value}
+          name={fieldName}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{label ?? name}</FormLabel>
+              <FormControl>
+                <Textarea {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      );
+    }
+    if (schema.type === "number" || schema.type === "integer") {
+      return (
+        <FormField
+          key={fieldName}
+          control={form.control}
+          defaultValue={schema.value}
+          name={fieldName}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{label ?? name}</FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  {...field}
+                  className="sdk:appearance-none sdk:[&::-webkit-outer-spin-button]:appearance-none sdk:[&::-webkit-inner-spin-button]:appearance-none sdk:[&::-ms-input-placeholder]:appearance-none"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      );
+    }
+    if (schema.type === "boolean") {
+      // TODO: Implement boolean control
+      return null;
+    }
+    // fallback
+    return null;
+  };
 
-    return Object.entries(_properties).map((item) => {
-      const name = item[0];
+  console.log(JSON.parse(jsonSchemaString ?? "{}"), "jsonSchemaString===");
 
-      let propertyInfo = item[1] as JSONSchemaType<any>;
-      propertyInfo.value = properties?.[name];
-      const type = propertyInfo.type;
-      if (!type) {
-        propertyInfo = {
-          ...jsonSchema?.definitions?.[name],
-          value: propertyInfo.value,
-        };
-        if (propertyInfo.enum) {
-          const index = propertyInfo.enum.indexOf(propertyInfo.value);
-          propertyInfo.value = propertyInfo?.["x-enumNames"][index];
-        }
-      }
-      return [item[0], propertyInfo];
-    });
+  // Use recursively parsed schema
+  const JSONSchemaProperties: [string, any][] = useMemo(() => {
+    return jsonSchemaParse(jsonSchemaString, properties);
   }, [jsonSchemaString, properties]);
 
   const form = useForm<any>();
@@ -197,104 +323,17 @@ function EditGAevatarInnerCom({
       try {
         if (btnLoadingRef.current) return;
         const errorFields: { name: string; error: string }[] = [];
-        const paramsList = [];
-        JSONSchemaProperties?.forEach((item) => {
-          const name = item[0];
-          const propertyInfo = item[1];
-
-          let type = propertyInfo.type;
-          if (typeof propertyInfo.type === "string") type = [propertyInfo.type];
-
-          const isNumberType =
-            (type.includes("number") || type.includes("integer")) &&
-            !propertyInfo.enum;
-
-          const isTypeError = isNumberType
-            ? Number.isNaN(Number(values[name]))
-            : false;
-
-          const notSupport =
-            type.includes("array") ||
-            type.includes("boolean") ||
-            type.includes("file");
-
-          // if (notSupport)
-          //   return toast({
-          //     title: "error",
-          //     description: "Not support type",
-          //     duration: 3000,
-          //   });
-
-          if (!values[name] && !notSupport) {
-            errorFields.push({
-              name: name,
-              error: "required",
-            });
-          } else if (isTypeError) {
-            errorFields.push({
-              name: name,
-              error: "Please enter a number",
-            });
-          } else if (isNumberType) {
-            const value = values[name];
-            if (propertyInfo.maximum) {
-              value > propertyInfo.maximum &&
-                errorFields.push({
-                  name: name,
-                  error: `maximum: ${propertyInfo.maximum}`,
-                });
-            }
-            if (propertyInfo.maximum) {
-              value < propertyInfo.maximum &&
-                errorFields.push({
-                  name: name,
-                  error: `maximum: ${propertyInfo.maximum}`,
-                });
-            }
-            paramsList.push({ [name]: Number(values[name]) });
-          } else if (propertyInfo.type.includes("string")) {
-            const value = values[name];
-
-            if (propertyInfo.pattern) {
-              const regex = new RegExp(propertyInfo.pattern);
-              const isValid = regex.test(value);
-              if (!isValid) {
-                errorFields.push({
-                  name: name,
-                  error: `Please enter ${propertyInfo.pattern}`,
-                });
-              }
-            }
-            if (
-              propertyInfo.minLength &&
-              value.length < propertyInfo.minLength
-            ) {
-              errorFields.push({
-                name: name,
-                error: `Minlength ${propertyInfo.minLength}`,
-              });
-            }
-            if (
-              propertyInfo.maxLength &&
-              value.length > propertyInfo.maxLength
-            ) {
-              errorFields.push({
-                name: name,
-                error: `maxLength ${propertyInfo.maxLength}`,
-              });
-            }
-            paramsList.push({ [name]: values[name] });
-          } else {
-            let value = values[name];
-            if (propertyInfo.enum) {
-              const _index = propertyInfo["x-enumNames"]?.indexOf(value);
-              value = propertyInfo.enum[_index];
-            }
-
-            paramsList.push({ [name]: value });
-          }
+        const params: any = {};
+        JSONSchemaProperties?.forEach(([name, schema]) => {
+          const { errors, param } = validateSchemaField(
+            name,
+            schema,
+            values[name]
+          );
+          console.log(name, param, JSONSchemaProperties, "param===");
+          errorFields.push(...errors);
+          if (param !== undefined) params[name] = param;
         });
-
         if (!values?.agentName) {
           errorFields.push({ name: "agentName", error: "required" });
         }
@@ -305,27 +344,18 @@ function EditGAevatarInnerCom({
           return;
         }
         setBtnLoading("saving");
-
-        const properties = paramsList.reduce((acc: any, curr) => {
-          // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-          return { ...acc, ...curr };
-        }, {});
-
-        const params = {
+        const submitParams = {
           agentType: values.agentType ?? (defaultAgentType || agentTypeList[0]),
           name: values.agentName,
-          properties: properties,
+          properties: params,
         };
-        console.log(params, defaultAgentType, "params==updateAgentInfo");
+        console.log(submitParams, defaultAgentType, "params==updateAgentInfo");
         if (type === "create") {
-          await aevatarAI.services.agent.createAgent(params);
+          await aevatarAI.services.agent.createAgent(submitParams);
         } else {
-          await aevatarAI.services.agent.updateAgentInfo(agentId, params);
+          await aevatarAI.services.agent.updateAgentInfo(agentId, submitParams);
         }
-
-        // TODO There will be some delay in cqrs
         await sleep(2000);
-
         setBtnLoading(undefined);
         onSuccess?.(type);
       } catch (error: any) {
@@ -359,12 +389,14 @@ function EditGAevatarInnerCom({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="sdk:h-full sdk:flex sdk:flex-col"
+        onSubmit={form.handleSubmit(onSubmit)}>
         <CommonHeader leftEle={leftEle} rightEle={rightEle} />
         <div
           className={clsx(
-            "sdk:max-w-[352px] sdk:m-auto sdk:bg-[#141415] sdk:pt-[22px] sdk:pb-[14px]",
-            "sdk:md:max-w-[361px] sdk:md:pt-[0]"
+            "sdk:flex-1 sdk:w-full sdk:m-auto sdk:bg-[#141415] sdk:pt-[22px] sdk:pb-[14px]",
+            "sdk:md:pt-[0] sdk:md:px-[40px]"
           )}>
           <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-white sdk:self-stretch">
             <div className="sdk:text-black sdk:font-syne sdk:text-sm sdk:font-semibold sdk:leading-normal sdk:lowercase">
@@ -374,7 +406,7 @@ function EditGAevatarInnerCom({
               Manage your aevatar settings and preferences
             </div>
           </div>
-          <div className="sdk:flex sdk:flex-col sdk:gap-y-[22px] sdk:p-[16px_16px_6px_16px] sdk:items-start sdk:content-start sdk:self-stretch">
+          <div className="sdk:md:w-[360px] sdk:m-auto sdk:flex sdk:flex-col sdk:gap-y-[22px] sdk:p-[16px_16px_6px_16px] sdk:items-start sdk:content-start sdk:self-stretch">
             <FormField
               control={form.control}
               name="agentType"
@@ -429,100 +461,9 @@ function EditGAevatarInnerCom({
                 </FormItem>
               )}
             />
-            {JSONSchemaProperties?.map((item, index) => {
-              const name = item[0];
-              const propertyInfo = item[1];
-
-              let type = propertyInfo.type;
-              if (!type) return null;
-              if (typeof propertyInfo.type === "string")
-                type = [propertyInfo.type];
-
-              const value = item[1]?.value;
-              const key = `${name}-${index}`;
-              if (propertyInfo.enum) {
-                return (
-                  <FormField
-                    key={key}
-                    control={form.control}
-                    defaultValue={value}
-                    name={name}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{name}</FormLabel>
-
-                        <Select
-                          value={field?.value}
-                          disabled={field?.disabled}
-                          onValueChange={field.onChange}>
-                          <FormControl>
-                            <SelectTrigger aria-disabled={field?.disabled}>
-                              <SelectValue placeholder="Select" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {propertyInfo?.["x-enumNames"]?.map((enumValue) => (
-                              <SelectItem key={enumValue} value={enumValue}>
-                                {enumValue}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                );
-              }
-              if (
-                type.includes("string") ||
-                type.includes("number") ||
-                type.includes("integer")
-              ) {
-                return (
-                  <FormField
-                    key={key}
-                    control={form.control}
-                    defaultValue={value}
-                    name={name}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{name}</FormLabel>
-                        <FormControl>
-                          <Input
-                            // placeholder="atomic-aevatar name"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                );
-              }
-
-              // if (type.includes("file") || type.includes("object")) {
-              //   return (
-              //     <FormField
-              //       key={key}
-              //       control={form.control}
-              //       defaultValue={value}
-              //       name={name}
-              //       render={() => (
-              //         <FormItem>
-              //           <FormControl>
-              //             <DropzoneItem
-              //               form={form}
-              //               name={name}
-              //               accept={{ "application/pdf": [] }}
-              //             />
-              //           </FormControl>
-              //         </FormItem>
-              //       )}
-              //     />
-              //   );
-              // }
-            })}
+            {JSONSchemaProperties?.map(([name, schema]) =>
+              renderSchemaField(name, schema)
+            )}
           </div>
         </div>
       </form>

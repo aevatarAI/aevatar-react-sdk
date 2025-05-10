@@ -100,7 +100,7 @@ export default function AevatarItem(props: IProps) {
                     {name}
                   </div>
                 </TooltipTrigger>
-                <TooltipContent side="left">{name}</TooltipContent>
+                <TooltipContent className='sdk:z-1000' side="left">{name}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
             <TooltipProvider delayDuration={0}>
@@ -110,7 +110,7 @@ export default function AevatarItem(props: IProps) {
                     {agentType}
                   </div>
                 </TooltipTrigger>
-                <TooltipContent side="left">{agentType}</TooltipContent>
+                <TooltipContent className='sdk:z-1000' side="left">{agentType}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>

@@ -1,30 +1,92 @@
 import type { JSONSchemaType } from "../components";
 
+// Recursively resolve $ref in schema
+type SchemaMap = Record<string, any>;
+
+function resolveRef(ref: string, rootSchema: any): any {
+  if (!ref.startsWith("#/")) return null;
+  const path = ref.replace(/^#\//, "").split("/");
+  let current: any = rootSchema;
+  for (const key of path) {
+    current = current[key];
+    if (!current) return null;
+  }
+  return current;
+}
+
+function parseJsonSchemaProperties(
+  properties: Record<string, any>,
+  rootSchema: any,
+  definitions: SchemaMap,
+  values?: Record<string, any>
+): [string, any][] {
+  return Object.entries(properties).map(([name, prop]) => {
+    return [name, parseJsonSchema(prop, rootSchema, definitions, values?.[name])];
+  });
+}
+
+export function parseJsonSchema(
+  schema: any,
+  rootSchema: any,
+  definitions: SchemaMap,
+  value?: any
+): any {
+  // Handle $ref
+  if (schema.$ref) {
+    const refSchema = resolveRef(schema.$ref, rootSchema);
+    if (!refSchema) return { ...schema, value };
+    return parseJsonSchema(refSchema, rootSchema, definitions, value);
+  }
+  // Handle allOf/anyOf/oneOf (not implemented, fallback to first)
+  if (schema.allOf && Array.isArray(schema.allOf)) {
+    return parseJsonSchema(schema.allOf[0], rootSchema, definitions, value);
+  }
+  if (schema.anyOf && Array.isArray(schema.anyOf)) {
+    return parseJsonSchema(schema.anyOf[0], rootSchema, definitions, value);
+  }
+  if (schema.oneOf && Array.isArray(schema.oneOf)) {
+    return parseJsonSchema(schema.oneOf[0], rootSchema, definitions, value);
+  }
+  // Handle object
+  if (schema.type === "object" && schema.properties) {
+    return {
+      ...schema,
+      value,
+      children: parseJsonSchemaProperties(schema.properties, rootSchema, definitions, value),
+    };
+  }
+  // Handle array
+  if (schema.type === "array" && schema.items) {
+    return {
+      ...schema,
+      value,
+      itemsSchema: parseJsonSchema(schema.items, rootSchema, definitions, undefined),
+    };
+  }
+  // Handle enum
+  if (schema.enum) {
+    return {
+      ...schema,
+      value,
+    };
+  }
+  // Handle primitive types (string, number, boolean, file, etc)
+  return {
+    ...schema,
+    value,
+  };
+}
+
+// Main entry: parse jsonSchemaString to [name, schema] pairs (top-level properties)
 export const jsonSchemaParse = (
   jsonSchemaString?: string,
-  properties?: Record<string, string>
-): [string, JSONSchemaType<any>][] => {
+  properties?: Record<string, any>
+): [string, any][] => {
   const jsonSchema = JSON.parse(jsonSchemaString ?? "{}");
-
+  const definitions = jsonSchema.definitions || {};
   const _properties = jsonSchema?.properties;
   if (!_properties) return [];
-
-  return Object.entries(_properties).map((item) => {
-    const name = item[0];
-
-    let propertyInfo = item[1] as JSONSchemaType<any>;
-    propertyInfo.value = properties?.[name];
-    const type = propertyInfo.type;
-    if (!type) {
-      propertyInfo = {
-        ...jsonSchema?.definitions?.[name],
-        value: propertyInfo.value,
-      };
-      if (propertyInfo.enum) {
-        const index = propertyInfo.enum.indexOf(propertyInfo.value);
-        propertyInfo.value = propertyInfo?.["x-enumNames"][index];
-      }
-    }
-    return [item[0], propertyInfo];
+  return Object.entries(_properties).map(([name, prop]) => {
+    return [name, parseJsonSchema(prop, jsonSchema, definitions, properties?.[name])];
   });
 };

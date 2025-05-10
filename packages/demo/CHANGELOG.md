@@ -1,5 +1,24 @@
 # demo
 
+## 0.1.3-alpha.0
+
+### Patch Changes
+
+- change input to textaere
+- Updated dependencies
+  - @aevatar-react-sdk/services@0.3.1-alpha.0
+  - @aevatar-react-sdk/ui-react@0.3.1-alpha.0
+  - @aevatar-react-sdk/utils@0.3.1-alpha.0
+
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [e73b565]
+  - @aevatar-react-sdk/services@0.3.0
+  - @aevatar-react-sdk/ui-react@0.3.0
+  - @aevatar-react-sdk/utils@0.3.0
+
 ## 0.1.1
 
 ### Patch Changes

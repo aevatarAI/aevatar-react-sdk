@@ -76,7 +76,7 @@ export default function Sidebar({
                   {ele[0]}
                 </div>
               </TooltipTrigger>
-              <TooltipContent className="sdk:mt-[20px]" side="left">
+              <TooltipContent className="sdk:mt-[20px] sdk:z-1000" side="left">
                 {ele[0]}
               </TooltipContent>
             </Tooltip>
