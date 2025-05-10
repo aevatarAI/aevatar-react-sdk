@@ -96,7 +96,7 @@ export default function MyGAevatar({
       <Button
         className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]"
         onClick={onNewGAevatar}>
-        <AddIcon style={{ width: 14, height: 14 }} />
+        <AddIcon className="text-[#606060]" style={{ width: 14, height: 14 }} />
         <span className="sdk:text-center sdk:font-syne sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
           new g-agent
         </span>

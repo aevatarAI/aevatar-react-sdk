@@ -57,7 +57,13 @@ export default function AevatarCardInner({
                 <div
                   className="sdk:p-[4px] sdk:bg-[#303030] sdk:text-[11px] sdk:text-white sdk:font-pro"
                   key={info}>
-                  {typeof info === 'object' ? JSON.stringify(info) : info}
+                  {typeof info === 'object' ? (
+                    <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0 }}>
+                      {JSON.stringify(info, null, 2)}
+                    </pre>
+                  ) : (
+                    info
+                  )}
                 </div>
               ))}
             </div>

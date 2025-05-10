@@ -24,13 +24,13 @@ import { sleep } from "@aevatar-react-sdk/utils";
 import Loading from "../../assets/svg/loading.svg?react";
 
 import { aevatarAI } from "../../utils";
-import type { JSONSchemaType } from "../types";
 import { useToast } from "../../hooks/use-toast";
 import { handleErrorMessage } from "../../utils/error";
 import ErrorBoundary from "../AevatarErrorBoundary";
 import { Textarea } from "../ui/textarea";
 import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import { validateSchemaField } from "../../utils/jsonSchemaValidate";
+import ArrayField from "./ArrayField";
 
 export type TEditGaevatarSuccessType = "create" | "edit" | "delete";
 
@@ -158,8 +158,9 @@ function EditGAevatarInnerCom({
   }, [onBack]);
 
   // Recursively render schema fields
-  const renderSchemaField = (name: string, schema: any, parentName = "") => {
+  const renderSchemaField = (name: string, schema: any, parentName = "", label?: string) => {
     const fieldName = parentName ? `${parentName}.${name}` : name;
+
     // enum
     if (schema.enum) {
       return (
@@ -170,7 +171,7 @@ function EditGAevatarInnerCom({
           name={fieldName}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{name}</FormLabel>
+              <FormLabel>{label ?? name}</FormLabel>
               <Select
                 value={field?.value}
                 disabled={field?.disabled}
@@ -198,20 +199,26 @@ function EditGAevatarInnerCom({
     }
     // array
     if (schema.type === "array" && schema.itemsSchema) {
-      // TODO: Support dynamic add/remove for array items
+      console.log(fieldName, name, "fieldName==");
       return (
-        <div key={fieldName} className="sdk:w-full sdk:mb-2">
-          <FormLabel>{name}</FormLabel>
-          {/* Only render one item here, can be extended to dynamic list later */}
-          {renderSchemaField("0", schema.itemsSchema, fieldName)}
-        </div>
+        <ArrayField
+          key={fieldName}
+          name={name}
+          schema={schema}
+          value={form.watch(fieldName) || []}
+          onChange={(v) => form.setValue(fieldName, v)}
+          label={name}
+          renderItem={(item, idx, onItemChange, onDelete) =>
+            renderSchemaField(String(idx), schema.itemsSchema, fieldName, `${name}-${idx}`)
+          }
+        />
       );
     }
     // object
     if (schema.type === "object" && schema.children) {
       return (
         <div key={fieldName} className="sdk:w-full sdk:mb-2">
-          <FormLabel>{name}</FormLabel>
+          <FormLabel>{label ?? name}</FormLabel>
           <div className="sdk:pl-4">
             {schema.children.map(([childName, childSchema]: [string, any]) =>
               renderSchemaField(childName, childSchema, fieldName)
@@ -231,7 +238,7 @@ function EditGAevatarInnerCom({
           name={fieldName}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{name}</FormLabel>
+              <FormLabel>{label ?? name}</FormLabel>
               <FormControl>
                 <Input type="file" {...field} />
               </FormControl>
@@ -251,7 +258,7 @@ function EditGAevatarInnerCom({
           name={fieldName}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{name}</FormLabel>
+              <FormLabel>{label ?? name}</FormLabel>
               <FormControl>
                 <Textarea {...field} />
               </FormControl>
@@ -270,9 +277,13 @@ function EditGAevatarInnerCom({
           name={fieldName}
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{name}</FormLabel>
+              <FormLabel>{label ?? name}</FormLabel>
               <FormControl>
-                <Input type="number" {...field} />
+                <Input
+                  type="number"
+                  {...field}
+                  className="sdk:appearance-none sdk:[&::-webkit-outer-spin-button]:appearance-none sdk:[&::-webkit-inner-spin-button]:appearance-none sdk:[&::-ms-input-placeholder]:appearance-none"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

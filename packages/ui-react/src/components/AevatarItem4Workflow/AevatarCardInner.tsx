@@ -87,7 +87,18 @@ export default function AevatarCardInner({
                       item?.[1].enum &&
                       "sdk:w-[100px]!"
                   )}>
-                  {item?.[1].value ?? ""}
+                  {typeof item?.[1].value === "object" ? (
+                    <pre
+                      style={{
+                        whiteSpace: "pre-wrap",
+                        wordBreak: "break-all",
+                        margin: 0,
+                      }}>
+                      {JSON.stringify(item?.[1].value, null, 2)}
+                    </pre>
+                  ) : (
+                    item?.[1].value ?? ""
+                  )}
                 </div>
                 {/* ))
                 } */}

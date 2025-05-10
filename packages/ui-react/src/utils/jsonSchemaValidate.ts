@@ -95,6 +95,17 @@ export function validateSchemaField(
     } else if (Number.isNaN(Number(value))) {
       errors.push({ name: fieldName, error: "Must be a number" });
     } else {
+      // int32 format validation for integer type
+      if (schema.type === "integer" && schema.format === "int32") {
+        // int32 range: -2147483648 to 2147483647
+        const intVal = Number(value);
+        if (!Number.isInteger(intVal) || intVal < -2147483648 || intVal > 2147483647) {
+          errors.push({
+            name: fieldName,
+            error: "Must be int32 integer (-2147483648 to 2147483647)",
+          });
+        }
+      }
       if (schema.minimum !== undefined && Number(value) < schema.minimum) {
         errors.push({ name: fieldName, error: `Minimum: ${schema.minimum}` });
       }
