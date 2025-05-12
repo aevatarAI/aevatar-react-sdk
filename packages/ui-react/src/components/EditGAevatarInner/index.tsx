@@ -158,7 +158,12 @@ function EditGAevatarInnerCom({
   }, [onBack]);
 
   // Recursively render schema fields
-  const renderSchemaField = (name: string, schema: any, parentName = "", label?: string) => {
+  const renderSchemaField = (
+    name: string,
+    schema: any,
+    parentName = "",
+    label?: string
+  ) => {
     const fieldName = parentName ? `${parentName}.${name}` : name;
 
     // enum
@@ -209,7 +214,12 @@ function EditGAevatarInnerCom({
           onChange={(v) => form.setValue(fieldName, v)}
           label={name}
           renderItem={(item, idx, onItemChange, onDelete) =>
-            renderSchemaField(String(idx), schema.itemsSchema, fieldName, `${name}-${idx}`)
+            renderSchemaField(
+              String(idx),
+              schema.itemsSchema,
+              fieldName,
+              `${name}-${idx}`
+            )
           }
         />
       );
@@ -240,7 +250,11 @@ function EditGAevatarInnerCom({
             <FormItem>
               <FormLabel>{label ?? name}</FormLabel>
               <FormControl>
-                <Input type="file" {...field} />
+                <Input
+                  type="file"
+                  placeholder={schema?.description ?? ""}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -260,7 +274,7 @@ function EditGAevatarInnerCom({
             <FormItem>
               <FormLabel>{label ?? name}</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea placeholder={schema?.description ?? ""} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -281,6 +295,7 @@ function EditGAevatarInnerCom({
               <FormControl>
                 <Input
                   type="number"
+                  placeholder={schema?.description ?? ""}
                   {...field}
                   className="sdk:appearance-none sdk:[&::-webkit-outer-spin-button]:appearance-none sdk:[&::-webkit-inner-spin-button]:appearance-none sdk:[&::-ms-input-placeholder]:appearance-none"
                 />
