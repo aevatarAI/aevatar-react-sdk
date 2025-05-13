@@ -192,13 +192,18 @@ export default function WorkflowAevatarEdit({
 
               {/* Render schema fields recursively */}
               {JSONSchemaProperties?.map(([name, schema]) =>
-                renderSchemaField(form, name, schema)
+                renderSchemaField({
+                  form,
+                  name,
+                  schema,
+                  selectContentCls: "sdk:w-[192px]!",
+                })
               )}
             </div>
           </div>
           <Button
             key={"save"}
-            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[192px] sdk:pt-[16px]"
+            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[192px]"
             type="submit">
             {btnLoading && (
               <Loading
