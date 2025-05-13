@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
-import { Button, Dialog, DialogOverlay, DialogPortal } from "../ui";
+import { Button, Dialog, DialogPortal } from "../ui";
 import { type IWorkflowInstance, Workflow } from "../Workflow";
 import Sidebar from "./sidebar";
 import { ReactFlowProvider } from "@xyflow/react";
@@ -56,8 +56,6 @@ const WorkflowConfiguration = ({
     isNew?: boolean;
     nodeId: string;
   }>();
-
-  console.log(open, "open==edit-agent");
 
   const [unsavedModal, setUnsavedModal] = useState(false);
 
@@ -212,7 +210,7 @@ const WorkflowConfiguration = ({
                 onClick={onSave}
                 className={clsx(
                   "sdk:workflow-title-button-save sdk:cursor-pointer sdk:h-[30px]",
-                  editAgentOpen && 'sdk:workflow-title-button-save-disabled'
+                  editAgentOpen && "sdk:workflow-title-button-save-disabled"
                 )}>
                 {btnLoading && (
                   <Loading
