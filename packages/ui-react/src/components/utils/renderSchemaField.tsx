@@ -92,7 +92,8 @@ export const renderSchemaField = ({
                 form,
                 name: idx.toString(),
                 schema: schema.itemsSchema,
-                parentName: `${name}-${idx}`,
+                parentName: fieldName,
+                label: `${name}-${idx}`,
                 selectContentCls,
               })
             }
