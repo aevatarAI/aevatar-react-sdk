@@ -103,7 +103,6 @@ function EditGAevatarInnerCom({
         data-testid="edit-gaevatar-inner"
         className="sdk:flex sdk:items-center sdk:gap-[8px]">
         <Button
-          key={"save"}
           className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]"
           type="submit">
           {btnLoading === "saving" && (
@@ -118,7 +117,6 @@ function EditGAevatarInnerCom({
           </span>
         </Button>
         <Button
-          key={"delete"}
           className={clsx(
             "sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]",
             type === "create" && "sdk:hidden"
@@ -204,37 +202,55 @@ function EditGAevatarInnerCom({
     }
     // array
     if (schema.type === "array" && schema.itemsSchema) {
-      console.log(fieldName, name, "fieldName==");
       return (
-        <ArrayField
+        <FormField
           key={fieldName}
-          name={name}
-          schema={schema}
-          value={form.watch(fieldName) || []}
-          onChange={(v) => form.setValue(fieldName, v)}
-          label={name}
-          renderItem={(item, idx, onItemChange, onDelete) =>
-            renderSchemaField(
-              String(idx),
-              schema.itemsSchema,
-              fieldName,
-              `${name}-${idx}`
-            )
-          }
+          control={form.control}
+          name={fieldName}
+          defaultValue={schema.value || []}
+          render={({ field }) => (
+            <ArrayField
+              name={name}
+              schema={schema}
+              value={field.value || []}
+              onChange={field.onChange}
+              label={name}
+              renderItem={(item, idx, onItemChange, onDelete) =>
+                renderSchemaField(
+                  idx.toString(),
+                  schema.itemsSchema,
+                  fieldName,
+                  `${name}-${idx}`
+                )
+              }
+            />
+          )}
         />
       );
     }
     // object
     if (schema.type === "object" && schema.children) {
       return (
-        <div key={fieldName} className="sdk:w-full sdk:mb-2">
-          <FormLabel>{label ?? name}</FormLabel>
-          <div className="sdk:pl-4">
-            {schema.children.map(([childName, childSchema]: [string, any]) =>
-              renderSchemaField(childName, childSchema, fieldName)
-            )}
-          </div>
-        </div>
+        <FormField
+          key={fieldName}
+          control={form.control}
+          name={fieldName}
+          defaultValue={schema.value || {}}
+          render={({ field }) => (
+            <div className="sdk:w-full sdk:mb-2">
+              <FormLabel>{label ?? name}</FormLabel>
+              <div className="sdk:pl-4">
+                {schema.children.map(([childName, childSchema]: [string, any]) =>
+                  renderSchemaField(
+                    childName,
+                    childSchema,
+                    fieldName
+                  )
+                )}
+              </div>
+            </div>
+          )}
+        />
       );
     }
     // file
@@ -335,6 +351,7 @@ function EditGAevatarInnerCom({
   const onSubmit = useCallback(
     async (values: any) => {
       console.log("onSubmit====", values);
+      form.clearErrors();
       try {
         if (btnLoadingRef.current) return;
         const errorFields: { name: string; error: string }[] = [];
@@ -345,7 +362,7 @@ function EditGAevatarInnerCom({
             schema,
             values[name]
           );
-          console.log(name, param, JSONSchemaProperties, "param===");
+          console.log(errors, "errors===onSubmit");
           errorFields.push(...errors);
           if (param !== undefined) params[name] = param;
         });

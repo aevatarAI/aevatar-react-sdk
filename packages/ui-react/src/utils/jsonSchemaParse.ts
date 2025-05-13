@@ -18,10 +18,21 @@ function parseJsonSchemaProperties(
   properties: Record<string, any>,
   rootSchema: any,
   definitions: SchemaMap,
-  values?: Record<string, any>
+  values?: Record<string, any>,
+  requiredList?: string[]
 ): [string, any][] {
   return Object.entries(properties).map(([name, prop]) => {
-    return [name, parseJsonSchema(prop, rootSchema, definitions, values?.[name])];
+    const isRequired = requiredList?.includes(name);
+    const propWithRequired = isRequired ? { ...prop, required: true } : prop;
+    return [
+      name,
+      parseJsonSchema(
+        propWithRequired,
+        rootSchema,
+        definitions,
+        values?.[name]
+      ),
+    ];
   });
 }
 
@@ -52,7 +63,13 @@ export function parseJsonSchema(
     return {
       ...schema,
       value,
-      children: parseJsonSchemaProperties(schema.properties, rootSchema, definitions, value),
+      children: parseJsonSchemaProperties(
+        schema.properties,
+        rootSchema,
+        definitions,
+        value,
+        schema.required
+      ),
     };
   }
   // Handle array
@@ -60,7 +77,12 @@ export function parseJsonSchema(
     return {
       ...schema,
       value,
-      itemsSchema: parseJsonSchema(schema.items, rootSchema, definitions, undefined),
+      itemsSchema: parseJsonSchema(
+        schema.items,
+        rootSchema,
+        definitions,
+        undefined
+      ),
     };
   }
   // Handle enum
@@ -85,8 +107,22 @@ export const jsonSchemaParse = (
   const jsonSchema = JSON.parse(jsonSchemaString ?? "{}");
   const definitions = jsonSchema.definitions || {};
   const _properties = jsonSchema?.properties;
+  const requiredList = jsonSchema?.required;
+
   if (!_properties) return [];
   return Object.entries(_properties).map(([name, prop]) => {
-    return [name, parseJsonSchema(prop, jsonSchema, definitions, properties?.[name])];
+    const isRequired = requiredList?.includes(name);
+
+    const propWithRequired = { ...((prop as any) ?? {}), required: isRequired };
+
+    return [
+      name,
+      parseJsonSchema(
+        propWithRequired,
+        jsonSchema,
+        definitions,
+        properties?.[name]
+      ),
+    ];
   });
 };
