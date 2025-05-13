@@ -319,7 +319,11 @@ function EditGAevatarInnerCom({
               )}
             />
             {JSONSchemaProperties?.map(([name, schema]) =>
-              renderSchemaField(form, name, schema)
+              renderSchemaField({
+                form,
+                name,
+                schema,
+              })
             )}
           </div>
         </div>
