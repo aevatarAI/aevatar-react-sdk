@@ -21,19 +21,19 @@ export function validateSchemaField(
   }
   // enum
   if (schema.enum) {
-    console.log(schema.enum.includes(value), schema["x-enumNames"].includes(value), 'schema["x-enumNames"].includes(value)=')
     if (!schema.enum.includes(value)) {
       if (schema["x-enumNames"].includes(value)) {
         value = schema.enum[schema["x-enumNames"].indexOf(value)];
       } else {
         errors.push({
           name: fieldName,
-          error: `Must be one of: ${schema.enum.join(", ")}`,
+          error: `Must be one of: ${(schema["x-enumNames"] ?? schema.enum).join(
+            ", "
+          )}`,
         });
       }
     }
     param = value;
-  console.log(param, value, _value, 'param==schema.enum')
 
     return { errors, param };
   }
@@ -99,7 +99,11 @@ export function validateSchemaField(
       if (schema.type === "integer" && schema.format === "int32") {
         // int32 range: -2147483648 to 2147483647
         const intVal = Number(value);
-        if (!Number.isInteger(intVal) || intVal < -2147483648 || intVal > 2147483647) {
+        if (
+          !Number.isInteger(intVal) ||
+          intVal < -2147483648 ||
+          intVal > 2147483647
+        ) {
           errors.push({
             name: fieldName,
             error: "Must be int32 integer (-2147483648 to 2147483647)",
@@ -118,7 +122,10 @@ export function validateSchemaField(
   }
   // string
   if (schema.type === "string") {
-    if (value === undefined || value === null || value === "") {
+    if (
+      schema.required &&
+      (value === undefined || value === null || value === "")
+    ) {
       errors.push({ name: fieldName, error: "required" });
     } else {
       if (schema.pattern) {
