@@ -1,7 +1,6 @@
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import {
   Button,
-  DialogTitle,
   Form,
   FormControl,
   FormField,
@@ -24,8 +23,8 @@ import { handleErrorMessage } from "../../utils/error";
 import { useToast } from "../../hooks/use-toast";
 import type { JSONSchemaType } from "../types";
 import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
-import ArrayField from "../EditGAevatarInner/ArrayField";
 import { validateSchemaField } from "../../utils/jsonSchemaValidate";
+import { renderSchemaField } from "../utils/renderSchemaField";
 
 export interface IWorkflowAevatarEditProps {
   agentItem?: Partial<IAgentInfoDetail>;
@@ -76,6 +75,8 @@ export default function WorkflowAevatarEdit({
     async (values: any) => {
       // Use validateSchemaField for each schema field
       try {
+        form.clearErrors();
+
         if (btnLoadingRef.current) return;
         const errorFields: { name: string; error: string }[] = [];
         const params: any = {};
@@ -130,130 +131,11 @@ export default function WorkflowAevatarEdit({
     ]
   );
 
-  // Recursive function to render schema fields
-  const renderSchemaField = (name: string, schema: any, parentName = "", label?: string) => {
-    const fieldName = parentName ? `${parentName}.${name}` : name;
-
-    // enum type
-    if (schema.enum) {
-      return (
-        <FormField
-          key={fieldName}
-          control={form.control}
-          defaultValue={schema.value}
-          name={fieldName}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
-              <Select
-                value={field?.value}
-                disabled={field?.disabled}
-                onValueChange={field.onChange}>
-                <FormControl>
-                  <SelectTrigger aria-disabled={field?.disabled}>
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {(schema["x-enumNames"] || schema.enum).map(
-                    (enumValue: any, idx: number) => (
-                      <SelectItem key={enumValue} value={enumValue}>
-                        {enumValue}
-                      </SelectItem>
-                    )
-                  )}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      );
-    }
-    // array type
-    if (schema.type === "array" && schema.itemsSchema) {
-      // Use ArrayField to render array items recursively
-      const arrayValue = form.watch(fieldName) || [];
-      return (
-        <ArrayField
-          key={fieldName}
-          name={name}
-          schema={schema}
-          value={arrayValue}
-          onChange={(v) => form.setValue(fieldName, v)}
-          label={label ?? name}
-          renderItem={(item, idx, onItemChange, onDelete) =>
-            renderSchemaField(String(idx), schema.itemsSchema, fieldName, `${name}-${idx}`)
-          }
-        />
-      );
-    }
-    // object type
-    if (schema.type === "object" && schema.children) {
-      return (
-        <div key={fieldName} className="sdk:w-full sdk:mb-2">
-          <FormLabel>{label ?? name}</FormLabel>
-          <div className="sdk:pl-4">
-            {schema.children.map(([childName, childSchema]: [string, any]) =>
-              renderSchemaField(childName, childSchema, fieldName)
-            )}
-          </div>
-        </div>
-      );
-    }
-    // file/boolean type (TODO: implement if needed)
-    if (schema.type === "file" || schema.type === "boolean") {
-      return null;
-    }
-    // string type
-    if (schema.type === "string") {
-      return (
-        <FormField
-          key={fieldName}
-          control={form.control}
-          defaultValue={schema.value}
-          name={fieldName}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      );
-    }
-    // number/integer type
-    if (schema.type === "number" || schema.type === "integer") {
-      return (
-        <FormField
-          key={fieldName}
-          control={form.control}
-          defaultValue={schema.value}
-          name={fieldName}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
-              <FormControl>
-                <Input type="number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      );
-    }
-    // fallback
-    return null;
-  };
-
   return (
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className={clsx(" sdk:bg-[#141415]")}>
+          <div className={clsx("sdk:bg-[#141415] sdk:pb-[60px]")}>
             <div className="sdk:flex sdk:flex-col sdk:gap-y-[24px]  sdk:items-start sdk:content-start sdk:self-stretch">
               <FormField
                 key={"agentName"}
@@ -310,13 +192,13 @@ export default function WorkflowAevatarEdit({
 
               {/* Render schema fields recursively */}
               {JSONSchemaProperties?.map(([name, schema]) =>
-                renderSchemaField(name, schema)
+                renderSchemaField(form, name, schema)
               )}
             </div>
           </div>
           <Button
             key={"save"}
-            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[192px]"
+            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[192px] sdk:pt-[16px]"
             type="submit">
             {btnLoading && (
               <Loading

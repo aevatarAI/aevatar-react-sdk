@@ -25,7 +25,6 @@ export default function ArrayField({
   renderItem,
   label,
 }: ArrayFieldProps) {
-  // 空态
   if (!value || value.length === 0) {
     return (
       <div className="sdk:w-full sdk:mb-2">
@@ -40,7 +39,6 @@ export default function ArrayField({
       </div>
     );
   }
-  // 单个 item
   if (value.length === 1) {
     return (
       <div className="sdk:w-full sdk:mb-2">
@@ -73,7 +71,6 @@ export default function ArrayField({
       </div>
     );
   }
-  // 多个 item
   if (value.length > 1) {
     return (
       <div className="sdk:w-full sdk:mb-2">
@@ -144,6 +141,6 @@ export default function ArrayField({
       </div>
     );
   }
-  // ...后续实现
+  // ...TODO
   return null;
 }
