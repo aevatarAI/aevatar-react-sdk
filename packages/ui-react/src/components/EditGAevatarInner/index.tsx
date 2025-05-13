@@ -27,10 +27,9 @@ import { aevatarAI } from "../../utils";
 import { useToast } from "../../hooks/use-toast";
 import { handleErrorMessage } from "../../utils/error";
 import ErrorBoundary from "../AevatarErrorBoundary";
-import { Textarea } from "../ui/textarea";
 import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import { validateSchemaField } from "../../utils/jsonSchemaValidate";
-import ArrayField from "./ArrayField";
+import { renderSchemaField } from "../utils/renderSchemaField";
 
 export type TEditGaevatarSuccessType = "create" | "edit" | "delete";
 
@@ -155,181 +154,6 @@ function EditGAevatarInnerCom({
     );
   }, [onBack]);
 
-  // Recursively render schema fields
-  const renderSchemaField = (
-    name: string,
-    schema: any,
-    parentName = "",
-    label?: string
-  ) => {
-    const fieldName = parentName ? `${parentName}.${name}` : name;
-
-    // enum
-    if (schema.enum) {
-      return (
-        <FormField
-          key={fieldName}
-          control={form.control}
-          defaultValue={schema.value}
-          name={fieldName}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
-              <Select
-                value={field?.value}
-                disabled={field?.disabled}
-                onValueChange={field.onChange}>
-                <FormControl>
-                  <SelectTrigger aria-disabled={field?.disabled}>
-                    <SelectValue placeholder="Select" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {(schema["x-enumNames"] || schema.enum).map(
-                    (enumValue: any, idx: number) => (
-                      <SelectItem key={enumValue} value={enumValue}>
-                        {enumValue}
-                      </SelectItem>
-                    )
-                  )}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      );
-    }
-    // array
-    if (schema.type === "array" && schema.itemsSchema) {
-      return (
-        <FormField
-          key={fieldName}
-          control={form.control}
-          name={fieldName}
-          defaultValue={schema.value || []}
-          render={({ field }) => (
-            <ArrayField
-              name={name}
-              schema={schema}
-              value={field.value || []}
-              onChange={field.onChange}
-              label={name}
-              renderItem={(item, idx, onItemChange, onDelete) =>
-                renderSchemaField(
-                  idx.toString(),
-                  schema.itemsSchema,
-                  fieldName,
-                  `${name}-${idx}`
-                )
-              }
-            />
-          )}
-        />
-      );
-    }
-    // object
-    if (schema.type === "object" && schema.children) {
-      return (
-        <FormField
-          key={fieldName}
-          control={form.control}
-          name={fieldName}
-          defaultValue={schema.value || {}}
-          render={({ field }) => (
-            <div className="sdk:w-full sdk:mb-2">
-              <FormLabel>{label ?? name}</FormLabel>
-              <div className="sdk:pl-4">
-                {schema.children.map(([childName, childSchema]: [string, any]) =>
-                  renderSchemaField(
-                    childName,
-                    childSchema,
-                    fieldName
-                  )
-                )}
-              </div>
-            </div>
-          )}
-        />
-      );
-    }
-    // file
-    if (schema.type === "file") {
-      // TODO: Implement file upload control
-      return (
-        <FormField
-          key={fieldName}
-          control={form.control}
-          defaultValue={schema.value}
-          name={fieldName}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
-              <FormControl>
-                <Input
-                  type="file"
-                  placeholder={schema?.description ?? ""}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      );
-    }
-    // string/number/boolean
-    if (schema.type === "string") {
-      return (
-        <FormField
-          key={fieldName}
-          control={form.control}
-          defaultValue={schema.value}
-          name={fieldName}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
-              <FormControl>
-                <Textarea placeholder={schema?.description ?? ""} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      );
-    }
-    if (schema.type === "number" || schema.type === "integer") {
-      return (
-        <FormField
-          key={fieldName}
-          control={form.control}
-          defaultValue={schema.value}
-          name={fieldName}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  placeholder={schema?.description ?? ""}
-                  {...field}
-                  className="sdk:appearance-none sdk:[&::-webkit-outer-spin-button]:appearance-none sdk:[&::-webkit-inner-spin-button]:appearance-none sdk:[&::-ms-input-placeholder]:appearance-none"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      );
-    }
-    if (schema.type === "boolean") {
-      // TODO: Implement boolean control
-      return null;
-    }
-    // fallback
-    return null;
-  };
-
   console.log(JSON.parse(jsonSchemaString ?? "{}"), "jsonSchemaString===");
 
   // Use recursively parsed schema
@@ -453,6 +277,7 @@ function EditGAevatarInnerCom({
                     disabled={field?.disabled}
                     onValueChange={(values) => {
                       onAgentTypeChange(values, field);
+                      form.clearErrors();
                     }}>
                     <FormControl>
                       <SelectTrigger aria-disabled={field?.disabled}>
@@ -494,7 +319,7 @@ function EditGAevatarInnerCom({
               )}
             />
             {JSONSchemaProperties?.map(([name, schema]) =>
-              renderSchemaField(name, schema)
+              renderSchemaField(form, name, schema)
             )}
           </div>
         </div>
