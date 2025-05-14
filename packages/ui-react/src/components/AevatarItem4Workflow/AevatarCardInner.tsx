@@ -117,19 +117,17 @@ export default function AevatarCardInner({
                         className={clsx(
                           "sdk:p-[4px] sdk:bg-[var(--sdk-border-color)] sdk:text-[12px] sdk:text-white "
                         )}>
-                        {/* If value is object, render as JSON string */}
-                        {typeof info === "object" && info !== null ? (
-                          <pre
-                            style={{
-                              whiteSpace: "pre-wrap",
-                              wordBreak: "break-all",
-                              margin: 0,
-                            }}>
-                            {JSON.stringify(info, null, 2)}
-                          </pre>
-                        ) : (
-                          info ?? ""
-                        )}
+                        <pre
+                          style={{
+                            whiteSpace: "pre-wrap",
+                            wordBreak: "break-all",
+                            margin: 0,
+                          }}>
+                          {/* If value is object, render as JSON string */}
+                          {typeof info === "object"
+                            ? JSON.stringify(info, null, 2)
+                            : info}
+                        </pre>
                       </div>
                     );
                   })}

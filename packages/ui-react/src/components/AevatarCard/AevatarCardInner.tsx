@@ -52,7 +52,7 @@ export default function AevatarCardInner({
           .filter((item) => {
             const value = item[1];
             if (Array.isArray(value)) return value.length > 0;
-            if (typeof value === 'string') return value.trim() !== '';
+            if (typeof value === "string") return value.trim() !== "";
             return !!value;
           })
           .map((item) => (
@@ -65,13 +65,16 @@ export default function AevatarCardInner({
                   <div
                     className="sdk:p-[4px] sdk:bg-[#303030] sdk:text-[11px] sdk:text-white sdk:font-pro"
                     key={info}>
-                    {typeof info === 'object' ? (
-                      <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0 }}>
-                        {JSON.stringify(info, null, 2)}
-                      </pre>
-                    ) : (
-                      info
-                    )}
+                    <pre
+                      style={{
+                        whiteSpace: "pre-wrap",
+                        wordBreak: "break-all",
+                        margin: 0,
+                      }}>
+                      {typeof info === "object"
+                        ? JSON.stringify(info, null, 2)
+                        : info}
+                    </pre>
                   </div>
                 ))}
               </div>
