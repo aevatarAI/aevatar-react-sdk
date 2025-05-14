@@ -67,7 +67,12 @@ export default function AevatarCardInner({
         </div>
         <div className="sdk:font-pro sdk:pb-[16px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
           {(propertiesInfo ?? []).map((item: [string, JSONSchemaType<any>]) => (
-            <div key={item?.[0]} className={clsx(isNew && "sdk:w-full")}>
+            <div
+              key={item?.[0]}
+              className={clsx(
+                isNew && "sdk:w-full",
+                !isNew && !item?.[1].value && "sdk:hidden"
+              )}>
               <div className="sdk:text-[var(--sdk-gray-text)] sdk:text-[11px] sdk:pb-[10px]">
                 {item[0]}
               </div>
