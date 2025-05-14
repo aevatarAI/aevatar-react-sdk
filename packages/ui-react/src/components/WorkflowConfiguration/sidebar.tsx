@@ -39,6 +39,13 @@ export default function Sidebar({
     const agentTypeMap: Map<string, IAgentsConfiguration> = new Map();
 
     if (!gaevatarList) return [agentMap, agentTypeMap];
+
+    gaevatarTypeList?.forEach((item) => {
+      agentTypeMap.set(item.agentType, item);
+      if (agentMap.has(item.agentType)) return;
+      agentMap.set(item.agentType, []);
+    });
+
     gaevatarList.forEach((agent) => {
       if (!agentMap.has(agent.agentType)) {
         agentMap.set(agent.agentType, []);
@@ -46,11 +53,6 @@ export default function Sidebar({
       agentMap.get(agent.agentType)?.push(agent);
     });
 
-    gaevatarTypeList?.forEach((item) => {
-      agentTypeMap.set(item.agentType, item);
-      if (agentMap.has(item.agentType)) return;
-      agentMap.set(item.agentType, []);
-    });
     return [agentMap, agentTypeMap];
   }, [gaevatarList, gaevatarTypeList]);
 
