@@ -47,28 +47,36 @@ export default function AevatarCardInner({
         </div> */}
       </div>
       <div className="sdk:pb-[6px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
-        {propertiesInfo.map((item) => (
-          <div key={item[0]}>
-            <div className="sdk:text-[#606060] sdk:text-[11px] sdk:pb-[10px] sdk:font-pro">
-              {item[0]}
+        {/* Only render property if value exists and is not empty */}
+        {propertiesInfo
+          .filter((item) => {
+            const value = item[1];
+            if (Array.isArray(value)) return value.length > 0;
+            if (typeof value === 'string') return value.trim() !== '';
+            return !!value;
+          })
+          .map((item) => (
+            <div key={item[0]}>
+              <div className="sdk:text-[#606060] sdk:text-[11px] sdk:pb-[10px] sdk:font-pro">
+                {item[0]}
+              </div>
+              <div className="sdk:flex sdk:flex-wrap sdk:gap-[10px]">
+                {propertiesValue(item[1]).map((info) => (
+                  <div
+                    className="sdk:p-[4px] sdk:bg-[#303030] sdk:text-[11px] sdk:text-white sdk:font-pro"
+                    key={info}>
+                    {typeof info === 'object' ? (
+                      <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0 }}>
+                        {JSON.stringify(info, null, 2)}
+                      </pre>
+                    ) : (
+                      info
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="sdk:flex sdk:flex-wrap sdk:gap-[10px]">
-              {propertiesValue(item[1]).map((info) => (
-                <div
-                  className="sdk:p-[4px] sdk:bg-[#303030] sdk:text-[11px] sdk:text-white sdk:font-pro"
-                  key={info}>
-                  {typeof info === 'object' ? (
-                    <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0 }}>
-                      {JSON.stringify(info, null, 2)}
-                    </pre>
-                  ) : (
-                    info
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

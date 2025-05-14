@@ -66,50 +66,86 @@ export default function AevatarCardInner({
           </div>
         </div>
         <div className="sdk:font-pro sdk:pb-[16px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
-          {(propertiesInfo ?? []).map((item: [string, JSONSchemaType<any>]) => (
-            <div
-              key={item?.[0]}
-              className={clsx(
-                isNew && "sdk:w-full",
-                !isNew && !item?.[1].value && "sdk:hidden"
-              )}>
-              <div className="sdk:text-[var(--sdk-gray-text)] sdk:text-[11px] sdk:pb-[10px]">
-                {item[0]}
-              </div>
-              <div
-                className={clsx(
-                  (!isNew || item?.[1].value) &&
-                    "sdk:flex sdk:flex-wrap sdk:gap-[10px]"
-                )}>
-                {/* {
-                propertiesValue(item?.[1]).map((info) => ( */}
+          {(propertiesInfo ?? []).map((item: [string, JSONSchemaType<any>]) => {
+            // Extract property name and schema
+            const [propName, schema] = item;
+            const isArray = schema.type === "array";
+            const value = schema.value;
+            // Always treat value as an array for uniform rendering
+            const valueList =
+              isArray && Array.isArray(value)
+                ? value
+                : !isArray &&
+                  value !== undefined &&
+                  value !== null &&
+                  value !== ""
+                ? [value]
+                : [];
+            // Only filter out empty values and arrays when not isNew
+            if (
+              !isNew &&
+              (valueList.length === 0 ||
+                valueList.every(
+                  (v) =>
+                    v === undefined ||
+                    v === null ||
+                    v === "" ||
+                    (Array.isArray(v) && v.length === 0)
+                ))
+            ) {
+              return null;
+            }
+            return (
+              <div key={propName} className={clsx(isNew && "sdk:w-full")}>
+                <div className="sdk:text-[var(--sdk-gray-text)] sdk:text-[11px] sdk:pb-[10px]">
+                  {propName}
+                </div>
                 <div
                   className={clsx(
-                    "sdk:p-[4px] sdk:bg-[var(--sdk-border-color)] sdk:text-[12px] sdk:text-white ",
-                    isNew && !item?.[1].value && "sdk:h-[23px] sdk:w-full",
-                    isNew &&
-                      !item?.[1].value &&
-                      item?.[1].enum &&
-                      "sdk:w-[100px]!"
+                    (!isNew || value) && "sdk:flex sdk:flex-wrap sdk:gap-[10px]"
                   )}>
-                  {typeof item?.[1].value === "object" ? (
-                    <pre
-                      style={{
-                        whiteSpace: "pre-wrap",
-                        wordBreak: "break-all",
-                        margin: 0,
-                      }}>
-                      {JSON.stringify(item?.[1].value, null, 2)}
-                    </pre>
-                  ) : (
-                    item?.[1].value ?? ""
+                  {/* Render array values if type is array, else render single value */}
+                  {valueList.map((info) => {
+                    // Prefer a unique value for key, fallback to propName+info
+                    const key =
+                      typeof info === "string" || typeof info === "number"
+                        ? `${propName}-${info}`
+                        : `${propName}-${JSON.stringify(info)}`;
+                    return (
+                      <div
+                        key={key}
+                        className={clsx(
+                          "sdk:p-[4px] sdk:bg-[var(--sdk-border-color)] sdk:text-[12px] sdk:text-white "
+                        )}>
+                        {/* If value is object, render as JSON string */}
+                        {typeof info === "object" && info !== null ? (
+                          <pre
+                            style={{
+                              whiteSpace: "pre-wrap",
+                              wordBreak: "break-all",
+                              margin: 0,
+                            }}>
+                            {JSON.stringify(info, null, 2)}
+                          </pre>
+                        ) : (
+                          info ?? ""
+                        )}
+                      </div>
+                    );
+                  })}
+                  {/* When isNew and valueList is empty, render a placeholder div for visual consistency */}
+                  {isNew && valueList.length === 0 && (
+                    <div
+                      className={clsx(
+                        "sdk:h-[23px] sdk:w-full sdk:bg-[#303030]",
+                        schema.type !== "string" && "sdk:w-[100px]!"
+                      )}
+                    />
                   )}
                 </div>
-                {/* ))
-                } */}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

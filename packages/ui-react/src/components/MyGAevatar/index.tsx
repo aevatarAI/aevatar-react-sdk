@@ -116,7 +116,7 @@ export default function MyGAevatar({
         leftEle={"my g-agents"}
         rightEle={
           gAevatarList &&
-          (maxGAevatarCount ? maxGAevatarCount >= gAevatarList.length : true) &&
+          (maxGAevatarCount ? maxGAevatarCount > gAevatarList.length : true) &&
           newGA
         }
       />
