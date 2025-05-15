@@ -48,9 +48,9 @@ export default function AevatarCardInner({
         className={`sdk:aevatar-item-background sdk:w-[234px] sdk:cutCorner sdk:border sdk:border-[#141415] sdk:cutCorner-border sdk:hover:border-[#303030] ${className}`}>
         <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
           <div className="sdk:flex sdk:justify-between sdk:items-center sdk:pb-[9px]">
-            <div className="sdk:flex sdk:font-syne sdk:text-white sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:lowercase ">{`${
-              agentInfo?.name ?? "agent name"
-            }`}</div>
+            <div
+              className="sdk:font-syne sdk:text-white sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:lowercase sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
+            >{`${agentInfo?.name ?? "agent name"}`}</div>
 
             {isNew ? (
               <DeleteWorkflowGAevatar handleDeleteClick={handleDeleteClick} />
