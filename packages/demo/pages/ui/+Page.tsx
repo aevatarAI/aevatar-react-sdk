@@ -83,14 +83,14 @@ export default function UI() {
       pageIndex: 0,
       pageSize: 100,
     });
-    const list = await Promise.all(
-      result.map(async (item) => {
-        const result = await aevatarAI.services.agent.getAgentInfo(item.id);
-        return { ...result, businessAgentGrainId: item.businessAgentGrainId };
-      })
-    );
-    console.log(list, "list===");
-    setGaevatarList(list);
+    // const list = await Promise.all(
+    //   result.map(async (item) => {
+    //     const result = await aevatarAI.services.agent.getAgentInfo(item.id);
+    //     return { ...result, businessAgentGrainId: item.businessAgentGrainId };
+    //   })
+    // );
+    // console.log(list, "list===");
+    setGaevatarList(result);
   }, []);
 
   const [agentTypeList, setAgentTypeList] = useState<IAgentsConfiguration[]>();

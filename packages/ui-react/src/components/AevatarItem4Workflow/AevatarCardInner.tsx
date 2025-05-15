@@ -69,8 +69,16 @@ export default function AevatarCardInner({
           {(propertiesInfo ?? []).map((item: [string, JSONSchemaType<any>]) => {
             // Extract property name and schema
             const [propName, schema] = item;
+
             const isArray = schema.type === "array";
-            const value = schema.value;
+
+            let value = schema.value;
+
+            if (schema.enum) {
+              const valueIndex = schema.enum.indexOf(schema.value);
+              value = schema["x-enumNames"]?.[valueIndex];
+            }
+
             // Always treat value as an array for uniform rendering
             const valueList =
               isArray && Array.isArray(value)
