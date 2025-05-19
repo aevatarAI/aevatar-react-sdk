@@ -10,11 +10,12 @@ export interface IAgentInfo {
   agentType: string;
   name: string;
   properties: Record<string, any>;
-  grainId: string;
+  businessAgentGrainId: string;
 }
 
 export interface IAgentInfoDetail extends IAgentInfo {
-  grainId: string;
+  businessAgentGrainId: string;
+  // grainId?: string;
   propertyJsonSchema?: string;
 }
 

@@ -10,20 +10,23 @@
     right: 0px;
     bottom: 0px;
     content: "";
-    border-left: 2rem solid transparent;
+    border-left: 15px solid transparent;
+  }
+  .sdk\:cutCorner:hover:before {
+    border-bottom: 15px solid var(--sdk-border-color);
   }
   @media (hover: hover) {
-    .sdk\:hover\:cutCorner-border:hover:before {
-      border-bottom: 2rem solid var(--sdk-border-color);
-    }
+    /* .sdk\:cutCorner-border::before {
+      border-bottom: 15px solid var(--sdk-border-color);
+    } */
   }
   .sdk\:cutCorner:after {
     position: absolute;
     right: -1px;
     bottom: -1px;
     content: "";
-    border-bottom: 2rem solid;
+    border-bottom: 15px solid;
     border-color: black;
-    border-left: 2rem solid transparent;
+    border-left: 15px solid transparent;
   }
 }

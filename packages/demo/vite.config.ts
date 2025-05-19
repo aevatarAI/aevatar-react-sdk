@@ -42,7 +42,7 @@ export default defineConfig((config) => ({
         // rewrite: (path) => path.replace(/^\/auth/, ''),
       },
       "/api": {
-        target: "https://station-developer-staging.aevatar.ai/EchoListen-client",
+        target: "https://station-developer-staging.aevatar.ai/sdk-client",
         changeOrigin: true,
         secure: true,
         // rewrite: (path) => path.replace(/^\/test-client/, ''),

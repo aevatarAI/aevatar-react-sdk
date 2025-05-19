@@ -10,6 +10,9 @@
   .sdk\:workflow-new-aevatar-item {
     @apply sdk:text-[12px];
   }
+  .sdk\:workflow-new-aevatar-item-disabled {
+    @apply sdk:text-[#616161];
+  }
   .sdk\:workflow-reactflow-background {
     @apply sdk:text-[12px] sdk:text-[var(--sdk-workflow-background)];
   }

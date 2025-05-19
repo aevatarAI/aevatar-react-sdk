@@ -1,0 +1,15 @@
+{
+  "mode": "exit",
+  "tag": "alpha",
+  "initialVersions": {
+    "@aevatar-react-sdk/core": "0.3.0",
+    "demo": "0.1.2",
+    "@aevatar-react-sdk/services": "0.3.0",
+    "@aevatar-react-sdk/types": "0.3.0",
+    "@aevatar-react-sdk/ui-react": "0.3.0",
+    "@aevatar-react-sdk/utils": "0.3.0"
+  },
+  "changesets": [
+    "common-zebras-tie"
+  ]
+}

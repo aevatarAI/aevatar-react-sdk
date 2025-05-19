@@ -1,10 +1,8 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-
 import { cn } from "../../lib/utils";
 
 const Dialog = DialogPrimitive.Root;
-
 const DialogTrigger: React.ElementType = DialogPrimitive.Trigger;
 const DialogPortal: React.ElementType = DialogPrimitive.Portal;
 const DialogClose: React.ElementType = DialogPrimitive.Close;
@@ -22,7 +20,7 @@ const DialogOverlay = React.forwardRef<
   <DialogPrimitiveOverlay
     ref={ref}
     className={cn(
-      "absolute inset-0 z-5 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      "sdk:absolute sdk:inset-0 sdk:z-5 sdk:bg-black/80 data-[state=open]:sdk:animate-in data-[state=closed]:sdk:animate-out data-[state=closed]:sdk:fade-out-0 data-[state=open]:sdk:fade-in-0",
       className
     )}
     {...props}
@@ -39,14 +37,13 @@ const DialogContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+        "sdk:fixed sdk:left-[50%] sdk:top-[50%] sdk:z-50 sdk:grid sdk:w-full sdk:max-w-lg sdk:translate-x-[-50%] sdk:translate-y-[-50%] sdk:border sdk:bg-[#171717] sdk:p-6 sdk:shadow-lg sdk:duration-200 data-[state=open]:sdk:animate-in data-[state=closed]:sdk:animate-out data-[state=closed]:sdk:fade-out-0 data-[state=open]:sdk:fade-in-0 data-[state=closed]:sdk:zoom-out-95 data-[state=open]:sdk:zoom-in-95 data-[state=closed]:sdk:slide-out-to-left-1/2 data-[state=closed]:sdk:slide-out-to-top-[48%] data-[state=open]:sdk:slide-in-from-left-1/2 data-[state=open]:sdk:slide-in-from-top-[48%] sm:sdk:rounded-lg",
         className
       )}
-      {...props}
-    >
+      {...props}>
       {children}
-      <DialogPrimitiveClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-        <span className="sr-only">Close</span>
+      <DialogPrimitiveClose className="sdk:absolute sdk:right-4 sdk:top-4 sdk:rounded-sm sdk:opacity-70 sdk:ring-offset-background sdk:transition-opacity hover:sdk:opacity-100 focus:sdk:outline-none focus:sdk:ring-2 focus:sdk:ring-ring focus:sdk:ring-offset-2 disabled:sdk:pointer-events-none data-[state=open]:sdk:bg-accent data-[state=open]:sdk:text-muted-foreground">
+        <span className="sdk:sr-only">Close</span>
       </DialogPrimitiveClose>
     </DialogPrimitive.Content>
   </DialogPortal>
@@ -59,7 +56,7 @@ const DialogHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col space-y-1.5 text-center sm:text-left",
+      "sdk:flex sdk:flex-col sdk:space-y-1.5 sdk:text-center sm:sdk:text-left",
       className
     )}
     {...props}
@@ -73,7 +70,7 @@ const DialogFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      "sdk:flex sdk:flex-col-reverse sm:sdk:flex-row sm:sdk:justify-end sm:sdk:space-x-2",
       className
     )}
     {...props}
@@ -89,7 +86,7 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitiveTitle
     ref={ref}
     className={cn(
-      "text-lg font-semibold leading-none tracking-tight",
+      "sdk:text-lg sdk:font-semibold sdk:leading-none sdk:tracking-tight",
       className
     )}
     {...props}
@@ -104,7 +101,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitiveDescription
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("sdk:text-sm sdk:text-muted-foreground", className)}
     {...props}
   />
 ));

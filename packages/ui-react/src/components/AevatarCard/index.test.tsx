@@ -3,6 +3,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import AevatarCard from "./index";
+import React from "react";
+import '@testing-library/jest-dom';
 
 const mockAgentInfo: IAgentInfoDetail = {
   id: "123",
@@ -10,10 +12,10 @@ const mockAgentInfo: IAgentInfoDetail = {
     name: "Test Agent",
     status: "Active",
   },
-  grainId: "",
   agentGuid: "",
   agentType: "",
   name: "",
+  businessAgentGrainId: ""
 };
 
 const mockOnEditGaevatar = vi.fn();

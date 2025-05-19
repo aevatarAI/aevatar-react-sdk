@@ -1,26 +1,23 @@
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import AevatarCardInner from "./AevatarCardInner";
 import { Handle, Position } from "@xyflow/react";
+import type { TNodeDataClick } from "../Workflow/types";
 
-interface IProps {
+interface IAevatarItem4WorkflowProps {
   id: string;
-  data: any;
-  onClick?: (data: any) => void;
+  data: {
+    agentInfo?: IAgentInfoDetail;
+    deleteNode: (nodeId: string) => void;
+    onClick: TNodeDataClick;
+    isNew?: boolean;
+  };
 }
-const agentInfo: IAgentInfoDetail = {
-  id: "8c2baec4-3eca-4403-a113-b05942412770",
-  agentType: "AI Basic",
-  name: "Agent Name",
-  properties: {
-    modelProvider: "gpt",
-    bio: "this is a lively and adorable physicist",
-    topic: ["aelf.pdf", "Agent1.pdf", "aelf1.pdf", "Agent.pdf"],
-  },
-  grainId: "8c2baec4-3eca-4403-a113-b05942412770",
-  agentGuid: ""
-};
-export default function AevatarItem({ id: nodeId, data }: IProps) {
-  const { isNew, onClick, deleteNode } = data;
+
+export default function AevatarItem4Workflow({
+  id: nodeId,
+  data,
+}: IAevatarItem4WorkflowProps) {
+  const { isNew, onClick, deleteNode, agentInfo } = data;
   return (
     <>
       <Handle
@@ -28,12 +25,13 @@ export default function AevatarItem({ id: nodeId, data }: IProps) {
         position={Position.Left}
         style={{
           background: "#53FF8A",
+          border: "1px solid #B9B9B9",
           width: 10,
           height: 10,
         }}
       />
       <AevatarCardInner
-        {...agentInfo}
+        agentInfo={agentInfo}
         isNew={isNew}
         onClick={onClick}
         deleteNode={deleteNode}
@@ -45,6 +43,7 @@ export default function AevatarItem({ id: nodeId, data }: IProps) {
         id="b"
         style={{
           background: "#53FF8A",
+          border: "1px solid #B9B9B9",
           width: 10,
           height: 10,
         }}

@@ -1,9 +1,15 @@
+import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import { createContext, useContext, useState, type ReactNode } from "react";
 
-type NodeType = "default" | "new";
+export type NodeType = "default" | "new";
+
+export interface IDragItem {
+  nodeType: NodeType;
+  agentInfo?: Partial<IAgentInfoDetail>;
+}
 
 const DnDContext = createContext<
-  [NodeType | null, React.Dispatch<React.SetStateAction<NodeType | null>>]
+  [IDragItem | null, React.Dispatch<React.SetStateAction<IDragItem | null>>]
 >([null, () => {}]);
 
 interface DnDProviderProps {
@@ -11,7 +17,7 @@ interface DnDProviderProps {
 }
 
 export const DnDProvider: React.FC<DnDProviderProps> = ({ children }) => {
-  const [type, setType] = useState<NodeType | null>(null);
+  const [type, setType] = useState<IDragItem | null>(null);
 
   return (
     <DnDContext.Provider value={[type, setType]}>
@@ -24,8 +30,8 @@ export default DnDContext;
 
 // useDnD hook
 export const useDnD = (): [
-  NodeType | null,
-  React.Dispatch<React.SetStateAction<NodeType | null>>
+  IDragItem | null,
+  React.Dispatch<React.SetStateAction<IDragItem | null>>
 ] => {
   return useContext(DnDContext);
 };

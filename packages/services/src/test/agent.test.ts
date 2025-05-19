@@ -31,12 +31,13 @@ describe("AgentService", () => {
     const mockResponse: IAgentInfoDetail = {
       id: "1",
       name: "Agent1",
-      grainId: "2",
+      businessAgentGrainId: "2",
       agentGuid: "",
       agentType: "",
       properties: {
         a: 1,
       },
+      grainId: ""
     };
     mockRequest.send.mockResolvedValue(mockResponse);
 
@@ -53,7 +54,7 @@ describe("AgentService", () => {
     const mockResponse: IAgentInfoDetail = {
       id: "1",
       name: "Updated Agent",
-      grainId: "",
+      businessAgentGrainId: "",
       agentGuid: "",
       agentType: "",
       properties: { a: 1 },
@@ -186,7 +187,7 @@ describe("AgentService", () => {
         agentType: "Type A",
         name: "Type A",
         properties: { a: 1 },
-        grainId: "grainId",
+        businessAgentGrainId: "businessAgentGrainId",
       },
     ];
     const params: IGetAgentsParams = {
@@ -212,7 +213,7 @@ describe("AgentService", () => {
       agentType: "Type A",
       name: "Type A",
       properties: { a: 1 },
-      grainId: "grainId",
+      businessAgentGrainId: "businessAgentGrainId",
     };
     const createParams: ICreateAgentParams = {
       name: "New Agent",

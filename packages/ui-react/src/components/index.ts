@@ -1,4 +1,4 @@
-export { DnDFlow as Workflow } from "./Workflow";
+export { Workflow } from "./Workflow";
 export { default as MyGAevatar } from "./MyGAevatar";
 export { default as EditGAevatar } from "./EditGAevatar";
 export { default as CreateGAevatar } from "./EditGAevatar";

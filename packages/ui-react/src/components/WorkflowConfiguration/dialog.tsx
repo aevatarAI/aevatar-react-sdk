@@ -1,77 +1,47 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import avatar from "../../assets/svg/add.svg";
 import MsgLoadingIcon from "../../assets/svg/msg-loading.svg?react";
 import CloseIcon from "../../assets/svg/close.svg?react";
 import clsx from "clsx";
-import { Button, DialogClose, DialogTitle } from "../ui";
-interface IProps {
-  icon?: string;
-  isConfig?: boolean;
-}
-enum MsgType {
-  success = "success",
-  error = "error",
-  warning = "warning",
-  info = "info",
-  loading = "loading",
-}
-const msg = `ai agent workflow: crypto scam detection Input -&gt; collect user reports,
-      blockchain transactions, social media data. analysis -&gt; AI scans for
-      scam patterns, smart contract risks, sentiment trends. decision -&gt;
-      assigns a risk score; flags high-risk projects. action -&gt; logs findings
-      on-chain, alerts community updates. learning -&gt; adapts based on
-      community feedback,improving accuracy.`;
-const MsgComp = ({ data, type }: { data?: string; type?: MsgType }) => {
-  return (
-    <div
-      className={clsx(
-        "sdk:workflow-common-desc-bg sdk:p-3 sdk:rounded-tl-none sdk:rounded-tr-[18px] sdk:rounded-br-[18px] sdk:rounded-bl-[18px] sdk:flex",
-        !data && "sdk:w-fit",
-        type === MsgType.success && "sdk:workflow-common-success-text",
-        type === MsgType.warning && "sdk:workflow-common-warning-text"
-      )}
-    >
-      {data ? data : <MsgLoadingIcon></MsgLoadingIcon>}
-    </div>
-  );
-};
+import { DialogClose, DialogTitle } from "../ui";
+import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
+import WorkflowAevatarEdit, {
+  type IWorkflowAevatarEditProps,
+} from "../WorkflowAevatarEdit";
+import AevatarLogo from "../../assets/aevatar.png";
 
-export default function WorkflowDialog({ icon, isConfig }: IProps) {
+interface IProps {
+  isNew?: boolean;
+  agentItem?: Partial<IAgentInfoDetail>;
+  nodeId?: string;
+  onGaevatarChange?: IWorkflowAevatarEditProps["onGaevatarChange"];
+}
+
+export default function WorkflowDialog({
+  isNew,
+  agentItem,
+  nodeId,
+  onGaevatarChange,
+}: IProps) {
   return (
-    <DialogPrimitive.Content className="sdk:z-6 sdk:absolute sdk:right-[20px] sdk:left-[19px] sdk:top-[52px] sdk:sm:right-[11px] sdk:sm:left-auto sdk:sm:top-[12px] sdk:sm:bottom-[13px] sdk:workflow-common-bg sdk:w-auto sdk:sm:w-[232px] sdk:px-[26px] sdk:sm:px-[20px] sdk:pt-[20px] sdk:sm:pt-[40px] sdk:pb-[20px] sdk:workflow-common-border sdk:border sdk:flex">
+    <DialogPrimitive.Content className="sdk:z-6 sdk:absolute sdk:right-[20px] sdk:left-[19px] sdk:top-[52px] sdk:sm:right-[11px] sdk:sm:left-auto sdk:sm:top-[12px] sdk:sm:bottom-[13px] sdk:workflow-common-bg sdk:w-auto sdk:sm:w-[232px] sdk:px-[26px] sdk:sm:px-[19px] sdk:pt-[19px] sdk:sm:pt-[40px] sdk:pb-[19px] sdk:workflow-common-border sdk:border sdk:flex">
       <DialogClose>
         <CloseIcon
           className="sdk:absolute sdk:right-[15px] sdk:sm:right-[6px] sdk:top-[17px] sdk:sm:top-[6px] sdk:cursor-pointer"
           width={24}
           height={24}
-        ></CloseIcon>
+        />
       </DialogClose>
-      {isConfig ? (
-        <div className="sdk:overflow-auto sdk:h-full sdk:flex sdk:flex-col gap-[23px]">
-          <DialogTitle className="sdk:mb-[23px] sdk:text-[15px] sdk:font-bold">
-            <p>g-agent configuration</p>
-          </DialogTitle>
-          <div>1234</div>
-          <Button
-            variant="default"
-            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[192px]"
-          >
-            save
-          </Button>
-        </div>
-      ) : (
-        <div className="sdk:overflow-auto sdk:h-full">
-          <DialogTitle className="sdk:mb-[23px] sdk:text-[15px] sdk:font-bold">
-            <p>stimulate g-aevatar</p>
-          </DialogTitle>
-          <div className="sdk:flex sdk:gap-[10px] sdk:flex-col">
-            <img src={icon || avatar} width={32} height={32}></img>
-            <MsgComp data={msg}></MsgComp>
-            <MsgComp></MsgComp>
-            <MsgComp data={msg} type={MsgType.success}></MsgComp>
-          </div>
-        </div>
-      )}
+      <div className="sdk:overflow-auto sdk:h-full sdk:flex sdk:flex-col sdk:gap-[23px] sdk:w-full">
+        <DialogTitle className="sdk:pb-[23px] sdk:text-[15px] sdk:font-syne sdk:font-semibold sdk:border-b sdk:border-[#303030]">
+          <p>g-agent configuration</p>
+        </DialogTitle>
+        <WorkflowAevatarEdit
+          isNew={isNew}
+          agentItem={agentItem}
+          nodeId={nodeId}
+          onGaevatarChange={onGaevatarChange}
+        />
+      </div>
     </DialogPrimitive.Content>
   );
 }
