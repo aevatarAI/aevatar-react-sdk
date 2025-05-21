@@ -104,8 +104,10 @@ export const jsonSchemaParse = (
   jsonSchemaString?: string,
   properties?: Record<string, any>
 ): [string, any][] => {
-  const jsonSchema = JSON.parse(jsonSchemaString ?? "{}");
-  const definitions = jsonSchema.definitions || {};
+  const jsonSchema = JSON.parse(
+    (jsonSchemaString === "" ? "{}" : jsonSchemaString) ?? "{}"
+  );
+  const definitions = jsonSchema?.definitions || {};
   const _properties = jsonSchema?.properties;
   const requiredList = jsonSchema?.required;
 
