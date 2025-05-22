@@ -19,6 +19,13 @@ export function validateSchemaField(
     errors.push({ name: fieldName, error: "required" });
     return { errors, param };
   }
+
+  if (
+    !schema.required &&
+    !(value === undefined || value === null || value === "")
+  )
+    return { errors, param: value };
+
   // enum
   if (schema.enum) {
     if (!schema.enum.includes(value)) {
