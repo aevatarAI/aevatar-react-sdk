@@ -186,7 +186,7 @@ function EditGAevatarInnerCom({
             schema,
             values[name]
           );
-          console.log(errors, "errors===onSubmit");
+          console.log(errors, param, "errors===onSubmit");
           errorFields.push(...errors);
           if (param !== undefined) params[name] = param;
         });

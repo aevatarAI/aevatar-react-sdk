@@ -22,7 +22,7 @@ export function validateSchemaField(
 
   if (
     !schema.required &&
-    !(value === undefined || value === null || value === "")
+    (value === undefined || value === null || value === "")
   )
     return { errors, param: value };
 
