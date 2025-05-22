@@ -25,7 +25,6 @@ import ScanCardNode from "../AevatarItem4Workflow";
 import Background from "./background";
 import type {
   IAgentInfoDetail,
-  IAgentsConfiguration,
   IWorkUnitRelationsItem,
 } from "@aevatar-react-sdk/services";
 import type { Edge, INode } from "./types";

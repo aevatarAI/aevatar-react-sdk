@@ -16,6 +16,9 @@ import { aevatarEvents } from "@aevatar-react-sdk/utils";
 
 const INITIAL_STATE = {
   theme: "dark",
+  hiddenGAevatarType: [
+    "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
+  ],
 };
 const AevatarContext = createContext<any>(INITIAL_STATE);
 
@@ -38,8 +41,12 @@ function reducer(state: any, { type, payload }: any) {
 export interface ProviderProps {
   // theme?: Theme;
   children: React.ReactNode;
+  hiddenGAevatarType?: string[];
 }
-export default function Provider({ children }: ProviderProps) {
+export default function Provider({
+  children,
+  hiddenGAevatarType,
+}: ProviderProps) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   useEffectOnce(() => {
     if (aevatarAI.config.storageMethod) {
@@ -61,7 +68,10 @@ export default function Provider({ children }: ProviderProps) {
 
   return (
     <AevatarContext.Provider
-      value={useMemo(() => [{ ...state }, { dispatch }], [state])}>
+      value={useMemo(
+        () => [{ ...state, hiddenGAevatarType }, { dispatch }],
+        [state, hiddenGAevatarType]
+      )}>
       {children}
       <Toaster />
     </AevatarContext.Provider>

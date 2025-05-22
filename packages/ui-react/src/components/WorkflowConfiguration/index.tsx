@@ -33,6 +33,7 @@ export interface IWorkflowConfigurationProps {
   };
   editWorkflow?: {
     workflowGrainId: string;
+    workflowName: string;
     workUnitRelations: IWorkUnitRelationsItem[];
   };
 
@@ -187,7 +188,7 @@ const WorkflowConfiguration = ({
               )}
               workflow configuration
             </div>
-            <div className="sdk:flex sdk:gap-2 ">
+            <div className="sdk:flex sdk:gap-[24px] ">
               {/* <Dialog>
                 <DialogTrigger asChild>
                   <Button
@@ -205,6 +206,15 @@ const WorkflowConfiguration = ({
                   />
                 </DialogPortal>
               </Dialog> */}
+              <div className="size- inline-flex justify-start items-center gap-2">
+                <div className="justify-center text-Grey-1 text-xs font-normal font-pro lowercase">
+                  {editWorkflow?.workflowName ?? "untitled_workflow"}
+                </div>
+                <div className="size-5 relative overflow-hidden">
+                  <div className="w-3.5 h-4 left-[2.50px] top-[2.50px] absolute bg-zinc-600" />
+                </div>
+              </div>
+
               <Button
                 variant="default"
                 onClick={onSave}
