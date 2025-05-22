@@ -24,6 +24,7 @@ import { useToast } from "../../hooks/use-toast";
 import type { INode } from "../Workflow/types";
 import clsx from "clsx";
 import { useUpdateEffect } from "react-use";
+import EditWorkflowNameDialog from "../EditWorkflowNameDialog";
 
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
@@ -77,11 +78,20 @@ const WorkflowConfiguration = ({
   const [btnLoading, setBtnLoading] = useState<boolean>();
 
   const isWorkflowChanged = useRef<boolean>();
+  const [workflowName, setWorkflowName] = useState<string>(
+    editWorkflow?.workflowName ?? "untitled_workflow"
+  );
+
+  useUpdateEffect(() => {
+    setWorkflowName(editWorkflow?.workflowName ?? "untitled_workflow");
+  }, [editWorkflow]);
 
   const onSave = useCallback(async () => {
     const workUnitRelations = workflowRef.current.getWorkUnitRelations();
     try {
       setBtnLoading(true);
+      console.log(workflowName, "workflowName===");
+      // workflowName
       if (!workUnitRelations.length) throw "Please finish workflow";
       let workflowGrainId = editWorkflow?.workflowGrainId;
       if (editWorkflow?.workflowGrainId) {
@@ -107,7 +117,7 @@ const WorkflowConfiguration = ({
     }
     setBtnLoading(false);
     // setSaveFailed(SaveFailedError.maxAgents);
-  }, [editWorkflow, toast, onSaveHandler]);
+  }, [editWorkflow, toast, onSaveHandler, workflowName]);
 
   const onConfirmSaveHandler = useCallback(
     (saved?: boolean) => {
@@ -206,15 +216,11 @@ const WorkflowConfiguration = ({
                   />
                 </DialogPortal>
               </Dialog> */}
-              <div className="size- inline-flex justify-start items-center gap-2">
-                <div className="justify-center text-Grey-1 text-xs font-normal font-pro lowercase">
-                  {editWorkflow?.workflowName ?? "untitled_workflow"}
-                </div>
-                <div className="size-5 relative overflow-hidden">
-                  <div className="w-3.5 h-4 left-[2.50px] top-[2.50px] absolute bg-zinc-600" />
-                </div>
-              </div>
 
+              <EditWorkflowNameDialog
+                defaultName={workflowName}
+                onSave={setWorkflowName}
+              />
               <Button
                 variant="default"
                 onClick={onSave}
