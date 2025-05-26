@@ -6,9 +6,10 @@ import {
   AevatarProvider,
   Button,
   WorkflowConfiguration,
+  ConfigProvider,
 } from "@aevatar-react-sdk/ui-react";
 // import "@aevatar-react-sdk/ui-react/ui-react.css";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { clientOnly } from "vike-react/clientOnly";
 import { sleep } from "@aevatar-react-sdk/utils";
@@ -30,6 +31,13 @@ const AuthButton = clientOnly(() => import("../../components/auth/AuthButton"));
 //     baseURL: "https://station-developer-staging.aevatar.ai/test-client",
 //   },
 // });
+
+ConfigProvider.setConfig({
+  requestDefaults: {
+    timeout: 15000,
+    // baseURL: "https://station-developer-staging.aevatar.ai/developer-client",
+  },
+});
 
 enum Stage {
   myGAevatar = "MyGAevatar",
@@ -79,45 +87,56 @@ export default function UI() {
   }, []);
 
   const getGaevatarList = useCallback(async () => {
-    const result = await aevatarAI.services.agent.getAgents({
+    return aevatarAI.services.agent.getAgents({
       pageIndex: 0,
       pageSize: 100,
     });
-    // const list = await Promise.all(
-    //   result.map(async (item) => {
-    //     const result = await aevatarAI.services.agent.getAgentInfo(item.id);
-    //     return { ...result, businessAgentGrainId: item.businessAgentGrainId };
-    //   })
-    // );
-    // console.log(list, "list===");
-    setGaevatarList(result);
   }, []);
 
   const [agentTypeList, setAgentTypeList] = useState<IAgentsConfiguration[]>();
 
-  const getAllAgentsConfiguration = useCallback(async () => {
-    const result = await aevatarAI.services.agent.getAllAgentsConfiguration();
-    setAgentTypeList(result);
-  }, []);
-
   const onShowWorkflow = useCallback(async () => {
-    await Promise.all([getGaevatarList(), getAllAgentsConfiguration()]);
+    const [gaevatarList, agentTypeList] = await Promise.all([
+      aevatarAI.services.agent.getAgents({
+        pageIndex: 0,
+        pageSize: 100,
+      }),
+      aevatarAI.services.agent.getAllAgentsConfiguration(),
+    ]);
+
+    setAgentTypeList(agentTypeList);
+    const list = gaevatarList.map((item) => {
+      const agentType = agentTypeList.find(
+        (type) => type.agentType === item.agentType
+      );
+      item.propertyJsonSchema = agentType?.propertyJsonSchema;
+      // TODO
+      item.businessAgentGrainId =
+        item.businessAgentGrainId ??
+        `${item.agentType}/${item.id.replace(/-/g, "")}`;
+      return { ...item };
+    });
+    setGaevatarList(list);
 
     setStage(Stage.Workflow);
-  }, [getGaevatarList, getAllAgentsConfiguration]);
+  }, []);
 
   const [editWorkflow, setEditWorkflow] = useState<any>();
 
   const onEditWorkflow = useCallback(async () => {
-    const workflowId = localStorage.getItem("workflowId");
-    if (!workflowId) return;
-    const result = await aevatarAI.services.workflow.getWorkflow(workflowId);
+    const workflowAgentId = localStorage.getItem("workflowAgentId");
+    if (!workflowAgentId) return;
+    const result = await aevatarAI.getWorkflowUnitRelationByAgentId(
+      workflowAgentId
+    );
     setEditWorkflow({
-      workflowGrainId: workflowId,
-      workUnitRelations: result,
+      workflowAgentId,
+      workflowName: result.workflowName,
+      // workUnitRelations: workUnitRelations,
+      workUnitRelations: result.workUnitRelations,
     });
     onShowWorkflow();
-    console.log(workflowId, result, "workflowId=");
+    console.log(workflowAgentId, result, "onEditWorkflow=");
   }, [onShowWorkflow]);
 
   const [showAction, setShowAction] = useState<boolean>();
@@ -155,7 +174,11 @@ export default function UI() {
 
   return (
     <div>
-      <AevatarProvider>
+      <AevatarProvider
+        hiddenGAevatarType={[
+          // "Aevatar.SignalR.GAgents.SignalRGAgent",
+          "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
+        ]}>
         <LoginButton />
 
         <AuthButton onFinish={onAuthFinish} />
@@ -213,9 +236,10 @@ export default function UI() {
               onBack={() => {
                 setStage(undefined);
               }}
-              onSave={(workflowId: string) => {
-                console.log(workflowId, "workflowId==");
-                workflowId && localStorage.setItem("workflowId", workflowId);
+              onSave={(workflowAgentId: string) => {
+                console.log(workflowAgentId, "workflowAgentId==");
+                workflowAgentId &&
+                  localStorage.setItem("workflowAgentId", workflowAgentId);
               }}
               editWorkflow={editWorkflow}
               onGaevatarChange={onGaevatarChange}

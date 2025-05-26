@@ -72,6 +72,44 @@ export function parseJsonSchema(
       ),
     };
   }
+  // Handle object with additionalProperties only
+  if (schema.type === "object" && !schema.properties) {
+    if (schema.additionalProperties === false) {
+      return {
+        ...schema,
+        value,
+        children: [],
+      };
+    }
+    if (schema.additionalProperties === true) {
+      return {
+        ...schema,
+        value,
+        children: [
+          {
+            isAdditionalProperties: true,
+            valueSchema: { type: 'any' },
+          },
+        ],
+      };
+    }
+    if (typeof schema.additionalProperties === 'object') {
+      return {
+        ...schema,
+        value,
+        children: [
+          {
+            isAdditionalProperties: true,
+            valueSchema: parseJsonSchema(
+              schema.additionalProperties,
+              rootSchema,
+              definitions
+            ),
+          },
+        ],
+      };
+    }
+  }
   // Handle array
   if (schema.type === "array" && schema.items) {
     return {

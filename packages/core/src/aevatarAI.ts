@@ -5,6 +5,7 @@ import type {
   ICreateAgentParams,
   RefreshTokenConfig,
   IClientAuthTokenParams,
+  IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 import { Connect, Services } from "@aevatar-react-sdk/services";
 import type { IConfig } from "@aevatar-react-sdk/types";
@@ -102,6 +103,38 @@ export class AevatarAI implements IAevatarAI, IAevatarAIMethods {
       Authorization: `${token_type} ${access_token}`,
     });
     return `${token_type} ${access_token}`;
+  }
+
+  async getWorkflowUnitRelationByAgentId(agentId: string) {
+    const [result, workUnitRelationsByES] = await Promise.all([
+      this.services.agent.getAgentInfo(agentId),
+      this.services.workflow.getWorkflow({
+        stateName: "WorkflowCoordinatorState",
+        queryString: `_id:${agentId}`,
+      }),
+    ]);
+    const workUnitRelations: IWorkflowUnitListItem[] = workUnitRelationsByES
+      .items?.[0]?.currentWorkUnitInfos
+      ? JSON.parse(
+          workUnitRelationsByES.items?.[0]?.currentWorkUnitInfos ?? "[]"
+        )
+      : result.properties.WorkflowUnitList;
+    function capitalizeKeys(obj: Record<string, any>) {
+      return Object.fromEntries(
+        Object.entries(obj).map(([k, v]) => [
+          k.charAt(0).toUpperCase() + k.slice(1),
+          v,
+        ])
+      );
+    }
+    const capitalizedWorkUnitRelations = Array.isArray(workUnitRelations)
+      ? workUnitRelations.map(capitalizeKeys)
+      : [];
+    return {
+      workflowName: result.name,
+      workUnitRelations:
+        capitalizedWorkUnitRelations as IWorkflowUnitListItem[],
+    };
   }
 
   setConfig(options: IConfig) {

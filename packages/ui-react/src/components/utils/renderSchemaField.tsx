@@ -104,9 +104,20 @@ export const renderSchemaField = ({
               onChange={handleChange}
               label={name}
               renderItem={(item, idx, onItemChange, onDelete) => {
-                const renderSchemaFieldOnchange = (value: any) => {
+                const renderSchemaFieldOnchange = (
+                  value: any,
+                  meta: { name: string; schema: any }
+                ) => {
                   const newValue = [...field.value];
-                  newValue[idx] = value;
+                  let newValueItem = newValue[idx];
+                  if (typeof newValueItem === "object") {
+                    const key = meta.name.split(".").pop();
+                    newValueItem = { ...newValueItem, [key]: value };
+                  } else {
+                    newValueItem = value;
+                  }
+                  newValue[idx] = newValueItem;
+
                   handleChange(newValue);
                 };
                 return renderSchemaField({
@@ -120,6 +131,97 @@ export const renderSchemaField = ({
                 });
               }}
             />
+          );
+        }}
+      />
+    );
+  }
+  // object type with additionalProperties (dynamic key-value)
+  if (
+    schema.type === "object" &&
+    Array.isArray(schema.children) &&
+    schema.children[0]?.isAdditionalProperties
+  ) {
+    // valueSchema: schema.children[0].valueSchema
+    return (
+      <FormField
+        key={fieldName}
+        control={form.control}
+        name={fieldName}
+        defaultValue={schema.value || {}}
+        render={({ field }) => {
+          // field.value: { [key: string]: any }
+          const value = field.value || {};
+          const handleKeyChange = (oldKey: string, newKey: string) => {
+            if (!newKey || oldKey === newKey) return;
+            const newValue = { ...value };
+            newValue[newKey] = newValue[oldKey];
+            delete newValue[oldKey];
+            field.onChange(newValue);
+            onChange?.(newValue, { name: fieldName, schema });
+          };
+          const handleValueChange = (key: string, val: any) => {
+            const newValue = { ...value, [key]: val };
+            field.onChange(newValue);
+            onChange?.(newValue, { name: fieldName, schema });
+          };
+          const handleDelete = (key: string) => {
+            const newValue = { ...value };
+            delete newValue[key];
+            field.onChange(newValue);
+            onChange?.(newValue, { name: fieldName, schema });
+          };
+          const handleAdd = () => {
+            let idx = 1;
+            let newKey = `key${Object.keys(value).length + 1}`;
+            while (value[newKey]) {
+              idx++;
+              newKey = `key${Object.keys(value).length + idx}`;
+            }
+            const newValue = { ...value, [newKey]: undefined };
+            field.onChange(newValue);
+            onChange?.(newValue, { name: fieldName, schema });
+          };
+          const valueSchema = schema.children[0].valueSchema;
+          return (
+            <div className="sdk:w-full sdk:mb-2">
+              <FormLabel>{label ?? name}</FormLabel>
+              <div className="sdk:pl-4">
+                {Object.entries(value).map(([k, v], idx) => (
+                  <div key={k} className="sdk:flex sdk:items-center sdk:mb-2">
+                    <Input
+                      value={k}
+                      onChange={(e) => handleKeyChange(k, e.target.value)}
+                      className="sdk:mr-2 sdk:w-32"
+                      placeholder="Key"
+                    />
+                    <div className="sdk:mr-2 sdk:flex-1">
+                      {renderSchemaField({
+                        form,
+                        name: k,
+                        schema: valueSchema,
+                        parentName: fieldName,
+                        label: undefined,
+                        selectContentCls,
+                        onChange: (val) => handleValueChange(k, val),
+                      })}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(k)}
+                      className="sdk:text-red-500 sdk:ml-2">
+                      delete
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={handleAdd}
+                  className="sdk:mt-2 sdk:text-blue-500">
+                  + add
+                </button>
+              </div>
+            </div>
           );
         }}
       />

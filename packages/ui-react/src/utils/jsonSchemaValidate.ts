@@ -34,9 +34,7 @@ export function validateSchemaField(
       } else {
         errors.push({
           name: fieldName,
-          error: `Must be one of: ${(schema["x-enumNames"] ?? schema.enum).join(
-            ", "
-          )}`,
+          error: `Must be one of: ${(schema["x-enumNames"] ?? schema.enum).join(", ")}`,
         });
       }
     }
@@ -65,6 +63,22 @@ export function validateSchemaField(
   }
   // object
   if (schema.type === "object" && schema.children) {
+    // additionalProperties structure
+    if (schema.children[0]?.isAdditionalProperties) {
+      param = {};
+      for (const key in value) {
+        const { errors: childErrors, param: childParam } = validateSchemaField(
+          key,
+          schema.children[0].valueSchema,
+          value[key],
+          fieldName
+        );
+        errors.push(...childErrors);
+        if (childParam !== undefined) param[key] = childParam;
+      }
+      return { errors, param };
+    }
+    // properties structure (default)
     param = {};
     schema.children.forEach(([childName, childSchema]: [string, any]) => {
       const { errors: childErrors, param: childParam } = validateSchemaField(

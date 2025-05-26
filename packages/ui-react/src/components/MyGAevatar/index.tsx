@@ -8,6 +8,7 @@ import { Button } from "../ui";
 import AddIcon from "../../assets/svg/add.svg?react";
 import "./index.css";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { sleep } from "@aevatar-react-sdk/utils";
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import CommonHeader from "../CommonHeader";
 import { aevatarAI } from "../../utils";
@@ -57,8 +58,6 @@ export default function MyGAevatar({
       });
     }
   }, [toast]);
-
-  console.log(agentConfiguration, "agentConfiguration");
 
   const fetchAllList = useCallback(async () => {
     let pageIndex = 0;

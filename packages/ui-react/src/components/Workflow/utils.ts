@@ -1,13 +1,13 @@
 import type {
   IAgentInfoDetail,
-  IWorkUnitRelationsItem,
+  IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 import type { Edge, INode, TDeleteNode, TNodeDataClick } from "./types";
 let id = 0;
 const getId = () => `edge_id_${id++}`;
 
 export const generateWorkflowGraph = (
-  grains: IWorkUnitRelationsItem[],
+  grains: IWorkflowUnitListItem[],
   agentInfos: IAgentInfoDetail[],
   onClick: TNodeDataClick,
   deleteNode: TDeleteNode
@@ -21,17 +21,17 @@ export const generateWorkflowGraph = (
   }
 
   for (const grain of grains) {
-    const agentInfo = agentInfoMap[grain.grainId];
+    const agentInfo = agentInfoMap[grain.GrainId];
     if (!agentInfo) {
-      throw new Error(`No agentInfo found for grainId ${grain.grainId}`);
+      throw new Error(`No agentInfo found for grainId ${grain.GrainId}`);
     }
 
     nodes.push({
       id: agentInfo.id,
       type: "ScanCard",
       position: {
-        x: grain.xPosition,
-        y: grain.yPosition,
+        x: Number(grain.ExtendedData.xPosition),
+        y: Number(grain.ExtendedData.yPosition),
       },
       data: {
         label: "ScanCard Node",
@@ -46,11 +46,11 @@ export const generateWorkflowGraph = (
       },
     });
 
-    if (grain.nextGrainId) {
-      const targetAgentInfo = agentInfoMap[grain.nextGrainId];
+    if (grain.NextGrainId) {
+      const targetAgentInfo = agentInfoMap[grain.NextGrainId];
       if (!targetAgentInfo) {
         throw new Error(
-          `No agentInfo found for nextGrainId ${grain.nextGrainId}`
+          `No agentInfo found for nextGrainId ${grain.NextGrainId}`
         );
       }
 

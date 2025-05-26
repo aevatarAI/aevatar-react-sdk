@@ -13,7 +13,7 @@ import WorkflowUnsaveModal from "../WorkflowUnsaveModal";
 import type {
   IAgentInfoDetail,
   IAgentsConfiguration,
-  IWorkUnitRelationsItem,
+  IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 import type { IWorkflowAevatarEditProps } from "../WorkflowAevatarEdit";
 import { sleep } from "@aevatar-react-sdk/utils";
@@ -25,6 +25,7 @@ import type { INode } from "../Workflow/types";
 import clsx from "clsx";
 import { useUpdateEffect } from "react-use";
 import EditWorkflowNameDialog from "../EditWorkflowNameDialog";
+import { useAevatar } from "../context/AevatarProvider";
 
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
@@ -33,13 +34,13 @@ export interface IWorkflowConfigurationProps {
     isNewGAevatar?: boolean;
   };
   editWorkflow?: {
-    workflowGrainId: string;
+    workflowAgentId: string;
     workflowName: string;
-    workUnitRelations: IWorkUnitRelationsItem[];
+    workUnitRelations: IWorkflowUnitListItem[];
   };
 
   onBack?: () => void;
-  onSave?: (workflowGrainId: string) => void;
+  onSave?: (workflowAgentId: string) => void;
   onGaevatarChange: IWorkflowAevatarEditProps["onGaevatarChange"];
 }
 
@@ -58,6 +59,7 @@ const WorkflowConfiguration = ({
     isNew?: boolean;
     nodeId: string;
   }>();
+  const [{ hiddenGAevatarType }] = useAevatar();
 
   const [unsavedModal, setUnsavedModal] = useState(false);
 
@@ -93,20 +95,26 @@ const WorkflowConfiguration = ({
       console.log(workflowName, "workflowName===");
       // workflowName
       if (!workUnitRelations.length) throw "Please finish workflow";
-      let workflowGrainId = editWorkflow?.workflowGrainId;
-      if (editWorkflow?.workflowGrainId) {
-        await aevatarAI.services.workflow.edit({
-          workflowGrainId: editWorkflow?.workflowGrainId ?? "",
-          workUnitRelations,
+      let workflowAgentId = editWorkflow?.workflowAgentId;
+      if (editWorkflow?.workflowAgentId) {
+        await aevatarAI.services.workflow.edit(editWorkflow?.workflowAgentId, {
+          name: workflowName,
+
+          properties: {
+            WorkflowUnitList: workUnitRelations,
+          },
         });
       } else {
         const result = await aevatarAI.services.workflow.create({
-          workUnitRelations,
+          name: workflowName,
+          properties: {
+            WorkflowUnitList: workUnitRelations,
+          },
         });
-        workflowGrainId = result.workflowGrainId;
+        workflowAgentId = result.id;
       }
 
-      onSaveHandler?.(workflowGrainId);
+      onSaveHandler?.(workflowAgentId);
     } catch (error) {
       console.log("error===");
       toast({
@@ -247,6 +255,7 @@ const WorkflowConfiguration = ({
             {/* Sidebar */}
             <Sidebar
               disabledGeavatarIds={disabledAgent}
+              hiddenGAevatarType={hiddenGAevatarType}
               gaevatarList={sidebarConfig.gaevatarList}
               isNewGAevatar={sidebarConfig.isNewGAevatar}
               gaevatarTypeList={sidebarConfig?.gaevatarTypeList}
