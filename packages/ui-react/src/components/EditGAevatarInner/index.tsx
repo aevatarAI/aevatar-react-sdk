@@ -30,6 +30,8 @@ import ErrorBoundary from "../AevatarErrorBoundary";
 import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import { validateSchemaField } from "../../utils/jsonSchemaValidate";
 import { renderSchemaField } from "../utils/renderSchemaField";
+import { AgentError } from "../../constants/error/agentError";
+import DeleteGAevatarConfirm from "../DeleteGAevatarConfirm";
 
 export type TEditGaevatarSuccessType = "create" | "edit" | "delete";
 
@@ -70,25 +72,56 @@ function EditGAevatarInnerCom({
 
   const { toast } = useToast();
 
-  const onDelete = useCallback(async () => {
-    if (btnLoadingRef.current) return;
+  const onDelete = useCallback(
+    async (isConfirm = false) => {
+      if (!isConfirm && btnLoadingRef.current) return;
 
-    setBtnLoading("deleting");
+      setBtnLoading("deleting");
+      try {
+        await aevatarAI.services.agent.deleteAgent(agentId);
+        // TODO There will be some delay in cqrs
+        await sleep(2000);
+        onSuccess?.("delete");
+      } catch (error) {
+        console.error("deleteAgent:", error);
+        const errorMessage = handleErrorMessage(error, "Something went wrong.");
+        if (errorMessage.includes(AgentError.AgentHasSubagents)) {
+          setDeleteOpen(true);
+          return;
+        }
+
+        toast({
+          title: "error",
+          description: handleErrorMessage(error, "Something went wrong."),
+          duration: 3000,
+        });
+      }
+      setBtnLoading(undefined);
+    },
+    [onSuccess, toast, agentId]
+  );
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  const onDeleteConfirm = useCallback(async () => {
+    setDeleteOpen(false);
+
     try {
-      await aevatarAI.services.agent.deleteAgent(agentId);
-      // TODO There will be some delay in cqrs
-      await sleep(2000);
-      onSuccess?.("delete");
+      const result = await aevatarAI.services.agent.removeAllSubAgent(agentId);
+
+      await onDelete(true);
+
+      console.log(result, "result==removeAllSubAgent");
     } catch (error) {
-      console.error("deleteAgent:", error);
+      console.error("removeAllSubAgent:", error);
       toast({
         title: "error",
         description: handleErrorMessage(error, "Something went wrong."),
         duration: 3000,
       });
     }
-    setBtnLoading(undefined);
-  }, [onSuccess, toast, agentId]);
+    console.log("onDeleteConfirm");
+  }, [onDelete, toast, agentId]);
 
   const rightEle = useMemo(() => {
     let text = "create";
@@ -120,7 +153,7 @@ function EditGAevatarInnerCom({
             "sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]",
             type === "create" && "sdk:hidden"
           )}
-          onClick={onDelete}>
+          onClick={() => onDelete(false)}>
           {btnLoading === "deleting" && (
             <Loading
               key={"delete"}
@@ -244,91 +277,102 @@ function EditGAevatarInnerCom({
   );
 
   return (
-    <Form {...form}>
-      <form
-        className="sdk:h-full sdk:flex sdk:flex-col"
-        onSubmit={form.handleSubmit(onSubmit)}>
-        <CommonHeader leftEle={leftEle} rightEle={rightEle} />
-        <div
-          className={clsx(
-            "sdk:flex-1 sdk:w-full sdk:m-auto sdk:bg-[#141415] sdk:pt-[22px] sdk:pb-[14px]",
-            "sdk:md:pt-[0] sdk:md:px-[40px]"
-          )}>
-          <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-white sdk:self-stretch">
-            <div className="sdk:text-black sdk:font-syne sdk:text-sm sdk:font-semibold sdk:leading-normal sdk:lowercase">
-              settings
+    <>
+      <Form {...form}>
+        <form
+          className="sdk:h-full sdk:flex sdk:flex-col"
+          onSubmit={form.handleSubmit(onSubmit)}>
+          <CommonHeader leftEle={leftEle} rightEle={rightEle} />
+          <div
+            className={clsx(
+              "sdk:flex-1 sdk:w-full sdk:m-auto sdk:bg-[#141415] sdk:pt-[22px] sdk:pb-[14px]",
+              "sdk:md:pt-[0] sdk:md:px-[40px]"
+            )}>
+            <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-white sdk:self-stretch">
+              <div className="sdk:text-black sdk:font-syne sdk:text-sm sdk:font-semibold sdk:leading-normal sdk:lowercase">
+                settings
+              </div>
+              <div className="sdk:text-[#606060] sdk:font-mono sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:lowercase">
+                Manage your aevatar settings and preferences
+              </div>
             </div>
-            <div className="sdk:text-[#606060] sdk:font-mono sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:lowercase">
-              Manage your aevatar settings and preferences
-            </div>
-          </div>
-          <div className="sdk:md:w-[360px] sdk:m-auto sdk:flex sdk:flex-col sdk:gap-y-[22px] sdk:p-[16px_16px_6px_16px] sdk:items-start sdk:content-start sdk:self-stretch">
-            <FormField
-              control={form.control}
-              name="agentType"
-              disabled={agentTypeList.length === 0 || type === "edit"}
-              render={({ field }) => (
-                <FormItem aria-labelledby="agentTypeLabel">
-                  <FormLabel id="agentTypeLabel">
-                    *Atomic-aevatars Type
-                  </FormLabel>
-                  <Select
-                    value={field?.value}
-                    disabled={field?.disabled}
-                    onValueChange={(values) => {
-                      onAgentTypeChange(values, field);
-                      form.clearErrors();
-                    }}>
-                    <FormControl>
-                      <SelectTrigger aria-disabled={field?.disabled}>
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {agentTypeList.map((agentType) => (
-                        <SelectItem key={agentType} value={agentType}>
-                          {agentType}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              key={"agentName"}
-              control={form.control}
-              defaultValue={agentName}
-              name={"agentName"}
-              render={({ field }) => (
-                <FormItem aria-labelledby="agentNameLabel">
-                  <FormLabel id="agentNameLabel">
-                    *atomic-aevatar name
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="atomic-aevatar name"
-                      {...field}
+            <div className="sdk:md:w-[360px] sdk:m-auto sdk:flex sdk:flex-col sdk:gap-y-[22px] sdk:p-[16px_16px_6px_16px] sdk:items-start sdk:content-start sdk:self-stretch">
+              <FormField
+                control={form.control}
+                name="agentType"
+                disabled={agentTypeList.length === 0 || type === "edit"}
+                render={({ field }) => (
+                  <FormItem aria-labelledby="agentTypeLabel">
+                    <FormLabel id="agentTypeLabel">
+                      *Atomic-aevatars Type
+                    </FormLabel>
+                    <Select
                       value={field?.value}
-                      onChange={field?.onChange}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                      disabled={field?.disabled}
+                      onValueChange={(values) => {
+                        onAgentTypeChange(values, field);
+                        form.clearErrors();
+                      }}>
+                      <FormControl>
+                        <SelectTrigger aria-disabled={field?.disabled}>
+                          <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {agentTypeList.map((agentType) => (
+                          <SelectItem key={agentType} value={agentType}>
+                            {agentType}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                key={"agentName"}
+                control={form.control}
+                defaultValue={agentName}
+                name={"agentName"}
+                render={({ field }) => (
+                  <FormItem aria-labelledby="agentNameLabel">
+                    <FormLabel id="agentNameLabel">
+                      *atomic-aevatar name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="atomic-aevatar name"
+                        {...field}
+                        value={field?.value}
+                        onChange={field?.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {JSONSchemaProperties?.map(([name, schema]) =>
+                renderSchemaField({
+                  form,
+                  name,
+                  schema,
+                })
               )}
-            />
-            {JSONSchemaProperties?.map(([name, schema]) =>
-              renderSchemaField({
-                form,
-                name,
-                schema,
-              })
-            )}
+            </div>
           </div>
-        </div>
-      </form>
-    </Form>
+        </form>
+      </Form>
+      <DeleteGAevatarConfirm
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        handleConfirm={onDeleteConfirm}
+        handleCancel={() => {
+          setBtnLoading(undefined);
+          setDeleteOpen(false);
+        }}
+      />
+    </>
   );
 }
 
