@@ -29,12 +29,14 @@ export function validateSchemaField(
   // enum
   if (schema.enum) {
     if (!schema.enum.includes(value)) {
-      if (schema["x-enumNames"].includes(value)) {
+      if (schema["x-enumNames"]?.includes?.(value)) {
         value = schema.enum[schema["x-enumNames"].indexOf(value)];
       } else {
         errors.push({
           name: fieldName,
-          error: `Must be one of: ${(schema["x-enumNames"] ?? schema.enum).join(", ")}`,
+          error: `Must be one of: ${(schema["x-enumNames"] ?? schema.enum).join(
+            ", "
+          )}`,
         });
       }
     }
@@ -107,7 +109,7 @@ export function validateSchemaField(
       errors.push({ name: fieldName, error: "File required" });
     }
     param = value;
-    return { errors, param };
+    return { errors: errors ?? [], param };
   }
   // number/integer
   if (schema.type === "number" || schema.type === "integer") {

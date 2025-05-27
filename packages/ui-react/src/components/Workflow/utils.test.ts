@@ -30,14 +30,14 @@ describe("generateWorkflowGraph", () => {
 
   const mockGrains: IWorkflowUnitListItem[] = [
     {
-      grainId: "grain1",
-      nextGrainId: "grain2",
-      position: { x: 100, y: 200 },
+      GrainId: "grain1",
+      NextGrainId: "grain2",
+      ExtendedData: { xPosition: "100", yPosition: "200" },
     },
     {
-      grainId: "grain2",
-      nextGrainId: "",
-      position: { x: 300, y: 400 },
+      GrainId: "grain2",
+      NextGrainId: "",
+      ExtendedData: { xPosition: "300", yPosition: "400" },
     },
   ];
 
@@ -97,9 +97,9 @@ describe("generateWorkflowGraph", () => {
   it("should throw an error if a grainId does not have a corresponding agent", () => {
     const invalidGrains: IWorkflowUnitListItem[] = [
       {
-        grainId: "grain3", // No corresponding agentInfo
-        nextGrainId: "",
-        position: { x: 100, y: 200 },
+        GrainId: "grain3", // No corresponding agentInfo
+        NextGrainId: "",
+        ExtendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 
@@ -111,9 +111,9 @@ describe("generateWorkflowGraph", () => {
   it("should throw an error if a nextGrainId does not have a corresponding agent", () => {
     const invalidGrains: IWorkflowUnitListItem[] = [
       {
-        grainId: "grain1",
-        nextGrainId: "grain3", // No corresponding agentInfo
-        position: { x: 100, y: 200 },
+        GrainId: "grain1",
+        NextGrainId: "grain3", // No corresponding agentInfo
+        ExtendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 
@@ -125,9 +125,9 @@ describe("generateWorkflowGraph", () => {
   it("should generate nodes without edges if nextGrainId is null", () => {
     const singleGrain: IWorkflowUnitListItem[] = [
       {
-        grainId: "grain1",
-        nextGrainId: "", // No edge case
-        position: { x: 100, y: 200 },
+        GrainId: "grain1",
+        NextGrainId: "", // No edge case
+        ExtendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 

@@ -3,10 +3,6 @@ import MsgLoadingIcon from "../../assets/svg/msg-loading.svg?react";
 import CloseIcon from "../../assets/svg/close.svg?react";
 import clsx from "clsx";
 import { DialogClose, DialogTitle } from "../ui";
-import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
-import WorkflowAevatarEdit, {
-  type IWorkflowAevatarEditProps,
-} from "../WorkflowAevatarEdit";
 import AevatarLogo from "../../assets/aevatar.png";
 
 interface IProps {

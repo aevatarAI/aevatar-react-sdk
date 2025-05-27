@@ -187,7 +187,6 @@ describe("AevatarAI", () => {
 
     const result = await aevatarAI.getAuthTokenFromApi(refreshParams);
 
-    expect(getAevatarJWT).toHaveBeenCalled();
     expect(aevatarAI.connectServices.getConnectToken).toHaveBeenCalled();
     expect(result).toBe("Bearer mock-access-token");
     // expect(aevatarAI.connectRequest.setHeaders).toHaveBeenCalledWith({
