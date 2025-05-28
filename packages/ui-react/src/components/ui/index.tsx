@@ -6,3 +6,4 @@ export * from "./select";
 export * from "./dislog";
 export * from "./toast";
 export * from "./toaster";
+export * from "./checkbox";

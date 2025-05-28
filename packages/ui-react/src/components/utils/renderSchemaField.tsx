@@ -12,6 +12,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { Button } from "../ui";
 import AddIcon from "../../assets/svg/add.svg?react";
 import DeleteIcon from "../../assets/svg/delete_agent.svg?react";
+import { Checkbox } from "../ui";
 
 export const renderSchemaField = ({
   form,
@@ -409,8 +410,33 @@ export const renderSchemaField = ({
     );
   }
   if (schema.type === "boolean") {
-    // TODO: Implement boolean control
-    return <></>;
+    // Render boolean as custom Checkbox
+    return (
+      <FormField
+        key={fieldName}
+        control={form.control}
+        defaultValue={schema.value}
+        name={fieldName}
+        render={({ field }) => {
+          // Wrap onChange to call both field.onChange and external onChange
+          const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            field.onChange(e.target.checked);
+            onChange?.(e.target.checked, { name: fieldName, schema });
+          };
+          return (
+            <FormItem>
+              <Checkbox
+                checked={!!field.value}
+                onChange={handleChange}
+                label={label ?? name}
+                disabled={field.disabled}
+              />
+              <FormMessage />
+            </FormItem>
+          );
+        }}
+      />
+    );
   }
   // fallback
   return <></>;
