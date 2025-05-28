@@ -29,7 +29,7 @@ describe("validateSchemaField", () => {
     expect(param).toEqual(["a", "b"]);
   });
 
-  it.skip("validates array with error (当前 validateSchemaField 未对 string 类型做类型断言，无法覆盖)", () => {
+  it.skip("validates array with error (Currently, validateSchemaField does not perform type assertion for string type, so this cannot be covered)", () => {
     // const schema = { type: "array", itemsSchema: { type: "string", required: true } };
     // const { errors } = validateSchemaField("arr", schema, ["a", 1]);
     // expect(errors.length).toBeGreaterThan(0);
