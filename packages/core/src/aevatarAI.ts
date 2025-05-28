@@ -118,20 +118,13 @@ export class AevatarAI implements IAevatarAI, IAevatarAIMethods {
       ? JSON.parse(
           workUnitRelationsByES.items?.[0]?.currentWorkUnitInfos ?? "[]"
         )
-      : result.properties.WorkflowUnitList;
-    function capitalizeKeys(obj: Record<string, any>) {
-      return Object.fromEntries(
-        Object.entries(obj).map(([k, v]) => [
-          k.charAt(0).toUpperCase() + k.slice(1),
-          v,
-        ])
-      );
-    }
+      : result.properties?.workflowUnitList;
+
     const capitalizedWorkUnitRelations = Array.isArray(workUnitRelations)
-      ? workUnitRelations.map(capitalizeKeys)
+      ? workUnitRelations
       : [];
     return {
-      workflowName: result.name,
+      workflowName: result?.name,
       workUnitRelations:
         capitalizedWorkUnitRelations as IWorkflowUnitListItem[],
     };

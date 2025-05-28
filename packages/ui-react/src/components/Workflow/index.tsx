@@ -153,9 +153,9 @@ export const Workflow = forwardRef(
           const node = nodes[0];
           return [
             {
-              GrainId: node.data.agentInfo.businessAgentGrainId,
-              NextGrainId: "",
-              ExtendedData: {
+              grainId: node.data.agentInfo.businessAgentGrainId,
+              nextGrainId: "",
+              extendedData: {
                 xPosition: String(node.position.x),
                 yPosition: String(node.position.y),
               },
@@ -163,7 +163,7 @@ export const Workflow = forwardRef(
           ];
         }
         const result = data.nodes.map((node) => {
-          const GrainId = node.data.agentInfo.businessAgentGrainId;
+          const grainId = node.data.agentInfo.businessAgentGrainId;
 
           const nextGrainIds = data.edges
             .filter((edge) => edge.source === node.id)
@@ -176,9 +176,9 @@ export const Workflow = forwardRef(
           if (nextGrainIds.length === 0) {
             return [
               {
-                GrainId,
-                NextGrainId: "",
-                ExtendedData: {
+                grainId,
+                nextGrainId: "",
+                extendedData: {
                   xPosition: String(node.position.x),
                   yPosition: String(node.position.y),
                 },
@@ -186,9 +186,9 @@ export const Workflow = forwardRef(
             ];
           }
           return nextGrainIds.map((nextGrainId) => ({
-            GrainId,
-            NextGrainId: nextGrainId,
-            ExtendedData: {
+            grainId,
+            nextGrainId,
+            extendedData: {
               xPosition: String(node.position.x),
               yPosition: String(node.position.y),
             },

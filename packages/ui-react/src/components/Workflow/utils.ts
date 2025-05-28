@@ -21,17 +21,17 @@ export const generateWorkflowGraph = (
   }
 
   for (const grain of grains) {
-    const agentInfo = agentInfoMap[grain.GrainId];
+    const agentInfo = agentInfoMap[grain.grainId];
     if (!agentInfo) {
-      throw new Error(`No agentInfo found for grainId ${grain.GrainId}`);
+      throw new Error(`No agentInfo found for grainId ${grain.grainId}`);
     }
 
     nodes.push({
       id: agentInfo.id,
       type: "ScanCard",
       position: {
-        x: Number(grain.ExtendedData.xPosition),
-        y: Number(grain.ExtendedData.yPosition),
+        x: Number(grain.extendedData.xPosition),
+        y: Number(grain.extendedData.yPosition),
       },
       data: {
         label: "ScanCard Node",
@@ -46,11 +46,11 @@ export const generateWorkflowGraph = (
       },
     });
 
-    if (grain.NextGrainId) {
-      const targetAgentInfo = agentInfoMap[grain.NextGrainId];
+    if (grain.nextGrainId) {
+      const targetAgentInfo = agentInfoMap[grain.nextGrainId];
       if (!targetAgentInfo) {
         throw new Error(
-          `No agentInfo found for nextGrainId ${grain.NextGrainId}`
+          `No agentInfo found for nextGrainId ${grain.nextGrainId}`
         );
       }
 

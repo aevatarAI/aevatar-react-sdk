@@ -13,15 +13,15 @@ export interface IWorkflowUnitPosition {
 }
 
 export interface IWorkflowUnitListItem {
-  GrainId: string;
-  NextGrainId: string;
-  ExtendedData: Record<string, string> & IWorkflowUnitPosition;
+  grainId: string;
+  nextGrainId: string;
+  extendedData: Record<string, string> & IWorkflowUnitPosition;
 }
 
 export interface ICreateWorkflowProps {
   name: string;
   properties: {
-    WorkflowUnitList: IWorkflowUnitListItem[];
+    workflowUnitList: IWorkflowUnitListItem[];
   };
 }
 
@@ -31,7 +31,7 @@ export interface ISimulateWorkflowProps {
 }
 
 export interface IResetWorkflowEventProperties {
-  WorkflowUnitList: IWorkflowUnitListItem[];
+  workflowUnitList: IWorkflowUnitListItem[];
 }
 
 export interface IEditWorkflowProps {

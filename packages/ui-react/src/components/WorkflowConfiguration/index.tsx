@@ -101,14 +101,14 @@ const WorkflowConfiguration = ({
           name: workflowName,
 
           properties: {
-            WorkflowUnitList: workUnitRelations,
+            workflowUnitList: workUnitRelations,
           },
         });
       } else {
         const result = await aevatarAI.services.workflow.create({
           name: workflowName,
           properties: {
-            WorkflowUnitList: workUnitRelations,
+            workflowUnitList: workUnitRelations,
           },
         });
         workflowAgentId = result.id;

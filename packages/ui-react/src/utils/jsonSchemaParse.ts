@@ -146,8 +146,17 @@ export const jsonSchemaParse = (
     (jsonSchemaString === "" ? "{}" : jsonSchemaString) ?? "{}"
   );
   const definitions = jsonSchema?.definitions || {};
-  const _properties = jsonSchema?.properties;
+  let _properties = jsonSchema?.properties;
   const requiredList = jsonSchema?.required;
+
+  // Filter out correlationId and publisherGrainId
+  if (_properties) {
+    _properties = Object.fromEntries(
+      Object.entries(_properties).filter(
+        ([key]) => key !== "correlationId" && key !== "publisherGrainId"
+      )
+    );
+  }
 
   if (!_properties) return [];
   return Object.entries(_properties).map(([name, prop]) => {
