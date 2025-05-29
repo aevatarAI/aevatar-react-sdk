@@ -46,6 +46,13 @@ export function validateSchemaField(
   }
   // array
   if (schema.type === "array" && schema.itemsSchema) {
+    if (
+      schema.required &&
+      (value === undefined || value === null || (Array.isArray(value) && value.length === 0))
+    ) {
+      errors.push({ name: fieldName, error: "required" });
+      return { errors, param };
+    }
     if (!Array.isArray(value)) {
       errors.push({ name: fieldName, error: "Must be an array" });
       return { errors, param };

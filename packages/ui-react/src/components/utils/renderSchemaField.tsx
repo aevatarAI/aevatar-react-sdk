@@ -101,40 +101,43 @@ export const renderSchemaField = ({
           };
 
           return (
-            <ArrayField
-              key={field.value?.length + JSON.stringify(field.value)}
-              name={name}
-              schema={schema}
-              value={field.value || []}
-              onChange={handleChange}
-              label={name}
-              renderItem={(item, idx, onItemChange, onDelete) => {
-                const renderSchemaFieldOnchange = (
-                  value: any,
-                  meta: { name: string; schema: any }
-                ) => {
-                  const baseArr = Array.isArray(field.value) ? field.value : [];
-                  const newValue = baseArr.map((it, i) => {
-                    if (i !== idx) return it;
-                    if (typeof it === "object") {
-                      const key = meta.name.split(".").pop();
-                      return { ...it, [key]: value };
-                    }
-                    return value;
+            <>
+              <ArrayField
+                key={field.value?.length + JSON.stringify(field.value)}
+                name={name}
+                schema={schema}
+                value={field.value || []}
+                onChange={handleChange}
+                label={name}
+                renderItem={(item, idx, onItemChange, onDelete) => {
+                  const renderSchemaFieldOnchange = (
+                    value: any,
+                    meta: { name: string; schema: any }
+                  ) => {
+                    const baseArr = Array.isArray(field.value) ? field.value : [];
+                    const newValue = baseArr.map((it, i) => {
+                      if (i !== idx) return it;
+                      if (typeof it === "object") {
+                        const key = meta.name.split(".").pop();
+                        return { ...it, [key]: value };
+                      }
+                      return value;
+                    });
+                    handleChange(newValue);
+                  };
+                  return renderSchemaField({
+                    form,
+                    name: idx.toString(),
+                    schema: schema.itemsSchema,
+                    parentName: fieldName,
+                    label: `${name}-${idx}`,
+                    selectContentCls,
+                    onChange: renderSchemaFieldOnchange, // propagate onChange to children
                   });
-                  handleChange(newValue);
-                };
-                return renderSchemaField({
-                  form,
-                  name: idx.toString(),
-                  schema: schema.itemsSchema,
-                  parentName: fieldName,
-                  label: `${name}-${idx}`,
-                  selectContentCls,
-                  onChange: renderSchemaFieldOnchange, // propagate onChange to children
-                });
-              }}
-            />
+                }}
+              />
+              <FormMessage />
+            </>
           );
         }}
       />
@@ -292,6 +295,7 @@ export const renderSchemaField = ({
                 })
               )}
             </div>
+            <FormMessage />
           </div>
         )}
       />

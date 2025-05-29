@@ -22,7 +22,7 @@ function parseJsonSchemaProperties(
   requiredList?: string[]
 ): [string, any][] {
   return Object.entries(properties).map(([name, prop]) => {
-    const isRequired = requiredList?.includes(name);
+    const isRequired = Array.isArray(requiredList) && requiredList.includes(name);
     const propWithRequired = isRequired ? { ...prop, required: true } : prop;
     return [
       name,
@@ -46,7 +46,8 @@ export function parseJsonSchema(
   if (schema.$ref) {
     const refSchema = resolveRef(schema.$ref, rootSchema);
     if (!refSchema) return { ...schema, value };
-    return parseJsonSchema(refSchema, rootSchema, definitions, value);
+    const newSchema = { ...refSchema, required: schema.required };
+    return parseJsonSchema(newSchema, rootSchema, definitions, value);
   }
   // Handle allOf/anyOf/oneOf (not implemented, fallback to first)
   if (schema.allOf && Array.isArray(schema.allOf)) {
@@ -88,12 +89,12 @@ export function parseJsonSchema(
         children: [
           {
             isAdditionalProperties: true,
-            valueSchema: { type: 'any' },
+            valueSchema: { type: "any" },
           },
         ],
       };
     }
-    if (typeof schema.additionalProperties === 'object') {
+    if (typeof schema.additionalProperties === "object") {
       return {
         ...schema,
         value,
@@ -160,7 +161,7 @@ export const jsonSchemaParse = (
 
   if (!_properties) return [];
   return Object.entries(_properties).map(([name, prop]) => {
-    const isRequired = requiredList?.includes(name);
+    const isRequired = Array.isArray(requiredList) && requiredList.includes(name);
 
     const propWithRequired = { ...((prop as any) ?? {}), required: isRequired };
 

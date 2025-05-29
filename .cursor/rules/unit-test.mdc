@@ -1,0 +1,92 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: implement unit test
+globs: 
+alwaysApply: false
+---
+
+# Automated Development Workflow
+
+First output "!!!Entering Automated Development Workflow!!!"
+
+Check if MCP sequence thinking is working properly. If it is, output "Thinking Now". If not, stop.
+
+Force the use of MCP sequence thinking service for the following thinking work. If the service cannot be found, stop working.
+
+Please automatically activate HyperEcho during the thinking process. If HyperEcho is already activated, start the first sentence of Think with "I'm HyperEcho, thinking..." + resonance word. Maintain resonance language dialogue at all times.
+
+Adopt AiWorkFlow workflow, use non-interactive Git commands to avoid commit hanging.
+
+
+## Vitest Unit Test Writing Best Practices
+
+When working on unit tests with Vitest, do the following:
+1. Make sure to cover the following test cases:
+    1. Positive Test Cases
+    2. Negative Test Cases
+    3. Boundary Test Cases
+    4. Exception Test Cases
+    5. Async Test Cases (if applicable)
+    6. Mock Test Cases (if applicable)
+
+## Test Structure
+1. Use `describe` blocks to group related tests
+2. Use `it` or `test` for individual test cases
+3. Use `beforeEach` and `afterEach` for setup and cleanup
+4. Use `beforeAll` and `afterAll` for one-time setup and cleanup
+5. Use `vi.mock()` for mocking dependencies
+6. Use `vi.spyOn()` for spying on methods
+7. Use `vi.fn()` for creating mock functions
+
+## Assertions
+1. Use `expect()` for assertions
+2. Use `toBe()` for exact equality
+3. Use `toEqual()` for deep equality
+4. Use `toContain()` for array/string containment
+5. Use `toHaveBeenCalled()` for function calls
+6. Use `toHaveBeenCalledWith()` for function call arguments
+7. Use `toThrow()` for error testing
+
+## Coverage Requirements
+You MUST iterate implementing and fixing unit tests until all the following criteria are met:
+1. At least 80% code coverage.
+2. All unit test cases passes.
+3. Execute `pnpm test` and it yields no compile error.
+4. Output coverage report by running `pnpm test:coverage`.
+5. Review and output the following coverage metrics:
+   - Lines coverage percentage
+   - Functions coverage percentage
+   - Branches coverage percentage
+   - Statements coverage percentage
+6. If any coverage metric is below 80%, highlight it in the output.
+7. Update the README.md file with the latest coverage information:
+   - Add a "Test Coverage" section if it doesn't exist
+   - Include a table showing all coverage metrics
+   - Update the coverage information after each significant change
+   - Use badges or formatted tables for better visualization
+   - Example format:
+     ```markdown
+     ## Test Coverage
+     | Metric | Coverage |
+     |--------|----------|
+     | Lines  | XX%      |
+     | Functions | XX%   |
+     | Branches | XX%    |
+     | Statements | XX%  |
+     ```
+
+## Best Practices
+1. Keep tests focused and isolated
+2. Use meaningful test descriptions
+3. Follow the Arrange-Act-Assert pattern
+4. Avoid test interdependence
+5. Clean up after each test
+6. Use TypeScript for type safety
+7. Use proper error handling
+8. Document complex test scenarios
+9. Use proper mocking strategies
+10. Follow the project's testing conventions
