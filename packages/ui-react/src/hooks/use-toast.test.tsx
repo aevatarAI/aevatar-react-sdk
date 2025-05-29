@@ -70,7 +70,7 @@ describe("toast logic", () => {
   it("auto removes toast after delay", async () => {
     const t = toast({ title: "A" });
     vi.advanceTimersByTime(1000000);
-    // 由于内部状态不可直接访问，只验证无异常
+    // Since the internal state cannot be accessed directly, only verify that there is no exception
   });
 });
 

@@ -103,9 +103,9 @@ describe("ArrayField", () => {
         label="TestArr"
       />
     );
-    // 第一个 move up 按钮应 disabled
+    // The first move up button should be disabled
     expect(screen.getAllByTestId("arrow-up")[0].closest("button")).toBeDisabled();
-    // 最后一个 move down 按钮应 disabled
+    // The last move down button should be disabled
     expect(screen.getAllByTestId("arrow-up")[5].closest("button")).toBeDisabled();
   });
 }); 
