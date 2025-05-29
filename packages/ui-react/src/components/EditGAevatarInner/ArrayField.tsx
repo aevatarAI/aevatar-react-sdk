@@ -77,10 +77,7 @@ export default function ArrayField({
         <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">{label ?? name}</FormLabel>
         <div className="sdk:rounded sdk:mb-2">
           {value.map((item, idx) => {
-            const key =
-              item && (item.id || item.name)
-                ? `${name}-${item.id || item.name}`
-                : `${name}-${idx}`;
+            const key = `${name}-${idx}`;
             return (
               <div key={key} className="sdk:flex sdk:items-end sdk:mb-2">
                 <div className="sdk:flex sdk:flex-row sdk:items-end sdk:gap-[10px] sdk:flex-1">
@@ -96,11 +93,8 @@ export default function ArrayField({
                     disabled={idx === 0}
                     onClick={() => {
                       if (idx === 0) return;
-                      const newArr = [...value];
-                      [newArr[idx - 1], newArr[idx]] = [
-                        newArr[idx],
-                        newArr[idx - 1],
-                      ];
+                      const newArr = value.map(obj => (obj && typeof obj === 'object' ? { ...obj } : obj));
+                      [newArr[idx - 1], newArr[idx]] = [newArr[idx], newArr[idx - 1]];
                       onChange(newArr);
                     }}>
                     <ArrowUp />
@@ -111,11 +105,8 @@ export default function ArrayField({
                     disabled={idx === value.length - 1}
                     onClick={() => {
                       if (idx === value.length - 1) return;
-                      const newArr = [...value];
-                      [newArr[idx], newArr[idx + 1]] = [
-                        newArr[idx + 1],
-                        newArr[idx],
-                      ];
+                      const newArr = value.map(obj => (obj && typeof obj === 'object' ? { ...obj } : obj));
+                      [newArr[idx], newArr[idx + 1]] = [newArr[idx + 1], newArr[idx]];
                       onChange(newArr);
                     }}>
                     <ArrowUp style={{ transform: "rotate(180deg)" }} />

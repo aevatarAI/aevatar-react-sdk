@@ -102,6 +102,7 @@ export const renderSchemaField = ({
 
           return (
             <ArrayField
+              key={field.value?.length + JSON.stringify(field.value)}
               name={name}
               schema={schema}
               value={field.value || []}
@@ -112,16 +113,15 @@ export const renderSchemaField = ({
                   value: any,
                   meta: { name: string; schema: any }
                 ) => {
-                  const newValue = [...field.value];
-                  let newValueItem = newValue[idx];
-                  if (typeof newValueItem === "object") {
-                    const key = meta.name.split(".").pop();
-                    newValueItem = { ...newValueItem, [key]: value };
-                  } else {
-                    newValueItem = value;
-                  }
-                  newValue[idx] = newValueItem;
-
+                  const baseArr = Array.isArray(field.value) ? field.value : [];
+                  const newValue = baseArr.map((it, i) => {
+                    if (i !== idx) return it;
+                    if (typeof it === "object") {
+                      const key = meta.name.split(".").pop();
+                      return { ...it, [key]: value };
+                    }
+                    return value;
+                  });
                   handleChange(newValue);
                 };
                 return renderSchemaField({
@@ -154,7 +154,6 @@ export const renderSchemaField = ({
         defaultValue={schema.value || {}}
         render={({ field }) => {
           const value = field.value || {};
-          console.log(value, "value====object==JSONSchemaProperties");
           const handleKeyChange = (oldKey: string, newKey: string) => {
             if (!newKey || oldKey === newKey) return;
             const entries = Object.entries(value);
@@ -212,7 +211,9 @@ export const renderSchemaField = ({
           // Has items
           return (
             <div className="sdk:w-full sdk:mb-2">
-              <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">{label ?? name}</FormLabel>
+              <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">
+                {label ?? name}
+              </FormLabel>
               <div className="sdk:rounded sdk:mb-2">
                 {Object.entries(value).map(([k, v], idx) => (
                   <div
@@ -225,7 +226,7 @@ export const renderSchemaField = ({
                         <FormControl>
                           <Input
                             defaultValue={k}
-                            onBlur={e => handleKeyChange(k, e.target.value)}
+                            onBlur={(e) => handleKeyChange(k, e.target.value)}
                             placeholder="key"
                             className="sdk:w-full"
                           />
