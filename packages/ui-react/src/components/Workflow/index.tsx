@@ -25,7 +25,7 @@ import ScanCardNode from "../AevatarItem4Workflow";
 import Background from "./background";
 import type {
   IAgentInfoDetail,
-  IWorkUnitRelationsItem,
+  IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 import type { Edge, INode } from "./types";
 import { generateWorkflowGraph } from "./utils";
@@ -38,8 +38,9 @@ interface IProps {
   gaevatarList?: IAgentInfoDetail[];
 
   editWorkflow?: {
-    workflowGrainId: string;
-    workUnitRelations: IWorkUnitRelationsItem[];
+    workflowAgentId: string;
+    workflowName: string;
+    workUnitRelations: IWorkflowUnitListItem[];
   };
   onCardClick: (
     data: Partial<IAgentInfoDetail>,
@@ -50,7 +51,7 @@ interface IProps {
 }
 
 export interface IWorkflowInstance {
-  getWorkUnitRelations: () => IWorkUnitRelationsItem[];
+  getWorkUnitRelations: () => IWorkflowUnitListItem[];
   setNodes: React.Dispatch<React.SetStateAction<any[]>>;
   setEdges: React.Dispatch<React.SetStateAction<any[]>>;
 }
@@ -144,52 +145,57 @@ export const Workflow = forwardRef(
       onNodesChanged?.(nodes);
     }, [nodes, onNodesChanged]);
 
-    const getWorkUnitRelations = useCallback(() => {
-      const data = { nodes, edges } as { nodes: INode[]; edges: Edge[] };
+    const getWorkUnitRelations: () => IWorkflowUnitListItem[] =
+      useCallback(() => {
+        const data = { nodes, edges } as { nodes: INode[]; edges: Edge[] };
 
-      if (edges.length < 1 && nodes.length === 1) {
-        const node = nodes[0];
-        return [
-          {
-            grainId: node.data.agentInfo.businessAgentGrainId,
-            nextGrainId: "",
-            xPosition: node.position.x,
-            yPosition: node.position.y,
-          },
-        ];
-      }
-      const result = data.nodes.map((node) => {
-        const grainId = node.data.agentInfo.businessAgentGrainId;
-        const xPosition = node.position.x;
-        const yPosition = node.position.y;
-
-        const nextGrainIds = data.edges
-          .filter((edge) => edge.source === node.id)
-          .map((edge) => {
-            const targetNode = data.nodes.find((n) => n.id === edge.target);
-            return targetNode?.data.agentInfo.businessAgentGrainId || "";
-          });
-        // .filter((nextGrainId) => nextGrainId !== '');
-
-        if (nextGrainIds.length === 0) {
+        if (edges.length < 1 && nodes.length === 1) {
+          const node = nodes[0];
           return [
             {
-              grainId,
+              grainId: node.data.agentInfo.businessAgentGrainId,
               nextGrainId: "",
-              xPosition,
-              yPosition,
+              extendedData: {
+                xPosition: String(node.position.x),
+                yPosition: String(node.position.y),
+              },
             },
           ];
         }
-        return nextGrainIds.map((nextGrainId) => ({
-          grainId,
-          nextGrainId,
-          xPosition,
-          yPosition,
-        }));
-      });
-      return result.flat();
-    }, [nodes, edges]);
+        const result = data.nodes.map((node) => {
+          const grainId = node.data.agentInfo.businessAgentGrainId;
+
+          const nextGrainIds = data.edges
+            .filter((edge) => edge.source === node.id)
+            .map((edge) => {
+              const targetNode = data.nodes.find((n) => n.id === edge.target);
+              return targetNode?.data.agentInfo.businessAgentGrainId || "";
+            });
+          // .filter((nextGrainId) => nextGrainId !== '');
+
+          if (nextGrainIds.length === 0) {
+            return [
+              {
+                grainId,
+                nextGrainId: "",
+                extendedData: {
+                  xPosition: String(node.position.x),
+                  yPosition: String(node.position.y),
+                },
+              },
+            ];
+          }
+          return nextGrainIds.map((nextGrainId) => ({
+            grainId,
+            nextGrainId,
+            extendedData: {
+              xPosition: String(node.position.x),
+              yPosition: String(node.position.y),
+            },
+          }));
+        });
+        return result.flat();
+      }, [nodes, edges]);
 
     useImperativeHandle(
       ref,

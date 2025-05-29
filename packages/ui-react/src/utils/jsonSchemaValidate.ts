@@ -29,7 +29,7 @@ export function validateSchemaField(
   // enum
   if (schema.enum) {
     if (!schema.enum.includes(value)) {
-      if (schema["x-enumNames"].includes(value)) {
+      if (schema["x-enumNames"]?.includes?.(value)) {
         value = schema.enum[schema["x-enumNames"].indexOf(value)];
       } else {
         errors.push({
@@ -65,6 +65,22 @@ export function validateSchemaField(
   }
   // object
   if (schema.type === "object" && schema.children) {
+    // additionalProperties structure
+    if (schema.children[0]?.isAdditionalProperties) {
+      param = {};
+      for (const key in value) {
+        const { errors: childErrors, param: childParam } = validateSchemaField(
+          key,
+          schema.children[0].valueSchema,
+          value[key],
+          fieldName
+        );
+        errors.push(...childErrors);
+        if (childParam !== undefined) param[key] = childParam;
+      }
+      return { errors, param };
+    }
+    // properties structure (default)
     param = {};
     schema.children.forEach(([childName, childSchema]: [string, any]) => {
       const { errors: childErrors, param: childParam } = validateSchemaField(
@@ -93,7 +109,7 @@ export function validateSchemaField(
       errors.push({ name: fieldName, error: "File required" });
     }
     param = value;
-    return { errors, param };
+    return { errors: errors ?? [], param };
   }
   // number/integer
   if (schema.type === "number" || schema.type === "integer") {

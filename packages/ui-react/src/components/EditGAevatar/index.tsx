@@ -8,6 +8,7 @@ import { loadingAtom } from "../../state/atoms";
 import { useUpdateEffect } from "react-use";
 import { useToast } from "../../hooks/use-toast";
 import { handleErrorMessage } from "../../utils/error";
+import { useAevatar } from "../context/AevatarProvider";
 
 export interface IEditGAevatarProps {
   className?: string;
@@ -25,15 +26,18 @@ export default function EditGAevatar({
 
   const [agentConfiguration, setAgentConfiguration] =
     useState<Record<string, string>>();
+  const [{ hiddenGAevatarType }] = useAevatar();
 
   const getAllAgentsConfiguration = useCallback(async () => {
     try {
       const result = await aevatarAI.services.agent.getAllAgentsConfiguration();
       if (!result) return;
       const configuration: any = {};
-      result.forEach((item) => {
-        configuration[item.agentType] = item.propertyJsonSchema;
-      });
+      result
+        .filter((item) => !hiddenGAevatarType.includes(item.agentType))
+        .forEach((item) => {
+          configuration[item.agentType] = item.propertyJsonSchema;
+        });
       setAgentConfiguration(configuration);
     } catch (error) {
       toast({
@@ -42,7 +46,7 @@ export default function EditGAevatar({
         duration: 3000,
       });
     }
-  }, [toast]);
+  }, [toast, hiddenGAevatarType]);
 
   const agentTypeList = useMemo(
     () => Object.keys(agentConfiguration ?? {}),

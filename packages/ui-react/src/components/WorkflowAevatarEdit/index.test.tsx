@@ -57,8 +57,8 @@ describe("WorkflowAevatarEdit Component", () => {
     expect(screen.getByLabelText("agent Type")).toBeInTheDocument();
 
     // Dynamic fields
-    expect(screen.getByLabelText("property1")).toBeInTheDocument();
-    expect(screen.getByLabelText("property2")).toBeInTheDocument();
+    expect(screen.getByText("property1")).toBeInTheDocument();
+    expect(screen.getByText("property2")).toBeInTheDocument();
   });
 
   // it("displays validation errors for missing required fields", async () => {

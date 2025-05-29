@@ -14,7 +14,7 @@ const mockAgentInfo: IAgentInfoDetail = {
   },
   agentGuid: "",
   agentType: "",
-  name: "",
+  name: "Test Agent",
   businessAgentGrainId: ""
 };
 

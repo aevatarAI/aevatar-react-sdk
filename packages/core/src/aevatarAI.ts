@@ -5,6 +5,7 @@ import type {
   ICreateAgentParams,
   RefreshTokenConfig,
   IClientAuthTokenParams,
+  IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 import { Connect, Services } from "@aevatar-react-sdk/services";
 import type { IConfig } from "@aevatar-react-sdk/types";
@@ -102,6 +103,31 @@ export class AevatarAI implements IAevatarAI, IAevatarAIMethods {
       Authorization: `${token_type} ${access_token}`,
     });
     return `${token_type} ${access_token}`;
+  }
+
+  async getWorkflowUnitRelationByAgentId(agentId: string) {
+    const [result, workUnitRelationsByES] = await Promise.all([
+      this.services.agent.getAgentInfo(agentId),
+      this.services.workflow.getWorkflow({
+        stateName: "WorkflowCoordinatorState",
+        queryString: `_id:${agentId}`,
+      }),
+    ]);
+    const workUnitRelations: IWorkflowUnitListItem[] = workUnitRelationsByES
+      .items?.[0]?.currentWorkUnitInfos
+      ? JSON.parse(
+          workUnitRelationsByES.items?.[0]?.currentWorkUnitInfos ?? "[]"
+        )
+      : result.properties?.workflowUnitList;
+
+    const capitalizedWorkUnitRelations = Array.isArray(workUnitRelations)
+      ? workUnitRelations
+      : [];
+    return {
+      workflowName: result?.name,
+      workUnitRelations:
+        capitalizedWorkUnitRelations as IWorkflowUnitListItem[],
+    };
   }
 
   setConfig(options: IConfig) {

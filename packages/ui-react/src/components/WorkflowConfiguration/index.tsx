@@ -13,7 +13,7 @@ import WorkflowUnsaveModal from "../WorkflowUnsaveModal";
 import type {
   IAgentInfoDetail,
   IAgentsConfiguration,
-  IWorkUnitRelationsItem,
+  IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 import type { IWorkflowAevatarEditProps } from "../WorkflowAevatarEdit";
 import { sleep } from "@aevatar-react-sdk/utils";
@@ -24,6 +24,8 @@ import { useToast } from "../../hooks/use-toast";
 import type { INode } from "../Workflow/types";
 import clsx from "clsx";
 import { useUpdateEffect } from "react-use";
+import EditWorkflowNameDialog from "../EditWorkflowNameDialog";
+import { useAevatar } from "../context/AevatarProvider";
 
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
@@ -32,13 +34,13 @@ export interface IWorkflowConfigurationProps {
     isNewGAevatar?: boolean;
   };
   editWorkflow?: {
-    workflowGrainId: string;
+    workflowAgentId: string;
     workflowName: string;
-    workUnitRelations: IWorkUnitRelationsItem[];
+    workUnitRelations: IWorkflowUnitListItem[];
   };
 
   onBack?: () => void;
-  onSave?: (workflowGrainId: string) => void;
+  onSave?: (workflowAgentId: string) => void;
   onGaevatarChange: IWorkflowAevatarEditProps["onGaevatarChange"];
 }
 
@@ -57,6 +59,7 @@ const WorkflowConfiguration = ({
     isNew?: boolean;
     nodeId: string;
   }>();
+  const [{ hiddenGAevatarType }] = useAevatar();
 
   const [unsavedModal, setUnsavedModal] = useState(false);
 
@@ -77,26 +80,41 @@ const WorkflowConfiguration = ({
   const [btnLoading, setBtnLoading] = useState<boolean>();
 
   const isWorkflowChanged = useRef<boolean>();
+  const [workflowName, setWorkflowName] = useState<string>(
+    editWorkflow?.workflowName ?? "untitled_workflow"
+  );
+
+  useUpdateEffect(() => {
+    setWorkflowName(editWorkflow?.workflowName ?? "untitled_workflow");
+  }, [editWorkflow]);
 
   const onSave = useCallback(async () => {
     const workUnitRelations = workflowRef.current.getWorkUnitRelations();
     try {
       setBtnLoading(true);
+      console.log(workflowName, "workflowName===");
+      // workflowName
       if (!workUnitRelations.length) throw "Please finish workflow";
-      let workflowGrainId = editWorkflow?.workflowGrainId;
-      if (editWorkflow?.workflowGrainId) {
-        await aevatarAI.services.workflow.edit({
-          workflowGrainId: editWorkflow?.workflowGrainId ?? "",
-          workUnitRelations,
+      let workflowAgentId = editWorkflow?.workflowAgentId;
+      if (editWorkflow?.workflowAgentId) {
+        await aevatarAI.services.workflow.edit(editWorkflow?.workflowAgentId, {
+          name: workflowName,
+
+          properties: {
+            workflowUnitList: workUnitRelations,
+          },
         });
       } else {
         const result = await aevatarAI.services.workflow.create({
-          workUnitRelations,
+          name: workflowName,
+          properties: {
+            workflowUnitList: workUnitRelations,
+          },
         });
-        workflowGrainId = result.workflowGrainId;
+        workflowAgentId = result.id;
       }
 
-      onSaveHandler?.(workflowGrainId);
+      onSaveHandler?.(workflowAgentId);
     } catch (error) {
       console.log("error===");
       toast({
@@ -107,7 +125,7 @@ const WorkflowConfiguration = ({
     }
     setBtnLoading(false);
     // setSaveFailed(SaveFailedError.maxAgents);
-  }, [editWorkflow, toast, onSaveHandler]);
+  }, [editWorkflow, toast, onSaveHandler, workflowName]);
 
   const onConfirmSaveHandler = useCallback(
     (saved?: boolean) => {
@@ -206,15 +224,11 @@ const WorkflowConfiguration = ({
                   />
                 </DialogPortal>
               </Dialog> */}
-              <div className="size- inline-flex justify-start items-center gap-2">
-                <div className="justify-center text-Grey-1 text-xs font-normal font-pro lowercase">
-                  {editWorkflow?.workflowName ?? "untitled_workflow"}
-                </div>
-                <div className="size-5 relative overflow-hidden">
-                  <div className="w-3.5 h-4 left-[2.50px] top-[2.50px] absolute bg-zinc-600" />
-                </div>
-              </div>
 
+              <EditWorkflowNameDialog
+                defaultName={workflowName}
+                onSave={setWorkflowName}
+              />
               <Button
                 variant="default"
                 onClick={onSave}
@@ -241,6 +255,7 @@ const WorkflowConfiguration = ({
             {/* Sidebar */}
             <Sidebar
               disabledGeavatarIds={disabledAgent}
+              hiddenGAevatarType={hiddenGAevatarType}
               gaevatarList={sidebarConfig.gaevatarList}
               isNewGAevatar={sidebarConfig.isNewGAevatar}
               gaevatarTypeList={sidebarConfig?.gaevatarTypeList}

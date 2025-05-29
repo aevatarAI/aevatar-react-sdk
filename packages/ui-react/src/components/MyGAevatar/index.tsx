@@ -59,8 +59,6 @@ export default function MyGAevatar({
     }
   }, [toast]);
 
-  console.log(agentConfiguration, "agentConfiguration");
-
   const fetchAllList = useCallback(async () => {
     let pageIndex = 0;
     let allData: any[] = [];

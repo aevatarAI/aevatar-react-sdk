@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import { generateWorkflowGraph } from "./utils"; // Adjust import path as necessary
 import type {
   IAgentInfoDetail,
-  IWorkUnitRelationsItem,
+  IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 import type { TNodeDataClick, TDeleteNode } from "./types";
 
@@ -28,18 +28,16 @@ describe("generateWorkflowGraph", () => {
     },
   ];
 
-  const mockGrains: IWorkUnitRelationsItem[] = [
+  const mockGrains: IWorkflowUnitListItem[] = [
     {
-      grainId: "grain1",
-      nextGrainId: "grain2",
-      xPosition: 100,
-      yPosition: 200,
+      GrainId: "grain1",
+      NextGrainId: "grain2",
+      ExtendedData: { xPosition: "100", yPosition: "200" },
     },
     {
-      grainId: "grain2",
-      nextGrainId: "",
-      xPosition: 300,
-      yPosition: 400,
+      GrainId: "grain2",
+      NextGrainId: "",
+      ExtendedData: { xPosition: "300", yPosition: "400" },
     },
   ];
 
@@ -97,12 +95,11 @@ describe("generateWorkflowGraph", () => {
   });
 
   it("should throw an error if a grainId does not have a corresponding agent", () => {
-    const invalidGrains: IWorkUnitRelationsItem[] = [
+    const invalidGrains: IWorkflowUnitListItem[] = [
       {
-        grainId: "grain3", // No corresponding agentInfo
-        nextGrainId: "",
-        xPosition: 100,
-        yPosition: 200,
+        GrainId: "grain3", // No corresponding agentInfo
+        NextGrainId: "",
+        ExtendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 
@@ -112,12 +109,11 @@ describe("generateWorkflowGraph", () => {
   });
 
   it("should throw an error if a nextGrainId does not have a corresponding agent", () => {
-    const invalidGrains: IWorkUnitRelationsItem[] = [
+    const invalidGrains: IWorkflowUnitListItem[] = [
       {
-        grainId: "grain1",
-        nextGrainId: "grain3", // No corresponding agentInfo
-        xPosition: 100,
-        yPosition: 200,
+        GrainId: "grain1",
+        NextGrainId: "grain3", // No corresponding agentInfo
+        ExtendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 
@@ -127,12 +123,11 @@ describe("generateWorkflowGraph", () => {
   });
 
   it("should generate nodes without edges if nextGrainId is null", () => {
-    const singleGrain: IWorkUnitRelationsItem[] = [
+    const singleGrain: IWorkflowUnitListItem[] = [
       {
-        grainId: "grain1",
-        nextGrainId: "", // No edge case
-        xPosition: 100,
-        yPosition: 200,
+        GrainId: "grain1",
+        NextGrainId: "", // No edge case
+        ExtendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 

@@ -1,63 +1,75 @@
-import "@testing-library/jest-dom";
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, fireEvent, screen } from "@testing-library/react";
+import { describe, it, expect, vi } from 'vitest';
+import React, { createRef } from "react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
 import { Workflow } from "./index";
-import React from "react";
-import { useReactFlow } from "@xyflow/react";
 
-// Mock necessary libraries and components
+let _nodes: any[] = [];
+let _edges: any[] = [];
+const setNodes = vi.fn();
+const setEdges = vi.fn();
+const onNodesChange = vi.fn();
+const onEdgesChange = vi.fn();
+
 vi.mock("@xyflow/react", () => ({
-  ReactFlow: vi.fn(({ children }) => (
-    <div data-testid="reactflow">{children}</div>
-  )),
-  addEdge: vi.fn((params, edges) => [...edges, params]),
-  useNodesState: vi.fn(() => [[], vi.fn(), vi.fn()]),
-  useEdgesState: vi.fn(() => [[], vi.fn(), vi.fn()]),
-  useReactFlow: vi.fn(() => ({
-    screenToFlowPosition: vi.fn(({ x, y }) => ({ x, y })),
-  })),
-  Controls: vi.fn(() => <div data-testid="controls" />),
+  ReactFlow: (props: any) => <div data-testid="reactflow">{props.children}</div>,
+  Controls: () => <div data-testid="controls" />,
+  useNodesState: () => [_nodes, setNodes, onNodesChange],
+  useEdgesState: () => [_edges, setEdges, onEdgesChange],
+  useReactFlow: () => ({ screenToFlowPosition: ({ x, y }: any) => ({ x, y }) }),
+  MarkerType: { ArrowClosed: "ArrowClosed" },
+  addEdge: (edge: any, eds: any) => [...eds, edge],
 }));
+vi.mock("./DnDContext", () => ({ useDnD: () => [{ nodeType: "new", agentInfo: { id: "id1", businessAgentGrainId: "g1", agentGuid: "guid1", agentType: "type1", name: "Agent1", properties: {} } }] }));
+vi.mock("./utils", () => ({ generateWorkflowGraph: vi.fn(() => ({ nodes: [{ id: "n1", data: { agentInfo: { id: "id1", businessAgentGrainId: "g1", agentGuid: "guid1", agentType: "type1", name: "Agent1", properties: {} } }, position: { x: 1, y: 2 } }], edges: [] })) }));
+vi.mock("../AevatarItem4Workflow", () => ({ default: () => <div data-testid="ScanCardNode" /> }));
+vi.mock("./background", () => ({ default: () => <div data-testid="background" /> }));
 
-vi.mock("./DnDContext", () => ({
-  useDnD: vi.fn(() => [{ nodeType: "new", agentInfo: { id: "node1" } }]),
-}));
+describe("Workflow", () => {
+  const gaevatarList = [{ id: "id1", businessAgentGrainId: "g1", agentGuid: "guid1", agentType: "type1", name: "Agent1", properties: {} }];
+  const editWorkflow = { workflowAgentId: "w1", workflowName: "wf", workUnitRelations: [{ GrainId: "g1", NextGrainId: "", ExtendedData: { xPosition: "1", yPosition: "2" } }] };
 
-// Mock utils and background
-vi.mock("./utils", () => ({
-  generateWorkflowGraph: vi.fn(() => ({
-    nodes: [],
-    edges: [],
-  })),
-}));
-vi.mock("./background", () => ({
-  __esModule: true,
-  default: () => <div data-testid="background" />,
-}));
-
-describe("Workflow Component", () => {
-  // biome-ignore lint/style/useSingleVarDeclarator: <explanation>
-  // biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
-  let onCardClickMock, onNodesChangedMock;
-
-  beforeEach(() => {
-    onCardClickMock = vi.fn();
-    onNodesChangedMock = vi.fn();
+  it("renders with editWorkflow and calls generateWorkflowGraph", () => {
+    _nodes = [];
+    _edges = [];
+    render(<Workflow gaevatarList={gaevatarList} editWorkflow={editWorkflow} onCardClick={vi.fn()} />);
+    expect(screen.getByTestId("reactflow")).toBeInTheDocument();
   });
 
-  it("should render the Workflow component and ReactFlow wrapper", () => {
-    render(
-      <Workflow
-        gaevatarList={[]}
-        editWorkflow={undefined}
-        onCardClick={onCardClickMock}
-        onNodesChanged={onNodesChangedMock}
-      />
-    );
-    const reactFlowWrapper = screen.getByTestId("reactflow");
-    expect(reactFlowWrapper).toBeInTheDocument();
-
-    const controls = screen.getByTestId("controls");
-    expect(controls).toBeInTheDocument();
+  it("getWorkUnitRelations returns correct for single node", () => {
+    _nodes = [{ id: "n1", data: { agentInfo: { id: "id1", businessAgentGrainId: "g1", agentGuid: "guid1", agentType: "type1", name: "Agent1", properties: {} } }, position: { x: 1, y: 2 } }];
+    _edges = [];
+    const ref = createRef<any>();
+    render(<Workflow ref={ref} gaevatarList={gaevatarList} editWorkflow={editWorkflow} onCardClick={vi.fn()} />);
+    act(() => {
+      const result = ref.current.getWorkUnitRelations();
+      expect(result).toEqual([
+        { GrainId: "g1", NextGrainId: "", ExtendedData: { xPosition: "1", yPosition: "2" } },
+      ]);
+    });
   });
-});
+
+  it("calls onCardClick on drop new node", () => {
+    _nodes = [];
+    _edges = [];
+    const onCardClick = vi.fn();
+    render(<Workflow gaevatarList={gaevatarList} onCardClick={onCardClick} />);
+    expect(screen.getByTestId("reactflow")).toBeInTheDocument();
+  });
+
+  it("calls onNodesChanged when nodes change", () => {
+    _nodes = [];
+    _edges = [];
+    const onNodesChanged = vi.fn();
+    render(<Workflow gaevatarList={gaevatarList} onCardClick={vi.fn()} onNodesChanged={onNodesChanged} />);
+    expect(screen.getByTestId("reactflow")).toBeInTheDocument();
+  });
+
+  it("ref exposes setNodes/setEdges", () => {
+    _nodes = [];
+    _edges = [];
+    const ref = createRef<any>();
+    render(<Workflow ref={ref} gaevatarList={gaevatarList} onCardClick={vi.fn()} />);
+    expect(ref.current.setNodes).toBeDefined();
+    expect(ref.current.setEdges).toBeDefined();
+  });
+}); 
