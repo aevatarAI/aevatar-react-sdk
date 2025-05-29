@@ -28,7 +28,7 @@ export default function ArrayField({
   if (!value || value.length === 0) {
     return (
       <div className="sdk:w-full sdk:mb-2">
-        <FormLabel>{label ?? name}</FormLabel>
+        <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">{label ?? name}</FormLabel>
         <Button
           type="button"
           className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
@@ -42,7 +42,7 @@ export default function ArrayField({
   if (value.length === 1) {
     return (
       <div className="sdk:w-full sdk:mb-2">
-        <FormLabel>{label ?? name}</FormLabel>
+        <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">{label ?? name}</FormLabel>
         <div className="sdk:rounded sdk:mb-2">
           <div className="sdk:flex sdk:flex-row sdk:items-end sdk:gap-[10px]">
             {renderItem(
@@ -74,7 +74,7 @@ export default function ArrayField({
   if (value.length > 1) {
     return (
       <div className="sdk:w-full sdk:mb-2">
-        <FormLabel>{label ?? name}</FormLabel>
+        <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">{label ?? name}</FormLabel>
         <div className="sdk:rounded sdk:mb-2">
           {value.map((item, idx) => {
             const key =

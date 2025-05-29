@@ -59,7 +59,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         )}
       </span>
       {label && (
-        <span className="sdk:text-[#B9B9B9] sdk:text-[13px] sdk:font-source-code-pro sdk:lowercase">
+        <span className="sdk:text-[#B9B9B9] sdk:text-[13px] sdk:font-pro sdk:lowercase">
           {label}
         </span>
       )}

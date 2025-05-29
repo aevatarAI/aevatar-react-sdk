@@ -212,7 +212,7 @@ export const renderSchemaField = ({
           // Has items
           return (
             <div className="sdk:w-full sdk:mb-2">
-              <FormLabel>{label ?? name}</FormLabel>
+              <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">{label ?? name}</FormLabel>
               <div className="sdk:rounded sdk:mb-2">
                 {Object.entries(value).map(([k, v], idx) => (
                   <div
@@ -279,7 +279,7 @@ export const renderSchemaField = ({
         render={({ field }) => (
           <div className="sdk:w-full sdk:mb-2">
             <FormLabel>{label ?? name}</FormLabel>
-            <div className="sdk:pl-4">
+            <div className="sdk:pl-4  sdk:flex sdk:flex-col sdk:gap-y-[10px]">
               {schema.children.map(([childName, childSchema]: [string, any]) =>
                 renderSchemaField({
                   form,
