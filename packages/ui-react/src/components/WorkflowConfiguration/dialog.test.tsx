@@ -22,10 +22,10 @@ describe("WorkflowDialog", () => {
     render(<Wrapper />);
     expect(screen.getByText("g-agent configuration")).toBeInTheDocument();
     expect(screen.getByTestId("edit-mock")).toBeInTheDocument();
-    expect(screen.getByRole("button")).toBeInTheDocument(); // 关闭按钮
+    expect(screen.getByRole("button")).toBeInTheDocument(); // Close button
   });
 
-  it.skip("passes props to WorkflowAevatarEdit (React Testing Library 无法直接断言自定义 props 透传到 mock 组件的 DOM attribute)", () => {
+  it.skip("passes props to WorkflowAevatarEdit (React Testing Library cannot directly assert custom props passed to mock component's DOM attribute)", () => {
     // render(<Wrapper isNew agentItem={{ id: "a" }} nodeId="n1" onGaevatarChange={() => {}} />);
     // const edit = screen.getByTestId("edit-mock");
     // expect(edit).toHaveAttribute("isnew", "true");

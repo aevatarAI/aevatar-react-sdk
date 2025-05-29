@@ -78,8 +78,8 @@ describe("WorkflowConfiguration", () => {
     const onBack = vi.fn();
     render(<WorkflowConfiguration {...baseProps} onBack={onBack} />);
     fireEvent.click(screen.getByRole("img"));
-    // 模拟弹窗确认
+    // Simulate popup confirmation
     fireEvent.click(screen.getByText("save"));
-    // 由于弹窗逻辑复杂，这里只断言主流程
+    // Since the popup logic is complex, only assert the main flow here
   });
 }); 

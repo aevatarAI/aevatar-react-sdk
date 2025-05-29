@@ -26,7 +26,7 @@ vi.mock("./background", () => ({ default: () => <div data-testid="background" />
 
 describe("Workflow", () => {
   const gaevatarList = [{ id: "id1", businessAgentGrainId: "g1", agentGuid: "guid1", agentType: "type1", name: "Agent1", properties: {} }];
-  const editWorkflow = { workflowAgentId: "w1", workflowName: "wf", workUnitRelations: [{ GrainId: "g1", NextGrainId: "", ExtendedData: { xPosition: "1", yPosition: "2" } }] };
+  const editWorkflow = { workflowAgentId: "w1", workflowName: "wf", workUnitRelations: [{ grainId: "g1", nextGrainId: "", extendedData: { xPosition: "1", yPosition: "2" } }] };
 
   it("renders with editWorkflow and calls generateWorkflowGraph", () => {
     _nodes = [];
@@ -43,7 +43,7 @@ describe("Workflow", () => {
     act(() => {
       const result = ref.current.getWorkUnitRelations();
       expect(result).toEqual([
-        { GrainId: "g1", NextGrainId: "", ExtendedData: { xPosition: "1", yPosition: "2" } },
+        { grainId: "g1", nextGrainId: "", extendedData: { xPosition: "1", yPosition: "2" } },
       ]);
     });
   });

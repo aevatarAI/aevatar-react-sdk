@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { jsonSchemaParse, parseJsonSchema } from "./jsonSchemaParse";
 
-// 基础 object schema
+// Basic object schema
 const objectSchema = JSON.stringify({
   type: "object",
   properties: {

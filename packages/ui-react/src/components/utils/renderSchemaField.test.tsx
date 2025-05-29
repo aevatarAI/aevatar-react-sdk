@@ -13,7 +13,7 @@ describe("renderSchemaField", () => {
     );
   }
 
-  it.skip("renders enum select and triggers onChange (Radix Select 结构复杂，测试库难以直接断言)", () => {
+  it.skip("renders enum select and triggers onChange (Radix Select structure is complex, hard to assert directly in test library)", () => {
     // const schema = { enum: ["a", "b"], value: "a" };
     // const onChange = vi.fn();
     // render(<Wrapper schema={schema} name="foo" onChange={onChange} />);
@@ -26,7 +26,7 @@ describe("renderSchemaField", () => {
     const schema = { type: "array", itemsSchema: { type: "string" }, value: ["a"] };
     const onChange = vi.fn();
     render(<Wrapper schema={schema} name="arr" onChange={onChange} />);
-    // ArrayField 结构断言
+    // ArrayField structure assertion
     expect(screen.getByText("arr-0")).toBeInTheDocument();
   });
 
@@ -71,7 +71,7 @@ describe("renderSchemaField", () => {
     expect(screen.getByDisplayValue("123")).toBeInTheDocument();
   });
 
-  it.skip("renders fallback for boolean (返回 null, 无 dom)", () => {
+  it.skip("renders fallback for boolean (returns null, no dom)", () => {
     // const schema = { type: "boolean", value: true };
     // render(<Wrapper schema={schema} name="flag" />);
     // expect(screen.container).toBeDefined();

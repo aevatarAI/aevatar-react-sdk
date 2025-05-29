@@ -132,8 +132,11 @@ export default function AevatarCardInner({
                             margin: 0,
                           }}>
                           {/* If value is object, render as JSON string */}
+
                           {typeof info === "object"
                             ? JSON.stringify(info, null, 2)
+                            : typeof info === "boolean"
+                            ? info.toString() // Render boolean as string
                             : info}
                         </pre>
                       </div>
