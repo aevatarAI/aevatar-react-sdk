@@ -13,6 +13,8 @@ import { Button } from "../ui";
 import AddIcon from "../../assets/svg/add.svg?react";
 import DeleteIcon from "../../assets/svg/delete_agent.svg?react";
 import { Checkbox } from "../ui";
+import type React from "react";
+import { useState } from "react";
 
 export const renderSchemaField = ({
   form,
@@ -91,25 +93,33 @@ export const renderSchemaField = ({
         name={fieldName}
         defaultValue={schema.value || []}
         render={({ field }) => {
-          // Wrap onChange to call both field.onChange and external onChange
-          const handleChange = (value: any) => {
+          // Use useState to maintain the key for ArrayField
+          const [arrayKey, setArrayKey] = useState(
+            field.value?.length + JSON.stringify(field.value)
+          );
+          // Only update key when actionType is a structural change
+          const handleChange = (value: any, actionType?: 'add' | 'delete' | 'move' | 'update') => {
             field.onChange(value);
             onChange?.(value, { name: fieldName, schema });
             value?.forEach((item: any, idx: number) => {
               form.setValue(`${name}.${idx}`, item, { shouldDirty: true });
             });
+            if (actionType === 'add' || actionType === 'delete' || actionType === 'move') {
+              setArrayKey(value?.length + JSON.stringify(value));
+            }
           };
 
           return (
             <>
               <ArrayField
-                key={field.value?.length + JSON.stringify(field.value)}
+                key={arrayKey}
                 name={name}
                 schema={schema}
                 value={field.value || []}
                 onChange={handleChange}
                 label={name}
                 renderItem={(item, idx, onItemChange, onDelete) => {
+                  // Propagate onChange to children, treat as content update
                   const renderSchemaFieldOnchange = (
                     value: any,
                     meta: { name: string; schema: any }
@@ -123,7 +133,7 @@ export const renderSchemaField = ({
                       }
                       return value;
                     });
-                    handleChange(newValue);
+                    handleChange(newValue, 'update');
                   };
                   return renderSchemaField({
                     form,
