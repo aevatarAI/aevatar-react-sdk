@@ -104,7 +104,7 @@ const FormLabel = React.forwardRef<
       htmlFor={formItemId}
       {...props}
       className={clsx(
-        "sdk:text-[#B9B9B9] sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:self-stretch sdk:font-syne",
+        "sdk:text-[#B9B9B9] sdk:text-[12px] sdk:font-semibold sdk:self-stretch sdk:font-syne",
         error && "sdk:text-[#FF2E2E]",
         className
       )}>

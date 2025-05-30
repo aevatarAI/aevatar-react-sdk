@@ -67,7 +67,7 @@ export default function EditWorkflowNameDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <div className="sdk:inline-flex sdk:justify-center sdk:items-center sdk:gap-2 sdk:cursor-pointer">
-          <div className="sdk:flex sdk:justify-center sdk:text-[#B9B9B9] sdk:text-[12px] sdk:font-normal sdk:font-pro sdk:lowercase">
+          <div className="sdk:flex sdk:justify-center sdk:text-[#B9B9B9] sdk:text-[12px] sdk:font-normal sdk:font-pro">
             {defaultName}
           </div>
           <Edit />

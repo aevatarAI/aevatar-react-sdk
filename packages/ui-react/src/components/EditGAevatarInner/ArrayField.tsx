@@ -33,7 +33,7 @@ export default function ArrayField({
           type="button"
           className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
           onClick={() => onChange([undefined], 'add')}>
-          <AddIcon className="text-white" />{" "}
+          <AddIcon className="text-white" />
           <span className="sdk:text-[12px] sdk:leading-[14px]">Add item</span>
         </Button>
       </div>

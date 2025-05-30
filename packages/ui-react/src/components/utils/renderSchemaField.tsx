@@ -37,7 +37,8 @@ export const renderSchemaField = ({
   onChange?: (value: any, meta: { name: string; schema: any }) => void;
 }) => {
   const fieldName = parentName ? `${parentName}.${name}` : name;
-
+  const labelWithRequired = schema.required ? `*${label ?? name}` : (label ?? name);
+  console.log(labelWithRequired, "labelWithRequired",schema.name, );
   // enum type
   if (schema.enum) {
     return (
@@ -57,7 +58,7 @@ export const renderSchemaField = ({
           const enumNamesValue = schema["x-enumNames"]?.[valueIndex];
           return (
             <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
+              <FormLabel>{labelWithRequired}</FormLabel>
               <Select
                 value={enumNamesValue ?? field?.value}
                 disabled={field?.disabled}
@@ -117,7 +118,7 @@ export const renderSchemaField = ({
                 schema={schema}
                 value={field.value || []}
                 onChange={handleChange}
-                label={name}
+                label={labelWithRequired}
                 renderItem={(item, idx, onItemChange, onDelete) => {
                   // Propagate onChange to children, treat as content update
                   const renderSchemaFieldOnchange = (
@@ -208,7 +209,7 @@ export const renderSchemaField = ({
             // No items
             return (
               <div className="sdk:w-full sdk:mb-2">
-                <FormLabel>{label ?? name}</FormLabel>
+                <FormLabel>{labelWithRequired}</FormLabel>
                 <Button
                   type="button"
                   className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
@@ -225,7 +226,7 @@ export const renderSchemaField = ({
           return (
             <div className="sdk:w-full sdk:mb-2">
               <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">
-                {label ?? name}
+                {labelWithRequired}
               </FormLabel>
               <div className="sdk:rounded sdk:mb-2">
                 {Object.entries(value).map(([k, v], idx) => (
@@ -292,8 +293,8 @@ export const renderSchemaField = ({
         defaultValue={schema.value || {}}
         render={({ field }) => (
           <div className="sdk:w-full sdk:mb-2">
-            <FormLabel>{label ?? name}</FormLabel>
-            <div className="sdk:pl-4  sdk:flex sdk:flex-col sdk:gap-y-[10px]">
+            <FormLabel>{labelWithRequired}</FormLabel>
+            <div className="sdk:pl-4  sdk:flex sdk:flex-col sdk:gap-y-[10px] sdk:border-l-2 sdk:border-l-[#303030]">
               {schema.children.map(([childName, childSchema]: [string, any]) =>
                 renderSchemaField({
                   form,
@@ -328,7 +329,7 @@ export const renderSchemaField = ({
           };
           return (
             <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
+              <FormLabel>{labelWithRequired}</FormLabel>
               <FormControl>
                 <Input
                   type="file"
@@ -368,7 +369,7 @@ export const renderSchemaField = ({
           };
           return (
             <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
+              <FormLabel>{labelWithRequired}</FormLabel>
               <FormControl>
                 {parentName ? (
                   <Input
@@ -407,7 +408,7 @@ export const renderSchemaField = ({
           };
           return (
             <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
+              <FormLabel>{labelWithRequired}</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -443,7 +444,7 @@ export const renderSchemaField = ({
               <Checkbox
                 checked={!!field.value}
                 onChange={handleChange}
-                label={label ?? name}
+                label={labelWithRequired}
                 disabled={field.disabled}
               />
               <FormMessage />

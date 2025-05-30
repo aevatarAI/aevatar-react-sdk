@@ -23,7 +23,7 @@ export default function DeleteGAevatarConfirm({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger>
         <Delete
-          className="sdk:cursor-pointer sdk:text-[#606060]"
+          className="sdk:cursor-pointer sdk:text-[#606060] sdk:hidden"
           onClick={(e) => {
             e.stopPropagation();
           }}
