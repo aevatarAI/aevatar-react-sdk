@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from "vitest";
 import { generateWorkflowGraph } from "./utils"; // Adjust import path as necessary
 import type {
   IAgentInfoDetail,
-  IWorkUnitRelationsItem,
+  IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 import type { TNodeDataClick, TDeleteNode } from "./types";
 
@@ -28,18 +28,16 @@ describe("generateWorkflowGraph", () => {
     },
   ];
 
-  const mockGrains: IWorkUnitRelationsItem[] = [
+  const mockGrains: IWorkflowUnitListItem[] = [
     {
       grainId: "grain1",
       nextGrainId: "grain2",
-      xPosition: 100,
-      yPosition: 200,
+      extendedData: { xPosition: "100", yPosition: "200" },
     },
     {
       grainId: "grain2",
       nextGrainId: "",
-      xPosition: 300,
-      yPosition: 400,
+      extendedData: { xPosition: "300", yPosition: "400" },
     },
   ];
 
@@ -97,12 +95,11 @@ describe("generateWorkflowGraph", () => {
   });
 
   it("should throw an error if a grainId does not have a corresponding agent", () => {
-    const invalidGrains: IWorkUnitRelationsItem[] = [
+    const invalidGrains: IWorkflowUnitListItem[] = [
       {
         grainId: "grain3", // No corresponding agentInfo
         nextGrainId: "",
-        xPosition: 100,
-        yPosition: 200,
+        extendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 
@@ -112,12 +109,11 @@ describe("generateWorkflowGraph", () => {
   });
 
   it("should throw an error if a nextGrainId does not have a corresponding agent", () => {
-    const invalidGrains: IWorkUnitRelationsItem[] = [
+    const invalidGrains: IWorkflowUnitListItem[] = [
       {
         grainId: "grain1",
         nextGrainId: "grain3", // No corresponding agentInfo
-        xPosition: 100,
-        yPosition: 200,
+        extendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 
@@ -127,12 +123,11 @@ describe("generateWorkflowGraph", () => {
   });
 
   it("should generate nodes without edges if nextGrainId is null", () => {
-    const singleGrain: IWorkUnitRelationsItem[] = [
+    const singleGrain: IWorkflowUnitListItem[] = [
       {
         grainId: "grain1",
         nextGrainId: "", // No edge case
-        xPosition: 100,
-        yPosition: 200,
+        extendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 
@@ -146,5 +141,56 @@ describe("generateWorkflowGraph", () => {
     // Validate nodes
     expect(nodes).toHaveLength(1);
     expect(edges).toHaveLength(0); // No edges
+  });
+
+  it("should return empty nodes and edges if grains is empty", () => {
+    const { nodes, edges } = generateWorkflowGraph(
+      [],
+      mockAgentInfos,
+      onClick,
+      deleteNode
+    );
+    expect(nodes).toHaveLength(0);
+    expect(edges).toHaveLength(0);
+  });
+
+  it("should throw error if agentInfos is empty", () => {
+    expect(() =>
+      generateWorkflowGraph(mockGrains, [], onClick, deleteNode)
+    ).toThrowError();
+  });
+
+  it("should handle extendedData with non-numeric x/y position as NaN", () => {
+    const grains: IWorkflowUnitListItem[] = [
+      {
+        grainId: "grain1",
+        nextGrainId: "",
+        extendedData: { xPosition: "abc", yPosition: "def" },
+      },
+    ];
+    const { nodes } = generateWorkflowGraph(
+      grains,
+      mockAgentInfos,
+      onClick,
+      deleteNode
+    );
+    expect(nodes[0].position.x).toBeNaN();
+    expect(nodes[0].position.y).toBeNaN();
+  });
+
+  it("should use the last agentInfo if businessAgentGrainId is duplicated", () => {
+    const duplicateAgentInfos = [
+      ...mockAgentInfos,
+      { ...mockAgentInfos[0], id: "agent1-dup", name: "Agent 1 Dup" },
+    ];
+    const { nodes } = generateWorkflowGraph(
+      mockGrains,
+      duplicateAgentInfos,
+      onClick,
+      deleteNode
+    );
+    // The last one should overwrite the previous in agentInfoMap
+    expect(nodes[0].id).toBe("agent1-dup");
+    expect(nodes[0].data.agentInfo.name).toBe("Agent 1 Dup");
   });
 });

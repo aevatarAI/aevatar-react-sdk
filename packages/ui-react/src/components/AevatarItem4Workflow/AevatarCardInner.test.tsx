@@ -26,7 +26,7 @@ vi.mock("../../utils/jsonSchemaParse", () => ({
     ["Property 1", { value: "Value 1" }],
     ["Property 2", { value: "Value 2" }],
     ["Property 3", { value: "" }],
-    ["Property 4", { value: "", enum: true }],
+    ["Property 4", { value: "A", enum: ["A", "B"], "x-enumNames": ["EnumA", "EnumB"] }],
   ]),
 }));
 

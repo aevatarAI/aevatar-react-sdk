@@ -12,17 +12,20 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import clsx from "clsx";
+import { useAevatar } from "../../..";
 export interface IWorkflowSidebarProps {
   gaevatarList?: IAgentInfoDetail[];
   isNewGAevatar?: boolean;
   gaevatarTypeList?: IAgentsConfiguration[];
   disabledGeavatarIds?: string[];
+  hiddenGAevatarType?: string[];
 }
 export default function Sidebar({
   gaevatarList,
   disabledGeavatarIds,
   isNewGAevatar = true,
   gaevatarTypeList,
+  hiddenGAevatarType,
 }: IWorkflowSidebarProps) {
   const [_, setDragItem] = useDnD();
 
@@ -40,13 +43,17 @@ export default function Sidebar({
 
     if (!gaevatarList) return [agentMap, agentTypeMap];
 
+    const list = gaevatarList.filter(
+      (gAevatar) => !hiddenGAevatarType?.includes(gAevatar.agentType)
+    );
+
     gaevatarTypeList?.forEach((item) => {
       agentTypeMap.set(item.agentType, item);
       if (agentMap.has(item.agentType)) return;
       agentMap.set(item.agentType, []);
     });
 
-    gaevatarList.forEach((agent) => {
+    list.forEach((agent) => {
       if (!agentMap.has(agent.agentType)) {
         agentMap.set(agent.agentType, []);
       }
@@ -54,7 +61,7 @@ export default function Sidebar({
     });
 
     return [agentMap, agentTypeMap];
-  }, [gaevatarList, gaevatarTypeList]);
+  }, [gaevatarList, gaevatarTypeList, hiddenGAevatarType]);
 
   return (
     <aside className="sdk:w-full sdk:sm:w-[184px] sdk:pl-[20px] sdk:pr-0 sdk:py-[16px] sdk:sm:px-[30px] sdk:sm:pt-[29px] sdk:flex sdk:flex-row sdk:sm:flex-col sdk:gap-6 sdk:border-r-1 sdk:workflow-common-border sdk:overflow-auto">

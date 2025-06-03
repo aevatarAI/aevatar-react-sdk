@@ -22,7 +22,7 @@ function parseJsonSchemaProperties(
   requiredList?: string[]
 ): [string, any][] {
   return Object.entries(properties).map(([name, prop]) => {
-    const isRequired = requiredList?.includes(name);
+    const isRequired = Array.isArray(requiredList) && requiredList.includes(name);
     const propWithRequired = isRequired ? { ...prop, required: true } : prop;
     return [
       name,
@@ -46,7 +46,8 @@ export function parseJsonSchema(
   if (schema.$ref) {
     const refSchema = resolveRef(schema.$ref, rootSchema);
     if (!refSchema) return { ...schema, value };
-    return parseJsonSchema(refSchema, rootSchema, definitions, value);
+    const newSchema = { ...refSchema, required: schema.required };
+    return parseJsonSchema(newSchema, rootSchema, definitions, value);
   }
   // Handle allOf/anyOf/oneOf (not implemented, fallback to first)
   if (schema.allOf && Array.isArray(schema.allOf)) {
@@ -71,6 +72,44 @@ export function parseJsonSchema(
         schema.required
       ),
     };
+  }
+  // Handle object with additionalProperties only
+  if (schema.type === "object" && !schema.properties) {
+    if (schema.additionalProperties === false) {
+      return {
+        ...schema,
+        value,
+        children: [],
+      };
+    }
+    if (schema.additionalProperties === true) {
+      return {
+        ...schema,
+        value,
+        children: [
+          {
+            isAdditionalProperties: true,
+            valueSchema: { type: "any" },
+          },
+        ],
+      };
+    }
+    if (typeof schema.additionalProperties === "object") {
+      return {
+        ...schema,
+        value,
+        children: [
+          {
+            isAdditionalProperties: true,
+            valueSchema: parseJsonSchema(
+              schema.additionalProperties,
+              rootSchema,
+              definitions
+            ),
+          },
+        ],
+      };
+    }
   }
   // Handle array
   if (schema.type === "array" && schema.items) {
@@ -108,12 +147,21 @@ export const jsonSchemaParse = (
     (jsonSchemaString === "" ? "{}" : jsonSchemaString) ?? "{}"
   );
   const definitions = jsonSchema?.definitions || {};
-  const _properties = jsonSchema?.properties;
+  let _properties = jsonSchema?.properties;
   const requiredList = jsonSchema?.required;
+
+  // Filter out correlationId and publisherGrainId
+  if (_properties) {
+    _properties = Object.fromEntries(
+      Object.entries(_properties).filter(
+        ([key]) => key !== "correlationId" && key !== "publisherGrainId"
+      )
+    );
+  }
 
   if (!_properties) return [];
   return Object.entries(_properties).map(([name, prop]) => {
-    const isRequired = requiredList?.includes(name);
+    const isRequired = Array.isArray(requiredList) && requiredList.includes(name);
 
     const propWithRequired = { ...((prop as any) ?? {}), required: isRequired };
 

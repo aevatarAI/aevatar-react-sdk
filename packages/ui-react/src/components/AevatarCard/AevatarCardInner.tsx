@@ -3,6 +3,7 @@ import Setting from "../../assets/svg/setting.svg?react";
 import { useCallback, useMemo } from "react";
 import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import clsx from "clsx";
+import CardLoading from "../CardLoading";
 
 export interface IAevatarCardInnerProps {
   className?: string;
@@ -22,10 +23,14 @@ export default function AevatarCardInner({
   );
 
   return (
-    <div className={clsx("sdk:w-full", className)}>
+    <div
+      className={clsx(
+        "sdk:w-full sdk:h-full sdk:flex sdk:flex-col",
+        className
+      )}>
       <div className="sdk:pb-[12px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[#303030] sdk:border-solid">
         <div className="sdk:flex sdk:justify-between sdk:items-center">
-          <div className="sdk:font-syne sdk:text-white sdk:text-[15px] sdk:font-semibold  sdk:lowercase sdk:leading-[18px] sdk:whitespace-nowrap sdk:overflow-hidden sdk:text-ellipsis sdk:max-w-[calc(100%-32px)]">
+          <div className="sdk:font-syne sdk:text-white sdk:text-[15px] sdk:font-semibold  sdk:leading-[18px] sdk:whitespace-nowrap sdk:overflow-hidden sdk:text-ellipsis sdk:max-w-[calc(100%-32px)]">
             {/* Ensure name is single line with ellipsis on overflow and does not overlap setting button */}
             {`${props.name}`}
           </div>
@@ -36,7 +41,7 @@ export default function AevatarCardInner({
           />
         </div>
       </div>
-      <div className="sdk:pb-[6px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
+      <div className="sdk:pb-[6px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch sdk:flex-1">
         {/* Render properties using enhanced logic: support array, enum, object, and filter empty values */}
         {(propertiesInfo ?? []).map((item: [string, any]) => {
           // Extract property name and schema
@@ -99,6 +104,8 @@ export default function AevatarCardInner({
                         {/* If value is object, render as JSON string */}
                         {typeof info === "object"
                           ? JSON.stringify(info, null, 2)
+                          : typeof info === "boolean"
+                          ? info.toString() // Render boolean as string
                           : info}
                       </pre>
                     </div>
@@ -108,6 +115,9 @@ export default function AevatarCardInner({
             </div>
           );
         })}
+        {typeof propertyJsonSchema === "undefined" && (
+          <CardLoading className="sdk:w-full" />
+        )}
       </div>
     </div>
   );

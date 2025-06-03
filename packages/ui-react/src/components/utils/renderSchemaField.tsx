@@ -9,6 +9,12 @@ import ArrayField from "../EditGAevatarInner/ArrayField";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import type { UseFormReturn } from "react-hook-form";
+import { Button } from "../ui";
+import AddIcon from "../../assets/svg/add.svg?react";
+import DeleteIcon from "../../assets/svg/delete_agent.svg?react";
+import { Checkbox } from "../ui";
+import type React from "react";
+import { useState } from "react";
 
 export const renderSchemaField = ({
   form,
@@ -31,7 +37,8 @@ export const renderSchemaField = ({
   onChange?: (value: any, meta: { name: string; schema: any }) => void;
 }) => {
   const fieldName = parentName ? `${parentName}.${name}` : name;
-
+  const labelWithRequired = schema.required ? `*${label ?? name}` : (label ?? name);
+  console.log(labelWithRequired, "labelWithRequired",schema.name, );
   // enum type
   if (schema.enum) {
     return (
@@ -51,7 +58,7 @@ export const renderSchemaField = ({
           const enumNamesValue = schema["x-enumNames"]?.[valueIndex];
           return (
             <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
+              <FormLabel>{labelWithRequired}</FormLabel>
               <Select
                 value={enumNamesValue ?? field?.value}
                 disabled={field?.disabled}
@@ -87,39 +94,190 @@ export const renderSchemaField = ({
         name={fieldName}
         defaultValue={schema.value || []}
         render={({ field }) => {
-          // Wrap onChange to call both field.onChange and external onChange
-          const handleChange = (value: any) => {
+          // Use useState to maintain the key for ArrayField
+          const [arrayKey, setArrayKey] = useState(
+            field.value?.length + JSON.stringify(field.value)
+          );
+          // Only update key when actionType is a structural change
+          const handleChange = (value: any, actionType?: 'add' | 'delete' | 'move' | 'update') => {
             field.onChange(value);
             onChange?.(value, { name: fieldName, schema });
             value?.forEach((item: any, idx: number) => {
               form.setValue(`${name}.${idx}`, item, { shouldDirty: true });
             });
+            if (actionType === 'add' || actionType === 'delete' || actionType === 'move') {
+              setArrayKey(value?.length + JSON.stringify(value));
+            }
           };
 
           return (
-            <ArrayField
-              name={name}
-              schema={schema}
-              value={field.value || []}
-              onChange={handleChange}
-              label={name}
-              renderItem={(item, idx, onItemChange, onDelete) => {
-                const renderSchemaFieldOnchange = (value: any) => {
-                  const newValue = [...field.value];
-                  newValue[idx] = value;
-                  handleChange(newValue);
-                };
-                return renderSchemaField({
-                  form,
-                  name: idx.toString(),
-                  schema: schema.itemsSchema,
-                  parentName: fieldName,
-                  label: `${name}-${idx}`,
-                  selectContentCls,
-                  onChange: renderSchemaFieldOnchange, // propagate onChange to children
-                });
-              }}
-            />
+            <>
+              <ArrayField
+                key={arrayKey}
+                name={name}
+                schema={schema}
+                value={field.value || []}
+                onChange={handleChange}
+                label={labelWithRequired}
+                renderItem={(item, idx, onItemChange, onDelete) => {
+                  // Propagate onChange to children, treat as content update
+                  const renderSchemaFieldOnchange = (
+                    value: any,
+                    meta: { name: string; schema: any }
+                  ) => {
+                    const baseArr = Array.isArray(field.value) ? field.value : [];
+                    const newValue = baseArr.map((it, i) => {
+                      if (i !== idx) return it;
+                      if (typeof it === "object") {
+                        const key = meta.name.split(".").pop();
+                        return { ...it, [key]: value };
+                      }
+                      return value;
+                    });
+                    handleChange(newValue, 'update');
+                  };
+                  return renderSchemaField({
+                    form,
+                    name: idx.toString(),
+                    schema: schema.itemsSchema,
+                    parentName: fieldName,
+                    label: `${name}-${idx}`,
+                    selectContentCls,
+                    onChange: renderSchemaFieldOnchange, // propagate onChange to children
+                  });
+                }}
+              />
+              <FormMessage />
+            </>
+          );
+        }}
+      />
+    );
+  }
+  // object type with additionalProperties (dynamic key-value)
+  if (
+    schema.type === "object" &&
+    Array.isArray(schema.children) &&
+    schema.children[0]?.isAdditionalProperties
+  ) {
+    return (
+      <FormField
+        key={fieldName}
+        control={form.control}
+        name={fieldName}
+        defaultValue={schema.value || {}}
+        render={({ field }) => {
+          const value = field.value || {};
+          const handleKeyChange = (oldKey: string, newKey: string) => {
+            if (!newKey || oldKey === newKey) return;
+            const entries = Object.entries(value);
+            const idx = entries.findIndex(([k]) => k === oldKey);
+            if (idx === -1) return;
+            entries[idx][0] = newKey;
+            const newValue = Object.fromEntries(entries);
+            field.onChange(newValue);
+            onChange?.(newValue, { name: fieldName, schema });
+          };
+          const handleValueChange = (key: string, val: any) => {
+            const newValue = { ...value, [key]: val };
+            field.onChange(newValue);
+            onChange?.(newValue, { name: fieldName, schema });
+          };
+          const handleDelete = (key: string) => {
+            const entries = Object.entries(value).filter(([k]) => k !== key);
+            const newValue = Object.fromEntries(entries);
+            field.onChange(newValue);
+            onChange?.(newValue, { name: fieldName, schema });
+          };
+          const handleAdd = () => {
+            const entries = Object.entries(value);
+            let idx = 1;
+            let newKey = `key${entries.length + 1}`;
+            const existingKeys = new Set(entries.map(([k]) => k));
+            while (existingKeys.has(newKey)) {
+              idx++;
+              newKey = `key${entries.length + idx}`;
+            }
+            entries.push([newKey, undefined]);
+            const newValue = Object.fromEntries(entries);
+            field.onChange(newValue);
+            onChange?.(newValue, { name: fieldName, schema });
+          };
+          const valueSchema = schema.children[0].valueSchema;
+          // --- UI branch ---
+          if (Object.keys(value).length === 0) {
+            // No items
+            return (
+              <div className="sdk:w-full sdk:mb-2">
+                <FormLabel>{labelWithRequired}</FormLabel>
+                <Button
+                  type="button"
+                  className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
+                  onClick={handleAdd}>
+                  <AddIcon className="text-white" />
+                  <span className="sdk:text-[12px] sdk:leading-[14px]">
+                    Add item
+                  </span>
+                </Button>
+              </div>
+            );
+          }
+          // Has items
+          return (
+            <div className="sdk:w-full sdk:mb-2">
+              <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">
+                {labelWithRequired}
+              </FormLabel>
+              <div className="sdk:rounded sdk:mb-2">
+                {Object.entries(value).map(([k, v], idx) => (
+                  <div
+                    key={k}
+                    className="sdk:flex sdk:flex-row sdk:items-end sdk:gap-[10px] sdk:mb-2">
+                    {/* key area: use Input (uncontrolled), onBlur triggers key change, avoids name collision with value area */}
+                    <div className="sdk:mr-2 sdk:w-32">
+                      <FormItem>
+                        {idx === 0 && <FormLabel>key</FormLabel>}
+                        <FormControl>
+                          <Input
+                            defaultValue={k}
+                            onBlur={(e) => handleKeyChange(k, e.target.value)}
+                            placeholder="key"
+                            className="sdk:w-full"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    </div>
+                    {/* value area */}
+                    <div className="sdk:mr-2 sdk:flex-1">
+                      {renderSchemaField({
+                        form,
+                        name: k,
+                        schema: valueSchema,
+                        parentName: fieldName,
+                        label: idx === 0 ? "value" : "",
+                        selectContentCls,
+                        onChange: (val) => handleValueChange(k, val),
+                      })}
+                    </div>
+                    <Button
+                      type="button"
+                      className="sdk:w-[40px] sdk:h-[40px] sdk:inline-block sdk:border-[#303030] sdk:p-[8px] sdk:px-[10px] sdk:hover:bg-[#303030] sdk:lowercase"
+                      onClick={() => handleDelete(k)}>
+                      <DeleteIcon />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+              <Button
+                type="button"
+                className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
+                onClick={handleAdd}>
+                <AddIcon className="text-white" />
+                <span className="sdk:text-[12px] sdk:leading-[14px]">
+                  Add item
+                </span>
+              </Button>
+            </div>
           );
         }}
       />
@@ -135,8 +293,8 @@ export const renderSchemaField = ({
         defaultValue={schema.value || {}}
         render={({ field }) => (
           <div className="sdk:w-full sdk:mb-2">
-            <FormLabel>{label ?? name}</FormLabel>
-            <div className="sdk:pl-4">
+            <FormLabel>{labelWithRequired}</FormLabel>
+            <div className="sdk:pl-4  sdk:flex sdk:flex-col sdk:gap-y-[10px] sdk:border-l-2 sdk:border-l-[#303030]">
               {schema.children.map(([childName, childSchema]: [string, any]) =>
                 renderSchemaField({
                   form,
@@ -148,6 +306,7 @@ export const renderSchemaField = ({
                 })
               )}
             </div>
+            <FormMessage />
           </div>
         )}
       />
@@ -170,7 +329,7 @@ export const renderSchemaField = ({
           };
           return (
             <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
+              <FormLabel>{labelWithRequired}</FormLabel>
               <FormControl>
                 <Input
                   type="file"
@@ -195,20 +354,36 @@ export const renderSchemaField = ({
         defaultValue={schema.value}
         name={fieldName}
         render={({ field }) => {
-          // Wrap onChange to call both field.onChange and external onChange
-          const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+          // For string under object, use Input; otherwise use Textarea
+          const handleInputChange = (
+            e: React.ChangeEvent<HTMLInputElement>
+          ) => {
+            field.onChange(e);
+            onChange?.(e.target.value, { name: fieldName, schema });
+          };
+          const handleTextareaChange = (
+            e: React.ChangeEvent<HTMLTextAreaElement>
+          ) => {
             field.onChange(e);
             onChange?.(e.target.value, { name: fieldName, schema });
           };
           return (
             <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
+              <FormLabel>{labelWithRequired}</FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder={schema?.description ?? ""}
-                  {...field}
-                  onChange={handleChange}
-                />
+                {parentName ? (
+                  <Input
+                    placeholder={schema?.description ?? ""}
+                    {...field}
+                    onChange={handleInputChange}
+                  />
+                ) : (
+                  <Textarea
+                    placeholder={schema?.description ?? ""}
+                    {...field}
+                    onChange={handleTextareaChange}
+                  />
+                )}
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -233,7 +408,7 @@ export const renderSchemaField = ({
           };
           return (
             <FormItem>
-              <FormLabel>{label ?? name}</FormLabel>
+              <FormLabel>{labelWithRequired}</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -251,8 +426,33 @@ export const renderSchemaField = ({
     );
   }
   if (schema.type === "boolean") {
-    // TODO: Implement boolean control
-    return <></>;
+    // Render boolean as custom Checkbox
+    return (
+      <FormField
+        key={fieldName}
+        control={form.control}
+        defaultValue={schema.value}
+        name={fieldName}
+        render={({ field }) => {
+          // Wrap onChange to call both field.onChange and external onChange
+          const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            field.onChange(e.target.checked);
+            onChange?.(e.target.checked, { name: fieldName, schema });
+          };
+          return (
+            <FormItem>
+              <Checkbox
+                checked={!!field.value}
+                onChange={handleChange}
+                label={labelWithRequired}
+                disabled={field.disabled}
+              />
+              <FormMessage />
+            </FormItem>
+          );
+        }}
+      />
+    );
   }
   // fallback
   return <></>;

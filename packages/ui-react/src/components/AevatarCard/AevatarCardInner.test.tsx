@@ -1,9 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-
 import { describe, expect, it, vi } from "vitest";
-import AevatarCardInner, {
-  type IAevatarCardInnerProps,
-} from "./AevatarCardInner";
+import AevatarCardInner from "./AevatarCardInner";
+import type { IAevatarCardInnerProps } from "./AevatarCardInner";
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import React from "react";
 import "@testing-library/jest-dom";
@@ -23,6 +21,13 @@ describe("AevatarCardInner", () => {
       name: "AI-123-properties",
       type: "Type-A",
     },
+    propertyJsonSchema: JSON.stringify({
+      properties: {
+        name: { type: "string" },
+        type: { type: "string" },
+      },
+      required: ["name", "type"],
+    }),
   };
 
   it("should render the component with correct className and elements", () => {
@@ -57,6 +62,12 @@ describe("AevatarCardInner", () => {
       properties: {
         name: ["AI-123-properties", "AI-124-properties"],
       },
+      propertyJsonSchema: JSON.stringify({
+        properties: {
+          name: { type: "array", items: { type: "string" } },
+        },
+        required: ["name"],
+      }),
     };
 
     render(<AevatarCardInner {...propsWithArray} />);
@@ -71,6 +82,12 @@ describe("AevatarCardInner", () => {
       properties: {
         name: "AI-123-properties",
       },
+      propertyJsonSchema: JSON.stringify({
+        properties: {
+          name: { type: "string" },
+        },
+        required: ["name"],
+      }),
     };
 
     render(<AevatarCardInner {...propsWithSingleValue} />);
@@ -82,6 +99,10 @@ describe("AevatarCardInner", () => {
     const propsWithEmptyProperties = {
       ...defaultProps,
       properties: {},
+      propertyJsonSchema: JSON.stringify({
+        properties: {},
+        required: [],
+      }),
     };
 
     render(<AevatarCardInner {...propsWithEmptyProperties} />);

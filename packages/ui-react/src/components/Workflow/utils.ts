@@ -1,13 +1,13 @@
 import type {
   IAgentInfoDetail,
-  IWorkUnitRelationsItem,
+  IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 import type { Edge, INode, TDeleteNode, TNodeDataClick } from "./types";
 let id = 0;
 const getId = () => `edge_id_${id++}`;
 
 export const generateWorkflowGraph = (
-  grains: IWorkUnitRelationsItem[],
+  grains: IWorkflowUnitListItem[],
   agentInfos: IAgentInfoDetail[],
   onClick: TNodeDataClick,
   deleteNode: TDeleteNode
@@ -30,8 +30,8 @@ export const generateWorkflowGraph = (
       id: agentInfo.id,
       type: "ScanCard",
       position: {
-        x: grain.xPosition,
-        y: grain.yPosition,
+        x: Number(grain.extendedData.xPosition),
+        y: Number(grain.extendedData.yPosition),
       },
       data: {
         label: "ScanCard Node",

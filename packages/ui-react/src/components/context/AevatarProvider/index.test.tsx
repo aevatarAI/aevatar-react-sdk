@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { aevatarAI } from "../../../utils";
 import { ConfigProvider } from "../../config-provider";
 import Provider, { useAevatar } from ".";
+import "@testing-library/jest-dom";
 
 // Mocking dependencies
 vi.mock("../../../utils", () => ({

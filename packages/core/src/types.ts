@@ -4,6 +4,7 @@ import type {
   IAgentInfo,
   RefreshTokenConfig,
   IClientAuthTokenParams,
+  IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
@@ -13,6 +14,10 @@ export interface IAevatarAIMethods {
   createGAevatar(params: ICreateAgentParams): Promise<IAgentInfo>;
   getAuthToken(params: RefreshTokenConfig): Promise<string>;
   getAuthTokenWithClient(params: IClientAuthTokenParams): Promise<string>;
+  getWorkflowUnitRelationByAgentId(agentId: string): Promise<{
+    workflowName: string;
+    workUnitRelations: IWorkflowUnitListItem[];
+  }>;
 }
 
 export interface IAevatarConfig {

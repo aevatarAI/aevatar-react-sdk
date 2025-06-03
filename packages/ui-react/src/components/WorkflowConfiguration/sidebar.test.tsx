@@ -32,6 +32,10 @@ vi.mock("./aevatarItemMini", () => ({
   },
 }));
 
+vi.mock("../../..", () => ({
+  useAevatar: () => [{ hiddenGAevatarType: [] }],
+}));
+
 describe("Sidebar Component", () => {
   const mockGaeavatarList: IAgentInfoDetail[] = [
     {

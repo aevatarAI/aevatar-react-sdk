@@ -1,5 +1,21 @@
 # @aevatar-react-sdk/ui-react
 
+## 0.4.0
+
+### Minor Changes
+
+- 729ba97: change input to textaere
+- 37b6a1e: update
+
+### Patch Changes
+
+- Updated dependencies [729ba97]
+- Updated dependencies [37b6a1e]
+  - @aevatar-react-sdk/services@0.4.0
+  - @aevatar-react-sdk/types@0.4.0
+  - @aevatar-react-sdk/utils@0.4.0
+  - @aevatar-react-sdk/core@0.4.0
+
 ## 0.3.1-alpha.0
 
 ### Minor Changes

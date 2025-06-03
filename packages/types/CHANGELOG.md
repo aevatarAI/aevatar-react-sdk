@@ -1,5 +1,12 @@
 # @aevatar-react-sdk/types
 
+## 0.4.0
+
+### Minor Changes
+
+- 729ba97: change input to textaere
+- 37b6a1e: update
+
 ## 0.3.1-alpha.0
 
 ### Minor Changes

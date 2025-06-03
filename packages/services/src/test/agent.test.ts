@@ -37,15 +37,13 @@ describe("AgentService", () => {
       properties: {
         a: 1,
       },
-      grainId: ""
     };
     mockRequest.send.mockResolvedValue(mockResponse);
 
     const result = await agentService.getAgentInfo("1");
     expect(mockRequest.send).toHaveBeenCalledWith({
       method: "GET",
-      url: "/api/agent",
-      params: { guid: "1" },
+      url: "/api/agent/1",
     });
     expect(result).toEqual(mockResponse);
   });
@@ -165,7 +163,7 @@ describe("AgentService", () => {
       {
         agentType: "Type B",
         fullName: "Agent Type B Full Name",
-        agentParams: null,
+        agentParams: [],
       },
     ];
     const mockResponse: IAgentsConfiguration[] = mockAgentsConfiguration;
@@ -174,7 +172,7 @@ describe("AgentService", () => {
     const result = await agentService.getAllAgentsConfiguration();
     expect(mockRequest.send).toHaveBeenCalledWith({
       method: "GET",
-      url: "/api/agent/all-agents",
+      url: "/api/agent/agent-type-info-list",
     });
     expect(result).toEqual(mockResponse);
   });
@@ -191,7 +189,6 @@ describe("AgentService", () => {
       },
     ];
     const params: IGetAgentsParams = {
-      userAddress: "userAddress",
       pageIndex: 0,
       pageSize: 20,
     };
@@ -200,7 +197,7 @@ describe("AgentService", () => {
     const result = await agentService.getAgents(params);
     expect(mockRequest.send).toHaveBeenCalledWith({
       method: "GET",
-      url: "/api/agent/atomic-agents",
+      url: "/api/agent/agent-list",
       params,
     });
     expect(result).toEqual(mockResponse);
@@ -225,7 +222,7 @@ describe("AgentService", () => {
     const result = await agentService.createAgent(createParams);
     expect(mockRequest.send).toHaveBeenCalledWith({
       method: "POST",
-      url: "/api/agent/agent",
+      url: "/api/agent",
       params: createParams,
     });
     expect(result).toEqual(mockResponse);

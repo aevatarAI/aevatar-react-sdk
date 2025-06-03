@@ -14,6 +14,7 @@ import CommonHeader from "../CommonHeader";
 import { aevatarAI } from "../../utils";
 import { useToast } from "../../hooks/use-toast";
 import { handleErrorMessage } from "../../utils/error";
+import { useAevatar } from "../context/AevatarProvider";
 
 export interface IMyGAevatarProps {
   height?: number | string;
@@ -34,7 +35,29 @@ export default function MyGAevatar({
 }: IMyGAevatarProps) {
   const [, setShow] = useAtom(loadingAtom);
   const [gAevatarList, setGAevatarList] = useState<IAgentInfoDetail[]>();
+  const [{ hiddenGAevatarType }] = useAevatar();
   const { toast } = useToast();
+
+  const [agentConfiguration, setAgentConfiguration] =
+    useState<Record<string, string>>();
+
+  const getAllAgentsConfiguration = useCallback(async () => {
+    try {
+      const result = await aevatarAI.services.agent.getAllAgentsConfiguration();
+      if (!result) return;
+      const configuration: any = {};
+      result.forEach((item) => {
+        configuration[item.agentType] = item.propertyJsonSchema;
+      });
+      setAgentConfiguration(configuration);
+    } catch (error) {
+      toast({
+        title: "error",
+        description: handleErrorMessage(error, "Something went wrong."),
+        duration: 3000,
+      });
+    }
+  }, [toast]);
 
   const fetchAllList = useCallback(async () => {
     let pageIndex = 0;
@@ -76,6 +99,7 @@ export default function MyGAevatar({
     setShow(true);
 
     try {
+      getAllAgentsConfiguration();
       await fetchAllList();
     } catch (error) {
       toast({
@@ -85,7 +109,7 @@ export default function MyGAevatar({
       });
       setShow(false);
     }
-  }, [setShow, toast, fetchAllList]);
+  }, [setShow, toast, fetchAllList, getAllAgentsConfiguration]);
 
   useEffect(() => {
     getGAevatarList();
@@ -105,6 +129,21 @@ export default function MyGAevatar({
     [onNewGAevatar]
   );
 
+  const aevatarList = useMemo(() => {
+    let list = gAevatarList;
+    if (hiddenGAevatarType) {
+      list = list?.filter(
+        (gAevatar) => !hiddenGAevatarType.includes(gAevatar.agentType)
+      );
+    }
+    return list?.map((item) => {
+      return {
+        ...item,
+        propertyJsonSchema: agentConfiguration?.[item.agentType],
+      };
+    });
+  }, [gAevatarList, hiddenGAevatarType, agentConfiguration]);
+
   return (
     <div
       className={clsx(
@@ -115,8 +154,8 @@ export default function MyGAevatar({
       <CommonHeader
         leftEle={"my g-agents"}
         rightEle={
-          gAevatarList &&
-          (maxGAevatarCount ? maxGAevatarCount > gAevatarList.length : true) &&
+          aevatarList &&
+          (maxGAevatarCount ? maxGAevatarCount > aevatarList.length : true) &&
           newGA
         }
       />
@@ -124,22 +163,22 @@ export default function MyGAevatar({
       <div
         className={clsx(
           "sdk:overflow-auto sdk:flex-1 sdk:lg:pb-[40px] sdk:pb-[16px]",
-          !gAevatarList && "sdk:flex sdk:justify-center sdk:items-center"
+          !aevatarList && "sdk:flex sdk:justify-center sdk:items-center"
         )}>
-        {(!gAevatarList || gAevatarList?.length === 0) && (
+        {(!aevatarList || aevatarList?.length === 0) && (
           <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:items-center sdk:gap-[20px]">
             <EmptyIcon role="img" data-testid="empty-icon" id="empty-icon" />
             {newGA}
           </div>
         )}
-        {gAevatarList && (
+        {aevatarList && (
           <div
             className={clsx(
               "sdk:grid sdk:grid-cols-1 sdk:place-items-center sdk:pt-[23px] sdk:gap-[20px]",
               "sdk:md:grid-cols-3 sdk:md:max-w-[762px] sdk:md:pt-[0] sdk:mx-auto",
               "aevatarai-gaevatar-list"
             )}>
-            {gAevatarList?.map((gAevatar, index) => (
+            {aevatarList?.map((gAevatar, index) => (
               <AevatarCard
                 agentInfo={gAevatar}
                 // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
