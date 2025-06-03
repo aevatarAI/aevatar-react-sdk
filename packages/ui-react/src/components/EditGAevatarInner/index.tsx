@@ -194,6 +194,8 @@ function EditGAevatarInnerCom({
     return jsonSchemaParse(jsonSchemaString, properties);
   }, [jsonSchemaString, properties]);
 
+  console.log(JSONSchemaProperties, "JSONSchemaProperties=");
+
   const form = useForm<any>();
   useEffect(() => {
     const agentType = form.getValues("agentType");

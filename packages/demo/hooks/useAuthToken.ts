@@ -81,7 +81,7 @@ export const useAuthToken = () => {
         client_id: "AevatarAuthServer",
         grant_type: "signature",
       };
-
+      console.log(apiData, 'apiData==')
       return aevatarAI.getAuthToken(apiData);
     }
     return "";
