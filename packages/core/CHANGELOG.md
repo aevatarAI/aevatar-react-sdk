@@ -1,6 +1,6 @@
 # @aevatar-react-sdk/core
 
-## 0.4.0
+## 0.3.1
 
 ### Minor Changes
 
@@ -11,9 +11,9 @@
 
 - Updated dependencies [729ba97]
 - Updated dependencies [37b6a1e]
-  - @aevatar-react-sdk/services@0.4.0
-  - @aevatar-react-sdk/types@0.4.0
-  - @aevatar-react-sdk/utils@0.4.0
+  - @aevatar-react-sdk/services@0.3.1
+  - @aevatar-react-sdk/types@0.3.1
+  - @aevatar-react-sdk/utils@0.3.1
 
 ## 0.3.1-alpha.0
 
