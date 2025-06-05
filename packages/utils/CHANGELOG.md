@@ -1,6 +1,6 @@
 # @aevatar-react-sdk/utils
 
-## 0.4.0
+## 0.3.1
 
 ### Minor Changes
 
