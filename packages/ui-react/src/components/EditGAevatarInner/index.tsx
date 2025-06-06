@@ -242,7 +242,13 @@ function EditGAevatarInnerCom({
         };
         console.log(submitParams, defaultAgentType, "params==updateAgentInfo");
         if (type === "create") {
-          await aevatarAI.services.agent.createAgent(submitParams);
+          const result = await aevatarAI.services.agent.createAgent(
+            submitParams
+          );
+          // TODO: add subAgents to receive publishEvent
+          await aevatarAI.services.agent.addSubAgents(result.id, {
+            subAgents: [],
+          });
         } else {
           await aevatarAI.services.agent.updateAgentInfo(agentId, submitParams);
         }

@@ -111,6 +111,10 @@ const WorkflowConfiguration = ({
             workflowUnitList: workUnitRelations,
           },
         });
+        // TODO: add subAgents to receive publishEvent
+        await aevatarAI.services.agent.addSubAgents(result.id, {
+          subAgents: [],
+        });
         workflowAgentId = result.id;
       }
 
