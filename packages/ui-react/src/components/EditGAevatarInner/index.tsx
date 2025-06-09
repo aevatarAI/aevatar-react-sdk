@@ -304,7 +304,7 @@ function EditGAevatarInnerCom({
                 Manage your aevatar settings and preferences
               </div>
             </div>
-            <div className="sdk:md:w-[360px] sdk:m-auto sdk:flex sdk:flex-col sdk:gap-y-[22px] sdk:p-[16px_16px_6px_16px] sdk:items-start sdk:content-start sdk:self-stretch">
+            <div className="sdk:md:w-[380px] sdk:m-auto sdk:flex sdk:flex-col sdk:gap-y-[22px] sdk:p-[16px_16px_6px_16px] sdk:items-start sdk:content-start sdk:self-stretch">
               <FormField
                 control={form.control}
                 name="agentType"
