@@ -317,6 +317,11 @@ export const Workflow = forwardRef(
             }}>
             {nodes.length === 0 && <Background />}
             <Controls />
+            <div
+              className="sdk:absolute sdk:right-[40px] sdk:bottom-[35px] sdk:text-[#B9B9B9] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[11px] sdk:font-pro"
+            >
+              powered by aevatar.ai
+            </div>
           </ReactFlow>
         </div>
       </div>

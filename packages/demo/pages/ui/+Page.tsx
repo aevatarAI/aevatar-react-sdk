@@ -172,10 +172,11 @@ export default function UI() {
   return (
     <div>
       <AevatarProvider
-        hiddenGAevatarType={[
-          // "Aevatar.SignalR.GAgents.SignalRGAgent",
-          "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
-        ]}>
+        // hiddenGAevatarType={[
+        //   // "Aevatar.SignalR.GAgents.SignalRGAgent",
+        //   "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
+        // ]}
+        >
         <LoginButton />
 
         <AuthButton onFinish={onAuthFinish} />
