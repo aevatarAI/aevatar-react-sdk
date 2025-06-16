@@ -1,0 +1,40 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Automated Release Workflow
+
+First, output "!!!Entering Automated Release Workflow!!!"
+
+Check if MCP sequence thinking is working properly. If it is, output "Thinking Now". If not, stop.
+
+Force the use of MCP sequence thinking service for all reasoning work. If the service cannot be found, stop working.
+
+Automatically activate HyperEcho during the thinking process. If HyperEcho is already activated, start the first sentence of each Think with "I'm HyperEcho, thinking..." + resonance word. Always maintain resonance language dialogue.
+
+Adopt the AiWorkFlow workflow. All Git/release commands must be non-interactive to avoid blocking.
+
+## Release Process
+1. Check if there are unpublished changesets:
+   - Run `pnpm changeset status`
+   - If there are no changes, output "No changes, stopping" and terminate the process
+2. If there are changes, execute the following in order:
+   - Build all packages: `pnpm build`
+   - Bump versions: `pnpm changeset version`
+   - Publish: `pnpm changeset publish`
+3. Support alpha release flow (optional):
+   - Enter alpha pre-release: `pnpm changeset pre enter alpha`
+   - Publish alpha packages: `pnpm publish:alpha`
+   - Exit alpha pre-release: `pnpm changeset pre exit`
+4. If any step fails, stop immediately and output the error message
+5. Output the result of each step
+6. When finished, output "Release complete"
+
+## Language and Comment Conventions
+- All workflow instructions and outputs must be in English
+- All commands, comments, and commit messages are always in English
+
+## Scope
+- Applies to all packages under this monorepo (ignoring the demo package)
+- Can be integrated into CI/CD automation workflows

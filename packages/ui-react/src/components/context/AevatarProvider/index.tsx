@@ -45,7 +45,7 @@ export interface ProviderProps {
 }
 export default function Provider({
   children,
-  hiddenGAevatarType,
+  hiddenGAevatarType = INITIAL_STATE.hiddenGAevatarType,
 }: ProviderProps) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   useEffectOnce(() => {

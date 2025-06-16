@@ -22,7 +22,8 @@ function parseJsonSchemaProperties(
   requiredList?: string[]
 ): [string, any][] {
   return Object.entries(properties).map(([name, prop]) => {
-    const isRequired = Array.isArray(requiredList) && requiredList.includes(name);
+    const isRequired =
+      Array.isArray(requiredList) && requiredList.includes(name);
     const propWithRequired = isRequired ? { ...prop, required: true } : prop;
     return [
       name,
@@ -113,6 +114,7 @@ export function parseJsonSchema(
   }
   // Handle array
   if (schema.type === "array" && schema.items) {
+    if (schema?.required && schema.items) schema.items.required = true;
     return {
       ...schema,
       value,
@@ -161,7 +163,8 @@ export const jsonSchemaParse = (
 
   if (!_properties) return [];
   return Object.entries(_properties).map(([name, prop]) => {
-    const isRequired = Array.isArray(requiredList) && requiredList.includes(name);
+    const isRequired =
+      Array.isArray(requiredList) && requiredList.includes(name);
 
     const propWithRequired = { ...((prop as any) ?? {}), required: isRequired };
 

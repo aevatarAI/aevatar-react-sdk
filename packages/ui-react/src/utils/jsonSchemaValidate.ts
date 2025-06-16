@@ -48,7 +48,9 @@ export function validateSchemaField(
   if (schema.type === "array" && schema.itemsSchema) {
     if (
       schema.required &&
-      (value === undefined || value === null || (Array.isArray(value) && value.length === 0))
+      (value === undefined ||
+        value === null ||
+        (Array.isArray(value) && value.length === 0))
     ) {
       errors.push({ name: fieldName, error: "required" });
       return { errors, param };

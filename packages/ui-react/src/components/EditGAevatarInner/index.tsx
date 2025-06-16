@@ -194,6 +194,8 @@ function EditGAevatarInnerCom({
     return jsonSchemaParse(jsonSchemaString, properties);
   }, [jsonSchemaString, properties]);
 
+  console.log(JSONSchemaProperties, "JSONSchemaProperties=");
+
   const form = useForm<any>();
   useEffect(() => {
     const agentType = form.getValues("agentType");
@@ -240,7 +242,13 @@ function EditGAevatarInnerCom({
         };
         console.log(submitParams, defaultAgentType, "params==updateAgentInfo");
         if (type === "create") {
-          await aevatarAI.services.agent.createAgent(submitParams);
+          const result = await aevatarAI.services.agent.createAgent(
+            submitParams
+          );
+          // TODO: add subAgents to receive publishEvent
+          await aevatarAI.services.agent.addSubAgents(result.id, {
+            subAgents: [],
+          });
         } else {
           await aevatarAI.services.agent.updateAgentInfo(agentId, submitParams);
         }
@@ -296,7 +304,7 @@ function EditGAevatarInnerCom({
                 Manage your aevatar settings and preferences
               </div>
             </div>
-            <div className="sdk:md:w-[360px] sdk:m-auto sdk:flex sdk:flex-col sdk:gap-y-[22px] sdk:p-[16px_16px_6px_16px] sdk:items-start sdk:content-start sdk:self-stretch">
+            <div className="sdk:md:w-[380px] sdk:m-auto sdk:flex sdk:flex-col sdk:gap-y-[22px] sdk:p-[16px_16px_6px_16px] sdk:items-start sdk:content-start sdk:self-stretch">
               <FormField
                 control={form.control}
                 name="agentType"

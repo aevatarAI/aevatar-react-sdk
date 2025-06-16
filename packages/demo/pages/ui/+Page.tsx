@@ -86,16 +86,9 @@ export default function UI() {
     setStage(Stage.myGAevatar);
   }, []);
 
-  const getGaevatarList = useCallback(async () => {
-    return aevatarAI.services.agent.getAgents({
-      pageIndex: 0,
-      pageSize: 100,
-    });
-  }, []);
-
   const [agentTypeList, setAgentTypeList] = useState<IAgentsConfiguration[]>();
 
-  const onShowWorkflow = useCallback(async () => {
+  const refreshGaevatarList = useCallback(async () => {
     const [gaevatarList, agentTypeList] = await Promise.all([
       aevatarAI.services.agent.getAgents({
         pageIndex: 0,
@@ -117,9 +110,12 @@ export default function UI() {
       return { ...item };
     });
     setGaevatarList(list);
-
-    setStage(Stage.Workflow);
   }, []);
+
+  const onShowWorkflow = useCallback(async () => {
+    await refreshGaevatarList();
+    setStage(Stage.Workflow);
+  }, [refreshGaevatarList]);
 
   const [editWorkflow, setEditWorkflow] = useState<any>();
 
@@ -165,20 +161,22 @@ export default function UI() {
           data.params
         );
       }
-      await sleep(500);
-      await getGaevatarList();
+      await sleep(2000);
+      await refreshGaevatarList();
+
       return result;
     },
-    [getGaevatarList]
+    [refreshGaevatarList]
   );
 
   return (
     <div>
       <AevatarProvider
-        hiddenGAevatarType={[
-          // "Aevatar.SignalR.GAgents.SignalRGAgent",
-          "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
-        ]}>
+        // hiddenGAevatarType={[
+        //   // "Aevatar.SignalR.GAgents.SignalRGAgent",
+        //   "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
+        // ]}
+        >
         <LoginButton />
 
         <AuthButton onFinish={onAuthFinish} />

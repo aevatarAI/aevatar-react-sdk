@@ -38,7 +38,6 @@ export const renderSchemaField = ({
 }) => {
   const fieldName = parentName ? `${parentName}.${name}` : name;
   const labelWithRequired = schema.required ? `*${label ?? name}` : (label ?? name);
-  console.log(labelWithRequired, "labelWithRequired",schema.name, );
   // enum type
   if (schema.enum) {
     return (
