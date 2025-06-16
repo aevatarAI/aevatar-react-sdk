@@ -1,5 +1,19 @@
 # @aevatar-react-sdk/ui-react
 
+## 0.4.0
+
+### Minor Changes
+
+- Bump all main packages to version 0.3.3 for release consistency.
+
+### Patch Changes
+
+- Updated dependencies
+  - @aevatar-react-sdk/utils@0.4.0
+  - @aevatar-react-sdk/types@0.4.0
+  - @aevatar-react-sdk/services@0.4.0
+  - @aevatar-react-sdk/core@0.4.0
+
 ## 0.3.1
 
 ### Minor Changes
