@@ -44,7 +44,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className ,}), 'aevatar-ui-button')}
+        className={cn(
+          "aevatar-ui-button-default",
+          buttonVariants({ variant, size, className }),
+          "aevatar-ui-button"
+        )}
         ref={ref}
         {...props}
       />
