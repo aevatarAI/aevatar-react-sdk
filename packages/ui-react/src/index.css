@@ -3,7 +3,7 @@
 
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme) prefix(sdk);
-@import "tailwindcss/utilities.css" layer(utilities) prefix(sdk);
+@import "tailwindcss/utilities.css" prefix(sdk);
 
 @layer theme {
   :root {

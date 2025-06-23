@@ -1,5 +1,11 @@
 # @aevatar-react-sdk/ui-react
 
+## 0.3.4
+
+### Patch Changes
+
+- Publish version 0.3.4
+
 ## 0.4.0
 
 ### Minor Changes
