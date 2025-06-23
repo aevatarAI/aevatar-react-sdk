@@ -96,7 +96,7 @@ export default function UI() {
       }),
       aevatarAI.services.agent.getAllAgentsConfiguration(),
     ]);
-
+    console.log(gaevatarList, "gaevatarList==");
     setAgentTypeList(agentTypeList);
     const list = gaevatarList.map((item) => {
       const agentType = agentTypeList.find(
@@ -172,22 +172,22 @@ export default function UI() {
   return (
     <div>
       <AevatarProvider
-        // hiddenGAevatarType={[
-        //   // "Aevatar.SignalR.GAgents.SignalRGAgent",
-        //   "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
-        // ]}
-        >
+      // hiddenGAevatarType={[
+      //   // "Aevatar.SignalR.GAgents.SignalRGAgent",
+      //   "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
+      // ]}
+      >
         <LoginButton />
 
         <AuthButton onFinish={onAuthFinish} />
         <Button onClick={getTokenByclient}>getTokenByclient</Button>
-        {showAction && (
-          <>
-            <Button onClick={onShowGaevatar}>show gaevatar</Button>
-            <Button onClick={onShowWorkflow}>show workflow</Button>
-            <Button onClick={onEditWorkflow}>edit workflow</Button>
-          </>
-        )}
+        {/* {showAction && (
+          <> */}
+        <Button onClick={onShowGaevatar}>show gaevatar</Button>
+        <Button onClick={onShowWorkflow}>show workflow</Button>
+        <Button onClick={onEditWorkflow}>edit workflow</Button>
+        {/* </>
+        )} */}
 
         <div className="text-[12px] lg:text-[24px]">aad</div>
 
