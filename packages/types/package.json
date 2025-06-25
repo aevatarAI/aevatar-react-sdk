@@ -1,6 +1,6 @@
 {
   "name": "@aevatar-react-sdk/types",
-  "version": "0.3.5",
+  "version": "0.3.8",
   "description": "",
   "type": "module",
   "main": "./dist/index.cjs",

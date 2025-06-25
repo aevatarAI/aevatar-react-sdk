@@ -236,6 +236,7 @@ const WorkflowConfiguration = ({
               <Button
                 variant="default"
                 onClick={onSave}
+                disabled={editAgentOpen}
                 className={clsx(
                   "sdk:workflow-title-button-save sdk:cursor-pointer sdk:h-[30px]",
                   editAgentOpen && "sdk:workflow-title-button-save-disabled"

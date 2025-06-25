@@ -9,7 +9,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "sdk:border-solid sdk:border-[0.75px] sdk:border-[#606060] sdk:hover:bg-white sdk:hover:text-black",
+          "sdk:border-solid sdk:bg-transparent sdk:border-[0.75px] sdk:border-[#606060] sdk:hover:bg-white sdk:hover:text-black",
         destructive:
           "sdk:bg-destructive sdk:text-destructive-foreground sdk:hover:bg-destructive/90",
         outline:

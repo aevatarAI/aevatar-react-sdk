@@ -1,19 +1,17 @@
 @import "tailwindcss/theme.css" layer(theme) prefix(sdk);
 
-@layer utilities {
-  .sdk\:workflow-aevatar-item-name {
-    @apply sdk:text-[11px] sdk:font-normal;
-  }
-  .sdk\:workflow-aevatar-item-id {
-    @apply sdk:text-[10px] sdk:font-normal sdk:text-[var(--sdk-gray-color)];
-  }
-  .sdk\:workflow-new-aevatar-item {
-    @apply sdk:text-[12px];
-  }
-  .sdk\:workflow-new-aevatar-item-disabled {
-    @apply sdk:text-[#616161];
-  }
-  .sdk\:workflow-reactflow-background {
-    @apply sdk:text-[12px] sdk:text-[var(--sdk-workflow-background)];
-  }
+.sdk\:workflow-aevatar-item-name {
+  @apply sdk:text-[11px] sdk:font-normal;
+}
+.sdk\:workflow-aevatar-item-id {
+  @apply sdk:text-[10px] sdk:font-normal sdk:text-[var(--sdk-gray-color)];
+}
+.sdk\:workflow-new-aevatar-item {
+  @apply sdk:text-[12px];
+}
+.sdk\:workflow-new-aevatar-item-disabled {
+  @apply sdk:text-[#616161];
+}
+.sdk\:workflow-reactflow-background {
+  @apply sdk:text-[12px] sdk:text-[var(--sdk-workflow-background)];
 }
