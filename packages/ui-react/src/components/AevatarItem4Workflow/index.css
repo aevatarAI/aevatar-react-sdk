@@ -1,32 +1,30 @@
 @import "tailwindcss/theme.css" layer(theme) prefix(sdk);
 
-@layer utilities {
-  .sdk\:aevatar-item-background {
-    @apply sdk:bg-[var(--sdk-card-background)];
-  }
+.sdk\:aevatar-item-background {
+  @apply sdk:bg-[var(--sdk-card-background)];
+}
 
-  .sdk\:cutCorner:before {
-    position: absolute;
-    right: 0px;
-    bottom: 0px;
-    content: "";
-    border-left: 15px solid transparent;
-  }
-  .sdk\:cutCorner:hover:before {
-    border-bottom: 15px solid var(--sdk-border-color);
-  }
-  @media (hover: hover) {
-    /* .sdk\:cutCorner-border::before {
+.sdk\:cutCorner:before {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  content: "";
+  border-left: 15px solid transparent;
+}
+.sdk\:cutCorner:hover:before {
+  border-bottom: 15px solid var(--sdk-border-color);
+}
+@media (hover: hover) {
+  /* .sdk\:cutCorner-border::before {
       border-bottom: 15px solid var(--sdk-border-color);
     } */
-  }
-  .sdk\:cutCorner:after {
-    position: absolute;
-    right: -1px;
-    bottom: -1px;
-    content: "";
-    border-bottom: 15px solid;
-    border-color: black;
-    border-left: 15px solid transparent;
-  }
+}
+.sdk\:cutCorner:after {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  content: "";
+  border-bottom: 15px solid;
+  border-color: black;
+  border-left: 15px solid transparent;
 }

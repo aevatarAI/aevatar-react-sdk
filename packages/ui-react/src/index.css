@@ -3,7 +3,7 @@
 
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme) prefix(sdk);
-@import "tailwindcss/utilities.css" layer(utilities) prefix(sdk);
+@import "tailwindcss/utilities.css" prefix(sdk);
 
 @layer theme {
   :root {
@@ -26,47 +26,47 @@
     --sdk-breakpoint-4xl: 2560px;
   }
 }
-@layer utilities {
-  .sdk\:workflow-common {
-    @apply sdk:bg-black sdk:text-white;
-  }
-  .sdk\:workflow-common-border {
-    border-color: var(--sdk-border-color);
-  }
-  .sdk\:workflow-common-bg {
-    @apply sdk:bg-[var(--sdk-card-background)];
-  }
-  .sdk\:workflow-common-desc-bg {
-    @apply sdk:bg-[var(--sdk-border-color)];
-  }
-  /* text color */
-  .sdk\:workflow-common-gray-text {
-    @apply sdk:text-[var(--sdk-gray-color)];
-  }
-  .sdk\:workflow-common-success-text {
-    @apply sdk:text-[var(--sdk-success-color)];
-  }
-  .sdk\:workflow-common-warning-text {
-    @apply sdk:text-[var(--sdk-warning-color)];
-  }
-  .sdk\:workflow-title {
-    background: var(--sdk-text-workflow-title);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .sdk\:workflow-common-border-stimulate {
-    @apply sdk:text-white sdk:border-[var(--sdk-border-color)] sdk:text-[12px];
-  }
-  .sdk\:workflow-title-button-save {
-    @apply sdk:bg-white sdk:text-black sdk:text-[12px];
-  }
-  .sdk\:workflow-title-button-save-disabled {
-    @apply sdk:cursor-not-allowed sdk:bg-[#606060] sdk:text-[#B9B9B9];
-  }
-  .sdk\:workflow-sidebar-title {
-    @apply sdk:text-[12px] sdk:font-semibold;
-  }
+.sdk\:workflow-common {
+  @apply sdk:bg-black sdk:text-white;
+}
+.sdk\:workflow-common-border {
+  border-color: var(--sdk-border-color);
+}
+.sdk\:workflow-common-bg {
+  @apply sdk:bg-[var(--sdk-card-background)];
+}
+.sdk\:workflow-common-desc-bg {
+  @apply sdk:bg-[var(--sdk-border-color)];
+}
+/* text color */
+.sdk\:workflow-common-gray-text {
+  @apply sdk:text-[var(--sdk-gray-color)];
+}
+.sdk\:workflow-common-success-text {
+  @apply sdk:text-[var(--sdk-success-color)];
+}
+.sdk\:workflow-common-warning-text {
+  @apply sdk:text-[var(--sdk-warning-color)];
+}
+.sdk\:workflow-title {
+  background: var(--sdk-text-workflow-title);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.sdk\:workflow-common-border-stimulate {
+  @apply sdk:text-white sdk:border-[var(--sdk-border-color)] sdk:text-[12px];
+}
+.sdk\:workflow-title-button-save {
+  @apply sdk:bg-white sdk:text-black sdk:text-[12px];
+}
+
+.sdk\:workflow-title-button-save-disabled {
+  @apply sdk:cursor-not-allowed sdk:bg-[#606060] sdk:text-[#B9B9B9];
+}
+
+.sdk\:workflow-sidebar-title {
+  @apply sdk:text-[12px] sdk:font-semibold;
 }
 .sdk\:font-syne {
   font-family: "Syne";

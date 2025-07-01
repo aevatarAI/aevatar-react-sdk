@@ -45,7 +45,12 @@ export class AevatarRequest extends FetchRequest implements IAevatarRequest {
         });
         this.getAuthTokenPending = false;
         this.commonHeaders.Authorization = token;
-        return this.sendOrigin(config);
+        const _result = await this.sendOrigin(config);
+        if (_result?.data) return _result.data;
+        // get jwt token
+        if (_result?.access_token) return _result;
+        if (_result.code === "20001") return _result.data;
+        throw _result;
       }
 
       throw error;
