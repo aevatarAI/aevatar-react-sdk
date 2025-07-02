@@ -4,8 +4,10 @@ export { default as EditGAevatar } from "./EditGAevatar";
 export { default as CreateGAevatar } from "./EditGAevatar";
 export { default as AevatarProvider } from "./context/AevatarProvider";
 export { default as EditGAevatarInner } from "./EditGAevatarInner";
-
 export { default as WorkflowConfiguration } from "./WorkflowConfiguration";
+export { default as WorkflowList } from "./WorkflowList";
+export { default as WorkflowListInner } from "./WorkflowListInner";
+
 export * from "./config-provider";
 export * from "./context";
 export * from "./ui";
