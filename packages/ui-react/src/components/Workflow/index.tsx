@@ -15,6 +15,8 @@ import {
   Controls,
   useReactFlow,
   MarkerType,
+  MiniMap,
+  Background as BackgroundFlow,
 } from "@xyflow/react";
 
 import "@xyflow/react/dist/style.css";
@@ -30,13 +32,15 @@ import type {
 import type { Edge, INode } from "./types";
 import { generateWorkflowGraph } from "./utils";
 import { useUpdateEffect } from "react-use";
+import { Button } from "../ui";
+import Play from "../../assets/svg/play.svg?react";
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 interface IProps {
   gaevatarList?: IAgentInfoDetail[];
-
+  selectedNodeId?: string;
   editWorkflow?: {
     workflowAgentId: string;
     workflowName: string;
@@ -48,6 +52,7 @@ interface IProps {
     nodeId: string
   ) => void;
   onNodesChanged?: (nodes: INode[]) => void;
+  onRunWorkflow?: () => void;
 }
 
 export interface IWorkflowInstance {
@@ -58,7 +63,14 @@ export interface IWorkflowInstance {
 
 export const Workflow = forwardRef(
   (
-    { gaevatarList, editWorkflow, onCardClick, onNodesChanged }: IProps,
+    {
+      gaevatarList,
+      editWorkflow,
+      selectedNodeId,
+      onCardClick,
+      onNodesChanged,
+      onRunWorkflow,
+    }: IProps,
     ref
   ) => {
     const deleteNode = useCallback((nodeId) => {
@@ -135,11 +147,12 @@ export const Workflow = forwardRef(
           if (agentMap.get(item.data.agentInfo.id)) {
             item.data.agentInfo = agentMap.get(item.data.agentInfo.id);
           }
-          return item;
+          item.selected = selectedNodeId && item.id === selectedNodeId;
+          return { ...item };
         });
         return [...updateNodes];
       });
-    }, [gaevatarList]);
+    }, [gaevatarList, selectedNodeId]);
 
     useUpdateEffect(() => {
       onNodesChanged?.(nodes);
@@ -315,11 +328,21 @@ export const Workflow = forwardRef(
               stroke: "#B9B9B9",
               strokeWidth: 2,
             }}>
+            <Button onClick={onRunWorkflow} className="sdk:z-10 sdk:absolute sdk:cursor-pointer sdk:hover:text-[#000] sdk:right-[16px] sdk:top-[12px] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-syne sdk:font-semibold sdk:border-[#303030]">
+              <Play />
+              run
+            </Button>
             {nodes.length === 0 && <Background />}
             <Controls />
-            <div
-              className="sdk:absolute sdk:right-[40px] sdk:bottom-[35px] sdk:text-[#B9B9B9] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[11px] sdk:font-pro"
-            >
+            <MiniMap
+              pannable
+              zoomable
+              nodeColor={"#cecece"}
+              bgColor={"#000"}
+              maskColor={"#141415"}
+            />
+            <BackgroundFlow bgColor={"#000"} size={2} color={"#3F4042"} />
+            <div className="sdk:absolute sdk:right-[0px] sdk:bottom-[0px] sdk:text-[#B9B9B9] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[11px] sdk:font-pro">
               powered by aevatar.ai
             </div>
           </ReactFlow>

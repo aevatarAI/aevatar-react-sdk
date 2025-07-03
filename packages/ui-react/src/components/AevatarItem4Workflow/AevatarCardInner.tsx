@@ -14,6 +14,7 @@ export interface IAevatarCardInnerProps {
   deleteNode: (nodeId: string) => void;
   nodeId?: string;
   agentInfo?: IAgentInfoDetail;
+  selected?: boolean;
 }
 
 export default function AevatarCardInner({
@@ -23,6 +24,7 @@ export default function AevatarCardInner({
   deleteNode,
   nodeId,
   agentInfo,
+  selected,
 }: IAevatarCardInnerProps) {
   const handleDeleteClick = useCallback(
     (e: any) => {
@@ -45,7 +47,11 @@ export default function AevatarCardInner({
         onClick?.(agentInfo, isNew, nodeId);
       }}>
       <div
-        className={`sdk:aevatar-item-background sdk:w-[234px] sdk:cutCorner sdk:border sdk:border-[#141415] sdk:cutCorner-border sdk:hover:border-[#303030] ${className}`}>
+        className={clsx(
+          "sdk:aevatar-item-background sdk:w-[234px] sdk:cutCorner sdk:border sdk:border-[#141415] sdk:cutCorner-border sdk:hover:border-[#303030]",
+          selected && "sdk:border-[#AFC6DD]! sdk:cutCorner-border-selected",
+          className
+        )}>
         <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
           <div className="sdk:flex sdk:justify-between sdk:items-center sdk:pb-[9px]">
             <div

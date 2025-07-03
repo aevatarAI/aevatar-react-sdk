@@ -77,6 +77,10 @@ const WorkflowConfiguration = ({
     []
   );
 
+  useUpdateEffect(() => {
+    !editAgentOpen && setSelectAgentInfo(undefined);
+  }, [editAgentOpen]);
+
   const [btnLoading, setBtnLoading] = useState<boolean>();
 
   const isWorkflowChanged = useRef<boolean>();
@@ -138,7 +142,7 @@ const WorkflowConfiguration = ({
     },
     [onBack, onSave]
   );
-  console.log(selectAgentInfo, "selectAgentInfo===");
+
   const onDefaultGaevatarChange: IWorkflowAevatarEditProps["onGaevatarChange"] =
     useCallback(
       async (...params) => {
@@ -193,6 +197,10 @@ const WorkflowConfiguration = ({
   useUpdateEffect(() => {
     isWorkflowChanged.current = true;
   }, [nodeList]);
+
+  const onRunWorkflow = useCallback(() => {
+    console.log("onRunWorkflow===");
+  }, []);
 
   return (
     <ReactFlowProvider>
@@ -268,14 +276,16 @@ const WorkflowConfiguration = ({
 
             {/* Main Content */}
             <main className="sdk:flex-1 sdk:flex sdk:flex-col sdk:items-center sdk:justify-center sdk:relative">
+              <Workflow
+                editWorkflow={editWorkflow}
+                gaevatarList={sidebarConfig?.gaevatarList}
+                selectedNodeId={selectAgentInfo?.nodeId}
+                ref={workflowRef}
+                onCardClick={onClickWorkflowItem}
+                onNodesChanged={onNodesChanged}
+                onRunWorkflow={onRunWorkflow}
+              />
               <Dialog open={editAgentOpen} onOpenChange={setEditAgentOpen}>
-                <Workflow
-                  editWorkflow={editWorkflow}
-                  gaevatarList={sidebarConfig?.gaevatarList}
-                  ref={workflowRef}
-                  onCardClick={onClickWorkflowItem}
-                  onNodesChanged={onNodesChanged}
-                />
                 <DialogPortal container={container} asChild>
                   {/* <DialogOverlay /> */}
                   <WorkflowDialog
