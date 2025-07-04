@@ -53,6 +53,7 @@ interface IProps {
   ) => void;
   onNodesChanged?: (nodes: INode[]) => void;
   onRunWorkflow?: () => void;
+  extraControlBar?: React.ReactNode;
 }
 
 export interface IWorkflowInstance {
@@ -70,6 +71,7 @@ export const Workflow = forwardRef(
       onCardClick,
       onNodesChanged,
       onRunWorkflow,
+      extraControlBar,
     }: IProps,
     ref
   ) => {
@@ -328,7 +330,12 @@ export const Workflow = forwardRef(
               stroke: "#B9B9B9",
               strokeWidth: 2,
             }}>
-            <Button onClick={onRunWorkflow} className="sdk:z-10 sdk:absolute sdk:cursor-pointer sdk:hover:text-[#000] sdk:right-[16px] sdk:top-[12px] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-syne sdk:font-semibold sdk:border-[#303030]">
+            <div className="sdk:absolute sdk:left-[15px] sdk:bottom-[130px] sdk:z-5">
+              {extraControlBar}
+            </div>
+            <Button
+              onClick={onRunWorkflow}
+              className="sdk:z-10 sdk:absolute sdk:cursor-pointer sdk:hover:text-[#000] sdk:right-[16px] sdk:top-[12px] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-syne sdk:font-semibold sdk:border-[#303030]">
               <Play />
               run
             </Button>

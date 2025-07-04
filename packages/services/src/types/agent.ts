@@ -60,6 +60,7 @@ export interface IAgentParams {
 export interface IAgentsConfiguration {
   agentType: string;
   fullName: string;
+  description?: string;
   agentParams?: IAgentParams[];
   propertyJsonSchema?: string;
 }

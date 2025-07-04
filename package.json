@@ -38,6 +38,7 @@
     "vitest": "^2.1.8"
   },
   "dependencies": {
-    "@changesets/cli": "^2.28.1"
+    "@changesets/cli": "^2.28.1",
+    "react-fullscreen": "^0.1.0"
   }
 }

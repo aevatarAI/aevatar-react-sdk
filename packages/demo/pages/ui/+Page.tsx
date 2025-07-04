@@ -7,9 +7,12 @@ import {
   Button,
   WorkflowConfiguration,
   ConfigProvider,
+  WorkflowList,
+  FullScreenIcon,
 } from "@aevatar-react-sdk/ui-react";
 // import "@aevatar-react-sdk/ui-react/ui-react.css";
 import { useCallback, useState } from "react";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 import { clientOnly } from "vike-react/clientOnly";
 import { sleep } from "@aevatar-react-sdk/utils";
@@ -169,8 +172,10 @@ export default function UI() {
     [refreshGaevatarList]
   );
 
+  const fullscreenHandle = useFullScreenHandle();
+
   return (
-    <div>
+    <div className="min-w-[375px]">
       <AevatarProvider
       // hiddenGAevatarType={[
       //   // "Aevatar.SignalR.GAgents.SignalRGAgent",
@@ -224,13 +229,36 @@ export default function UI() {
           />
         )}
         {stage === Stage.Workflow && (
-          <div className="h-[900px]">
+          <FullScreen className="h-[900px]" handle={fullscreenHandle}>
             <WorkflowConfiguration
               sidebarConfig={{
-                gaevatarList,
+                gaevatarList, //: [],
                 isNewGAevatar: true,
                 gaevatarTypeList: agentTypeList,
+                type: "newAgent",
               }}
+              extraControlBar={
+                <div className="w-full h-full bg-[#141415] flex flow-row border-[1px] border-[#303030]">
+                  {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+                  <div
+                    className={`p-[4px] w-[26px] h-[26px] flex justify-center items-center cursor-pointer ${
+                      fullscreenHandle.active ? "bg-[#AFC6DD]" : ""
+                    }`}
+                    onClick={() => {
+                      fullscreenHandle.active
+                        ? fullscreenHandle.exit()
+                        : fullscreenHandle.enter();
+                    }}>
+                    <FullScreenIcon
+                      className={
+                        fullscreenHandle.active
+                          ? "text-[#606060]"
+                          : "text-[#B9B9B9]"
+                      }
+                    />
+                  </div>
+                </div>
+              }
               onBack={() => {
                 setStage(undefined);
               }}
@@ -242,8 +270,10 @@ export default function UI() {
               editWorkflow={editWorkflow}
               onGaevatarChange={onGaevatarChange}
             />
-          </div>
+          </FullScreen>
         )}
+
+        {/* <WorkflowList /> */}
       </AevatarProvider>
     </div>
   );

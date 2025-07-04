@@ -7,7 +7,7 @@ import { DnDProvider } from "../Workflow/DnDContext";
 import WorkflowDialog from "./dialog";
 import BackArrow from "../../assets/svg/back-arrow.svg?react";
 import WorkflowSaveFailedModal, {
-  type SaveFailedError,
+  SaveFailedError,
 } from "../WorkflowSaveFailedModal";
 import WorkflowUnsaveModal from "../WorkflowUnsaveModal";
 import type {
@@ -26,19 +26,21 @@ import clsx from "clsx";
 import { useUpdateEffect } from "react-use";
 import EditWorkflowNameDialog from "../EditWorkflowNameDialog";
 import { useAevatar } from "../context/AevatarProvider";
+import SidebarWithNewAgent from "./sidebarWithNewAgent";
 
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
     gaevatarList?: IAgentInfoDetail[];
     gaevatarTypeList?: IAgentsConfiguration[];
     isNewGAevatar?: boolean;
+    type?: "newAgent" | "allAgent";
   };
   editWorkflow?: {
     workflowAgentId: string;
     workflowName: string;
     workUnitRelations: IWorkflowUnitListItem[];
   };
-
+  extraControlBar?: React.ReactNode;
   onBack?: () => void;
   onSave?: (workflowAgentId: string) => void;
   onGaevatarChange: IWorkflowAevatarEditProps["onGaevatarChange"];
@@ -47,6 +49,7 @@ export interface IWorkflowConfigurationProps {
 const WorkflowConfiguration = ({
   sidebarConfig,
   editWorkflow,
+  extraControlBar,
   onBack,
   onSave: onSaveHandler,
   onGaevatarChange,
@@ -200,6 +203,7 @@ const WorkflowConfiguration = ({
 
   const onRunWorkflow = useCallback(() => {
     console.log("onRunWorkflow===");
+    setSaveFailed(SaveFailedError.workflowExecutionFailed);
   }, []);
 
   return (
@@ -207,8 +211,12 @@ const WorkflowConfiguration = ({
       <DnDProvider>
         <div className="sdk:h-full sdk:workflow-common flex flex-col">
           {/* header */}
-          <div className=" sdk:relative sdk:w-full sdk:flex sdk:justify-between sdk:items-center sdk:border-b-[1px] sdk:px-[20px] sdk:py-[22px] sdk:sm:px-[40px] sdk:sm:py-[15px] sdk:workflow-common-border">
-            <div className="sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-syne sdk:workflow-title sdk:w-[146px] sdk:sm:w-[300px] sdk:flex-wrap">
+          <div className=" sdk:relative sdk:w-full sdk:flex sdk:justify-between sdk:items-center sdk:border-b-[1px] sdk:px-[20px] sdk:py-[12px] sdk:sm:px-[16px] sdk:sm:py-[8px] sdk:workflow-common-border">
+            <div
+              className={clsx(
+                "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-syne sdk:workflow-title sdk:flex-wrap",
+                "sdk:items-center"
+              )}>
               {onBack && (
                 <BackArrow
                   role="img"
@@ -216,7 +224,14 @@ const WorkflowConfiguration = ({
                   onClick={onUnsavedBack}
                 />
               )}
-              workflow configuration
+              <div>
+                <div className="">workflow configuration</div>
+                <EditWorkflowNameDialog
+                  className="sdk:inline-flex sdk:sm:hidden"
+                  defaultName={workflowName}
+                  onSave={setWorkflowName}
+                />
+              </div>
             </div>
             <div className="sdk:flex sdk:gap-[24px] ">
               {/* <Dialog>
@@ -238,6 +253,7 @@ const WorkflowConfiguration = ({
               </Dialog> */}
 
               <EditWorkflowNameDialog
+                className="sdk:hidden! sdk:sm:inline-flex!"
                 defaultName={workflowName}
                 onSave={setWorkflowName}
               />
@@ -266,17 +282,26 @@ const WorkflowConfiguration = ({
             className="sdk:flex sdk:sm:h-[calc(100%-70px)] sdk:flex-1 sdk:relative sdk:sm:flex-row sdk:flex-col"
             ref={setContainer}>
             {/* Sidebar */}
-            <Sidebar
-              disabledGeavatarIds={disabledAgent}
-              hiddenGAevatarType={hiddenGAevatarType}
-              gaevatarList={sidebarConfig.gaevatarList}
-              isNewGAevatar={sidebarConfig.isNewGAevatar}
-              gaevatarTypeList={sidebarConfig?.gaevatarTypeList}
-            />
+            {sidebarConfig.type === "newAgent" && (
+              <SidebarWithNewAgent
+                gaevatarTypeList={sidebarConfig?.gaevatarTypeList}
+                hiddenGAevatarType={hiddenGAevatarType}
+              />
+            )}
+            {(!sidebarConfig.type || sidebarConfig.type === "allAgent") && (
+              <Sidebar
+                disabledGeavatarIds={disabledAgent}
+                hiddenGAevatarType={hiddenGAevatarType}
+                gaevatarList={sidebarConfig.gaevatarList}
+                isNewGAevatar={sidebarConfig.isNewGAevatar}
+                gaevatarTypeList={sidebarConfig?.gaevatarTypeList}
+              />
+            )}
 
             {/* Main Content */}
             <main className="sdk:flex-1 sdk:flex sdk:flex-col sdk:items-center sdk:justify-center sdk:relative">
               <Workflow
+                extraControlBar={extraControlBar}
                 editWorkflow={editWorkflow}
                 gaevatarList={sidebarConfig?.gaevatarList}
                 selectedNodeId={selectAgentInfo?.nodeId}

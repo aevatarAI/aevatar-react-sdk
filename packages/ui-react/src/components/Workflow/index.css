@@ -54,3 +54,11 @@
   border-radius: 6px;
   overflow: hidden;
 }
+
+.react-flow__panel.react-flow__controls {
+  border: 1px solid #303030;
+}
+
+.react-flow__panel.react-flow__controls .react-flow__controls-button {
+  background: #141415;
+}
