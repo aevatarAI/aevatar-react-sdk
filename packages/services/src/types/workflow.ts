@@ -44,6 +44,24 @@ export interface IStartWorkflowProps {
   eventProperties: any;
 }
 
+export enum WorkflowStatus {
+  pending = '0',
+  running = '1',
+  failed = '2',
+}
+
+export interface IWorkflowCoordinatorState {
+  lastRunningTime?: string;
+  termToWorkUnitGrainId: Record<string, string>;
+  children: string;
+  workflowStatus: WorkflowStatus; // 0: pending 1；running 2：failed
+  currentWorkUnitInfos: string;
+  ctime: string;
+  term: number;
+  blackboardId: string;
+  backupWorkUnitInfos: string;
+  version: number;
+}
 export interface IGetWorkflowQuery {
   stateName: string;
   queryString?: string;

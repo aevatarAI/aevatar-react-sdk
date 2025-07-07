@@ -18,7 +18,7 @@ import {
   MiniMap,
   Background as BackgroundFlow,
 } from "@xyflow/react";
-
+import Loading from "../../assets/svg/loading.svg?react";
 import "@xyflow/react/dist/style.css";
 import "./index.css";
 
@@ -34,6 +34,7 @@ import { generateWorkflowGraph } from "./utils";
 import { useUpdateEffect } from "react-use";
 import { Button } from "../ui";
 import Play from "../../assets/svg/play.svg?react";
+import clsx from "clsx";
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
@@ -52,7 +53,7 @@ interface IProps {
     nodeId: string
   ) => void;
   onNodesChanged?: (nodes: INode[]) => void;
-  onRunWorkflow?: () => void;
+  onRunWorkflow?: () => Promise<void>;
   extraControlBar?: React.ReactNode;
 }
 
@@ -310,6 +311,14 @@ export const Workflow = forwardRef(
       [updaterList]
     );
 
+    const [isRunning, setIsRunning] = useState(false);
+
+    const onRunningHandler = useCallback(async () => {
+      setIsRunning(true);
+      await onRunWorkflow?.();
+      setIsRunning(false);
+    }, [onRunWorkflow]);
+
     return (
       <div className="dndflow sdk:w-full">
         <div className="reactflow-wrapper sdk:relative" ref={reactFlowWrapper}>
@@ -334,10 +343,18 @@ export const Workflow = forwardRef(
               {extraControlBar}
             </div>
             <Button
-              onClick={onRunWorkflow}
+              onClick={onRunningHandler}
               className="sdk:z-10 sdk:absolute sdk:cursor-pointer sdk:hover:text-[#000] sdk:right-[16px] sdk:top-[12px] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-syne sdk:font-semibold sdk:border-[#303030]">
-              <Play />
-              run
+              {isRunning ? (
+                <Loading
+                  key={"save"}
+                  className={clsx("aevatarai-loading-icon")}
+                  style={{ width: 14, height: 14 }}
+                />
+              ) : (
+                <Play />
+              )}
+              {isRunning ? "running" : "run"}
             </Button>
             {nodes.length === 0 && <Background />}
             <Controls />

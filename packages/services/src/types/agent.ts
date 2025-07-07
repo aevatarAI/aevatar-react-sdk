@@ -22,6 +22,7 @@ export interface IAgentInfoDetail extends IAgentInfo {
 export interface IGetAgentsParams {
   pageIndex: number;
   pageSize: number;
+  agentType?: string;
 }
 
 export interface IUpdateAgentInfo {

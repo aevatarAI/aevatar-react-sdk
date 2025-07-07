@@ -1,5 +1,4 @@
 import DataTable from "../ui/DataTable";
-import { type IWorkflow, workflowColumns } from "./columns";
 import { Button } from "../ui/button";
 import AddIcon from "../../assets/svg/add.svg?react";
 import Edit from "../../assets/svg/edit.svg?react";
@@ -9,19 +8,32 @@ import NoWorkflows from "../../assets/svg/no-workflows.svg?react";
 import { useMemo } from "react";
 import clsx from "clsx";
 import DeleteWorkflowConfirm from "../DeleteWorkflowConfirm";
+import type {
+  IAgentInfoDetail,
+  IWorkflowCoordinatorState,
+} from "@aevatar-react-sdk/services";
+import { workflowColumns } from "./columns";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 interface WorkflowListInnerProps {
-  workflowsList: IWorkflow[];
+  workflowsList: (IWorkflowCoordinatorState & IAgentInfoDetail)[];
   loading?: boolean;
   className?: string;
 
-  onEditWorkflow: (workflow: IWorkflow) => void;
-  onDeleteWorkflow: (workflow: IWorkflow) => void;
+  onEditWorkflow?: (workflowId: string) => void;
+  onDeleteWorkflow: (
+    workflow: IWorkflowCoordinatorState & IAgentInfoDetail
+  ) => void;
   onNewWorkflow: () => void;
 }
 
 export default function WorkflowListInner({
-  workflowsList,
+  workflowsList = [],
   loading,
   className,
 
@@ -31,14 +43,34 @@ export default function WorkflowListInner({
 }: WorkflowListInnerProps) {
   const tableData = useMemo(
     () =>
-      workflowsList.map((item) => ({
+      workflowsList?.map((item) => ({
         ...item,
         operation: (
           <div className="sdk:flex sdk:flex-row sdk:gap-[7px] sdk:h-[45px] sdk:w-[50px] sdk:items-center sdk:justify-center">
-            <Edit
+            {/* <Edit
               className="sdk:cursor-pointer sdk:text-[#606060] sdk:w-[14px] sdk:h-[14px]"
-              onClick={() => onEditWorkflow(item)}
-            />
+              onClick={() => onEditWorkflow?.(item.id)}
+            /> */}
+            <TooltipProvider delayDuration={0}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div>
+                    <Edit
+                      className="sdk:cursor-pointer sdk:text-[#606060] sdk:w-[14px] sdk:h-[14px]"
+                      onClick={() => onEditWorkflow?.(item.id)}
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent
+                  className={clsx(
+                    "sdk:z-1000 sdk:max-w-[200px] sdk:text-[10px] sdk:font-pro sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                    "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                  )}
+                  side="top">
+                  edit
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
 
             <DeleteWorkflowConfirm
               handleConfirm={() => onDeleteWorkflow(item)}
@@ -69,7 +101,7 @@ export default function WorkflowListInner({
   return (
     <div
       className={clsx(
-        "sdk:flex sdk:flex-col sdk:gap-[30px] sdk:items-start sdk:w-full sdk:box-border sdk:bg-[#000]",
+        "sdk:flex sdk:flex-col sdk:gap-[30px] sdk:items-start sdk:w-full sdk:box-border sdk:bg-[#000] sdk:h-full sdk:overflow-y-auto",
         className
       )}
       id="node-6202_82359">
@@ -93,7 +125,7 @@ export default function WorkflowListInner({
       </div>
       <div className="sdk:w-full">
         <DataTable
-          className={clsx(!loading && tableData.length && "sdk:min-w-[600px]")}
+          className={clsx(!loading && tableData?.length && "sdk:min-w-[600px]")}
           tableHeadClassName={"sdk:first:pl-[15px]"}
           columns={workflowColumns}
           data={tableData}

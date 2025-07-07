@@ -1,35 +1,26 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
 import FailedIcon from "../../assets/svg/failed.svg?react";
-
-export enum WorkflowStatus {
-  failed = "failed",
-  success = "success",
-  pending = "pending",
-  running = "running",
-}
+import {
+  type IAgentInfoDetail,
+  type IWorkflowCoordinatorState,
+  WorkflowStatus,
+} from "@aevatar-react-sdk/services";
+import dayjs from "../../utils/dayjs";
 
 export const workflowStatusMap = {
-  [WorkflowStatus.failed]: "failed",
-  [WorkflowStatus.success]: "success",
   [WorkflowStatus.pending]: "pending",
   [WorkflowStatus.running]: "running",
+  [WorkflowStatus.failed]: "failed",
 };
 
-export interface IWorkflow {
-  name: string;
-  created: string;
-  createdBy: string;
-  lastUpdated: string;
-  lastRan: string;
-  status: WorkflowStatus;
-}
-
-export interface IWorkflowTable extends IWorkflow {
+export interface IWorkflowTable {
   operation?: JSX.Element;
 }
 
-export const workflowColumns: ColumnDef<IWorkflowTable>[] = [
+export const workflowColumns: ColumnDef<
+  IWorkflowTable & IWorkflowCoordinatorState & IAgentInfoDetail
+>[] = [
   {
     accessorKey: "name",
     header: "name",
@@ -44,34 +35,37 @@ export const workflowColumns: ColumnDef<IWorkflowTable>[] = [
     header: "created",
     cell: ({ row }) => (
       <div className="sdk:text-[12px]  sdk:font-pro sdk:font-semibold">
-        {row.original.created}
+        {dayjs.utc(row.original.ctime).local().format("DD.MM.YYYY HH:mm")}
       </div>
     ),
   },
+  // {
+  //   accessorKey: "createdBy",
+  //   header: "created by",
+  //   cell: ({ row }) => (
+  //     <div className="sdk:text-[14px] sdk:font-syne sdk:font-semibold">
+  //       {row.original.createdBy}
+  //     </div>
+  //   ),
+  // },
+  // {
+  //   accessorKey: "lastUpdated",
+  //   header: "last updated",
+  //   cell: ({ row }) => (
+  //     <div className="sdk:text-[12px]  sdk:font-pro">
+  //       {row.original.lastUpdated}
+  //     </div>
+  //   ),
+  // },
   {
-    accessorKey: "createdBy",
-    header: "created by",
-    cell: ({ row }) => (
-      <div className="sdk:text-[14px] sdk:font-syne sdk:font-semibold">
-        {row.original.createdBy}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "lastUpdated",
-    header: "last updated",
+    accessorKey: "lastRun",
+    header: "last run",
     cell: ({ row }) => (
       <div className="sdk:text-[12px]  sdk:font-pro">
-        {row.original.lastUpdated}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "lastRan",
-    header: "last ran",
-    cell: ({ row }) => (
-      <div className="sdk:text-[12px]  sdk:font-pro">
-        {row.original.lastRan}
+        {dayjs
+          .utc(row.original.lastRunningTime)
+          .local()
+          .format("DD.MM.YYYY HH:mm")}
       </div>
     ),
   },
@@ -82,13 +76,13 @@ export const workflowColumns: ColumnDef<IWorkflowTable>[] = [
       <div
         className={clsx(
           "sdk:text-[14px]  sdk:font-syne sdk:font-semibold ",
-          row.original.status === WorkflowStatus.failed &&
+          row.original.workflowStatus === WorkflowStatus.failed &&
             "sdk:text-[#FF2E2E] sdk:flex sdk:flex-row sdk:gap-[4px] sdk:items-center"
         )}>
-        {row.original.status === WorkflowStatus.failed && (
+        {row.original.workflowStatus === WorkflowStatus.failed && (
           <FailedIcon className="sdk:w-[14px] sdk:h-[14px]" />
         )}
-        {workflowStatusMap[row.original.status]}
+        {workflowStatusMap[row.original.workflowStatus]}
       </div>
     ),
   },

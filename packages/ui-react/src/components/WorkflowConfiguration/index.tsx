@@ -10,10 +10,12 @@ import WorkflowSaveFailedModal, {
   SaveFailedError,
 } from "../WorkflowSaveFailedModal";
 import WorkflowUnsaveModal from "../WorkflowUnsaveModal";
-import type {
-  IAgentInfoDetail,
-  IAgentsConfiguration,
-  IWorkflowUnitListItem,
+import {
+  WorkflowStatus,
+  type IAgentInfoDetail,
+  type IAgentsConfiguration,
+  type IWorkflowCoordinatorState,
+  type IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 import type { IWorkflowAevatarEditProps } from "../WorkflowAevatarEdit";
 import { sleep } from "@aevatar-react-sdk/utils";
@@ -63,6 +65,9 @@ const WorkflowConfiguration = ({
     nodeId: string;
   }>();
   const [{ hiddenGAevatarType }] = useAevatar();
+
+  const [newWorkflowState, setNewWorkflowState] =
+    useState<IWorkflowConfigurationProps["editWorkflow"]>();
 
   const [unsavedModal, setUnsavedModal] = useState(false);
 
@@ -124,7 +129,11 @@ const WorkflowConfiguration = ({
         });
         workflowAgentId = result.id;
       }
-
+      setNewWorkflowState({
+        workflowAgentId: workflowAgentId,
+        workflowName,
+        workUnitRelations,
+      });
       onSaveHandler?.(workflowAgentId);
     } catch (error) {
       console.log("error===");
@@ -201,10 +210,88 @@ const WorkflowConfiguration = ({
     isWorkflowChanged.current = true;
   }, [nodeList]);
 
-  const onRunWorkflow = useCallback(() => {
-    console.log("onRunWorkflow===");
-    setSaveFailed(SaveFailedError.workflowExecutionFailed);
+  const getWorkflowState = useCallback(async (workflowAgentId: string) => {
+    const queryString = `_id:${workflowAgentId}`;
+    const workflowList =
+      await aevatarAI.services.workflow.getWorkflow<IWorkflowCoordinatorState>({
+        stateName: "WorkflowCoordinatorState",
+        queryString,
+      });
+    if (!workflowList.items.length) throw "workflow not found";
+    return workflowList.items?.[0];
   }, []);
+
+  const getWorkflowStateLoop = useCallback(
+    async (workflowAgentId: string, term: number) => {
+      let workflowStatus = WorkflowStatus.pending;
+      let currentTerm = term;
+      while (workflowStatus === WorkflowStatus.pending) {
+        try {
+          await sleep(1500);
+          const workflowState = await getWorkflowState(workflowAgentId);
+          if (!workflowState) throw "workflow not found";
+          currentTerm = workflowState.term;
+
+          if (currentTerm > term) return WorkflowStatus.running;
+
+          workflowStatus = workflowState.workflowStatus;
+        } catch (error) {
+          workflowStatus = WorkflowStatus.failed;
+        }
+      }
+      return workflowStatus;
+    },
+    [getWorkflowState]
+  );
+
+  const onRunWorkflow = useCallback(async () => {
+    console.log("onRunWorkflow===");
+    try {
+      const workUnitRelations = workflowRef.current.getWorkUnitRelations();
+      if (!workUnitRelations.length || !newWorkflowState?.workUnitRelations) {
+        toast({
+          title: "error",
+          description: "Please save your workflow before running it.",
+          duration: 3000,
+        });
+        return;
+      }
+      const workflowAgentId =
+        editWorkflow?.workflowAgentId ?? newWorkflowState?.workflowAgentId;
+      if (!workflowAgentId) throw "workflowAgentId is required";
+      const workflowState = await getWorkflowState(workflowAgentId);
+      if (!workflowState) throw "workflow not found";
+      if (workflowState.workflowStatus === WorkflowStatus.running)
+        throw "workflow is running";
+      if (workflowState.workflowStatus === WorkflowStatus.failed)
+        throw "workflow is failed, please check the workflow";
+      const term = workflowState.term;
+
+      await aevatarAI.services.workflow.start({
+        agentId: workflowAgentId,
+        eventProperties: {},
+      });
+      const workflowStatus = await getWorkflowStateLoop(workflowAgentId, term);
+      if (workflowStatus === WorkflowStatus.failed)
+        throw "workflow is failed, please check the workflow";
+      if (workflowStatus === WorkflowStatus.running) {
+        toast({
+          title: "success",
+          description: "workflow executed successfully.",
+          duration: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("run workflow error:", error);
+      setSaveFailed(SaveFailedError.workflowExecutionFailed);
+    }
+  }, [
+    editWorkflow,
+    newWorkflowState,
+    toast,
+    getWorkflowState,
+    getWorkflowStateLoop,
+  ]);
 
   return (
     <ReactFlowProvider>

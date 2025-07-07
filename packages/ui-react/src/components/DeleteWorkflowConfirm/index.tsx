@@ -3,6 +3,13 @@ import { Button, Dialog, DialogContent, DialogTrigger } from "../ui";
 import Delete from "../../assets/svg/delete.svg?react";
 import DeleteTip from "../../assets/svg/delete-tip-logo.svg?react";
 import Close from "../../assets/svg/close.svg?react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import clsx from "clsx";
 
 export interface IDeleteWorkflowConfirmProps {
   handleConfirm: () => void;
@@ -15,12 +22,29 @@ export default function DeleteWorkflowConfirm({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Delete
-          className="sdk:cursor-pointer sdk:text-[#606060] sdk:w-[14px] sdk:h-[14px]"
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        />
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div>
+                <Delete
+                  className="sdk:cursor-pointer sdk:text-[#606060] sdk:w-[14px] sdk:h-[14px]"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpen(true);
+                  }}
+                />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent
+              className={clsx(
+                "sdk:z-1000 sdk:max-w-[200px] sdk:text-[10px] sdk:font-pro sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+              )}
+              side="top">
+              delete
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </DialogTrigger>
       <DialogContent
         onClick={(e) => e.stopPropagation()}
