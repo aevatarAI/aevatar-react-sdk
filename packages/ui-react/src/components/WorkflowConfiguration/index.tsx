@@ -204,8 +204,12 @@ const WorkflowConfiguration = ({
   const [nodeList, setNodeList] = useState<INode[]>();
 
   const onUnsavedBack = useCallback(() => {
-    setUnsavedModal(!isSaveRef.current);
-  }, []);
+    if (!isSaveRef.current) {
+      setUnsavedModal(true);
+    } else {
+      onBack?.();
+    }
+  }, [onBack]);
 
   const onNodesChanged = useCallback((nodes: INode[]) => {
     console.log(nodes, "nodes===onNodesChanged");

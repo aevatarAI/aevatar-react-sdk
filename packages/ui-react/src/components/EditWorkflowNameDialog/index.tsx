@@ -109,7 +109,7 @@ export default function EditWorkflowNameDialog({
                   cancel
                 </Button>
                 <Button
-                  className="sdk:text-[12px] sdk:bg-white sdk:text-black-light sdk:py-[7px] sdk:leading-[14px]"
+                  className="sdk:text-[12px] sdk:bg-white sdk:text-black sdk:py-[7px] sdk:leading-[14px]"
                   type="submit">
                   {btnLoading && (
                     <Loading
