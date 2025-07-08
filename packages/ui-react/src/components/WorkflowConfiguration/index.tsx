@@ -95,6 +95,7 @@ const WorkflowConfiguration = ({
   const [workflowName, setWorkflowName] = useState<string>(
     editWorkflow?.workflowName ?? "untitled_workflow"
   );
+  const isSaveRef = useRef<boolean>(true);
 
   useUpdateEffect(() => {
     setWorkflowName(editWorkflow?.workflowName ?? "untitled_workflow");
@@ -134,6 +135,11 @@ const WorkflowConfiguration = ({
         workflowName,
         workUnitRelations,
       });
+      toast({
+        description: "workflow saved successfully",
+        duration: 3000,
+      });
+      isSaveRef.current = true;
       onSaveHandler?.(workflowAgentId);
     } catch (error) {
       console.log("error===");
@@ -198,11 +204,13 @@ const WorkflowConfiguration = ({
   const [nodeList, setNodeList] = useState<INode[]>();
 
   const onUnsavedBack = useCallback(() => {
-    setUnsavedModal(true);
+    setUnsavedModal(!isSaveRef.current);
   }, []);
 
   const onNodesChanged = useCallback((nodes: INode[]) => {
+    console.log(nodes, "nodes===onNodesChanged");
     setNodeList(nodes);
+    isSaveRef.current = false;
     setDisabledAgent(nodes.map((item) => item.id));
   }, []);
 

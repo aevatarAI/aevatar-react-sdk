@@ -125,8 +125,28 @@ export const Workflow = forwardRef(
         onCardClick,
         deleteNode
       );
-      setNodes(nodes);
-      setEdges(edges);
+      console.log(
+        "useEffect===onNodesChanged",
+        nodes,
+        edges,
+        editWorkflow.workUnitRelations,
+        gaevatarList
+      );
+
+      setNodes((prevNodes) => {
+        const merged = [...prevNodes, ...nodes];
+        const map = new Map();
+        merged.forEach((node) => map.set(node.id, node));
+        return Array.from(map.values());
+      });
+
+      // setEdges(edges);
+      setEdges((preEdges) => {
+        const merged = [...preEdges, ...edges];
+        const map = new Map();
+        merged.forEach((edge) => map.set(edge.id, edge));
+        return Array.from(map.values());
+      });
     }, [
       editWorkflow,
       // deleteNode,
@@ -144,7 +164,6 @@ export const Workflow = forwardRef(
       gaevatarList.forEach((item) => {
         agentMap.set(item.id, item);
       });
-
       setNodes((node) => {
         const updateNodes = node?.map((item) => {
           if (agentMap.get(item.data.agentInfo.id)) {
@@ -153,6 +172,8 @@ export const Workflow = forwardRef(
           item.selected = selectedNodeId && item.id === selectedNodeId;
           return { ...item };
         });
+        console.log("useUpdateEffect===onNodesChanged", updateNodes);
+
         return [...updateNodes];
       });
     }, [gaevatarList, selectedNodeId]);

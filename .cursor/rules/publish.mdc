@@ -19,15 +19,23 @@ Adopt the AiWorkFlow workflow. All Git/release commands must be non-interactive 
 
 1. If there are changes, execute the following in order:
    - Build all packages: `pnpm build`
-   - Bump versions: `pnpm changeset version`
-   - Publish: `pnpm changeset publish`
+   - If there are unpublished changesets:
+     - Bump versions: `pnpm changeset version`
+     - Commit all version changes: `git add . && git commit -m "chore: release [version] [skip ci]"`
+     - Publish: `pnpm changeset publish`
+   - If there are NO unpublished changesets:
+     - Force bump all package.json versions to target version
+     - Commit all version changes: `git add . && git commit -m "chore: force version [version] for all packages [skip ci]"`
+     - Publish: `pnpm publish --recursive --no-git-checks`
+   - If `pnpm changeset publish` fails to publish new versions, fallback to `pnpm publish --recursive --no-git-checks`
 2. Support alpha release flow (optional):
    - Enter alpha pre-release: `pnpm changeset pre enter alpha`
    - Publish alpha packages: `pnpm publish:alpha`
    - Exit alpha pre-release: `pnpm changeset pre exit`
 3. If any step fails, stop immediately and output the error message
-4. Output the result of each step
-5. When finished, output "Release complete"
+4. After each step, output a structural reasoning chain (sequential thinking)
+5. Output the result of each step
+6. When finished, output "Release complete"
 
 ## Language and Comment Conventions
 - All workflow instructions and outputs must be in English
