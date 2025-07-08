@@ -210,7 +210,7 @@ const WorkflowConfiguration = ({
   const onNodesChanged = useCallback((nodes: INode[]) => {
     console.log(nodes, "nodes===onNodesChanged");
     setNodeList(nodes);
-    isSaveRef.current = false;
+    // isSaveRef.current = false;
     setDisabledAgent(nodes.map((item) => item.id));
   }, []);
 

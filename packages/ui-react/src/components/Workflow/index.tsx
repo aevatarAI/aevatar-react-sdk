@@ -134,7 +134,7 @@ export const Workflow = forwardRef(
       );
 
       setNodes((prevNodes) => {
-        const merged = [...prevNodes, ...nodes];
+        const merged = [...nodes, ...prevNodes];
         const map = new Map();
         merged.forEach((node) => map.set(node.id, node));
         return Array.from(map.values());
@@ -142,7 +142,7 @@ export const Workflow = forwardRef(
 
       // setEdges(edges);
       setEdges((preEdges) => {
-        const merged = [...preEdges, ...edges];
+        const merged = [...edges, ...preEdges];
         const map = new Map();
         merged.forEach((edge) => map.set(edge.id, edge));
         return Array.from(map.values());
