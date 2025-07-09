@@ -365,7 +365,7 @@ export const Workflow = forwardRef(
             </div>
             <Button
               onClick={onRunningHandler}
-              className="sdk:z-10 sdk:absolute sdk:cursor-pointer sdk:hover:text-[#000] sdk:right-[16px] sdk:top-[12px] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-syne sdk:font-semibold sdk:border-[#303030]">
+              className="sdk:z-10 sdk:absolute sdk:cursor-pointer sdk:hover:text-[#000] sdk:right-[16px] sdk:top-[12px] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[#303030]">
               {isRunning ? (
                 <Loading
                   key={"save"}

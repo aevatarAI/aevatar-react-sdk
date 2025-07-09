@@ -79,7 +79,7 @@ export default function Sidebar({
               <TooltipTrigger asChild>
                 <div
                   className={clsx(
-                    "sdk:workflow-sidebar-title sdk:mb-[28px] sdk:font-syne sdk:truncate sdk:hidden sm:block",
+                    "sdk:workflow-sidebar-title sdk:mb-[28px] sdk:font-outfit sdk:truncate sdk:hidden sm:block",
                     ele[0]?.length < 20 ? "sdk:hidden!" : "sdk:sm:block!"
                   )}>
                   {ele[0]}
@@ -93,7 +93,7 @@ export default function Sidebar({
             </Tooltip>
           </TooltipProvider>
 
-          <div className="sdk:font-pro  sdk:flex sdk:flex-row sdk:sm:flex-col sdk:space-x-4 sdk:sm:space-x-0 sdk:sm:space-y-4">
+          <div className="sdk:font-outfit  sdk:flex sdk:flex-row sdk:sm:flex-col sdk:space-x-4 sdk:sm:space-x-0 sdk:sm:space-y-4">
             {ele[1]?.length > 0 && (
               <div className="sdk:flex sdk:flex-row sdk:sm:flex-col sdk:space-x-4 sdk:sm:space-x-0 sdk:sm:space-y-4">
                 {(ele[1] as IAgentInfoDetail[])?.map((item) => (

@@ -308,12 +308,12 @@ const WorkflowConfiguration = ({
   return (
     <ReactFlowProvider>
       <DnDProvider>
-        <div className="sdk:h-full sdk:workflow-common flex flex-col">
+        <div className="sdk:h-full sdk:workflow-common flex flex-col sdk:font-outfit">
           {/* header */}
           <div className=" sdk:relative sdk:w-full sdk:flex sdk:justify-between sdk:items-center sdk:border-b-[1px] sdk:px-[20px] sdk:py-[12px] sdk:sm:px-[16px] sdk:sm:py-[8px] sdk:workflow-common-border">
             <div
               className={clsx(
-                "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-syne sdk:workflow-title sdk:flex-wrap",
+                "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-outfit sdk:workflow-title sdk:flex-wrap",
                 "sdk:items-center"
               )}>
               {onBack && (

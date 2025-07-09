@@ -32,7 +32,7 @@ export default function WorkflowDialog({
         />
       </DialogClose>
       <div className="sdk:overflow-auto sdk:h-full sdk:flex sdk:flex-col sdk:gap-[23px] sdk:w-full">
-        <DialogTitle className="sdk:pb-[23px] sdk:text-[15px] sdk:font-syne sdk:font-semibold sdk:border-b sdk:border-[#303030]">
+        <DialogTitle className="sdk:pb-[23px] sdk:text-[15px] sdk:font-outfit sdk:font-semibold sdk:border-b sdk:border-[#303030]">
           <p>g-agent configuration</p>
         </DialogTitle>
         <WorkflowAevatarEdit

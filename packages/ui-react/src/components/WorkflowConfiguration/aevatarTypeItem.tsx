@@ -48,7 +48,7 @@ export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
               className={clsx("sdk:absolute sdk:group-hover:block sdk:hidden")}
             />
             <div className=" sdk:text-center sdk:px-[16px] sdk:py-[16px] sdk:relative sdk:flex sdk:flex-col ">
-              <div className="sdk:text-[11px] sdk:font-pro sdk:text-[#B9B9B9] sdk:text-center sdk:w-full sdk:truncate">
+              <div className="sdk:text-[11px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:text-center sdk:w-full sdk:truncate">
                 {agentType?.split(".")?.pop() || ""}
               </div>
             </div>
@@ -56,7 +56,7 @@ export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
         </TooltipTrigger>
         <TooltipContent
           className={clsx(
-            "sdk:z-1000 sdk:max-w-[200px] sdk:text-[10px] sdk:font-pro sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+            "sdk:z-1000 sdk:max-w-[200px] sdk:text-[10px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
             "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
           )}
           align="end"

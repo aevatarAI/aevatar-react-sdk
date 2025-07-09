@@ -25,7 +25,7 @@ export const workflowColumns: ColumnDef<
     accessorKey: "name",
     header: "name",
     cell: ({ row }) => (
-      <div className="sdk:text-[14px] sdk:pl-[15px] sdk:font-syne sdk:font-semibold">
+      <div className="sdk:text-[14px] sdk:pl-[15px] sdk:font-outfit sdk:font-semibold">
         {row.original.name}
       </div>
     ),
@@ -34,7 +34,7 @@ export const workflowColumns: ColumnDef<
     accessorKey: "created",
     header: "created",
     cell: ({ row }) => (
-      <div className="sdk:text-[12px]  sdk:font-pro sdk:font-semibold">
+      <div className="sdk:text-[12px]  sdk:font-outfit sdk:font-semibold">
         {dayjs.utc(row.original.ctime).local().format("DD.MM.YYYY HH:mm")}
       </div>
     ),
@@ -43,7 +43,7 @@ export const workflowColumns: ColumnDef<
   //   accessorKey: "createdBy",
   //   header: "created by",
   //   cell: ({ row }) => (
-  //     <div className="sdk:text-[14px] sdk:font-syne sdk:font-semibold">
+  //     <div className="sdk:text-[14px] sdk:font-outfit sdk:font-semibold">
   //       {row.original.createdBy}
   //     </div>
   //   ),
@@ -52,7 +52,7 @@ export const workflowColumns: ColumnDef<
   //   accessorKey: "lastUpdated",
   //   header: "last updated",
   //   cell: ({ row }) => (
-  //     <div className="sdk:text-[12px]  sdk:font-pro">
+  //     <div className="sdk:text-[12px]  sdk:font-outfit">
   //       {row.original.lastUpdated}
   //     </div>
   //   ),
@@ -61,7 +61,7 @@ export const workflowColumns: ColumnDef<
     accessorKey: "lastRun",
     header: "last run",
     cell: ({ row }) => (
-      <div className="sdk:text-[12px]  sdk:font-pro">
+      <div className="sdk:text-[12px]  sdk:font-outfit">
         {dayjs
           .utc(row.original.lastRunningTime)
           .local()
@@ -75,7 +75,7 @@ export const workflowColumns: ColumnDef<
     cell: ({ row }) => (
       <div
         className={clsx(
-          "sdk:text-[14px]  sdk:font-syne sdk:font-semibold ",
+          "sdk:text-[14px]  sdk:font-outfit sdk:font-semibold ",
           row.original.workflowStatus === WorkflowStatus.failed &&
             "sdk:text-[#FF2E2E] sdk:flex sdk:flex-row sdk:gap-[4px] sdk:items-center"
         )}>

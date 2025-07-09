@@ -212,7 +212,7 @@ export default function WorkflowAevatarEdit({
                 style={{ width: 14, height: 14 }}
               />
             )}
-            <span className="sdk:text-center sdk:font-syne sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
+            <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
               save
             </span>
           </Button>

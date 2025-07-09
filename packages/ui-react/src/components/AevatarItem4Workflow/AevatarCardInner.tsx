@@ -55,7 +55,7 @@ export default function AevatarCardInner({
         <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
           <div className="sdk:flex sdk:justify-between sdk:items-center sdk:pb-[9px]">
             <div
-              className="sdk:font-syne sdk:text-white sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
+              className="sdk:font-outfit sdk:text-white sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
             >{`${agentInfo?.name ?? "agent name"}`}</div>
 
             {isNew ? (
@@ -67,11 +67,11 @@ export default function AevatarCardInner({
               />
             )}
           </div>
-          <div className="sdk:font-pro sdk:text-[#B9B9B9] sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:truncate">
+          <div className="sdk:font-outfit sdk:text-[#B9B9B9] sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:truncate">
             {agentInfo?.agentType ?? "--"}
           </div>
         </div>
-        <div className="sdk:font-pro sdk:pb-[16px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
+        <div className="sdk:font-outfit sdk:pb-[16px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
           {(propertiesInfo ?? []).map((item: [string, JSONSchemaType<any>]) => {
             // Extract property name and schema
             const [propName, schema] = item;

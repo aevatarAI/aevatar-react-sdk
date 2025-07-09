@@ -37,7 +37,7 @@ export default function DeleteWorkflowConfirm({
             </TooltipTrigger>
             <TooltipContent
               className={clsx(
-                "sdk:z-1000 sdk:max-w-[200px] sdk:text-[10px] sdk:font-pro sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                "sdk:z-1000 sdk:max-w-[200px] sdk:text-[10px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
                 "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
               )}
               side="top">
@@ -57,7 +57,7 @@ export default function DeleteWorkflowConfirm({
         <div className="sdk:flex sdk:flex-col sdk:items-center sdk:gap-[16px] sdk:pt-[10px]">
           <DeleteTip />
 
-          <div className="sdk:text-center sdk:font-syne sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:lowercase sdk:text-white">
+          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:lowercase sdk:text-white">
             Are you sure you want to delete this workflow?
           </div>
         </div>

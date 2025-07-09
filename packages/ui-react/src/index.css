@@ -1,5 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Source%20Code%20Pro:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme) prefix(sdk);
@@ -68,11 +67,8 @@
 .sdk\:workflow-sidebar-title {
   @apply sdk:text-[12px] sdk:font-semibold;
 }
-.sdk\:font-syne {
-  font-family: "Syne";
-}
-.sdk\:font-pro {
-  font-family: "Source Code Pro";
+.sdk\:font-outfit {
+  font-family: 'Outfit', sans-serif;
 }
 .aevatarai-loading-icon {
   animation: aevatarai-rotate 1s linear infinite;

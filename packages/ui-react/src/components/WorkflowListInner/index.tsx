@@ -63,7 +63,7 @@ export default function WorkflowListInner({
                 </TooltipTrigger>
                 <TooltipContent
                   className={clsx(
-                    "sdk:z-1000 sdk:max-w-[200px] sdk:text-[10px] sdk:font-pro sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                    "sdk:z-1000 sdk:max-w-[200px] sdk:text-[10px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
                     "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                   )}
                   side="top">
@@ -109,14 +109,14 @@ export default function WorkflowListInner({
         className="sdk:flex sdk:flex-row sdk:items-center sdk:w-full sdk:justify-between sdk:box-border"
         id="node-6202_82360">
         <div
-          className="sdk:font-syne sdk:font-semibold sdk:text-[18px] sdk:bg-gradient-to-r sdk:from-white sdk:to-[#999] sdk:bg-clip-text sdk:text-transparent sdk:lowercase"
+          className="sdk:font-outfit sdk:font-semibold sdk:text-[18px] sdk:bg-gradient-to-r sdk:from-white sdk:to-[#999] sdk:bg-clip-text sdk:text-transparent sdk:lowercase"
           id="node-6202_82361"
           style={{ WebkitTextFillColor: "transparent" }}>
           <p>Workflows</p>
         </div>
         <div>
           <Button
-            className="sdk:text-white sdk:text-[12px] sdk:font-syne sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:hover:text-black sdk:cursor-pointer"
+            className="sdk:text-white sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:hover:text-black sdk:cursor-pointer"
             onClick={onNewWorkflow}>
             <AddIcon style={{ width: 14, height: 14 }} />
             new workflow
