@@ -32,13 +32,8 @@ describe("WorkflowUnsaveModal", () => {
 
     // Verify modal content is rendered
     expect(screen.getByTestId("unsaved-icon")).toBeInTheDocument();
-    expect(screen.getByText("Unsaved Changes")).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        "You've made changes that haven't been saved. Would you like to save them before closing?"
-      )
-    ).toBeInTheDocument();
-
+    // 只断言正文内容，避免与DialogTitle重复
+    expect(screen.getByText(/you've made changes that haven't been saved/i)).toBeInTheDocument();
     // Verify buttons are present
     expect(screen.getByText("Close without saving")).toBeInTheDocument();
     expect(screen.getByText("Save and close")).toBeInTheDocument();

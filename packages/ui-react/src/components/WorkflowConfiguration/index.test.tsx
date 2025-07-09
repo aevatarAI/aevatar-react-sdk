@@ -10,6 +10,9 @@ vi.mock("../../utils", () => ({
         create: vi.fn().mockResolvedValue({ id: "new-id" }),
         edit: vi.fn().mockResolvedValue({}),
       },
+      agent: {
+        addSubAgents: vi.fn().mockResolvedValue({}), // 补充 mock
+      },
     },
   },
 }));
@@ -23,7 +26,7 @@ vi.mock("../context/AevatarProvider", () => ({
 vi.mock("../Workflow", () => ({
   Workflow: React.forwardRef((props, ref) => {
     React.useImperativeHandle(ref, () => ({
-      getWorkUnitRelations: () => [{ id: "1" }],
+      getWorkUnitRelations: () => [{ grainId: "g1", nextGrainId: "", extendedData: { xPosition: "1", yPosition: "2" } }],
       setNodes: vi.fn(),
     }));
     return <div data-testid="workflow-mock" />;
@@ -50,7 +53,8 @@ describe("WorkflowConfiguration", () => {
     const onSave = vi.fn();
     render(<WorkflowConfiguration {...baseProps} onSave={onSave} />);
     fireEvent.click(screen.getByText("save"));
-    await waitFor(() => expect(onSave).toHaveBeenCalledWith("new-id"));
+    await waitFor(() => expect(onSave).toHaveBeenCalled(), { timeout: 1500 });
+    await waitFor(() => expect(onSave).toHaveBeenCalledWith("new-id"), { timeout: 1500 });
   });
 
   it("calls onSave for edit workflow", async () => {

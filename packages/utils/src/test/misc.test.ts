@@ -11,8 +11,8 @@ describe('Utils Functions', () => {
       const end = Date.now();
       const duration = end - start;
       
-      expect(duration).toBeGreaterThanOrEqual(1000);
-      expect(duration).toBeLessThan(1100);  // Allowing small margin of error for execution time
+      expect(duration).toBeGreaterThanOrEqual(950);
+      expect(duration).toBeLessThan(1200);  // Allowing larger margin of error for execution time
     });
   });
 

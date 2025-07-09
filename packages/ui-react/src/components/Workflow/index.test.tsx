@@ -13,6 +13,8 @@ const onEdgesChange = vi.fn();
 vi.mock("@xyflow/react", () => ({
   ReactFlow: (props: any) => <div data-testid="reactflow">{props.children}</div>,
   Controls: () => <div data-testid="controls" />,
+  MiniMap: () => <div data-testid="minimap" />,
+  Background: () => <div data-testid="background-flow" />,
   useNodesState: () => [_nodes, setNodes, onNodesChange],
   useEdgesState: () => [_edges, setEdges, onEdgesChange],
   useReactFlow: () => ({ screenToFlowPosition: ({ x, y }: any) => ({ x, y }) }),
