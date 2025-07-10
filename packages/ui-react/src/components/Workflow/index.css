@@ -62,3 +62,7 @@
 .react-flow__panel.react-flow__controls .react-flow__controls-button {
   background: #141415;
 }
+
+.editAgentOpen-workflow-inner .react-flow__panel.right.react-flow__minimap {
+  margin-right: 400px;
+}

@@ -2,7 +2,6 @@ import DataTable from "../ui/DataTable";
 import { Button } from "../ui/button";
 import AddIcon from "../../assets/svg/add.svg?react";
 import Edit from "../../assets/svg/edit.svg?react";
-import Delete from "../../assets/svg/delete.svg?react";
 import NoWorkflows from "../../assets/svg/no-workflows.svg?react";
 
 import { useMemo } from "react";
@@ -45,6 +44,14 @@ export default function WorkflowListInner({
     () =>
       workflowsList?.map((item) => ({
         ...item,
+        name: (
+          // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+          <div
+            className="sdk:text-[14px] sdk:pl-[15px] sdk:font-outfit sdk:font-semibold sdk:hover:underline sdk:hover:decoration-[#fff] sdk:cursor-pointer"
+            onClick={() => onEditWorkflow?.(item.id)}>
+            {item.name}
+          </div>
+        ),
         operation: (
           <div className="sdk:flex sdk:flex-row sdk:gap-[7px] sdk:h-[45px] sdk:w-[50px] sdk:items-center sdk:justify-center">
             {/* <Edit
@@ -56,14 +63,14 @@ export default function WorkflowListInner({
                 <TooltipTrigger asChild>
                   <div>
                     <Edit
-                      className="sdk:cursor-pointer sdk:text-[#606060] sdk:w-[14px] sdk:h-[14px]"
+                      className="sdk:cursor-pointer sdk:text-[#606060] sdk:w-[16px] sdk:h-[16px]"
                       onClick={() => onEditWorkflow?.(item.id)}
                     />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent
                   className={clsx(
-                    "sdk:z-1000 sdk:max-w-[200px] sdk:text-[10px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                    "sdk:z-1000 sdk:max-w-[200px] sdk:text-[11px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
                     "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                   )}
                   side="top">

@@ -25,9 +25,10 @@ import "./index.css";
 import { useDnD } from "./DnDContext";
 import ScanCardNode from "../AevatarItem4Workflow";
 import Background from "./background";
-import type {
-  IAgentInfoDetail,
-  IWorkflowUnitListItem,
+import {
+  WorkflowStatus,
+  type IAgentInfoDetail,
+  type IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 import type { Edge, INode } from "./types";
 import { generateWorkflowGraph } from "./utils";
@@ -35,6 +36,7 @@ import { useUpdateEffect } from "react-use";
 import { Button } from "../ui";
 import Play from "../../assets/svg/play.svg?react";
 import clsx from "clsx";
+import { useWorkflowState } from "../../hooks/useWorkflowState";
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
@@ -47,6 +49,7 @@ interface IProps {
     workflowName: string;
     workUnitRelations: IWorkflowUnitListItem[];
   };
+  editAgentOpen?: boolean;
   onCardClick: (
     data: Partial<IAgentInfoDetail>,
     isNew: boolean,
@@ -69,6 +72,7 @@ export const Workflow = forwardRef(
       gaevatarList,
       editWorkflow,
       selectedNodeId,
+      editAgentOpen,
       onCardClick,
       onNodesChanged,
       onRunWorkflow,
@@ -251,6 +255,7 @@ export const Workflow = forwardRef(
             addEdge(
               {
                 ...params,
+                type: "bezier",
                 markerEnd: { type: MarkerType.ArrowClosed },
                 style: {
                   strokeWidth: 2,
@@ -334,14 +339,37 @@ export const Workflow = forwardRef(
 
     const [isRunning, setIsRunning] = useState(false);
 
+    const isRunningRef = useRef(false);
+
+    useEffect(() => {
+      isRunningRef.current = isRunning;
+    }, [isRunning]);
+
     const onRunningHandler = useCallback(async () => {
+      if (isRunningRef.current) return;
       setIsRunning(true);
       await onRunWorkflow?.();
       setIsRunning(false);
     }, [onRunWorkflow]);
 
+    const { getWorkflowState } = useWorkflowState();
+
+    useEffect(() => {
+      if (editWorkflow?.workflowAgentId) {
+        getWorkflowState(editWorkflow.workflowAgentId).then((res) => {
+          if (res?.workflowStatus === WorkflowStatus.running) {
+            setIsRunning(true);
+          }
+        });
+      }
+    }, [editWorkflow?.workflowAgentId, getWorkflowState]);
+
     return (
-      <div className="dndflow sdk:w-full">
+      <div
+        className={clsx(
+          "dndflow sdk:w-full",
+          editAgentOpen && "editAgentOpen-workflow-inner"
+        )}>
         <div className="reactflow-wrapper sdk:relative" ref={reactFlowWrapper}>
           <ReactFlow
             colorMode="dark"
@@ -365,7 +393,7 @@ export const Workflow = forwardRef(
             </div>
             <Button
               onClick={onRunningHandler}
-              className="sdk:z-10 sdk:absolute sdk:cursor-pointer sdk:hover:text-[#000] sdk:right-[16px] sdk:top-[12px] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[#303030]">
+              className="sdk:z-10 sdk:absolute sdk:cursor-pointer sdk:hover:text-[#000] sdk:right-[16px] sdk:top-[12px] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
               {isRunning ? (
                 <Loading
                   key={"save"}
@@ -382,12 +410,16 @@ export const Workflow = forwardRef(
             <MiniMap
               pannable
               zoomable
+              style={{
+                width: 100,
+                height: 64,
+              }}
               nodeColor={"#cecece"}
               bgColor={"#000"}
               maskColor={"#141415"}
             />
-            <BackgroundFlow bgColor={"#000"} size={2} color={"#3F4042"} />
-            <div className="sdk:absolute sdk:right-[0px] sdk:bottom-[0px] sdk:text-[#B9B9B9] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[11px] sdk:font-pro">
+            <BackgroundFlow bgColor={"#000"} size={2} color={"#D2D6DB4D"} />
+            <div className="sdk:absolute sdk:right-[0px] sdk:bottom-[0px] sdk:text-[#B9B9B9] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[11px] sdk:font-pro aevatar-ai-watermark">
               powered by aevatar.ai
             </div>
           </ReactFlow>

@@ -23,7 +23,11 @@ export default function WorkflowDialog({
   onGaevatarChange,
 }: IProps) {
   return (
-    <DialogPrimitive.Content className="sdk:z-6 sdk:absolute sdk:right-[20px] sdk:left-[19px] sdk:top-[52px] sdk:sm:right-[11px] sdk:sm:left-auto sdk:sm:top-[52px] sdk:sm:bottom-[13px] sdk:workflow-common-bg sdk:w-auto sdk:sm:w-[380px] sdk:px-[26px] sdk:sm:px-[19px] sdk:pt-[19px] sdk:sm:pt-[40px] sdk:pb-[19px] sdk:workflow-common-border sdk:border sdk:flex">
+    <DialogPrimitive.Content
+      className={clsx(
+        "sdk:z-6 sdk:left-[19px] sdk:sm:left-auto  sdk:workflow-common-bg sdk:w-auto sdk:sm:w-[380px] sdk:px-[8px] sdk:sm:px-[8px] sdk:pt-[8px] sdk:sm:pt-[8px] sdk:pb-[19px] sdk:workflow-common-border sdk:border sdk:flex",
+        "sdk:absolute sdk:right-[20px]  sdk:top-[52px] sdk:sm:right-[11px] sdk:sm:top-[52px] sdk:sm:bottom-[13px]"
+      )}>
       <DialogClose className="sdk:border-none">
         <CloseIcon
           className="sdk:absolute sdk:right-[15px] sdk:sm:right-[6px] sdk:top-[17px] sdk:sm:top-[6px] sdk:cursor-pointer"

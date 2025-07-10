@@ -203,7 +203,7 @@ export default function WorkflowAevatarEdit({
           </div>
           <Button
             key={"save"}
-            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[340px]"
+            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[362px]"
             type="submit">
             {btnLoading && (
               <Loading

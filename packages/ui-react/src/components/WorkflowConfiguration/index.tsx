@@ -29,6 +29,7 @@ import { useUpdateEffect } from "react-use";
 import EditWorkflowNameDialog from "../EditWorkflowNameDialog";
 import { useAevatar } from "../context/AevatarProvider";
 import SidebarWithNewAgent from "./sidebarWithNewAgent";
+import { useWorkflowState } from "../../hooks/useWorkflowState";
 
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
@@ -222,17 +223,8 @@ const WorkflowConfiguration = ({
     isWorkflowChanged.current = true;
   }, [nodeList]);
 
-  const getWorkflowState = useCallback(async (workflowAgentId: string) => {
-    const queryString = `_id:${workflowAgentId}`;
-    const workflowList =
-      await aevatarAI.services.workflow.getWorkflow<IWorkflowCoordinatorState>({
-        stateName: "WorkflowCoordinatorState",
-        queryString,
-      });
-    if (!workflowList.items.length) throw "workflow not found";
-    return workflowList.items?.[0];
-  }, []);
 
+  const { getWorkflowState } = useWorkflowState();
   const getWorkflowStateLoop = useCallback(
     async (workflowAgentId: string, term: number) => {
       let workflowStatus = WorkflowStatus.pending;
@@ -402,6 +394,7 @@ const WorkflowConfiguration = ({
               <Workflow
                 extraControlBar={extraControlBar}
                 editWorkflow={editWorkflow}
+                editAgentOpen={editAgentOpen}
                 gaevatarList={sidebarConfig?.gaevatarList}
                 selectedNodeId={selectAgentInfo?.nodeId}
                 ref={workflowRef}

@@ -75,7 +75,7 @@ export default function EditWorkflowNameDialog({
       </DialogTrigger>
       <DialogContent
         aria-describedby="rename workflow"
-        className="sdk:w-[328px] sdk:p-5 sdk:flex sdk:flex-col sdk:gap-[28px] sdk:rounded-[6px] sdk:border sdk:border-black-light">
+        className="sdk:w-[328px] sdk:p-5 sdk:flex sdk:flex-col sdk:gap-[28px] sdk:rounded-[6px]">
         <DialogHeader>
           <DialogTitle className="sdk:text-left aevatarai-text-gradient-1 sdk:inline  sdk:text-[18px] sdk:font-semibold sdk:leading-normal sdk:lowercase">
             rename workflow

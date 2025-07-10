@@ -15,27 +15,24 @@ export const workflowStatusMap = {
 };
 
 export interface IWorkflowTable {
+  name?:JSX.Element;
   operation?: JSX.Element;
 }
 
 export const workflowColumns: ColumnDef<
-  IWorkflowTable & IWorkflowCoordinatorState & IAgentInfoDetail
+  IWorkflowTable & IWorkflowCoordinatorState & Omit<IAgentInfoDetail, "name">
 >[] = [
   {
     accessorKey: "name",
     header: "name",
-    cell: ({ row }) => (
-      <div className="sdk:text-[14px] sdk:pl-[15px] sdk:font-outfit sdk:font-semibold">
-        {row.original.name}
-      </div>
-    ),
+    cell: ({ row }) => row.original.name,
   },
   {
     accessorKey: "created",
     header: "created",
     cell: ({ row }) => (
       <div className="sdk:text-[12px]  sdk:font-outfit sdk:font-semibold">
-        {dayjs.utc(row.original.ctime).local().format("DD.MM.YYYY HH:mm")}
+        {dayjs.utc(row.original.ctime).local().format("YYYY-MM-DD HH:mm")}
       </div>
     ),
   },
@@ -65,7 +62,7 @@ export const workflowColumns: ColumnDef<
         {dayjs
           .utc(row.original.lastRunningTime)
           .local()
-          .format("DD.MM.YYYY HH:mm")}
+          .format("YYYY-MM-DD HH:mm")}
       </div>
     ),
   },

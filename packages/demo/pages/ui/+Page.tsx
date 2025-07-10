@@ -276,6 +276,10 @@ export default function UI() {
                         : fullscreenHandle.enter();
                     }}>
                     <FullScreenIcon
+                      style={{
+                        width: 16,
+                        height: 16,
+                      }}
                       className={
                         fullscreenHandle.active
                           ? "text-[#606060]"

@@ -80,7 +80,7 @@ export default function AevatarCardInner({
           }
           return (
             <div key={propName}>
-              <div className="sdk:text-[#606060] sdk:text-[11px] sdk:pb-[10px] sdk:font-outfit">
+              <div className="sdk:text-[#6F6F6F] sdk:text-[11px] sdk:pb-[10px] sdk:font-outfit">
                 {propName}
               </div>
               <div className="sdk:flex sdk:flex-wrap sdk:gap-[10px]">
