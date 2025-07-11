@@ -68,7 +68,7 @@ export default function AevatarCardInner({
               />
             )}
           </div>
-          <div className="sdk:font-outfit sdk:text-[#B9B9B9] sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:truncate">
+          <div className="sdk:font-outfit sdk:text-[#B9B9B9] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:truncate">
             {agentInfo?.agentType ?? "--"}
           </div>
         </div>
@@ -112,7 +112,7 @@ export default function AevatarCardInner({
             }
             return (
               <div key={propName} className={clsx(isNew && "sdk:w-full")}>
-                <div className="sdk:text-[#6F6F6F] sdk:text-[11px] sdk:pb-[10px]">
+                <div className="sdk:text-[#6F6F6F] sdk:text-[12px] sdk:pb-[10px]">
                   {propName}
                 </div>
                 <div

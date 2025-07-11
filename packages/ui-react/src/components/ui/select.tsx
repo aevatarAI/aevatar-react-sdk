@@ -148,7 +148,7 @@ const SelectItem = React.forwardRef<
     ref={ref}
     className={cn(
       "sdk:relative sdk:cursor-pointer sdk:select-none sdk:items-center sdk:text-sm sdk:outline-none sdk:focus:bg-accent sdk:focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      "sdk:text-[#B9B9B9] sdk:text-center sdk:font-outfit sdk:text-[11px] sdk:font-bold sdk:leading-normal sdk:lowercase sdk:py-[7px]",
+      "sdk:text-[#B9B9B9] sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-bold sdk:leading-normal sdk:lowercase sdk:py-[7px]",
       "select-item-wrapper",
       className
     )}

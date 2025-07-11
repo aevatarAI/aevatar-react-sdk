@@ -126,7 +126,7 @@ const ToastDescription = React.forwardRef<
   <ToastActionDescriptionEle
     ref={ref}
     className={cn(
-      "sdk:text-white sdk:text-[11px] sdk:font-normal sdk:lowercase sdk:font-source-code",
+      "sdk:text-white sdk:text-[12px] sdk:font-normal sdk:lowercase sdk:font-source-code",
       className
     )}
     {...props}

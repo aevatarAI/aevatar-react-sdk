@@ -37,7 +37,7 @@ export default function DeleteWorkflowConfirm({
             </TooltipTrigger>
             <TooltipContent
               className={clsx(
-                "sdk:z-1000 sdk:max-w-[200px] sdk:text-[10px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
                 "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
               )}
               side="top">

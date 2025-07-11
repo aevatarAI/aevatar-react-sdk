@@ -300,7 +300,7 @@ function EditGAevatarInnerCom({
               <div className="sdk:text-black sdk:font-outfit sdk:text-sm sdk:font-semibold sdk:leading-normal sdk:lowercase">
                 settings
               </div>
-              <div className="sdk:text-[#606060] sdk:font-mono sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:lowercase">
+              <div className="sdk:text-[#606060] sdk:font-mono sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:lowercase">
                 Manage your aevatar settings and preferences
               </div>
             </div>
