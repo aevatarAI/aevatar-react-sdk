@@ -179,6 +179,17 @@ export default function UI() {
 
   const workflowListRef = useRef<IWorkflowListRef>(null);
 
+  const getWorkflowDetail = useCallback(async (workflowAgentId: string) => {
+    const result =
+      await aevatarAI.getWorkflowUnitRelationByAgentId(workflowAgentId);
+    console.log("getWorkflowDetail", result);
+    setEditWorkflow({
+      workflowAgentId,
+      workflowName: result.workflowName,
+      workUnitRelations: result.workUnitRelations,
+    });
+  }, []);
+
   return (
     <div className="min-w-[375px]">
       <AevatarProvider
@@ -296,6 +307,7 @@ export default function UI() {
                 console.log(workflowAgentId, "workflowAgentId==");
                 workflowAgentId &&
                   localStorage.setItem("workflowAgentId", workflowAgentId);
+                getWorkflowDetail(workflowAgentId);
               }}
               editWorkflow={editWorkflow}
               onGaevatarChange={onGaevatarChange}

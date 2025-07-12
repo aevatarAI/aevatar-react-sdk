@@ -15,7 +15,7 @@ export const workflowStatusMap = {
 };
 
 export interface IWorkflowTable {
-  name?:JSX.Element;
+  name?: JSX.Element;
   operation?: JSX.Element;
 }
 
@@ -32,7 +32,9 @@ export const workflowColumns: ColumnDef<
     header: "created",
     cell: ({ row }) => (
       <div className="sdk:text-[12px]  sdk:font-outfit sdk:font-semibold">
-        {dayjs.utc(row.original.ctime).local().format("YYYY-MM-DD HH:mm")}
+        {row.original.ctime
+          ? dayjs.utc(row.original.ctime).local().format("YYYY-MM-DD HH:mm")
+          : "-"}
       </div>
     ),
   },
@@ -59,10 +61,12 @@ export const workflowColumns: ColumnDef<
     header: "last run",
     cell: ({ row }) => (
       <div className="sdk:text-[12px]  sdk:font-outfit">
-        {dayjs
-          .utc(row.original.lastRunningTime)
-          .local()
-          .format("YYYY-MM-DD HH:mm")}
+        {row.original.lastRunningTime
+          ? dayjs
+              .utc(row.original.lastRunningTime)
+              .local()
+              .format("YYYY-MM-DD HH:mm")
+          : "-"}
       </div>
     ),
   },

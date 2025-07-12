@@ -44,7 +44,7 @@ export default function SidebarWithNewAgent({
       className={clsx(
         "sdk:bg-[#000000] sdk:relative ",
         "sdk:w-full sdk:border-b-[1px] sdk:border-b-[#303030] sdk:overflow-x-auto",
-        "sdk:sm:w-[152px]  sdk:sm:h-full sdk:sm:border-r-[1px] sdk:sm:border-r-[#303030]"
+        "sdk:sm:w-[152px]  sdk:sm:h-full sdk:sm:border-r-[1px] sdk:sm:border-b-[0px] sdk:sm:border-b-[#303030] sdk:sm:border-r-[#303030]"
       )}>
       <div
         className={clsx(

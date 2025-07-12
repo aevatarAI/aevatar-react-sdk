@@ -136,11 +136,13 @@ export const Workflow = forwardRef(
         editWorkflow.workUnitRelations,
         gaevatarList
       );
+      // setNodes(nodes);
+      // setEdges(edges);
 
       setNodes((prevNodes) => {
         const merged = [...nodes, ...prevNodes];
         const map = new Map();
-        merged.forEach((node) => map.set(node.id, node));
+        merged.forEach((node) => map.set(node?.data?.agentInfo?.id, node));
         return Array.from(map.values());
       });
 
@@ -176,7 +178,6 @@ export const Workflow = forwardRef(
           item.selected = selectedNodeId && item.id === selectedNodeId;
           return { ...item };
         });
-        console.log("useUpdateEffect===onNodesChanged", updateNodes);
 
         return [...updateNodes];
       });
@@ -235,7 +236,15 @@ export const Workflow = forwardRef(
             },
           }));
         });
-        return result.flat();
+        const flatResult = result.flat();
+        const seen = new Set();
+        const deduped = flatResult.filter((item) => {
+          const key = `${item.grainId}|${item.nextGrainId}`;
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+        return deduped;
       }, [nodes, edges]);
 
     useImperativeHandle(
@@ -382,7 +391,7 @@ export const Workflow = forwardRef(
             onDragOver={onDragOver}
             fitView
             nodeTypes={nodeTypes}
-            defaultEdgeOptions={{ type: "smoothstep" }}
+            defaultEdgeOptions={{ type: "bezier" }}
             connectionLineStyle={{
               strokeDasharray: "10 10",
               stroke: "#B9B9B9",

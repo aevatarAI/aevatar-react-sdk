@@ -223,7 +223,6 @@ const WorkflowConfiguration = ({
     isWorkflowChanged.current = true;
   }, [nodeList]);
 
-
   const { getWorkflowState } = useWorkflowState();
   const getWorkflowStateLoop = useCallback(
     async (workflowAgentId: string, term: number) => {
@@ -316,7 +315,7 @@ const WorkflowConfiguration = ({
                 />
               )}
               <div>
-                <div className="">workflow configuration</div>
+                <div className="sdk:font-semibold">workflow configuration</div>
                 <EditWorkflowNameDialog
                   className="sdk:inline-flex sdk:sm:hidden"
                   defaultName={workflowName}
@@ -402,13 +401,22 @@ const WorkflowConfiguration = ({
                 onNodesChanged={onNodesChanged}
                 onRunWorkflow={onRunWorkflow}
               />
-              <Dialog open={editAgentOpen} onOpenChange={setEditAgentOpen}>
+              <Dialog
+                open={editAgentOpen}
+                modal={false}
+                onOpenChange={(v) => {
+                  console.log(v, "editAgentOpen=onClickWorkflowItem");
+                  // setEditAgentOpen(v);
+                }}>
                 <DialogPortal container={container} asChild>
                   {/* <DialogOverlay /> */}
                   <WorkflowDialog
                     agentItem={selectAgentInfo?.agent}
                     isNew={selectAgentInfo?.isNew}
                     nodeId={selectAgentInfo?.nodeId}
+                    onClose={() => {
+                      setEditAgentOpen(false);
+                    }}
                     onGaevatarChange={onDefaultGaevatarChange}
                   />
                 </DialogPortal>
