@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 export enum SaveFailedError {
   insufficientQuota = "insufficient quota",
   maxAgents = "maximum agent",
+  workflowExecutionFailed = "workflow execution failed",
 }
 export interface IWorkflowSaveFailedModalProps {
   saveFailed?: SaveFailedError | boolean;
@@ -30,7 +31,7 @@ export default function WorkflowSaveFailedModal({
         <div className="sdk:flex sdk:flex-col sdk:items-center sdk:gap-[16px] sdk:pt-[10px]">
           <SaveFailedTip />
 
-          <div className="sdk:text-center sdk:font-syne sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:lowercase sdk:text-white">
+          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:lowercase sdk:text-white">
             {saveFailed === SaveFailedError.insufficientQuota && (
               <>
                 saving failed :( <br />
@@ -39,6 +40,12 @@ export default function WorkflowSaveFailedModal({
             )}
             {saveFailed === SaveFailedError.maxAgents &&
               "Maximum agent creation count reached"}
+            {saveFailed === SaveFailedError.workflowExecutionFailed &&
+              "Workflow execution failed"}
+          </div>
+          <div className="sdk:w-[220px] sdk:text-[12px] sdk:text-[#B9B9B9] sdk:text-center sdk:font-outfit sdk:font-normal sdk:leading-normal sdk:lowercase">
+            {saveFailed === SaveFailedError.workflowExecutionFailed &&
+              "The workflow encountered an error and could not complete. Please review the configuration and logs, then try again."}
           </div>
         </div>
         <div className="sdk:flex sdk:justify-between sdk:items-start sdk:self-stretch  sdk:gap-[14px] sdk:pt-[28px]">
@@ -51,6 +58,7 @@ export default function WorkflowSaveFailedModal({
             }}>
             {saveFailed === SaveFailedError.insufficientQuota && "Purchase now"}
             {saveFailed === SaveFailedError.maxAgents && "ok"}
+            {saveFailed === SaveFailedError.workflowExecutionFailed && "ok"}
           </Button>
         </div>
       </DialogContent>

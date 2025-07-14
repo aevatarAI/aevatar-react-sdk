@@ -1,5 +1,23 @@
 # @aevatar-react-sdk/services
 
+## 0.3.17
+
+### Patch Changes
+
+- Bump version to 0.3.17 for release consistency.
+
+## 0.3.16
+
+### Patch Changes
+
+- Bump version to 0.3.16 for release consistency.
+
+## 0.3.15
+
+### Patch Changes
+
+- Bump version to 0.3.15 for release consistency.
+
 ## 0.4.0
 
 ### Minor Changes

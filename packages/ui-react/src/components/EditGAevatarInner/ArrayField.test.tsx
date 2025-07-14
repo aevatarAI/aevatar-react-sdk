@@ -22,7 +22,7 @@ describe("ArrayField", () => {
     );
     expect(screen.getByText("Add item")).toBeInTheDocument();
     fireEvent.click(screen.getByText("Add item"));
-    expect(onChange).toHaveBeenCalledWith([undefined]);
+    expect(onChange).toHaveBeenCalledWith([undefined], "add");
   });
 
   it("renders add button when value is undefined and triggers onChange", () => {
@@ -32,7 +32,7 @@ describe("ArrayField", () => {
     );
     expect(screen.getByText("Add item")).toBeInTheDocument();
     fireEvent.click(screen.getByText("Add item"));
-    expect(onChange).toHaveBeenCalledWith([undefined]);
+    expect(onChange).toHaveBeenCalledWith([undefined], "add");
   });
 
   it("renders single item, add and delete buttons, triggers onChange", () => {
@@ -42,11 +42,11 @@ describe("ArrayField", () => {
     );
     expect(screen.getByTestId("item-0")).toHaveTextContent("foo");
     fireEvent.click(screen.getAllByText("Add item")[0]);
-    expect(onChange).toHaveBeenCalledWith(["foo", undefined]);
+    expect(onChange).toHaveBeenCalledWith(["foo", undefined], "add");
     const delBtn = screen.getAllByRole("button").find(btn => btn.innerHTML.includes("delete-icon"));
     expect(delBtn).toBeDefined();
     if (delBtn) fireEvent.click(delBtn);
-    expect(onChange).toHaveBeenCalledWith([]);
+    expect(onChange).toHaveBeenCalledWith([], "delete");
   });
 
   it("renders multiple items, supports move up/down, delete, add", () => {

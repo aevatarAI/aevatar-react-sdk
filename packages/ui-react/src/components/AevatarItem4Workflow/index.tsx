@@ -5,6 +5,7 @@ import type { TNodeDataClick } from "../Workflow/types";
 
 interface IAevatarItem4WorkflowProps {
   id: string;
+  selected?: boolean;
   data: {
     agentInfo?: IAgentInfoDetail;
     deleteNode: (nodeId: string) => void;
@@ -15,6 +16,7 @@ interface IAevatarItem4WorkflowProps {
 
 export default function AevatarItem4Workflow({
   id: nodeId,
+  selected,
   data,
 }: IAevatarItem4WorkflowProps) {
   const { isNew, onClick, deleteNode, agentInfo } = data;
@@ -32,6 +34,7 @@ export default function AevatarItem4Workflow({
       />
       <AevatarCardInner
         agentInfo={agentInfo}
+        selected={selected}
         isNew={isNew}
         onClick={onClick}
         deleteNode={deleteNode}

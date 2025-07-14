@@ -38,6 +38,7 @@ export interface Measured {
 export interface INode {
   id: string;
   type: string;
+  selected?: boolean;
   position: {
     x: number;
     y: number;

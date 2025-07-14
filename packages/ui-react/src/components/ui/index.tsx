@@ -7,3 +7,4 @@ export * from "./dislog";
 export * from "./toast";
 export * from "./toaster";
 export * from "./checkbox";
+export { default as SearchBar } from "./SearchBar";

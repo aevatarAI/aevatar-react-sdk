@@ -22,6 +22,7 @@ export interface IAgentInfoDetail extends IAgentInfo {
 export interface IGetAgentsParams {
   pageIndex: number;
   pageSize: number;
+  agentType?: string;
 }
 
 export interface IUpdateAgentInfo {
@@ -60,6 +61,7 @@ export interface IAgentParams {
 export interface IAgentsConfiguration {
   agentType: string;
   fullName: string;
+  description?: string;
   agentParams?: IAgentParams[];
   propertyJsonSchema?: string;
 }

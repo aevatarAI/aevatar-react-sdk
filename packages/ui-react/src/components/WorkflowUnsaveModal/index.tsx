@@ -28,11 +28,11 @@ export default function WorkflowUnsaveModal({
         </div>
         <div className="sdk:flex sdk:flex-col sdk:items-center sdk:gap-[16px] sdk:pt-[10px]">
           <Unsaved />
-          <div className="sdk:text-center sdk:font-syne sdk:text-[18px] sdk:w-[274px] sdk:leading-normal sdk:lowercase sdk:text-white">
+          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:leading-normal sdk:lowercase sdk:text-white">
             <div className="sdk:font-semibold sdk:leading-[22px] sdk:pb-[10px]">
               Unsaved Changes
             </div>
-            <div className="sdk:font-pro sdk:text-[12px]">
+            <div className="sdk:font-outfit sdk:text-[12px]">
               You've made changes that haven't been saved. Would you like to
               save them before closing?
             </div>

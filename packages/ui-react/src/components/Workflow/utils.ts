@@ -56,7 +56,7 @@ export const generateWorkflowGraph = (
 
       edges.push({
         id: `edge__${agentInfo.id}__${targetAgentInfo.id}__${getId()}`,
-        type: "smoothstep",
+        type: "bezier",
         source: agentInfo.id,
         sourceHandle: "b",
         target: targetAgentInfo.id,

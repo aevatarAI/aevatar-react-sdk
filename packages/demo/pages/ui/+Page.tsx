@@ -7,9 +7,12 @@ import {
   Button,
   WorkflowConfiguration,
   ConfigProvider,
+  WorkflowList,
+  FullScreenIcon,
 } from "@aevatar-react-sdk/ui-react";
 // import "@aevatar-react-sdk/ui-react/ui-react.css";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 import { clientOnly } from "vike-react/clientOnly";
 import { sleep } from "@aevatar-react-sdk/utils";
@@ -18,6 +21,7 @@ import type {
   IAgentInfoDetail,
   IAgentsConfiguration,
 } from "@aevatar-react-sdk/services";
+import type { IWorkflowListRef } from "../../../ui-react/dist/types/src/components/WorkflowList";
 const LoginButton = clientOnly(
   () => import("../../components/auth/LoginButton")
 );
@@ -44,6 +48,7 @@ enum Stage {
   newGAevatar = "newGAevatar",
   editGAevatar = "editGAevatar",
   Workflow = "Workflow",
+  WorkflowList = "WorkflowList",
 }
 
 export default function UI() {
@@ -119,21 +124,22 @@ export default function UI() {
 
   const [editWorkflow, setEditWorkflow] = useState<any>();
 
-  const onEditWorkflow = useCallback(async () => {
-    const workflowAgentId = localStorage.getItem("workflowAgentId");
-    if (!workflowAgentId) return;
-    const result = await aevatarAI.getWorkflowUnitRelationByAgentId(
-      workflowAgentId
-    );
-    setEditWorkflow({
-      workflowAgentId,
-      workflowName: result.workflowName,
-      // workUnitRelations: workUnitRelations,
-      workUnitRelations: result.workUnitRelations,
-    });
-    onShowWorkflow();
-    console.log(workflowAgentId, result, "onEditWorkflow=");
-  }, [onShowWorkflow]);
+  const onEditWorkflow = useCallback(
+    async (workflowAgentId: string) => {
+      const result = await aevatarAI.getWorkflowUnitRelationByAgentId(
+        workflowAgentId
+      );
+      setEditWorkflow({
+        workflowAgentId,
+        workflowName: result.workflowName,
+        // workUnitRelations: workUnitRelations,
+        workUnitRelations: result.workUnitRelations,
+      });
+      onShowWorkflow();
+      console.log(workflowAgentId, result, "onEditWorkflow=");
+    },
+    [onShowWorkflow]
+  );
 
   const [showAction, setShowAction] = useState<boolean>();
 
@@ -169,8 +175,23 @@ export default function UI() {
     [refreshGaevatarList]
   );
 
+  const fullscreenHandle = useFullScreenHandle();
+
+  const workflowListRef = useRef<IWorkflowListRef>(null);
+
+  const getWorkflowDetail = useCallback(async (workflowAgentId: string) => {
+    const result =
+      await aevatarAI.getWorkflowUnitRelationByAgentId(workflowAgentId);
+    console.log("getWorkflowDetail", result);
+    setEditWorkflow({
+      workflowAgentId,
+      workflowName: result.workflowName,
+      workUnitRelations: result.workUnitRelations,
+    });
+  }, []);
+
   return (
-    <div>
+    <div className="min-w-[375px]">
       <AevatarProvider
       // hiddenGAevatarType={[
       //   // "Aevatar.SignalR.GAgents.SignalRGAgent",
@@ -180,12 +201,33 @@ export default function UI() {
         <LoginButton />
 
         <AuthButton onFinish={onAuthFinish} />
+        <div className="h-[10px]" />
+
         <Button onClick={getTokenByclient}>getTokenByclient</Button>
         {/* {showAction && (
           <> */}
         <Button onClick={onShowGaevatar}>show gaevatar</Button>
         <Button onClick={onShowWorkflow}>show workflow</Button>
-        <Button onClick={onEditWorkflow}>edit workflow</Button>
+        <Button
+          onClick={() => {
+            onEditWorkflow(localStorage.getItem("workflowAgentId") ?? "");
+          }}>
+          edit workflow
+        </Button>
+        <div className="h-[10px]" />
+        <Button
+          onClick={() => {
+            setStage(Stage.WorkflowList);
+          }}>
+          show workflowList
+        </Button>
+        <Button
+          onClick={() => {
+            workflowListRef.current?.refresh();
+          }}>
+          refresh workflowList
+        </Button>
+
         {/* </>
         )} */}
 
@@ -224,13 +266,40 @@ export default function UI() {
           />
         )}
         {stage === Stage.Workflow && (
-          <div className="h-[900px]">
+          <FullScreen className="h-[900px]" handle={fullscreenHandle}>
             <WorkflowConfiguration
               sidebarConfig={{
-                gaevatarList,
+                gaevatarList, //: [],
                 isNewGAevatar: true,
                 gaevatarTypeList: agentTypeList,
+                type: "newAgent",
               }}
+              extraControlBar={
+                <div className="w-full h-full bg-[#141415] flex flow-row border-[1px] border-[#303030]">
+                  {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+                  <div
+                    className={`p-[4px] w-[26px] h-[26px] flex justify-center items-center cursor-pointer ${
+                      fullscreenHandle.active ? "bg-[#AFC6DD]" : ""
+                    }`}
+                    onClick={() => {
+                      fullscreenHandle.active
+                        ? fullscreenHandle.exit()
+                        : fullscreenHandle.enter();
+                    }}>
+                    <FullScreenIcon
+                      style={{
+                        width: 16,
+                        height: 16,
+                      }}
+                      className={
+                        fullscreenHandle.active
+                          ? "text-[#606060]"
+                          : "text-[#B9B9B9]"
+                      }
+                    />
+                  </div>
+                </div>
+              }
               onBack={() => {
                 setStage(undefined);
               }}
@@ -238,9 +307,23 @@ export default function UI() {
                 console.log(workflowAgentId, "workflowAgentId==");
                 workflowAgentId &&
                   localStorage.setItem("workflowAgentId", workflowAgentId);
+                getWorkflowDetail(workflowAgentId);
               }}
               editWorkflow={editWorkflow}
               onGaevatarChange={onGaevatarChange}
+            />
+          </FullScreen>
+        )}
+        {stage === Stage.WorkflowList && (
+          <div className="h-[500px]">
+            <WorkflowList
+              ref={workflowListRef}
+              onEditWorkflow={(workflowAgentId) => {
+                onEditWorkflow(workflowAgentId);
+              }}
+              onNewWorkflow={() => {
+                onShowWorkflow();
+              }}
             />
           </div>
         )}

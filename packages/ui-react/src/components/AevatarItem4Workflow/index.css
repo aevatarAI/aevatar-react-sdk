@@ -28,3 +28,7 @@
   border-color: black;
   border-left: 15px solid transparent;
 }
+
+.sdk\:cutCorner-border-selected:before {
+  border-bottom: 15px solid #afc6dd !important;
+}

@@ -15,39 +15,49 @@ import {
   Controls,
   useReactFlow,
   MarkerType,
+  MiniMap,
+  Background as BackgroundFlow,
 } from "@xyflow/react";
-
+import Loading from "../../assets/svg/loading.svg?react";
 import "@xyflow/react/dist/style.css";
 import "./index.css";
 
 import { useDnD } from "./DnDContext";
 import ScanCardNode from "../AevatarItem4Workflow";
 import Background from "./background";
-import type {
-  IAgentInfoDetail,
-  IWorkflowUnitListItem,
+import {
+  WorkflowStatus,
+  type IAgentInfoDetail,
+  type IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 import type { Edge, INode } from "./types";
 import { generateWorkflowGraph } from "./utils";
 import { useUpdateEffect } from "react-use";
+import { Button } from "../ui";
+import Play from "../../assets/svg/play.svg?react";
+import clsx from "clsx";
+import { useWorkflowState } from "../../hooks/useWorkflowState";
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 interface IProps {
   gaevatarList?: IAgentInfoDetail[];
-
+  selectedNodeId?: string;
   editWorkflow?: {
     workflowAgentId: string;
     workflowName: string;
     workUnitRelations: IWorkflowUnitListItem[];
   };
+  editAgentOpen?: boolean;
   onCardClick: (
     data: Partial<IAgentInfoDetail>,
     isNew: boolean,
     nodeId: string
   ) => void;
   onNodesChanged?: (nodes: INode[]) => void;
+  onRunWorkflow?: () => Promise<void>;
+  extraControlBar?: React.ReactNode;
 }
 
 export interface IWorkflowInstance {
@@ -58,7 +68,16 @@ export interface IWorkflowInstance {
 
 export const Workflow = forwardRef(
   (
-    { gaevatarList, editWorkflow, onCardClick, onNodesChanged }: IProps,
+    {
+      gaevatarList,
+      editWorkflow,
+      selectedNodeId,
+      editAgentOpen,
+      onCardClick,
+      onNodesChanged,
+      onRunWorkflow,
+      extraControlBar,
+    }: IProps,
     ref
   ) => {
     const deleteNode = useCallback((nodeId) => {
@@ -110,8 +129,30 @@ export const Workflow = forwardRef(
         onCardClick,
         deleteNode
       );
-      setNodes(nodes);
-      setEdges(edges);
+      console.log(
+        "useEffect===onNodesChanged",
+        nodes,
+        edges,
+        editWorkflow.workUnitRelations,
+        gaevatarList
+      );
+      // setNodes(nodes);
+      // setEdges(edges);
+
+      setNodes((prevNodes) => {
+        const merged = [...nodes, ...prevNodes];
+        const map = new Map();
+        merged.forEach((node) => map.set(node?.data?.agentInfo?.id, node));
+        return Array.from(map.values());
+      });
+
+      // setEdges(edges);
+      setEdges((preEdges) => {
+        const merged = [...edges, ...preEdges];
+        const map = new Map();
+        merged.forEach((edge) => map.set(edge.id, edge));
+        return Array.from(map.values());
+      });
     }, [
       editWorkflow,
       // deleteNode,
@@ -129,17 +170,18 @@ export const Workflow = forwardRef(
       gaevatarList.forEach((item) => {
         agentMap.set(item.id, item);
       });
-
       setNodes((node) => {
         const updateNodes = node?.map((item) => {
           if (agentMap.get(item.data.agentInfo.id)) {
             item.data.agentInfo = agentMap.get(item.data.agentInfo.id);
           }
-          return item;
+          item.selected = selectedNodeId && item.id === selectedNodeId;
+          return { ...item };
         });
+
         return [...updateNodes];
       });
-    }, [gaevatarList]);
+    }, [gaevatarList, selectedNodeId]);
 
     useUpdateEffect(() => {
       onNodesChanged?.(nodes);
@@ -194,7 +236,15 @@ export const Workflow = forwardRef(
             },
           }));
         });
-        return result.flat();
+        const flatResult = result.flat();
+        const seen = new Set();
+        const deduped = flatResult.filter((item) => {
+          const key = `${item.grainId}|${item.nextGrainId}`;
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+        return deduped;
       }, [nodes, edges]);
 
     useImperativeHandle(
@@ -214,6 +264,7 @@ export const Workflow = forwardRef(
             addEdge(
               {
                 ...params,
+                type: "bezier",
                 markerEnd: { type: MarkerType.ArrowClosed },
                 style: {
                   strokeWidth: 2,
@@ -295,8 +346,39 @@ export const Workflow = forwardRef(
       [updaterList]
     );
 
+    const [isRunning, setIsRunning] = useState(false);
+
+    const isRunningRef = useRef(false);
+
+    useEffect(() => {
+      isRunningRef.current = isRunning;
+    }, [isRunning]);
+
+    const onRunningHandler = useCallback(async () => {
+      if (isRunningRef.current) return;
+      setIsRunning(true);
+      await onRunWorkflow?.();
+      setIsRunning(false);
+    }, [onRunWorkflow]);
+
+    const { getWorkflowState } = useWorkflowState();
+
+    useEffect(() => {
+      if (editWorkflow?.workflowAgentId) {
+        getWorkflowState(editWorkflow.workflowAgentId).then((res) => {
+          if (res?.workflowStatus === WorkflowStatus.running) {
+            setIsRunning(true);
+          }
+        });
+      }
+    }, [editWorkflow?.workflowAgentId, getWorkflowState]);
+
     return (
-      <div className="dndflow sdk:w-full">
+      <div
+        className={clsx(
+          "dndflow sdk:w-full",
+          editAgentOpen && "editAgentOpen-workflow-inner"
+        )}>
         <div className="reactflow-wrapper sdk:relative" ref={reactFlowWrapper}>
           <ReactFlow
             colorMode="dark"
@@ -309,17 +391,44 @@ export const Workflow = forwardRef(
             onDragOver={onDragOver}
             fitView
             nodeTypes={nodeTypes}
-            defaultEdgeOptions={{ type: "smoothstep" }}
+            defaultEdgeOptions={{ type: "bezier" }}
             connectionLineStyle={{
               strokeDasharray: "10 10",
               stroke: "#B9B9B9",
               strokeWidth: 2,
             }}>
+            <div className="sdk:absolute sdk:left-[15px] sdk:bottom-[130px] sdk:z-5">
+              {extraControlBar}
+            </div>
+            <Button
+              onClick={onRunningHandler}
+              className="sdk:z-10 sdk:absolute sdk:cursor-pointer sdk:hover:text-[#000] sdk:right-[16px] sdk:top-[12px] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
+              {isRunning ? (
+                <Loading
+                  key={"save"}
+                  className={clsx("aevatarai-loading-icon")}
+                  style={{ width: 14, height: 14 }}
+                />
+              ) : (
+                <Play />
+              )}
+              {isRunning ? "running" : "run"}
+            </Button>
             {nodes.length === 0 && <Background />}
             <Controls />
-            <div
-              className="sdk:absolute sdk:right-[40px] sdk:bottom-[35px] sdk:text-[#B9B9B9] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[11px] sdk:font-pro"
-            >
+            <MiniMap
+              pannable
+              zoomable
+              style={{
+                width: 100,
+                height: 64,
+              }}
+              nodeColor={"#cecece"}
+              bgColor={"#000"}
+              maskColor={"#141415"}
+            />
+            <BackgroundFlow bgColor={"#000"} size={2} color={"#D2D6DB4D"} />
+            <div className="sdk:absolute sdk:right-[0px] sdk:bottom-[0px] sdk:text-[#B9B9B9] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[11px] sdk:font-pro aevatar-ai-watermark">
               powered by aevatar.ai
             </div>
           </ReactFlow>

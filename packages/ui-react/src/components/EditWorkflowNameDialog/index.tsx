@@ -1,7 +1,5 @@
 import Loading from "../../assets/svg/loading.svg?react";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import clsx from "clsx";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -35,9 +33,11 @@ export type TEditWorkflowNameForm = z.infer<typeof EditWorkflowNameForm>;
 
 export default function EditWorkflowNameDialog({
   defaultName = "untitled_workflow",
+  className,
   onSave,
 }: {
   defaultName?: string;
+  className?: string;
   onSave: (name: string) => void;
 }) {
   const form = useForm<TEditWorkflowNameForm>({
@@ -65,9 +65,9 @@ export default function EditWorkflowNameDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <div className="sdk:inline-flex sdk:justify-center sdk:items-center sdk:gap-2 sdk:cursor-pointer">
-          <div className="sdk:flex sdk:justify-center sdk:text-[#B9B9B9] sdk:text-[12px] sdk:font-normal sdk:font-pro">
+      <DialogTrigger asChild >
+        <div className={clsx("sdk:inline-flex sdk:justify-center sdk:items-center sdk:gap-2 sdk:cursor-pointer", className)}>
+          <div className="sdk:flex sdk:justify-center sdk:text-[#B9B9B9] sdk:text-[13px] sdk:font-normal sdk:font-outfit">
             {defaultName}
           </div>
           <Edit />
@@ -75,7 +75,7 @@ export default function EditWorkflowNameDialog({
       </DialogTrigger>
       <DialogContent
         aria-describedby="rename workflow"
-        className="sdk:w-[328px] sdk:p-5 sdk:flex sdk:flex-col sdk:gap-[28px] sdk:rounded-[6px] sdk:border sdk:border-black-light">
+        className="sdk:w-[328px] sdk:p-5 sdk:flex sdk:flex-col sdk:gap-[28px] sdk:rounded-[6px] sdk:border-[#272728]">
         <DialogHeader>
           <DialogTitle className="sdk:text-left aevatarai-text-gradient-1 sdk:inline  sdk:text-[18px] sdk:font-semibold sdk:leading-normal sdk:lowercase">
             rename workflow
@@ -109,7 +109,7 @@ export default function EditWorkflowNameDialog({
                   cancel
                 </Button>
                 <Button
-                  className="sdk:text-[12px] sdk:bg-white sdk:text-black-light sdk:py-[7px] sdk:leading-[14px]"
+                  className="sdk:text-[12px] sdk:bg-white sdk:text-black sdk:py-[7px] sdk:leading-[14px]"
                   type="submit">
                   {btnLoading && (
                     <Loading

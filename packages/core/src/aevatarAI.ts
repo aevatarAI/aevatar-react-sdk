@@ -39,8 +39,8 @@ export class AevatarAI implements IAevatarAI, IAevatarAIMethods {
 
   async getAuthToken(params: RefreshTokenConfig) {
     // 1: local storage has JWT token
-    const data = await this.getAuthTokenFromStorage(params);
-    if (data) return data;
+    // const data = await this.getAuthTokenFromStorage(params);
+    // if (data) return data;
 
     // 2: local storage don not has JWT token
     return this.getAuthTokenFromApi({

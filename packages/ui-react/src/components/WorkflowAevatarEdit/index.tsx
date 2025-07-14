@@ -25,6 +25,7 @@ import type { JSONSchemaType } from "../types";
 import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import { validateSchemaField } from "../../utils/jsonSchemaValidate";
 import { renderSchemaField } from "../utils/renderSchemaField";
+import { useUpdateEffect } from "react-use";
 
 export interface IWorkflowAevatarEditProps {
   agentItem?: Partial<IAgentInfoDetail>;
@@ -58,6 +59,22 @@ export default function WorkflowAevatarEdit({
   useEffect(() => {
     btnLoadingRef.current = btnLoading;
   }, [btnLoading]);
+
+  // useUpdateEffect(() => {
+  //   form.setValue("agentName", agentItem?.name);
+  // }, [agentItem?.name]);
+
+  // useUpdateEffect(() => {
+  //   form.setValue("agentType", agentItem?.agentType);
+  // }, [agentItem?.agentType]);
+
+  useUpdateEffect(() => {
+    console.log(agentItem?.name, "agentItem?.name===WorkflowDialog");
+    form.reset({
+      agentName: agentItem?.name ?? "",
+      agentType: agentItem?.agentType ?? "",
+    });
+  }, [agentItem, nodeId]);
 
   const JSONSchemaProperties: [string, JSONSchemaType<any>][] = useMemo(() => {
     return jsonSchemaParse(
@@ -132,11 +149,11 @@ export default function WorkflowAevatarEdit({
   );
 
   return (
-    <div>
+    <div key={nodeId}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className={clsx("sdk:bg-[#141415] sdk:pb-[60px]")}>
-            <div className="sdk:flex sdk:flex-col sdk:gap-y-[24px]  sdk:items-start sdk:content-start sdk:self-stretch">
+            <div className="sdk:flex sdk:flex-col sdk:gap-y-[16px]  sdk:items-start sdk:content-start sdk:self-stretch">
               <FormField
                 key={"agentName"}
                 control={form.control}
@@ -203,7 +220,7 @@ export default function WorkflowAevatarEdit({
           </div>
           <Button
             key={"save"}
-            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[340px]"
+            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[362px]"
             type="submit">
             {btnLoading && (
               <Loading
@@ -212,7 +229,7 @@ export default function WorkflowAevatarEdit({
                 style={{ width: 14, height: 14 }}
               />
             )}
-            <span className="sdk:text-center sdk:font-syne sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
+            <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
               save
             </span>
           </Button>

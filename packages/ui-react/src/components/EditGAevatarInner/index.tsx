@@ -144,7 +144,7 @@ function EditGAevatarInnerCom({
               style={{ width: 14, height: 14 }}
             />
           )}
-          <span className="sdk:text-center sdk:font-syne sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
+          <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
             {text}
           </span>
         </Button>
@@ -161,7 +161,7 @@ function EditGAevatarInnerCom({
               style={{ width: 14, height: 14 }}
             />
           )}
-          <span className="sdk:text-center sdk:font-syne sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
+          <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
             delete
           </span>
         </Button>
@@ -288,19 +288,19 @@ function EditGAevatarInnerCom({
     <>
       <Form {...form}>
         <form
-          className="sdk:h-full sdk:flex sdk:flex-col"
+          className="sdk:h-full sdk:flex sdk:flex-col sdk:font-outfit"
           onSubmit={form.handleSubmit(onSubmit)}>
           <CommonHeader leftEle={leftEle} rightEle={rightEle} />
           <div
             className={clsx(
               "sdk:flex-1 sdk:w-full sdk:m-auto sdk:bg-[#141415] sdk:pt-[22px] sdk:pb-[14px]",
-              "sdk:md:pt-[0] sdk:md:px-[40px]"
+              "sdk:md:pt-[0] sdk:md:px-[40px] sdk:font-outfit"
             )}>
             <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-white sdk:self-stretch">
-              <div className="sdk:text-black sdk:font-syne sdk:text-sm sdk:font-semibold sdk:leading-normal sdk:lowercase">
+              <div className="sdk:text-black sdk:font-outfit sdk:text-sm sdk:font-semibold sdk:leading-normal sdk:lowercase">
                 settings
               </div>
-              <div className="sdk:text-[#606060] sdk:font-mono sdk:text-[11px] sdk:font-normal sdk:leading-normal sdk:lowercase">
+              <div className="sdk:text-[#606060] sdk:font-mono sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:lowercase">
                 Manage your aevatar settings and preferences
               </div>
             </div>

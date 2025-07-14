@@ -5,10 +5,10 @@ import { vi, describe, it, expect } from "vitest";
 import "@testing-library/jest-dom";
 
 // Mock SVG Icon
-vi.mock("../../assets/svg/empty-gaevatar.svg?react", () => ({
+vi.mock("../../assets/svg/empty-workflow.svg?react", () => ({
   __esModule: true,
   default: ({ width, hanging }: { width: number; hanging: number }) => (
-    <svg data-testid="empty-icon" width={width} hanging={hanging} />
+    <svg data-testid="empty-workflow" width={width} hanging={hanging} />
   ),
 }));
 
@@ -17,14 +17,14 @@ describe("Background Component", () => {
     render(<Background />);
 
     // Check if SVG icon is rendered
-    const svgIcon = screen.getByTestId("empty-icon");
+    const svgIcon = screen.getByTestId("empty-workflow");
     expect(svgIcon).toBeInTheDocument();
-    expect(svgIcon).toHaveAttribute("width", "86");
-    expect(svgIcon).toHaveAttribute("hanging", "67");
+    expect(svgIcon).toHaveAttribute("width", "144");
+    expect(svgIcon).toHaveAttribute("hanging", "144");
 
     // Check if instructional text is rendered
     const textElement = screen.getByText(
-      /begin by dragging and dropping or adding a card from the sidebar on the left!/i
+      /drag and drop agents from the left panel to begin\./i
     );
     expect(textElement).toBeInTheDocument();
     expect(textElement).toHaveClass("sdk:text-center");
@@ -41,10 +41,10 @@ describe("Background Component", () => {
     );
 
     // Validate the inner container has the right classes
-    const innerDiv = container.querySelector("div.sdk\\:w-\\[288px\\]");
+    const innerDiv = container.querySelector("div.sdk\\:w-\\[390px\\]");
     expect(innerDiv).toBeInTheDocument();
     expect(innerDiv).toHaveClass(
-      "sdk:flex sdk:gap-6 sdk:flex-col sdk:justify-center sdk:items-center sdk:workflow-reactflow-background"
+      "sdk:flex sdk:gap-8 sdk:flex-col sdk:justify-center sdk:items-center sdk:workflow-reactflow-background"
     );
   });
 });

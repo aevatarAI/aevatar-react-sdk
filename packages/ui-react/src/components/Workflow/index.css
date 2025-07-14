@@ -44,3 +44,25 @@
   background: transparent;
   color: white;
 }
+
+.react-flow__panel.react-flow__attribution.bottom.right {
+  display: none;
+}
+
+.react-flow__panel.react-flow__minimap.bottom.right {
+  border: 1px solid #303030;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.react-flow__panel.react-flow__controls {
+  border: 1px solid #303030;
+}
+
+.react-flow__panel.react-flow__controls .react-flow__controls-button {
+  background: #141415;
+}
+
+.editAgentOpen-workflow-inner .react-flow__panel.right.react-flow__minimap {
+  margin-right: 400px;
+}

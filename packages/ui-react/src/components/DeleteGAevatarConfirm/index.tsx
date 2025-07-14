@@ -40,7 +40,7 @@ export default function DeleteGAevatarConfirm({
         <div className="sdk:flex sdk:flex-col sdk:items-center sdk:gap-[16px] sdk:pt-[10px]">
           <DeleteTip />
 
-          <div className="sdk:text-center sdk:font-syne sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:lowercase sdk:text-white">
+          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:lowercase sdk:text-white">
             Are you sure you want to delete this g-agent?
           </div>
           <CheckboxWithDesc checked={checked} setChecked={setChecked} />

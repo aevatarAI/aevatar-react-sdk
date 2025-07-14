@@ -36,6 +36,18 @@ export const renderSchemaField = ({
    */
   onChange?: (value: any, meta: { name: string; schema: any }) => void;
 }) => {
+  if (Array.isArray(schema.type)) {
+    const types = schema.type;
+    const nonNullTypes = types.filter((t) => t !== "null");
+    if (types.length === 1 && types[0] === "null") {
+      return null;
+    }
+    if (types.length === 2 && types.includes("null") && nonNullTypes.length === 1) {
+      schema = { ...schema, type: nonNullTypes[0], nullable: true };
+    } else {
+      return <></>;
+    }
+  }
   const fieldName = parentName ? `${parentName}.${name}` : name;
   const labelWithRequired = schema.required ? `*${label ?? name}` : (label ?? name);
   // enum type
@@ -357,14 +369,26 @@ export const renderSchemaField = ({
           const handleInputChange = (
             e: React.ChangeEvent<HTMLInputElement>
           ) => {
-            field.onChange(e);
-            onChange?.(e.target.value, { name: fieldName, schema });
+            const val = e.target.value;
+            if (schema.nullable && val === "") {
+              field.onChange(null);
+              onChange?.(null, { name: fieldName, schema });
+            } else {
+              field.onChange(e);
+              onChange?.(val, { name: fieldName, schema });
+            }
           };
           const handleTextareaChange = (
             e: React.ChangeEvent<HTMLTextAreaElement>
           ) => {
-            field.onChange(e);
-            onChange?.(e.target.value, { name: fieldName, schema });
+            const val = e.target.value;
+            if (schema.nullable && val === "") {
+              field.onChange(null);
+              onChange?.(null, { name: fieldName, schema });
+            } else {
+              field.onChange(e);
+              onChange?.(val, { name: fieldName, schema });
+            }
           };
           return (
             <FormItem>
@@ -402,8 +426,14 @@ export const renderSchemaField = ({
         render={({ field }) => {
           // Wrap onChange to call both field.onChange and external onChange
           const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            field.onChange(e);
-            onChange?.(e.target.value, { name: fieldName, schema });
+            const val = e.target.value;
+            if (schema.nullable && val === "") {
+              field.onChange(null);
+              onChange?.(null, { name: fieldName, schema });
+            } else {
+              field.onChange(e);
+              onChange?.(val, { name: fieldName, schema });
+            }
           };
           return (
             <FormItem>
@@ -435,13 +465,18 @@ export const renderSchemaField = ({
         render={({ field }) => {
           // Wrap onChange to call both field.onChange and external onChange
           const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            field.onChange(e.target.checked);
-            onChange?.(e.target.checked, { name: fieldName, schema });
+            if (schema.nullable && e.target.indeterminate) {
+              field.onChange(null);
+              onChange?.(null, { name: fieldName, schema });
+            } else {
+              field.onChange(e.target.checked);
+              onChange?.(e.target.checked, { name: fieldName, schema });
+            }
           };
           return (
             <FormItem>
               <Checkbox
-                checked={!!field.value}
+                checked={field.value === null ? false : !!field.value}
                 onChange={handleChange}
                 label={labelWithRequired}
                 disabled={field.disabled}
