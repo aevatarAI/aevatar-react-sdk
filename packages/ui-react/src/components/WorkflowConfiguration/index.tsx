@@ -11,6 +11,7 @@ import WorkflowSaveFailedModal, {
 } from "../WorkflowSaveFailedModal";
 import WorkflowUnsaveModal from "../WorkflowUnsaveModal";
 import {
+  type IAgentInfo,
   WorkflowStatus,
   type IAgentInfoDetail,
   type IAgentsConfiguration,
@@ -45,7 +46,13 @@ export interface IWorkflowConfigurationProps {
   };
   extraControlBar?: React.ReactNode;
   onBack?: () => void;
-  onSave?: (workflowAgentId: string) => void;
+  onSave?: (
+    workflowAgentId: string,
+    {
+      workflowUnitList,
+      workflowName,
+    }: { workflowUnitList: IWorkflowUnitListItem[]; workflowName: string }
+  ) => void;
   onGaevatarChange: IWorkflowAevatarEditProps["onGaevatarChange"];
 }
 
@@ -110,26 +117,30 @@ const WorkflowConfiguration = ({
       // workflowName
       if (!workUnitRelations.length) throw "Please finish workflow";
       let workflowAgentId = editWorkflow?.workflowAgentId;
+      let workflowInfo: IAgentInfoDetail | IAgentInfo;
       if (editWorkflow?.workflowAgentId) {
-        await aevatarAI.services.workflow.edit(editWorkflow?.workflowAgentId, {
-          name: workflowName,
+        workflowInfo = await aevatarAI.services.workflow.edit(
+          editWorkflow?.workflowAgentId,
+          {
+            name: workflowName,
 
-          properties: {
-            workflowUnitList: workUnitRelations,
-          },
-        });
+            properties: {
+              workflowUnitList: workUnitRelations,
+            },
+          }
+        );
       } else {
-        const result = await aevatarAI.services.workflow.create({
+        workflowInfo = await aevatarAI.services.workflow.create({
           name: workflowName,
           properties: {
             workflowUnitList: workUnitRelations,
           },
         });
         // TODO: add subAgents to receive publishEvent
-        await aevatarAI.services.agent.addSubAgents(result.id, {
+        await aevatarAI.services.agent.addSubAgents(workflowInfo.id, {
           subAgents: [],
         });
-        workflowAgentId = result.id;
+        workflowAgentId = workflowInfo.id;
       }
       setNewWorkflowState({
         workflowAgentId: workflowAgentId,
@@ -141,7 +152,11 @@ const WorkflowConfiguration = ({
         duration: 3000,
       });
       isSaveRef.current = true;
-      onSaveHandler?.(workflowAgentId);
+      console.log(workflowInfo, "workflowInfo===");
+      onSaveHandler?.(workflowAgentId, {
+        workflowUnitList: workflowInfo?.properties?.workflowUnitList,
+        workflowName: workflowInfo?.name,
+      });
     } catch (error) {
       console.log("error===");
       toast({

@@ -180,6 +180,7 @@ export default function UI() {
   const workflowListRef = useRef<IWorkflowListRef>(null);
 
   const getWorkflowDetail = useCallback(async (workflowAgentId: string) => {
+    await sleep(2000);
     const result =
       await aevatarAI.getWorkflowUnitRelationByAgentId(workflowAgentId);
     console.log("getWorkflowDetail", result);
