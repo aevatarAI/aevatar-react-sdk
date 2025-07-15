@@ -24,6 +24,7 @@ export const renderSchemaField = ({
   label,
   selectContentCls = "",
   onChange,
+  disabled = false,
 }: {
   form: UseFormReturn<any>;
   name: string;
@@ -35,6 +36,7 @@ export const renderSchemaField = ({
    * Optional onChange callback, called after field.onChange with (value, {name, schema})
    */
   onChange?: (value: any, meta: { name: string; schema: any }) => void;
+  disabled?: boolean;
 }) => {
   if (Array.isArray(schema.type)) {
     const types = schema.type;
@@ -58,6 +60,7 @@ export const renderSchemaField = ({
         control={form.control}
         defaultValue={schema.value}
         name={fieldName}
+        disabled={disabled}
         render={({ field }) => {
           // Wrap onValueChange to call both field.onChange and external onChange
           const handleChange = (value: any) => {
@@ -104,6 +107,7 @@ export const renderSchemaField = ({
         control={form.control}
         name={fieldName}
         defaultValue={schema.value || []}
+        disabled={disabled}
         render={({ field }) => {
           // Use useState to maintain the key for ArrayField
           const [arrayKey, setArrayKey] = useState(
@@ -155,8 +159,10 @@ export const renderSchemaField = ({
                     label: `${name}-${idx}`,
                     selectContentCls,
                     onChange: renderSchemaFieldOnchange, // propagate onChange to children
+                    disabled,
                   });
                 }}
+                disabled={disabled}
               />
               <FormMessage />
             </>
@@ -177,6 +183,7 @@ export const renderSchemaField = ({
         control={form.control}
         name={fieldName}
         defaultValue={schema.value || {}}
+        disabled={disabled}
         render={({ field }) => {
           const value = field.value || {};
           const handleKeyChange = (oldKey: string, newKey: string) => {
@@ -250,6 +257,7 @@ export const renderSchemaField = ({
                         {idx === 0 && <FormLabel>key</FormLabel>}
                         <FormControl>
                           <Input
+                            disabled={disabled}
                             defaultValue={k}
                             onBlur={(e) => handleKeyChange(k, e.target.value)}
                             placeholder="key"
@@ -268,6 +276,7 @@ export const renderSchemaField = ({
                         label: idx === 0 ? "value" : "",
                         selectContentCls,
                         onChange: (val) => handleValueChange(k, val),
+                        disabled,
                       })}
                     </div>
                     <Button
@@ -302,6 +311,7 @@ export const renderSchemaField = ({
         control={form.control}
         name={fieldName}
         defaultValue={schema.value || {}}
+        disabled={disabled}
         render={({ field }) => (
           <div className="sdk:w-full sdk:mb-2">
             <FormLabel>{labelWithRequired}</FormLabel>
@@ -314,6 +324,7 @@ export const renderSchemaField = ({
                   parentName: fieldName,
                   selectContentCls,
                   onChange, // propagate onChange to children
+                  disabled,
                 })
               )}
             </div>
@@ -332,6 +343,7 @@ export const renderSchemaField = ({
         control={form.control}
         defaultValue={schema.value}
         name={fieldName}
+        disabled={disabled}
         render={({ field }) => {
           // Wrap onChange to call both field.onChange and external onChange
           const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -347,6 +359,7 @@ export const renderSchemaField = ({
                   placeholder={schema?.description ?? ""}
                   {...field}
                   onChange={handleChange}
+                  disabled={field.disabled ?? disabled}
                 />
               </FormControl>
               <FormMessage />
@@ -364,6 +377,7 @@ export const renderSchemaField = ({
         control={form.control}
         defaultValue={schema.value}
         name={fieldName}
+        disabled={disabled}
         render={({ field }) => {
           // For string under object, use Input; otherwise use Textarea
           const handleInputChange = (
@@ -399,12 +413,14 @@ export const renderSchemaField = ({
                     placeholder={schema?.description ?? ""}
                     {...field}
                     onChange={handleInputChange}
+                    disabled={field.disabled ?? disabled}
                   />
                 ) : (
                   <Textarea
                     placeholder={schema?.description ?? ""}
                     {...field}
                     onChange={handleTextareaChange}
+                    disabled={field.disabled ?? disabled}
                   />
                 )}
               </FormControl>
@@ -423,6 +439,7 @@ export const renderSchemaField = ({
         control={form.control}
         defaultValue={schema.value}
         name={fieldName}
+        disabled={disabled}
         render={({ field }) => {
           // Wrap onChange to call both field.onChange and external onChange
           const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -445,6 +462,7 @@ export const renderSchemaField = ({
                   {...field}
                   onChange={handleChange}
                   className="sdk:appearance-none sdk:[&::-webkit-outer-spin-button]:appearance-none sdk:[&::-webkit-inner-spin-button]:appearance-none sdk:[&::-ms-input-placeholder]:appearance-none"
+                  disabled={field.disabled ?? disabled}
                 />
               </FormControl>
               <FormMessage />
@@ -462,6 +480,7 @@ export const renderSchemaField = ({
         control={form.control}
         defaultValue={schema.value}
         name={fieldName}
+        disabled={disabled}
         render={({ field }) => {
           // Wrap onChange to call both field.onChange and external onChange
           const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -479,7 +498,7 @@ export const renderSchemaField = ({
                 checked={field.value === null ? false : !!field.value}
                 onChange={handleChange}
                 label={labelWithRequired}
-                disabled={field.disabled}
+                disabled={field.disabled ?? disabled}
               />
               <FormMessage />
             </FormItem>

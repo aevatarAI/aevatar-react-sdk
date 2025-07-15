@@ -34,10 +34,12 @@ export type TEditWorkflowNameForm = z.infer<typeof EditWorkflowNameForm>;
 export default function EditWorkflowNameDialog({
   defaultName = "untitled_workflow",
   className,
+  disabled,
   onSave,
 }: {
   defaultName?: string;
   className?: string;
+  disabled?: boolean;
   onSave: (name: string) => void;
 }) {
   const form = useForm<TEditWorkflowNameForm>({
@@ -65,8 +67,12 @@ export default function EditWorkflowNameDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild >
-        <div className={clsx("sdk:inline-flex sdk:justify-center sdk:items-center sdk:gap-2 sdk:cursor-pointer", className)}>
+      <DialogTrigger asChild>
+        <div
+          className={clsx(
+            "sdk:inline-flex sdk:justify-center sdk:items-center sdk:gap-2 sdk:cursor-pointer",
+            className
+          )}>
           <div className="sdk:flex sdk:justify-center sdk:text-[#B9B9B9] sdk:text-[13px] sdk:font-normal sdk:font-outfit">
             {defaultName}
           </div>
@@ -87,6 +93,7 @@ export default function EditWorkflowNameDialog({
               <FormField
                 key="name"
                 control={form.control}
+                disabled={disabled}
                 name="name"
                 render={({ field }) => (
                   <FormItem aria-labelledby="nameLabel" className="sdk:w-full">

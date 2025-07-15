@@ -50,6 +50,7 @@ interface IProps {
     workUnitRelations: IWorkflowUnitListItem[];
   };
   editAgentOpen?: boolean;
+  isRunning?: boolean;
   onCardClick: (
     data: Partial<IAgentInfoDetail>,
     isNew: boolean,
@@ -73,6 +74,7 @@ export const Workflow = forwardRef(
       editWorkflow,
       selectedNodeId,
       editAgentOpen,
+      isRunning,
       onCardClick,
       onNodesChanged,
       onRunWorkflow,
@@ -349,9 +351,7 @@ export const Workflow = forwardRef(
       [updaterList]
     );
 
-    const [isRunning, setIsRunning] = useState(false);
-
-    const isRunningRef = useRef(false);
+    const isRunningRef = useRef(isRunning);
 
     useEffect(() => {
       isRunningRef.current = isRunning;
@@ -359,22 +359,8 @@ export const Workflow = forwardRef(
 
     const onRunningHandler = useCallback(async () => {
       if (isRunningRef.current) return;
-      setIsRunning(true);
       await onRunWorkflow?.();
-      setIsRunning(false);
     }, [onRunWorkflow]);
-
-    const { getWorkflowState } = useWorkflowState();
-
-    useEffect(() => {
-      if (editWorkflow?.workflowAgentId) {
-        getWorkflowState(editWorkflow.workflowAgentId).then((res) => {
-          if (res?.workflowStatus === WorkflowStatus.running) {
-            setIsRunning(true);
-          }
-        });
-      }
-    }, [editWorkflow?.workflowAgentId, getWorkflowState]);
 
     return (
       <div

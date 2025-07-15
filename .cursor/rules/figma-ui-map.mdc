@@ -1,0 +1,31 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Figma Content Feature to Local Component Auto-Mapping Rules
+
+> These rules are used by MCP to automatically select the appropriate local React component based on the content of a Figma node (such as component type, keywords, or structural features) during UI generation.
+> The mapping is based on content features, not specific links, for generalization and extensibility.
+
+| Figma Content Feature (Keyword/Type)      | Recommended Local Component Path                    | Description                |
+|-------------------------------------------|----------------------------------------------------|----------------------------|
+| Contains "Table"                          | packages/ui-react/src/components/ui/DataTable       | For data table UIs         |
+| Contains "Button"                         | packages/ui-react/src/components/ui/button          | For button UIs             |
+| Contains "Input"                          | packages/ui-react/src/components/ui/input           | For input field UIs        |
+| Contains "Select" or "Dropdown"           | packages/ui-react/src/components/ui/select          | For dropdown/select UIs    |
+| Contains "Tag" or "Label"                 | packages/ui-react/src/components/ui/tag             | For tag/label UIs          |
+| Contains "Switch"                         | packages/ui-react/src/components/ui/switch          | For switch/toggle UIs      |
+| Contains "Radio"                          | packages/ui-react/src/components/ui/radio-group     | For radio group UIs        |
+| Contains "Checkbox"                       | packages/ui-react/src/components/ui/checkbox        | For checkbox UIs           |
+| Contains "Slider"                         | packages/ui-react/src/components/ui/slider          | For slider/progress UIs    |
+| Contains "Dialog" or "Modal"              | packages/ui-react/src/components/ui/dialog          | For dialog/modal UIs       |
+
+<!--
+Extension notes:
+- To support more Figma content features, add new rows in the table above.
+- Content features can be keywords, component types, or structural descriptions.
+- Use absolute paths (relative to project root) for local component paths.
+- The description column should briefly explain the use case.
+- When parsing a Figma node, MCP should match the content features in this table and select the corresponding component automatically.
+-->
