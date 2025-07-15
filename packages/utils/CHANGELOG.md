@@ -1,5 +1,11 @@
 # @aevatar-react-sdk/utils
 
+## 0.3.20
+
+### Patch Changes
+
+- Bump version to 0.3.20 for release consistency.
+
 ## 0.3.19
 
 ### Patch Changes
