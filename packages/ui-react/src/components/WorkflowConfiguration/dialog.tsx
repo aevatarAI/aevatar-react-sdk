@@ -9,6 +9,7 @@ import WorkflowAevatarEdit, {
 } from "../WorkflowAevatarEdit";
 
 interface IProps {
+  disabled?: boolean;
   isNew?: boolean;
   agentItem?: Partial<IAgentInfoDetail>;
   nodeId?: string;
@@ -17,13 +18,13 @@ interface IProps {
 }
 
 export default function WorkflowDialog({
+  disabled,
   isNew,
   agentItem,
   nodeId,
   onGaevatarChange,
   onClose,
 }: IProps) {
-  console.log(isNew, agentItem, nodeId, "WorkflowDialog");
   return (
     <DialogPrimitive.Content
       className={clsx(
@@ -34,7 +35,6 @@ export default function WorkflowDialog({
         className="sdk:border-none"
         onClick={(e) => {
           e.stopPropagation();
-          console.log("close");
           onClose?.();
         }}>
         <CloseIcon
@@ -52,6 +52,7 @@ export default function WorkflowDialog({
           </p>
         </DialogTitle>
         <WorkflowAevatarEdit
+          disabled={disabled}
           isNew={isNew}
           agentItem={agentItem}
           nodeId={nodeId}

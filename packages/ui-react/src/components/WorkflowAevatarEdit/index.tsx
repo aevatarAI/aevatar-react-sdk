@@ -31,6 +31,7 @@ export interface IWorkflowAevatarEditProps {
   agentItem?: Partial<IAgentInfoDetail>;
   isNew?: boolean;
   nodeId?: string;
+  disabled?: boolean;
   onGaevatarChange?: (
     isCreate: boolean,
     data: {
@@ -50,6 +51,7 @@ export default function WorkflowAevatarEdit({
   isNew,
   nodeId,
   onGaevatarChange,
+  disabled,
 }: IWorkflowAevatarEditProps) {
   const form = useForm<any>();
   const [btnLoading, setBtnLoading] = useState<boolean>();
@@ -69,7 +71,6 @@ export default function WorkflowAevatarEdit({
   // }, [agentItem?.agentType]);
 
   useUpdateEffect(() => {
-    console.log(agentItem?.name, "agentItem?.name===WorkflowDialog");
     form.reset({
       agentName: agentItem?.name ?? "",
       agentType: agentItem?.agentType ?? "",
@@ -157,6 +158,7 @@ export default function WorkflowAevatarEdit({
               <FormField
                 key={"agentName"}
                 control={form.control}
+                disabled={disabled}
                 defaultValue={agentItem?.name}
                 name={"agentName"}
                 render={({ field }) => (
@@ -214,6 +216,7 @@ export default function WorkflowAevatarEdit({
                   name,
                   schema,
                   selectContentCls: "sdk:w-[192px]!",
+                  disabled,
                 })
               )}
             </div>
@@ -221,7 +224,9 @@ export default function WorkflowAevatarEdit({
           <Button
             key={"save"}
             className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[362px]"
-            type="submit">
+            type="submit"
+            disabled={disabled}
+          >
             {btnLoading && (
               <Loading
                 key={"save"}

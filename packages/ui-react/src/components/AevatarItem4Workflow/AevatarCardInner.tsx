@@ -1,5 +1,6 @@
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import Delete from "../../assets/svg/delete.svg?react";
+import Hypotenuse from "../../assets/svg/hypotenuse.svg?react";
 import "./index.css";
 import { useCallback, useMemo } from "react";
 import DeleteWorkflowGAevatar from "../DeleteWorkflowGAevatar";
@@ -43,14 +44,16 @@ export default function AevatarCardInner({
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
       data-testid="aevatar-card"
+      className="sdk:group"
       onClick={(e) => {
         e.stopPropagation();
         onClick?.(agentInfo, isNew, nodeId);
       }}>
       <div
         className={clsx(
-          "sdk:aevatar-item-background sdk:w-[234px] sdk:cutCorner sdk:border sdk:border-[#141415] sdk:cutCorner-border sdk:hover:border-[#303030]",
-          selected && "sdk:border-[#AFC6DD]! sdk:cutCorner-border-selected",
+          "sdk:aevatar-item-background sdk:w-[234px]  sdk:border sdk:border-[#141415]  sdk:group-hover:border-[#303030]",
+          selected && "sdk:border-[#AFC6DD]! ",
+          "sdk:border-b-[0px]!",
           className
         )}>
         <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
@@ -72,7 +75,7 @@ export default function AevatarCardInner({
             {agentInfo?.agentType ?? "--"}
           </div>
         </div>
-        <div className="sdk:font-outfit sdk:pb-[16px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
+        <div className="sdk:font-outfit sdk:pb-[6px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
           {(propertiesInfo ?? []).map((item: [string, JSONSchemaType<any>]) => {
             // Extract property name and schema
             const [propName, schema] = item;
@@ -163,6 +166,21 @@ export default function AevatarCardInner({
             );
           })}
         </div>
+      </div>
+      <div className="sdk:h-[14px] sdk:relative sdk:flex ">
+        <div
+          className={clsx(
+            " sdk:bg-[#141415] sdk:flex-1 sdk:border sdk:border-[#141415] sdk:group-hover:border-[#303030]",
+            " sdk:border-t-[0px] sdk:border-r-[0px]",
+            selected && "sdk:border-[#AFC6DD]!"
+          )}
+        />
+        <Hypotenuse
+          className={clsx(
+            "sdk:w-[17px] sdk:h-[14px] sdk:text-[#141415]  sdk:group-hover:text-[#303030]",
+            selected && "sdk:text-[#AFC6DD]!"
+          )}
+        />
       </div>
     </div>
   );

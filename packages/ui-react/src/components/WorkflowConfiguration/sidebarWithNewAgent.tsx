@@ -9,11 +9,13 @@ import AevatarTypeItem from "./aevatarTypeItem";
 export interface IWorkflowSidebarWithNewAgentProps {
   gaevatarTypeList?: IAgentsConfiguration[];
   hiddenGAevatarType?: string[];
+  disabled?: boolean;
 }
 
 export default function SidebarWithNewAgent({
   gaevatarTypeList,
   hiddenGAevatarType,
+  disabled,
 }: IWorkflowSidebarWithNewAgentProps) {
   const [_, setDragItem] = useDnD();
 
@@ -57,7 +59,6 @@ export default function SidebarWithNewAgent({
           placeholder="search"
           className="sdk:w-full"
           onDebounceChange={(v) => {
-            console.log("v", v);
             setSearchValue(v);
           }}
         />
@@ -76,6 +77,7 @@ export default function SidebarWithNewAgent({
           return (
             <AevatarTypeItem
               key={ele?.agentType}
+              disabled={disabled}
               agentType={ele?.agentType}
               description={(ele as any)?.description || ele?.fullName}
               onDragStart={(event) =>

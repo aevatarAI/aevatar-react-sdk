@@ -15,9 +15,11 @@ interface ArrayFieldProps {
     item: any,
     idx: number,
     onItemChange: (v: any) => void,
-    onDelete: () => void
+    onDelete: () => void,
+    disabled?: boolean
   ) => React.ReactNode;
   label?: string;
+  disabled?: boolean;
 }
 
 export default function ArrayField({
@@ -27,6 +29,7 @@ export default function ArrayField({
   onChange,
   renderItem,
   label,
+  disabled = false,
 }: ArrayFieldProps) {
   if (!value || value.length === 0) {
     return (
@@ -37,7 +40,9 @@ export default function ArrayField({
         <Button
           type="button"
           className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
-          onClick={() => onChange([undefined], "add")}>
+          onClick={() => onChange([undefined], "add")}
+          disabled={disabled}
+        >
           <AddIcon className="text-white" />
           <span className="sdk:text-[12px] sdk:leading-[14px]">Add item</span>
         </Button>
@@ -56,27 +61,20 @@ export default function ArrayField({
               value[0],
               0,
               (v) => onChange([v], "update"),
-              () => onChange([], "delete")
+              () => onChange([], "delete"),
+              disabled
             )}
-
-            {/* <Button
-              type="button"
-              className="sdk:w-[40px] sdk:h-[40px] sdk:border-[#303030] sdk:p-[8px] sdk:px-[10px] sdk:hover:bg-[#303030] sdk:lowercase"
-              onClick={() => onChange([], "delete")}>
-              <DeleteIcon />
-            </Button> */}
-
             <div className="sdk:flex sdk:flex-row sdk:items-start sdk:gap-[10px] sdk:absolute sdk:right-0 sdk:top-0">
               <Button
                 type="button"
                 className="sdk:w-[24pxpx] sdk:h-[20px] sdk:inline-block sdk:border-[#303030] sdk:p-[3px] sdk:px-[5px] sdk:hover:bg-[#303030] sdk:lowercase"
-                disabled={true}>
+                disabled={true || disabled}>
                 <ArrowUp style={{ width: "12px", height: "12px" }} />
               </Button>
               <Button
                 type="button"
                 className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:border-[#303030] sdk:p-[3px] sdk:px-[5px] sdk:hover:bg-[#303030] sdk:lowercase"
-                disabled={true}>
+                disabled={true || disabled}>
                 <ArrowUp
                   style={{
                     transform: "rotate(180deg)",
@@ -88,7 +86,9 @@ export default function ArrayField({
               <Button
                 type="button"
                 className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:px-[5px]  sdk:border-[#303030] sdk:p-[3px] sdk:hover:bg-[#303030] sdk:lowercase"
-                onClick={() => onChange([], "delete")}>
+                onClick={() => onChange([], "delete")}
+                disabled={disabled}
+              >
                 <DeleteIcon style={{ width: "12px", height: "12px" }} />
               </Button>
             </div>
@@ -98,7 +98,9 @@ export default function ArrayField({
           <Button
             type="button"
             className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
-            onClick={() => onChange([...value, undefined], "add")}>
+            onClick={() => onChange([...value, undefined], "add")}
+            disabled={disabled}
+          >
             <AddIcon className="text-white" />
             <span className="sdk:text-[12px] sdk:leading-[14px]">Add item</span>
           </Button>
@@ -130,15 +132,16 @@ export default function ArrayField({
                       onChange(
                         value.filter((_, i) => i !== idx),
                         "delete"
-                      )
+                      ),
+                    disabled
                   )}
                   <div className="sdk:flex sdk:flex-row sdk:items-start sdk:gap-[10px] sdk:absolute sdk:right-0 sdk:top-0">
                     <Button
                       type="button"
                       className="sdk:w-[24pxpx] sdk:h-[20px] sdk:inline-block sdk:border-[#303030] sdk:p-[3px] sdk:px-[5px] sdk:hover:bg-[#303030] sdk:lowercase"
-                      disabled={idx === 0}
+                      disabled={idx === 0 || disabled}
                       onClick={() => {
-                        if (idx === 0) return;
+                        if (idx === 0 || disabled) return;
                         const newArr = value.map((obj) =>
                           obj && typeof obj === "object" ? { ...obj } : obj
                         );
@@ -153,9 +156,9 @@ export default function ArrayField({
                     <Button
                       type="button"
                       className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:border-[#303030] sdk:p-[3px] sdk:px-[5px] sdk:hover:bg-[#303030] sdk:lowercase"
-                      disabled={idx === value.length - 1}
+                      disabled={idx === value.length - 1 || disabled}
                       onClick={() => {
-                        if (idx === value.length - 1) return;
+                        if (idx === value.length - 1 || disabled) return;
                         const newArr = value.map((obj) =>
                           obj && typeof obj === "object" ? { ...obj } : obj
                         );
@@ -181,7 +184,9 @@ export default function ArrayField({
                           value.filter((_, i) => i !== idx),
                           "delete"
                         )
-                      }>
+                      }
+                      disabled={disabled}
+                    >
                       <DeleteIcon style={{ width: "12px", height: "12px" }} />
                     </Button>
                   </div>
@@ -193,13 +198,14 @@ export default function ArrayField({
         <Button
           type="button"
           className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
-          onClick={() => onChange([...value, undefined], "add")}>
+          onClick={() => onChange([...value, undefined], "add")}
+          disabled={disabled}
+        >
           <AddIcon className="text-white" />
           <span className="sdk:text-[12px] sdk:leading-[14px]">Add item</span>
         </Button>
       </div>
     );
   }
-  // ...TODO
   return null;
 }

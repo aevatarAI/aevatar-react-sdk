@@ -19,6 +19,7 @@ export interface IWorkflowSidebarProps {
   gaevatarTypeList?: IAgentsConfiguration[];
   disabledGeavatarIds?: string[];
   hiddenGAevatarType?: string[];
+  disabled?: boolean;
 }
 export default function Sidebar({
   gaevatarList,
@@ -26,6 +27,7 @@ export default function Sidebar({
   isNewGAevatar = true,
   gaevatarTypeList,
   hiddenGAevatarType,
+  disabled,
 }: IWorkflowSidebarProps) {
   const [_, setDragItem] = useDnD();
 
@@ -101,7 +103,7 @@ export default function Sidebar({
                     <AevatarItemMini
                       name={item.name}
                       agentType={item.agentType}
-                      disabled={disabledGeavatarIds?.includes(item.id)}
+                      disabled={disabledGeavatarIds?.includes(item.id) || disabled}
                       onDragStart={(event) =>
                         onDragStart(event, {
                           agentInfo: item,

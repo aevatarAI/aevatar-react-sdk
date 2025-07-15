@@ -10,16 +10,24 @@ import { useCallback } from "react";
 import { useToast } from "../../hooks/use-toast";
 import NewAevatarItemIcon from "../../assets/svg/new-aevatarItem.svg?react";
 import NewAevatarItemHoverIcon from "../../assets/svg/new-aevatarItem-hover.svg?react";
-
+import AevatarItemIcon from "../../assets/svg/aevatarItem.svg?react";
 interface IAevatarTypeItemProps {
   agentType?: string;
   description?: string;
   className?: string;
+  disabled?: boolean;
   onDragStart?: (event: React.DragEvent<HTMLDivElement>) => void;
   draggable?: boolean;
 }
 export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
-  const { agentType, description, onDragStart, draggable, className } = props;
+  const {
+    agentType,
+    description,
+    onDragStart,
+    draggable,
+    className,
+    disabled,
+  } = props;
   const { toast } = useToast();
   const onAevatarItemClick = useCallback(() => {
     toast({
@@ -36,19 +44,37 @@ export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
           <div
             className={clsx(
               "sdk:relative sdk:min-w-[124px] sdk:max-w-[124px] sdk:h-[45px] sdk:cursor-grab sdk:active:cursor-grabbing sdk:group",
+              disabled && "sdk:cursor-not-allowed",
               className
             )}
             onDragStart={onDragStart}
             onClick={onAevatarItemClick}
-            draggable={draggable}>
+            draggable={!disabled && draggable}>
             <NewAevatarItemIcon
-              className={clsx("sdk:absolute sdk:group-hover:hidden")}
+              className={clsx(
+                "sdk:absolute sdk:group-hover:hidden",
+                disabled && "sdk:hidden!"
+              )}
             />
             <NewAevatarItemHoverIcon
-              className={clsx("sdk:absolute sdk:group-hover:block sdk:hidden")}
+              className={clsx(
+                "sdk:absolute sdk:group-hover:block sdk:hidden",
+                disabled && "sdk:hidden!"
+              )}
             />
+            <AevatarItemIcon
+              className={clsx(
+                "sdk:absolute sdk:hidden",
+                disabled && "sdk:block!"
+              )}
+            />
+
             <div className=" sdk:text-center sdk:px-[16px] sdk:py-[16px] sdk:relative sdk:flex sdk:flex-col ">
-              <div className="sdk:text-[11px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:text-center sdk:w-full sdk:truncate">
+              <div
+                className={clsx(
+                  "sdk:text-[11px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:text-center sdk:w-full sdk:truncate",
+                  disabled && "sdk:text-[#B9B9B9]"
+                )}>
                 {agentType?.split(".")?.pop() || ""}
               </div>
             </div>
