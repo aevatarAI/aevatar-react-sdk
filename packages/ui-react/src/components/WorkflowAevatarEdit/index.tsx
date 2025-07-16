@@ -150,7 +150,9 @@ export default function WorkflowAevatarEdit({
   );
 
   return (
-    <div key={nodeId}>
+    <div
+      className="sdk:px-[8px] sdk:sm:px-[8px] sdk:overflow-auto sdk:flex-1"
+      key={nodeId}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className={clsx("sdk:bg-[#141415] sdk:pb-[60px]")}>
@@ -225,8 +227,7 @@ export default function WorkflowAevatarEdit({
             key={"save"}
             className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[calc(100%-16px)]"
             type="submit"
-            disabled={disabled}
-          >
+            disabled={disabled}>
             {btnLoading && (
               <Loading
                 key={"save"}
