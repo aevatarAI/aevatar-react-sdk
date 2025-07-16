@@ -1,6 +1,6 @@
 {
   "name": "@aevatar-react-sdk/ui-react",
-  "version": "0.3.21",
+  "version": "0.3.22",
   "type": "module",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
