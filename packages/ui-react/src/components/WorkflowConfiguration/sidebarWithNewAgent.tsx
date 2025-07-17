@@ -17,7 +17,7 @@ export default function SidebarWithNewAgent({
   hiddenGAevatarType,
   disabled,
 }: IWorkflowSidebarWithNewAgentProps) {
-  const [_, setDragItem] = useDnD();
+  // const [_, setDragItem] = useDnD();
 
   const [search, setSearch] = useState("");
   const [searchValue, setSearchValue] = useState("");
@@ -33,13 +33,13 @@ export default function SidebarWithNewAgent({
     });
   }, [gaevatarTypeList, searchValue]);
 
-  const onDragStart = useCallback(
-    (event: React.DragEvent<HTMLDivElement>, dragItem: IDragItem) => {
-      setDragItem(dragItem);
-      event.dataTransfer.effectAllowed = "move";
-    },
-    [setDragItem]
-  );
+  // const onDragStart = useCallback(
+  //   (event: React.DragEvent<HTMLDivElement>, dragItem: IDragItem) => {
+  //     setDragItem(dragItem);
+  //     event.dataTransfer.effectAllowed = "move";
+  //   },
+  //   [setDragItem]
+  // );
 
   return (
     <div
@@ -79,17 +79,8 @@ export default function SidebarWithNewAgent({
               key={ele?.agentType}
               disabled={disabled}
               agentType={ele?.agentType}
+              propertyJsonSchema={ele?.propertyJsonSchema}
               description={(ele as any)?.description || ele?.fullName}
-              onDragStart={(event) =>
-                onDragStart(event, {
-                  agentInfo: {
-                    agentType: ele?.agentType,
-                    propertyJsonSchema: ele?.propertyJsonSchema,
-                  },
-                  nodeType: "new",
-                })
-              }
-              draggable
             />
           );
         })}

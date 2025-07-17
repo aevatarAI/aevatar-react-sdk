@@ -6,29 +6,57 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useToast } from "../../hooks/use-toast";
 import NewAevatarItemIcon from "../../assets/svg/new-aevatarItem.svg?react";
 import NewAevatarItemHoverIcon from "../../assets/svg/new-aevatarItem-hover.svg?react";
 import AevatarItemIcon from "../../assets/svg/aevatarItem.svg?react";
+import { useDrag } from "react-dnd";
+import { useDnD, type IDragItem } from "../Workflow/DnDContext";
 interface IAevatarTypeItemProps {
   agentType?: string;
   description?: string;
   className?: string;
   disabled?: boolean;
+  propertyJsonSchema?: string;
   onDragStart?: (event: React.DragEvent<HTMLDivElement>) => void;
   draggable?: boolean;
 }
 export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
-  const {
-    agentType,
-    description,
-    onDragStart,
-    draggable,
-    className,
-    disabled,
-  } = props;
+  const { agentType, description, className, disabled, propertyJsonSchema } =
+    props;
   const { toast } = useToast();
+  const [, setDragItem] = useDnD();
+  const dragData: IDragItem = useMemo(
+    () => ({
+      nodeType: "new",
+      agentInfo: agentType ? { agentType, propertyJsonSchema } : undefined,
+    }),
+    [agentType, propertyJsonSchema]
+  );
+
+  const [{ isDragging }, dragRef] = useDrag<
+    IDragItem,
+    unknown,
+    { isDragging: boolean }
+  >({
+    type: "AEVATAR_TYPE_ITEM",
+    item: dragData,
+    canDrag: !disabled,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+    end: () => {
+      setDragItem(null);
+    },
+  });
+
+  useEffect(() => {
+    if (isDragging) {
+      setDragItem(dragData);
+    }
+  }, [isDragging, dragData, setDragItem]);
+
   const onAevatarItemClick = useCallback(() => {
     toast({
       description:
@@ -42,14 +70,14 @@ export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
         <TooltipTrigger asChild>
           {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
           <div
+            ref={dragRef}
             className={clsx(
-              "sdk:relative sdk:min-w-[124px] sdk:max-w-[124px] sdk:h-[45px] sdk:cursor-grab sdk:active:cursor-grabbing sdk:group",
+              "sdk:relative sdk:min-w-[124px] sdk:max-w-[124px] sdk:h-[45px] sdk:cursor-grab sdk:active:cursor-grabbing sdk:group sdk:no-user-select",
               disabled && "sdk:cursor-not-allowed",
+              isDragging && "sdk:opacity-50",
               className
             )}
-            onDragStart={onDragStart}
-            onClick={onAevatarItemClick}
-            draggable={!disabled && draggable}>
+            onClick={onAevatarItemClick}>
             <NewAevatarItemIcon
               className={clsx(
                 "sdk:absolute sdk:group-hover:hidden",

@@ -10,8 +10,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { useCallback } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useToast } from "../../hooks/use-toast";
+import { useDrag } from "react-dnd";
+import { useDnD, type IDragItem } from "../Workflow/DnDContext";
+import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 
 interface IProps {
   isnew?: boolean;
@@ -19,20 +22,43 @@ interface IProps {
   disabled?: boolean;
   name?: string;
   className?: string;
+  agentInfo?: Partial<IAgentInfoDetail>;
   onDragStart?: (event: React.DragEvent<HTMLDivElement>) => void;
   draggable?: boolean;
 }
 export default function AevatarItem(props: IProps) {
-  const {
-    isnew,
-    agentType,
-    name,
-    onDragStart,
-    draggable,
-    disabled,
-    className,
-  } = props;
+  const { isnew, agentType, name, disabled, className, agentInfo } =
+    props;
   const { toast } = useToast();
+  const [, setDragItem] = useDnD();
+  const dragData: IDragItem = useMemo(
+    () => ({
+      nodeType: isnew ? "new" : "default",
+      agentInfo: agentInfo,
+    }),
+    [isnew, agentInfo]
+  );
+  const [{ isDragging }, dragRef] = useDrag<
+    IDragItem,
+    unknown,
+    { isDragging: boolean }
+  >({
+    type: "AEVATAR_ITEM_MINI",
+    item: dragData,
+    canDrag: !disabled,
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+    end: () => {
+      setDragItem(null);
+    },
+  });
+  useEffect(() => {
+    if (isDragging) {
+      setDragItem(dragData);
+    }
+  }, [isDragging, dragData, setDragItem]);
+
   const onAevatarItemClick = useCallback(() => {
     toast({
       description:
@@ -43,14 +69,14 @@ export default function AevatarItem(props: IProps) {
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
+      ref={dragRef}
       className={clsx(
         "sdk:relative sdk:w-[124px] sdk:h-[45px] sdk:cursor-grab sdk:active:cursor-grabbing sdk:group",
         disabled && "sdk:cursor-not-allowed! opacity-50",
+        isDragging && "sdk:opacity-50",
         className
       )}
-      onDragStart={onDragStart}
-      onClick={onAevatarItemClick}
-      draggable={disabled ? false : draggable}>
+      onClick={onAevatarItemClick}>
       {isnew ? (
         <>
           <NewAevatarItemIcon
@@ -100,7 +126,11 @@ export default function AevatarItem(props: IProps) {
                     {name}
                   </div>
                 </TooltipTrigger>
-                <TooltipContent className='sdk:z-1000 sdk:max-w-[200px]' side="left">{name}</TooltipContent>
+                <TooltipContent
+                  className="sdk:z-1000 sdk:max-w-[200px]"
+                  side="left">
+                  {name}
+                </TooltipContent>
               </Tooltip>
             </TooltipProvider>
             <TooltipProvider delayDuration={0}>
@@ -110,7 +140,11 @@ export default function AevatarItem(props: IProps) {
                     {agentType}
                   </div>
                 </TooltipTrigger>
-                <TooltipContent className='sdk:z-1000 sdk:max-w-[200px]' side="left">{agentType}</TooltipContent>
+                <TooltipContent
+                  className="sdk:z-1000 sdk:max-w-[200px]"
+                  side="left">
+                  {agentType}
+                </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>

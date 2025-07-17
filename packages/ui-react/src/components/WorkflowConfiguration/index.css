@@ -15,3 +15,10 @@
 .sdk\:workflow-reactflow-background {
   @apply sdk:text-[12px] sdk:text-[var(--sdk-workflow-background)];
 }
+.sdk\:no-touch-callout {
+  -webkit-touch-callout: none;
+}
+.sdk\:no-user-select {
+  user-select: none;
+  -webkit-user-select: none;
+}

@@ -238,6 +238,6 @@ describe("AevatarAI", () => {
     };
     const result = await aevatarAI.getAuthTokenFromStorage(params);
     expect(result).toBeUndefined();
-    // expect(getAevatarJWT).toHaveBeenCalled(); // 注释掉此断言，主文件未必调用
+    // expect(getAevatarJWT).toHaveBeenCalled(); // Comment out this assertion, the main file may not call it
   });
 });

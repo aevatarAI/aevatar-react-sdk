@@ -36,6 +36,7 @@ import { Button } from "../ui";
 import Play from "../../assets/svg/play.svg?react";
 import clsx from "clsx";
 import { useWorkflowState } from "../../hooks/useWorkflowState";
+import { useDrop } from "react-dnd";
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
@@ -119,6 +120,7 @@ export const Workflow = forwardRef(
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const { screenToFlowPosition } = useReactFlow();
     const [dragInfo] = useDnD();
+    console.log(dragInfo, 'dragInfo===dragData')
     const nodesRef = useRef<INode[]>(nodes);
     const gaevatarListRef = useRef<IAgentInfoDetail[]>([]);
     useEffect(() => {
@@ -297,63 +299,60 @@ export const Workflow = forwardRef(
       event.dataTransfer.dropEffect = "move";
     }, []);
 
-    const onDrop = useCallback(
-      (event) => {
-        event.preventDefault();
+    // Original onDrop logic
+    const handleDrop = useCallback((item, monitor) => {
+      // Compatible with react-dnd drop event
+      if (!dragInfo.nodeType) return;
+      // Get mouse position
+      const clientOffset = monitor.getClientOffset();
+      if (!clientOffset) return;
+      const position = screenToFlowPosition({
+        x: clientOffset.x,
+        y: clientOffset.y,
+      });
+      const newNode =
+        dragInfo.nodeType === "new"
+          ? {
+              id: getId(),
+              type: "ScanCard",
+              position,
+              data: {
+                label: "ScanCard Node",
+                agentInfo: dragInfo.agentInfo,
+                isNew: true,
+                onClick: onCardClick,
+                deleteNode,
+              },
+              measured: {
+                width: 234,
+                height: 301,
+              },
+            }
+          : {
+              id: dragInfo.agentInfo.id,
+              type: "ScanCard",
+              position,
+              data: {
+                label: "ScanCard Node",
+                agentInfo: dragInfo.agentInfo,
+                isNew: false,
+                onClick: onCardClick,
+                deleteNode,
+              },
+              measured: {
+                width: 234,
+                height: 301,
+              },
+            };
+      setNodes((nds) => nds.concat(newNode as any));
+      if (dragInfo.nodeType === "new")
+        onCardClick(dragInfo.agentInfo, true, newNode.id);
+    }, [screenToFlowPosition, dragInfo, setNodes, onCardClick, deleteNode]);
 
-        // check if the dropped element is valid
-        if (!dragInfo.nodeType) {
-          return;
-        }
-
-        // project was renamed to screenToFlowPosition
-        // and you don't need to subtract the reactFlowBounds.left/top anymore
-        // details: https://reactflow.dev/whats-new/2023-11-10
-        const position = screenToFlowPosition({
-          x: event.clientX,
-          y: event.clientY,
-        });
-        const newNode =
-          dragInfo.nodeType === "new"
-            ? {
-                id: getId(),
-                type: "ScanCard",
-                position,
-                data: {
-                  label: "ScanCard Node",
-                  agentInfo: dragInfo.agentInfo,
-                  isNew: true,
-                  onClick: onCardClick,
-                  deleteNode,
-                },
-                measured: {
-                  width: 234,
-                  height: 301,
-                },
-              }
-            : {
-                id: dragInfo.agentInfo.id,
-                type: "ScanCard",
-                position,
-                data: {
-                  label: "ScanCard Node",
-                  agentInfo: dragInfo.agentInfo,
-                  isNew: false,
-                  onClick: onCardClick,
-                  deleteNode,
-                },
-                measured: {
-                  width: 234,
-                  height: 301,
-                },
-              };
-
-        setNodes((nds) => nds.concat(newNode as any));
-        if (dragInfo.nodeType === "new")
-          onCardClick(dragInfo.agentInfo, true, newNode.id);
-      },
-      [screenToFlowPosition, dragInfo, setNodes, onCardClick, deleteNode]
-    );
+    const [, dropRef] = useDrop({
+      accept: ["AEVATAR_TYPE_ITEM", "AEVATAR_ITEM_MINI"],
+      drop: handleDrop,
+    });
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     const nodeTypes = useMemo(
@@ -378,7 +377,13 @@ export const Workflow = forwardRef(
           "dndflow sdk:w-full",
           editAgentOpen && "editAgentOpen-workflow-inner"
         )}>
-        <div className="reactflow-wrapper sdk:relative" ref={reactFlowWrapper}>
+        <div
+          className="reactflow-wrapper sdk:relative"
+          ref={(node) => {
+            reactFlowWrapper.current = node;
+            dropRef(node);
+          }}
+        >
           <ReactFlow
             colorMode="dark"
             nodes={nodes}
@@ -386,7 +391,8 @@ export const Workflow = forwardRef(
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            onDrop={onDrop}
+            deleteKeyCode={["Backspace", "Delete"]}
+            // onDrop={onDrop} // Remove native onDrop
             onDragOver={onDragOver}
             fitView
             nodeTypes={nodeTypes}

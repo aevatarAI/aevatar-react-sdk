@@ -33,6 +33,9 @@ import SidebarWithNewAgent from "./sidebarWithNewAgent";
 import { useWorkflowState } from "../../hooks/useWorkflowState";
 import WorkflowProvider, { useWorkflow } from "../context/WorkflowProvider";
 import { basicWorkflow } from "../context/WorkflowProvider/actions";
+import { DndProvider as ReactDndProvider } from "react-dnd";
+import { TouchBackend } from "react-dnd-touch-backend";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
@@ -498,13 +501,20 @@ const WorkflowConfigurationInner = ({
 export default function WorkflowConfiguration(
   props: IWorkflowConfigurationProps
 ) {
+  // Determine if it is a mobile device
+  const isMobile = typeof window !== "undefined" &&
+    ("ontouchstart" in window || navigator.maxTouchPoints > 0);
   return (
     <ReactFlowProvider>
-      <DnDProvider>
-        <WorkflowProvider>
-          <WorkflowConfigurationInner {...props} />
-        </WorkflowProvider>
-      </DnDProvider>
+      <ReactDndProvider backend={isMobile ? TouchBackend : HTML5Backend}
+        options={isMobile ? { enableMouseEvents: true } : undefined}
+      >
+        <DnDProvider>
+          <WorkflowProvider>
+            <WorkflowConfigurationInner {...props} />
+          </WorkflowProvider>
+        </DnDProvider>
+      </ReactDndProvider>
     </ReactFlowProvider>
   );
 }

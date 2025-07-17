@@ -32,7 +32,7 @@ describe("WorkflowUnsaveModal", () => {
 
     // Verify modal content is rendered
     expect(screen.getByTestId("unsaved-icon")).toBeInTheDocument();
-    // 只断言正文内容，避免与DialogTitle重复
+    // Only assert the main content to avoid duplication with DialogTitle
     expect(screen.getByText(/you've made changes that haven't been saved/i)).toBeInTheDocument();
     // Verify buttons are present
     expect(screen.getByText("Close without saving")).toBeInTheDocument();

@@ -46,7 +46,6 @@ export default function AevatarCardInner({
       data-testid="aevatar-card"
       className="sdk:group"
       onClick={(e) => {
-        e.stopPropagation();
         onClick?.(agentInfo, isNew, nodeId);
       }}>
       <div
