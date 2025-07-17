@@ -349,9 +349,9 @@ export default function UI() {
     await aevatarAI.getAuthTokenWithClient({
       grant_type: "password",
       scope: "Aevatar",
-      username: "leotest@teml.net", // (import.meta as any).env.VITE_APP_SERVICE_USERNAME,
+      username: "runulr@snapmail.cc", // "leotest@teml.net", // (import.meta as any).env.VITE_APP_SERVICE_USERNAME,
       client_id: "AevatarAuthServer",
-      password: "Leo123!", //(import.meta as any).env.VITE_APP_SERVICE_PASSWORD,
+      password: "Aa1234!", //"Leo123!", //(import.meta as any).env.VITE_APP_SERVICE_PASSWORD,
     } as any);
     setShowAction(true);
   }, []);
