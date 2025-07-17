@@ -87,7 +87,7 @@ export default function ArrayField({
                 className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:px-[5px]  sdk:border-[#303030] sdk:p-[3px] sdk:hover:bg-[#303030] sdk:lowercase"
                 onClick={() => onChange([], "delete")}
                 disabled={disabled}>
-                <DeleteIcon style={{ width: "12px", height: "12px" }} />
+                <DeleteIcon  className="sdk:mx-auto sdk:text-white"  style={{ width: "12px", height: "12px" }} />
               </Button>
             </div>
           </div>
@@ -183,7 +183,7 @@ export default function ArrayField({
                         )
                       }
                       disabled={disabled}>
-                      <DeleteIcon style={{ width: "12px", height: "12px" }} />
+                      <DeleteIcon className="sdk:mx-auto sdk:text-white" style={{ width: "12px", height: "12px", }} />
                     </Button>
                   </div>
                 </div>

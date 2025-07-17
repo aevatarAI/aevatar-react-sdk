@@ -37,6 +37,7 @@ import Play from "../../assets/svg/play.svg?react";
 import clsx from "clsx";
 import { useWorkflowState } from "../../hooks/useWorkflowState";
 import { useDrop } from "react-dnd";
+import CustomEdge from "./CustomEdge";
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
@@ -120,7 +121,7 @@ export const Workflow = forwardRef(
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const { screenToFlowPosition } = useReactFlow();
     const [dragInfo] = useDnD();
-    console.log(dragInfo, 'dragInfo===dragData')
+    console.log(dragInfo, "dragInfo===dragData");
     const nodesRef = useRef<INode[]>(nodes);
     const gaevatarListRef = useRef<IAgentInfoDetail[]>([]);
     useEffect(() => {
@@ -272,24 +273,27 @@ export const Workflow = forwardRef(
         if (params.source === params.target) {
           return;
         }
-        setEdges(
-          (eds) =>
-            addEdge(
-              {
-                ...params,
-                type: "bezier",
-                // markerEnd: {
-                //   type: MarkerType.ArrowClosed,
-                //   color: "#53FF8A",
-                // },
-                style: {
-                  strokeWidth: 2,
-                  stroke: "#B9B9B9",
-                },
+        setEdges((eds) => {
+          console.log(eds, "eds==onConnect");
+          if(eds.find(item => item.source === params.target && item.target === params.source)) {
+            return eds;
+          }
+          return addEdge(
+            {
+              ...params,
+              type: "bezier",
+              // markerEnd: {
+              //   type: MarkerType.ArrowClosed,
+              //   color: "#53FF8A",
+              // },
+              style: {
+                strokeWidth: 2,
+                stroke: "#B9B9B9",
               },
-              eds
-            ) as any
-        );
+            },
+            eds
+          ) as any;
+        });
       },
       [setEdges]
     );
@@ -300,54 +304,57 @@ export const Workflow = forwardRef(
     }, []);
 
     // Original onDrop logic
-    const handleDrop = useCallback((item, monitor) => {
-      // Compatible with react-dnd drop event
-      if (!dragInfo.nodeType) return;
-      // Get mouse position
-      const clientOffset = monitor.getClientOffset();
-      if (!clientOffset) return;
-      const position = screenToFlowPosition({
-        x: clientOffset.x,
-        y: clientOffset.y,
-      });
-      const newNode =
-        dragInfo.nodeType === "new"
-          ? {
-              id: getId(),
-              type: "ScanCard",
-              position,
-              data: {
-                label: "ScanCard Node",
-                agentInfo: dragInfo.agentInfo,
-                isNew: true,
-                onClick: onCardClick,
-                deleteNode,
-              },
-              measured: {
-                width: 234,
-                height: 301,
-              },
-            }
-          : {
-              id: dragInfo.agentInfo.id,
-              type: "ScanCard",
-              position,
-              data: {
-                label: "ScanCard Node",
-                agentInfo: dragInfo.agentInfo,
-                isNew: false,
-                onClick: onCardClick,
-                deleteNode,
-              },
-              measured: {
-                width: 234,
-                height: 301,
-              },
-            };
-      setNodes((nds) => nds.concat(newNode as any));
-      if (dragInfo.nodeType === "new")
-        onCardClick(dragInfo.agentInfo, true, newNode.id);
-    }, [screenToFlowPosition, dragInfo, setNodes, onCardClick, deleteNode]);
+    const handleDrop = useCallback(
+      (item, monitor) => {
+        // Compatible with react-dnd drop event
+        if (!dragInfo.nodeType) return;
+        // Get mouse position
+        const clientOffset = monitor.getClientOffset();
+        if (!clientOffset) return;
+        const position = screenToFlowPosition({
+          x: clientOffset.x,
+          y: clientOffset.y,
+        });
+        const newNode =
+          dragInfo.nodeType === "new"
+            ? {
+                id: getId(),
+                type: "ScanCard",
+                position,
+                data: {
+                  label: "ScanCard Node",
+                  agentInfo: dragInfo.agentInfo,
+                  isNew: true,
+                  onClick: onCardClick,
+                  deleteNode,
+                },
+                measured: {
+                  width: 234,
+                  height: 301,
+                },
+              }
+            : {
+                id: dragInfo.agentInfo.id,
+                type: "ScanCard",
+                position,
+                data: {
+                  label: "ScanCard Node",
+                  agentInfo: dragInfo.agentInfo,
+                  isNew: false,
+                  onClick: onCardClick,
+                  deleteNode,
+                },
+                measured: {
+                  width: 234,
+                  height: 301,
+                },
+              };
+        setNodes((nds) => nds.concat(newNode as any));
+        if (dragInfo.nodeType === "new")
+          onCardClick(dragInfo.agentInfo, true, newNode.id);
+      },
+      [screenToFlowPosition, dragInfo, setNodes, onCardClick, deleteNode]
+    );
 
     const [, dropRef] = useDrop({
       accept: ["AEVATAR_TYPE_ITEM", "AEVATAR_ITEM_MINI"],
@@ -358,6 +365,16 @@ export const Workflow = forwardRef(
     const nodeTypes = useMemo(
       () => ({ ScanCard: ScanCardNode }),
       [updaterList]
+    );
+
+    // Added: register edgeTypes
+    const edgeTypes = useMemo(
+      () => ({
+        bezier: (edgeProps) => (
+          <CustomEdge {...edgeProps} setEdges={setEdges} />
+        ),
+      }),
+      [setEdges]
     );
 
     const isRunningRef = useRef(isRunning);
@@ -382,8 +399,7 @@ export const Workflow = forwardRef(
           ref={(node) => {
             reactFlowWrapper.current = node;
             dropRef(node);
-          }}
-        >
+          }}>
           <ReactFlow
             colorMode="dark"
             nodes={nodes}
@@ -396,6 +412,7 @@ export const Workflow = forwardRef(
             onDragOver={onDragOver}
             fitView
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             defaultEdgeOptions={{ type: "bezier" }}
             connectionLineStyle={{
               strokeDasharray: "10 10",

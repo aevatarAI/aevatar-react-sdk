@@ -298,7 +298,7 @@ export const renderSchemaField = ({
                       type="button"
                       className="sdk:w-[40px] sdk:h-[40px] sdk:inline-block sdk:border-[#303030] sdk:p-[8px] sdk:px-[10px] sdk:hover:bg-[#303030] sdk:lowercase"
                       onClick={() => handleDelete(k)}>
-                      <DeleteIcon />
+                      <DeleteIcon className='sdk:text-white'/>
                     </Button>
                   </div>
                 ))}
