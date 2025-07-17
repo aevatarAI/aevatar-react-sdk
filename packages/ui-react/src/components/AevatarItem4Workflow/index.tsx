@@ -2,6 +2,7 @@ import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import AevatarCardInner from "./AevatarCardInner";
 import { Handle, Position } from "@xyflow/react";
 import type { TNodeDataClick } from "../Workflow/types";
+import { useWorkflow } from "../context/WorkflowProvider";
 
 interface IAevatarItem4WorkflowProps {
   id: string;
@@ -20,6 +21,8 @@ export default function AevatarItem4Workflow({
   data,
 }: IAevatarItem4WorkflowProps) {
   const { isNew, onClick, deleteNode, agentInfo } = data;
+  const [{ selectedAgent }] = useWorkflow();
+  console.log(nodeId, selected, selectedAgent, "selectedNodeId===");
   return (
     <>
       <Handle
@@ -34,7 +37,7 @@ export default function AevatarItem4Workflow({
       />
       <AevatarCardInner
         agentInfo={agentInfo}
-        selected={selected}
+        selected={selectedAgent?.nodeId === nodeId}
         isNew={isNew}
         onClick={onClick}
         deleteNode={deleteNode}

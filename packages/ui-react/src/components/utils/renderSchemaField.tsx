@@ -44,14 +44,20 @@ export const renderSchemaField = ({
     if (types.length === 1 && types[0] === "null") {
       return null;
     }
-    if (types.length === 2 && types.includes("null") && nonNullTypes.length === 1) {
+    if (
+      types.length === 2 &&
+      types.includes("null") &&
+      nonNullTypes.length === 1
+    ) {
       schema = { ...schema, type: nonNullTypes[0], nullable: true };
     } else {
       return <></>;
     }
   }
   const fieldName = parentName ? `${parentName}.${name}` : name;
-  const labelWithRequired = schema.required ? `*${label ?? name}` : (label ?? name);
+  const labelWithRequired = schema.required
+    ? `*${label ?? name}`
+    : label ?? name;
   // enum type
   if (schema.enum) {
     return (
@@ -114,13 +120,20 @@ export const renderSchemaField = ({
             field.value?.length + JSON.stringify(field.value)
           );
           // Only update key when actionType is a structural change
-          const handleChange = (value: any, actionType?: 'add' | 'delete' | 'move' | 'update') => {
+          const handleChange = (
+            value: any,
+            actionType?: "add" | "delete" | "move" | "update"
+          ) => {
             field.onChange(value);
             onChange?.(value, { name: fieldName, schema });
             value?.forEach((item: any, idx: number) => {
               form.setValue(`${name}.${idx}`, item, { shouldDirty: true });
             });
-            if (actionType === 'add' || actionType === 'delete' || actionType === 'move') {
+            if (
+              actionType === "add" ||
+              actionType === "delete" ||
+              actionType === "move"
+            ) {
               setArrayKey(value?.length + JSON.stringify(value));
             }
           };
@@ -140,7 +153,9 @@ export const renderSchemaField = ({
                     value: any,
                     meta: { name: string; schema: any }
                   ) => {
-                    const baseArr = Array.isArray(field.value) ? field.value : [];
+                    const baseArr = Array.isArray(field.value)
+                      ? field.value
+                      : [];
                     const newValue = baseArr.map((it, i) => {
                       if (i !== idx) return it;
                       if (typeof it === "object") {
@@ -149,7 +164,7 @@ export const renderSchemaField = ({
                       }
                       return value;
                     });
-                    handleChange(newValue, 'update');
+                    handleChange(newValue, "update");
                   };
                   return renderSchemaField({
                     form,
@@ -232,7 +247,7 @@ export const renderSchemaField = ({
                   type="button"
                   className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
                   onClick={handleAdd}>
-                  <AddIcon className="text-white" />
+                  <AddIcon />
                   <span className="sdk:text-[12px] sdk:leading-[14px]">
                     Add item
                   </span>
@@ -292,7 +307,7 @@ export const renderSchemaField = ({
                 type="button"
                 className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
                 onClick={handleAdd}>
-                <AddIcon className="text-white" />
+                <AddIcon />
                 <span className="sdk:text-[12px] sdk:leading-[14px]">
                   Add item
                 </span>

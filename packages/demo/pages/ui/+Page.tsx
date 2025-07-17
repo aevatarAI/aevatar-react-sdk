@@ -147,9 +147,9 @@ export default function UI() {
     await aevatarAI.getAuthTokenWithClient({
       grant_type: "password",
       scope: "Aevatar",
-      username: (import.meta as any).env.VITE_APP_SERVICE_USERNAME,
+      username: "leotest@teml.net", // (import.meta as any).env.VITE_APP_SERVICE_USERNAME,
       client_id: "AevatarAuthServer",
-      password: (import.meta as any).env.VITE_APP_SERVICE_PASSWORD,
+      password: "Leo123!", //(import.meta as any).env.VITE_APP_SERVICE_PASSWORD,
     } as any);
     setShowAction(true);
   }, []);
@@ -181,8 +181,9 @@ export default function UI() {
 
   const getWorkflowDetail = useCallback(async (workflowAgentId: string) => {
     await sleep(2000);
-    const result =
-      await aevatarAI.getWorkflowUnitRelationByAgentId(workflowAgentId);
+    const result = await aevatarAI.getWorkflowUnitRelationByAgentId(
+      workflowAgentId
+    );
     console.log("getWorkflowDetail", result);
     setEditWorkflow({
       workflowAgentId,

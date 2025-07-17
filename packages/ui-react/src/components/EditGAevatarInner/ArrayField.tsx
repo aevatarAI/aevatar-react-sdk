@@ -41,9 +41,8 @@ export default function ArrayField({
           type="button"
           className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
           onClick={() => onChange([undefined], "add")}
-          disabled={disabled}
-        >
-          <AddIcon className="text-white" />
+          disabled={disabled}>
+          <AddIcon />
           <span className="sdk:text-[12px] sdk:leading-[14px]">Add item</span>
         </Button>
       </div>
@@ -87,8 +86,7 @@ export default function ArrayField({
                 type="button"
                 className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:px-[5px]  sdk:border-[#303030] sdk:p-[3px] sdk:hover:bg-[#303030] sdk:lowercase"
                 onClick={() => onChange([], "delete")}
-                disabled={disabled}
-              >
+                disabled={disabled}>
                 <DeleteIcon style={{ width: "12px", height: "12px" }} />
               </Button>
             </div>
@@ -99,9 +97,8 @@ export default function ArrayField({
             type="button"
             className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
             onClick={() => onChange([...value, undefined], "add")}
-            disabled={disabled}
-          >
-            <AddIcon className="text-white" />
+            disabled={disabled}>
+            <AddIcon />
             <span className="sdk:text-[12px] sdk:leading-[14px]">Add item</span>
           </Button>
         </div>
@@ -185,8 +182,7 @@ export default function ArrayField({
                           "delete"
                         )
                       }
-                      disabled={disabled}
-                    >
+                      disabled={disabled}>
                       <DeleteIcon style={{ width: "12px", height: "12px" }} />
                     </Button>
                   </div>
@@ -199,9 +195,8 @@ export default function ArrayField({
           type="button"
           className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
           onClick={() => onChange([...value, undefined], "add")}
-          disabled={disabled}
-        >
-          <AddIcon className="text-white" />
+          disabled={disabled}>
+          <AddIcon />
           <span className="sdk:text-[12px] sdk:leading-[14px]">Add item</span>
         </Button>
       </div>

@@ -25,10 +25,9 @@ import "./index.css";
 import { useDnD } from "./DnDContext";
 import ScanCardNode from "../AevatarItem4Workflow";
 import Background from "./background";
-import {
-  WorkflowStatus,
-  type IAgentInfoDetail,
-  type IWorkflowUnitListItem,
+import type {
+  IAgentInfoDetail,
+  IWorkflowUnitListItem,
 } from "@aevatar-react-sdk/services";
 import type { Edge, INode } from "./types";
 import { generateWorkflowGraph } from "./utils";
@@ -43,7 +42,6 @@ const getId = () => `dndnode_${id++}`;
 
 interface IProps {
   gaevatarList?: IAgentInfoDetail[];
-  selectedNodeId?: string;
   editWorkflow?: {
     workflowAgentId: string;
     workflowName: string;
@@ -57,6 +55,7 @@ interface IProps {
     nodeId: string
   ) => void;
   onNodesChanged?: (nodes: INode[]) => void;
+  onRemoveNode?: (nodeId: string) => void;
   onRunWorkflow?: () => Promise<void>;
   extraControlBar?: React.ReactNode;
 }
@@ -72,24 +71,28 @@ export const Workflow = forwardRef(
     {
       gaevatarList,
       editWorkflow,
-      selectedNodeId,
       editAgentOpen,
       isRunning,
       onCardClick,
       onNodesChanged,
       onRunWorkflow,
+      onRemoveNode,
       extraControlBar,
     }: IProps,
     ref
   ) => {
-    const deleteNode = useCallback((nodeId) => {
-      setNodes((prevNodes) => prevNodes.filter((node) => node.id !== nodeId));
-      setEdges((prevEdges) =>
-        prevEdges.filter(
-          (edge) => edge.source !== nodeId && edge.target !== nodeId
-        )
-      );
-    }, []);
+    const deleteNode = useCallback(
+      (nodeId) => {
+        setNodes((prevNodes) => prevNodes.filter((node) => node.id !== nodeId));
+        onRemoveNode?.(nodeId);
+        setEdges((prevEdges) =>
+          prevEdges.filter(
+            (edge) => edge.source !== nodeId && edge.target !== nodeId
+          )
+        );
+      },
+      [onRemoveNode]
+    );
 
     const initialNodes = useMemo(() => {
       return [];
@@ -180,13 +183,12 @@ export const Workflow = forwardRef(
           if (agentMap.get(item.data.agentInfo.id)) {
             item.data.agentInfo = agentMap.get(item.data.agentInfo.id);
           }
-          item.selected = selectedNodeId && item.id === selectedNodeId;
           return { ...item };
         });
 
         return [...updateNodes];
       });
-    }, [gaevatarList, selectedNodeId]);
+    }, [gaevatarList]);
 
     useUpdateEffect(() => {
       onNodesChanged?.(nodes);
@@ -263,14 +265,21 @@ export const Workflow = forwardRef(
     );
 
     const onConnect = useCallback(
-      (params) =>
+      (params) => {
+        console.log(params, "params==onConnect");
+        if (params.source === params.target) {
+          return;
+        }
         setEdges(
           (eds) =>
             addEdge(
               {
                 ...params,
                 type: "bezier",
-                markerEnd: { type: MarkerType.ArrowClosed },
+                // markerEnd: {
+                //   type: MarkerType.ArrowClosed,
+                //   color: "#53FF8A",
+                // },
                 style: {
                   strokeWidth: 2,
                   stroke: "#B9B9B9",
@@ -278,7 +287,8 @@ export const Workflow = forwardRef(
               },
               eds
             ) as any
-        ),
+        );
+      },
       [setEdges]
     );
 

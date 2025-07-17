@@ -28,7 +28,7 @@ export default function WorkflowDialog({
   return (
     <DialogPrimitive.Content
       className={clsx(
-        "sdk:z-6 sdk:left-[19px] sdk:sm:left-auto  sdk:workflow-common-bg sdk:w-auto sdk:sm:w-[380px] sdk:px-[8px] sdk:sm:px-[8px] sdk:pt-[8px] sdk:sm:pt-[8px] sdk:pb-[19px] sdk:workflow-common-border sdk:border sdk:flex",
+        "sdk:z-6 sdk:left-[19px] sdk:sm:left-auto  sdk:workflow-common-bg sdk:w-auto sdk:sm:w-[380px]  sdk:workflow-common-border sdk:border sdk:flex",
         "sdk:absolute sdk:right-[20px]  sdk:top-[58px] sdk:sm:right-[11px] sdk:sm:top-[58px] sdk:sm:bottom-[13px]"
       )}>
       <DialogClose
@@ -43,10 +43,10 @@ export default function WorkflowDialog({
           height={24}
         />
       </DialogClose>
-      <div className="sdk:overflow-auto sdk:h-full sdk:flex sdk:flex-col sdk:gap-[8px] sdk:w-full">
+      <div className="sdk:h-[500px] sdk:sm:h-full sdk:flex sdk:flex-col sdk:gap-[8px] sdk:w-full  sdk:pt-[8px] sdk:sm:pt-[8px] sdk:pb-[19px]">
         <DialogTitle className="sdk:pb-[8px] sdk:text-[15px] sdk:font-outfit sdk:font-semibold sdk:border-b sdk:border-[#303030] sdk:aevatar-title">
           <p
-            className="sdk:bg-gradient-to-r sdk:from-white sdk:to-[#999] sdk:bg-clip-text sdk:text-transparent"
+            className="sdk:bg-gradient-to-r sdk:px-[8px] sdk:sm:px-[8px]  sdk:from-white sdk:to-[#999] sdk:bg-clip-text sdk:text-transparent"
             style={{ WebkitTextFillColor: "transparent" }}>
             agent configuration
           </p>
