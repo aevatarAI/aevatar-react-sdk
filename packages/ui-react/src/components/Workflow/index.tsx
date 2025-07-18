@@ -35,7 +35,6 @@ import { useUpdateEffect } from "react-use";
 import { Button } from "../ui";
 import Play from "../../assets/svg/play.svg?react";
 import clsx from "clsx";
-import { useWorkflowState } from "../../hooks/useWorkflowState";
 import { useDrop } from "react-dnd";
 import CustomEdge from "./CustomEdge";
 
