@@ -76,3 +76,12 @@
   stroke: #53ff8a !important;
   /* marker-end: url('#1__color=#53FF8A&type=arrowclosed') !important; */
 }
+
+.react-flow__edge.selectable .aevatar-edge-delete-btn {
+  display: none;
+}
+
+.react-flow__edge.selectable:hover .aevatar-edge-delete-btn,
+.react-flow__edge.selectable.selected .aevatar-edge-delete-btn {
+  display: block !important;
+}

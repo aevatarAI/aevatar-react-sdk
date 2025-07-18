@@ -172,6 +172,7 @@ export default function WorkflowAevatarEdit({
                         {...field}
                         value={field?.value}
                         onChange={field?.onChange}
+                        className={clsx(field?.disabled && "sdk:bg-[#303030]")}
                       />
                     </FormControl>
                     <FormMessage />
@@ -194,7 +195,9 @@ export default function WorkflowAevatarEdit({
                       // }}
                     >
                       <FormControl>
-                        <SelectTrigger aria-disabled={field?.disabled}>
+                        <SelectTrigger 
+                          aria-disabled={field?.disabled}
+                          className={clsx(field?.disabled && "sdk:bg-[#303030]")}>
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                       </FormControl>

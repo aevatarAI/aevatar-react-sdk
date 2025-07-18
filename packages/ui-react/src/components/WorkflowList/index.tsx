@@ -83,10 +83,10 @@ export default forwardRef(function WorkflowList(
       }
 
       const idList = allList.map((item) => item.id);
-      const workflowAgentMap = new Map<string, IAgentInfoDetail>();
-      allList.forEach((item) => {
-        workflowAgentMap.set(item.id, item);
-      });
+      // const workflowAgentMap = new Map<string, IAgentInfoDetail>();
+      // allList.forEach((item) => {
+      //   workflowAgentMap.set(item.id, item);
+      // });
       const queryString = `_id:${idList.join(" OR ")}`;
       const workflowList =
         await aevatarAI.services.workflow.getWorkflow<IWorkflowCoordinatorState>(
@@ -95,13 +95,30 @@ export default forwardRef(function WorkflowList(
             queryString,
           }
         );
-      const workflowListWithAgentInfo = workflowList.items.map((item) => {
-        const agentInfo = workflowAgentMap.get(item.blackboardId);
+      const workflowListAgentInfoMap = new Map<
+        string,
+        IWorkflowCoordinatorState
+      >();
+      workflowList.items.forEach((item) => {
+        workflowListAgentInfoMap.set(item.blackboardId, item);
+      });
+
+      const workflowListWithAgentInfo = allList.map((item) => {
+        const agentInfo = workflowListAgentInfoMap.get(item.id);
         return {
           ...item,
           ...agentInfo,
         };
       });
+
+      // const workflowListWithAgentInfo = workflowList.items.map((item) => {
+      //   const agentInfo = workflowAgentMap.get(item.blackboardId);
+      //   return {
+      //     ...item,
+      //     ...agentInfo,
+      //   };
+      // });
+
       setWorkflows(workflowListWithAgentInfo);
     } catch (error) {
       toast({

@@ -15,6 +15,7 @@ import DeleteIcon from "../../assets/svg/delete_agent.svg?react";
 import { Checkbox } from "../ui";
 import type React from "react";
 import { useState } from "react";
+import clsx from "clsx";
 
 export const renderSchemaField = ({
   form,
@@ -84,7 +85,9 @@ export const renderSchemaField = ({
                 disabled={field?.disabled}
                 onValueChange={handleChange}>
                 <FormControl>
-                  <SelectTrigger aria-disabled={field?.disabled}>
+                  <SelectTrigger
+                    aria-disabled={field?.disabled}
+                    className={field?.disabled ? "sdk:bg-[#303030]" : ""}>
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                 </FormControl>
@@ -252,6 +255,7 @@ export const renderSchemaField = ({
                 <FormLabel>{labelWithRequired}</FormLabel>
                 <Button
                   type="button"
+                  disabled={disabled}
                   className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
                   onClick={handleAdd}>
                   <AddIcon />
@@ -283,7 +287,10 @@ export const renderSchemaField = ({
                             defaultValue={k}
                             onBlur={(e) => handleKeyChange(k, e.target.value)}
                             placeholder="key"
-                            className="sdk:w-full"
+                            className={clsx(
+                              "sdk:w-full",
+                              disabled && "sdk:bg-[#303030]"
+                            )}
                           />
                         </FormControl>
                       </FormItem>
@@ -312,6 +319,7 @@ export const renderSchemaField = ({
               </div>
               <Button
                 type="button"
+                disabled={disabled}
                 className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
                 onClick={handleAdd}>
                 <AddIcon />
@@ -382,6 +390,9 @@ export const renderSchemaField = ({
                   {...field}
                   onChange={handleChange}
                   disabled={field.disabled ?? disabled}
+                  className={clsx(
+                    (field.disabled ?? disabled) && "sdk:bg-[#303030]"
+                  )}
                 />
               </FormControl>
               <FormMessage />
@@ -436,6 +447,9 @@ export const renderSchemaField = ({
                     {...field}
                     onChange={handleInputChange}
                     disabled={field.disabled ?? disabled}
+                    className={clsx(
+                      (field.disabled ?? disabled) && "sdk:bg-[#303030]"
+                    )}
                   />
                 ) : (
                   <Textarea
@@ -443,6 +457,9 @@ export const renderSchemaField = ({
                     {...field}
                     onChange={handleTextareaChange}
                     disabled={field.disabled ?? disabled}
+                    className={clsx(
+                      (field.disabled ?? disabled) && "sdk:bg-[#303030]"
+                    )}
                   />
                 )}
               </FormControl>
@@ -483,7 +500,10 @@ export const renderSchemaField = ({
                   placeholder={schema?.description ?? ""}
                   {...field}
                   onChange={handleChange}
-                  className="sdk:appearance-none sdk:[&::-webkit-outer-spin-button]:appearance-none sdk:[&::-webkit-inner-spin-button]:appearance-none sdk:[&::-ms-input-placeholder]:appearance-none"
+                  className={clsx(
+                    "sdk:appearance-none sdk:[&::-webkit-outer-spin-button]:appearance-none sdk:[&::-webkit-inner-spin-button]:appearance-none sdk:[&::-ms-input-placeholder]:appearance-none",
+                    (field.disabled ?? disabled) && "sdk:bg-[#303030]"
+                  )}
                   disabled={field.disabled ?? disabled}
                 />
               </FormControl>

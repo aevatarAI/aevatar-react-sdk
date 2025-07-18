@@ -73,7 +73,7 @@ export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
             ref={dragRef}
             className={clsx(
               "sdk:relative sdk:min-w-[124px] sdk:max-w-[124px] sdk:h-[45px] sdk:cursor-grab sdk:active:cursor-grabbing sdk:group sdk:no-user-select",
-              disabled && "sdk:cursor-not-allowed",
+              disabled && "sdk:cursor-not-allowed sdk:opacity-50",
               isDragging && "sdk:opacity-50",
               className
             )}
@@ -81,19 +81,19 @@ export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
             <NewAevatarItemIcon
               className={clsx(
                 "sdk:absolute sdk:group-hover:hidden",
-                disabled && "sdk:hidden!"
+                disabled && "sdk:hidden! sdk:opacity-50"
               )}
             />
             <NewAevatarItemHoverIcon
               className={clsx(
                 "sdk:absolute sdk:group-hover:block sdk:hidden",
-                disabled && "sdk:hidden!"
+                disabled && "sdk:hidden! sdk:opacity-50"
               )}
             />
             <AevatarItemIcon
               className={clsx(
                 "sdk:absolute sdk:hidden",
-                disabled && "sdk:block!"
+                disabled && "sdk:block! sdk:opacity-50"
               )}
             />
 
@@ -101,7 +101,7 @@ export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
               <div
                 className={clsx(
                   "sdk:text-[11px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:text-center sdk:w-full sdk:truncate",
-                  disabled && "sdk:text-[#B9B9B9]"
+                  disabled && "sdk:text-[#B9B9B9] sdk:opacity-50"
                 )}>
                 {agentType?.split(".")?.pop() || ""}
               </div>
