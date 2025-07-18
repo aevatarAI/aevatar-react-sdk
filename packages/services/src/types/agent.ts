@@ -20,6 +20,8 @@ export interface IAgentInfoDetail extends IAgentInfo {
 }
 
 export interface IGetAgentsParams {
+  name?: string;
+  status?: string;
   pageIndex: number;
   pageSize: number;
   agentType?: string;

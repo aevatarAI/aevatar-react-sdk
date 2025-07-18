@@ -1,3 +1,4 @@
+import z from "zod"
 import type { IAgentParams } from "@aevatar-react-sdk/services";
 
 export type Theme = "light" | "dark";
@@ -56,3 +57,14 @@ export type JSONSchemaType<T> = {
 export interface IGAevatarProperties {
   [x: string]: JSONSchemaType<any>;
 }
+
+export type TEditExecutionsFilterForm = z.infer<
+  typeof editExecutionsFilterForm
+>;
+
+export const editExecutionsFilterForm = z.object({
+  name: z.string(),
+  status: z.string(),
+  date: z.string(),
+  id: z.string(),
+});
