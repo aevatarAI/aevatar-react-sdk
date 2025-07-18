@@ -8,20 +8,20 @@ import {
   WorkflowConfiguration,
   ConfigProvider,
   WorkflowList,
+  ExecutionList,
   FullScreenIcon,
 } from "@aevatar-react-sdk/ui-react";
 // import "@aevatar-react-sdk/ui-react/ui-react.css";
 import { useCallback, useRef, useState } from "react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
-
 import { clientOnly } from "vike-react/clientOnly";
 import { sleep } from "@aevatar-react-sdk/utils";
-
 import type {
   IAgentInfoDetail,
   IAgentsConfiguration,
 } from "@aevatar-react-sdk/services";
 import type { IWorkflowListRef } from "../../../ui-react/dist/types/src/components/WorkflowList";
+
 const LoginButton = clientOnly(
   () => import("../../components/auth/LoginButton")
 );
@@ -49,6 +49,7 @@ enum Stage {
   editGAevatar = "editGAevatar",
   Workflow = "Workflow",
   WorkflowList = "WorkflowList",
+  ExecutionList = "ExecutionList",
 }
 
 export default function UI() {
@@ -176,14 +177,13 @@ export default function UI() {
   );
 
   const fullscreenHandle = useFullScreenHandle();
-
   const workflowListRef = useRef<IWorkflowListRef>(null);
 
   const getWorkflowDetail = useCallback(async (workflowAgentId: string) => {
     await sleep(2000);
-    const result =
-      await aevatarAI.getWorkflowUnitRelationByAgentId(workflowAgentId);
-    console.log("getWorkflowDetail", result);
+    const result = await aevatarAI.getWorkflowUnitRelationByAgentId(
+      workflowAgentId
+    );
     setEditWorkflow({
       workflowAgentId,
       workflowName: result.workflowName,
@@ -212,21 +212,31 @@ export default function UI() {
         <Button
           onClick={() => {
             onEditWorkflow(localStorage.getItem("workflowAgentId") ?? "");
-          }}>
+          }}
+        >
           edit workflow
         </Button>
         <div className="h-[10px]" />
         <Button
           onClick={() => {
             setStage(Stage.WorkflowList);
-          }}>
+          }}
+        >
           show workflowList
         </Button>
         <Button
           onClick={() => {
             workflowListRef.current?.refresh();
-          }}>
+          }}
+        >
           refresh workflowList
+        </Button>
+        <Button
+          onClick={() => {
+            setStage(Stage.ExecutionList);
+          }}
+        >
+          show executions
         </Button>
 
         {/* </>
@@ -286,7 +296,8 @@ export default function UI() {
                       fullscreenHandle.active
                         ? fullscreenHandle.exit()
                         : fullscreenHandle.enter();
-                    }}>
+                    }}
+                  >
                     <FullScreenIcon
                       style={{
                         width: 16,
@@ -322,6 +333,15 @@ export default function UI() {
               onEditWorkflow={(workflowAgentId) => {
                 onEditWorkflow(workflowAgentId);
               }}
+              onNewWorkflow={() => {
+                onShowWorkflow();
+              }}
+            />
+          </div>
+        )}
+        {stage === Stage.ExecutionList && (
+          <div className="h-[500px]">
+            <ExecutionList
               onNewWorkflow={() => {
                 onShowWorkflow();
               }}
