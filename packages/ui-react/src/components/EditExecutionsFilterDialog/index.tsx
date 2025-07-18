@@ -1,5 +1,5 @@
 import Filter from "../../assets/svg/filter.svg?react";
-import FilterBtn from "../../assets/svg/FilterBtn.svg?react";
+import FilterBtn from "../../assets/svg/filterBtn.svg?react";
 import {
   Button,
   Input,
