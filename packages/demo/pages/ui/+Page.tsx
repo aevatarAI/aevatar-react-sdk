@@ -489,7 +489,7 @@ export default function UI() {
                 gaevatarList, //: [],
                 isNewGAevatar: true,
                 gaevatarTypeList: agentTypeList,
-                // type: "newAgent",
+                type: "newAgent",
               }}
               extraControlBar={
                 <div className="w-full h-full bg-[#141415] flex flow-row border-[1px] border-[#303030]">

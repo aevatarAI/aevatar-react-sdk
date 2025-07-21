@@ -94,15 +94,15 @@ export default function AevatarCardInner({
               const valueIndex = schema.enum.indexOf(schema.value);
 
               value = schema["x-enumNames"]?.[valueIndex];
+              valueList = [typeof value === "string" ? value : JSON.stringify(value)];
+              // const firstThree = value?.slice(0, 3);
+              // const remainingCount = value?.length - 3;
 
-              const firstThree = value?.slice(0, 3);
-              const remainingCount = value?.length - 3;
-
-              if (remainingCount > 0) {
-                valueList = [...firstThree, `+${remainingCount}`];
-              } else {
-                valueList = [firstThree];
-              }
+              // if (remainingCount > 0) {
+              //   valueList = [...firstThree, `+${remainingCount}`];
+              // } else {
+              //   valueList = [firstThree];
+              // }
             } else if (isArray) {
               if (Array.isArray(value) && value.length > 0) {
                 valueList = [`${value.length} items`];

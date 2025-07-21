@@ -89,7 +89,9 @@ const WorkflowConfigurationInner = ({
 
   const onClickWorkflowItem = useCallback(
     (data: Partial<IAgentInfoDetail>, isNew: boolean, nodeId: string) => {
-      dispatch(basicWorkflow.setSelectedAgent.actions({ agent: data, isNew, nodeId }));
+      dispatch(
+        basicWorkflow.setSelectedAgent.actions({ agent: data, isNew, nodeId })
+      );
       setEditAgentOpen(true);
     },
     [dispatch]
@@ -97,9 +99,7 @@ const WorkflowConfigurationInner = ({
 
   useUpdateEffect(() => {
     !editAgentOpen &&
-      dispatch(
-        basicWorkflow.setSelectedAgent.actions(undefined)
-      );
+      dispatch(basicWorkflow.setSelectedAgent.actions(undefined));
   }, [editAgentOpen]);
 
   const selectAgentInfoRef = useRef<{
@@ -112,12 +112,15 @@ const WorkflowConfigurationInner = ({
     selectAgentInfoRef.current = selectAgentInfo;
   }, [selectAgentInfo]);
 
-  const onRemoveNode = useCallback((nodeId: string) => {
-    if (selectAgentInfoRef.current?.nodeId === nodeId) {
-      dispatch(basicWorkflow.setSelectedAgent.actions(undefined));
-      setEditAgentOpen(false);
-    }
-  }, [dispatch]);
+  const onRemoveNode = useCallback(
+    (nodeId: string) => {
+      if (selectAgentInfoRef.current?.nodeId === nodeId) {
+        dispatch(basicWorkflow.setSelectedAgent.actions(undefined));
+        setEditAgentOpen(false);
+      }
+    },
+    [dispatch]
+  );
 
   const [btnLoading, setBtnLoading] = useState<boolean>();
 
@@ -197,7 +200,6 @@ const WorkflowConfigurationInner = ({
     },
     [onBack, onSave]
   );
-
 
   const onDefaultGaevatarChange: IWorkflowAevatarEditProps["onGaevatarChange"] =
     useCallback(
@@ -288,11 +290,15 @@ const WorkflowConfigurationInner = ({
 
   useEffect(() => {
     if (editWorkflow?.workflowAgentId) {
-      getWorkflowState(editWorkflow.workflowAgentId).then((res) => {
-        if (res?.workflowStatus === WorkflowStatus.running) {
-          setIsRunning(true);
-        }
-      });
+      try {
+        getWorkflowState(editWorkflow.workflowAgentId).then((res) => {
+          if (res?.workflowStatus === WorkflowStatus.running) {
+            setIsRunning(true);
+          }
+        });
+      } catch (error) {
+        console.error("getWorkflowState error:", error);
+      }
     }
   }, [editWorkflow?.workflowAgentId, getWorkflowState]);
 
@@ -502,13 +508,14 @@ export default function WorkflowConfiguration(
   props: IWorkflowConfigurationProps
 ) {
   // Determine if it is a mobile device
-  const isMobile = typeof window !== "undefined" &&
+  const isMobile =
+    typeof window !== "undefined" &&
     ("ontouchstart" in window || navigator.maxTouchPoints > 0);
   return (
     <ReactFlowProvider>
-      <ReactDndProvider backend={isMobile ? TouchBackend : HTML5Backend}
-        options={isMobile ? { enableMouseEvents: true } : undefined}
-      >
+      <ReactDndProvider
+        backend={isMobile ? TouchBackend : HTML5Backend}
+        options={isMobile ? { enableMouseEvents: true } : undefined}>
         <DnDProvider>
           <WorkflowProvider>
             <WorkflowConfigurationInner {...props} />
