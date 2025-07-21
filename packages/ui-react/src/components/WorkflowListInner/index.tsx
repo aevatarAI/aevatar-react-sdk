@@ -49,7 +49,7 @@ export default function WorkflowListInner({
           <div
             className="sdk:text-[14px] sdk:pl-[15px] sdk:font-outfit sdk:font-semibold sdk:hover:underline sdk:hover:decoration-[#fff] sdk:cursor-pointer"
             onClick={() => onEditWorkflow?.(item.id)}>
-            {item.name}
+            {item?.name ?? '-'}
           </div>
         ),
         operation: (

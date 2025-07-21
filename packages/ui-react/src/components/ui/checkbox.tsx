@@ -26,9 +26,10 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       <span
         className={cn(
           "sdk:relative sdk:w-[18px] sdk:h-[18px] sdk:rounded-[4px] sdk:box-border sdk:flex sdk:items-center sdk:justify-center",
-          checked
+          disabled && "sdk:bg-[#303030] sdk:border sdk:border-[#606060]",
+          !disabled && checked
             ? "sdk:bg-[#AFC6DD] sdk:border-[2px] sdk:border-[#606060]"
-            : "sdk:bg-[#fff] sdk:border sdk:border-[#606060]"
+            : !disabled && "sdk:bg-[#fff] sdk:border sdk:border-[#606060]"
         )}
       >
         <input

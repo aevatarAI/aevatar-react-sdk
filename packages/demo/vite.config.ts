@@ -43,7 +43,7 @@ export default defineConfig((config) => ({
         // rewrite: (path) => path.replace(/^\/auth/, ''),
       },
       "/api": {
-        target: "https://station-developer-dev-staging.aevatar.ai/tool-client",
+        target: "https://station-developer-dev-staging.aevatar.ai/developer-client",
         changeOrigin: true,
         secure: true,
         // rewrite: (path) => path.replace(/^\/test-client/, ''),

@@ -36,6 +36,8 @@ import { Button } from "../ui";
 import Play from "../../assets/svg/play.svg?react";
 import clsx from "clsx";
 import { useWorkflowState } from "../../hooks/useWorkflowState";
+import { useDrop } from "react-dnd";
+import CustomEdge from "./CustomEdge";
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
@@ -119,6 +121,7 @@ export const Workflow = forwardRef(
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const { screenToFlowPosition } = useReactFlow();
     const [dragInfo] = useDnD();
+    console.log(dragInfo, "dragInfo===dragData");
     const nodesRef = useRef<INode[]>(nodes);
     const gaevatarListRef = useRef<IAgentInfoDetail[]>([]);
     useEffect(() => {
@@ -270,24 +273,27 @@ export const Workflow = forwardRef(
         if (params.source === params.target) {
           return;
         }
-        setEdges(
-          (eds) =>
-            addEdge(
-              {
-                ...params,
-                type: "bezier",
-                // markerEnd: {
-                //   type: MarkerType.ArrowClosed,
-                //   color: "#53FF8A",
-                // },
-                style: {
-                  strokeWidth: 2,
-                  stroke: "#B9B9B9",
-                },
+        setEdges((eds) => {
+          console.log(eds, "eds==onConnect");
+          if(eds.find(item => item.source === params.target && item.target === params.source)) {
+            return eds;
+          }
+          return addEdge(
+            {
+              ...params,
+              type: "bezier",
+              // markerEnd: {
+              //   type: MarkerType.ArrowClosed,
+              //   color: "#53FF8A",
+              // },
+              style: {
+                strokeWidth: 2,
+                stroke: "#B9B9B9",
               },
-              eds
-            ) as any
-        );
+            },
+            eds
+          ) as any;
+        });
       },
       [setEdges]
     );
@@ -297,21 +303,17 @@ export const Workflow = forwardRef(
       event.dataTransfer.dropEffect = "move";
     }, []);
 
-    const onDrop = useCallback(
-      (event) => {
-        event.preventDefault();
-
-        // check if the dropped element is valid
-        if (!dragInfo.nodeType) {
-          return;
-        }
-
-        // project was renamed to screenToFlowPosition
-        // and you don't need to subtract the reactFlowBounds.left/top anymore
-        // details: https://reactflow.dev/whats-new/2023-11-10
+    // Original onDrop logic
+    const handleDrop = useCallback(
+      (item, monitor) => {
+        // Compatible with react-dnd drop event
+        if (!dragInfo.nodeType) return;
+        // Get mouse position
+        const clientOffset = monitor.getClientOffset();
+        if (!clientOffset) return;
         const position = screenToFlowPosition({
-          x: event.clientX,
-          y: event.clientY,
+          x: clientOffset.x,
+          y: clientOffset.y,
         });
         const newNode =
           dragInfo.nodeType === "new"
@@ -347,7 +349,6 @@ export const Workflow = forwardRef(
                   height: 301,
                 },
               };
-
         setNodes((nds) => nds.concat(newNode as any));
         if (dragInfo.nodeType === "new")
           onCardClick(dragInfo.agentInfo, true, newNode.id);
@@ -355,10 +356,25 @@ export const Workflow = forwardRef(
       [screenToFlowPosition, dragInfo, setNodes, onCardClick, deleteNode]
     );
 
+    const [, dropRef] = useDrop({
+      accept: ["AEVATAR_TYPE_ITEM", "AEVATAR_ITEM_MINI"],
+      drop: handleDrop,
+    });
+
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     const nodeTypes = useMemo(
       () => ({ ScanCard: ScanCardNode }),
       [updaterList]
+    );
+
+    // Added: register edgeTypes
+    const edgeTypes = useMemo(
+      () => ({
+        bezier: (edgeProps) => (
+          <CustomEdge {...edgeProps} setEdges={setEdges} />
+        ),
+      }),
+      [setEdges]
     );
 
     const isRunningRef = useRef(isRunning);
@@ -378,7 +394,12 @@ export const Workflow = forwardRef(
           "dndflow sdk:w-full",
           editAgentOpen && "editAgentOpen-workflow-inner"
         )}>
-        <div className="reactflow-wrapper sdk:relative" ref={reactFlowWrapper}>
+        <div
+          className="reactflow-wrapper sdk:relative"
+          ref={(node) => {
+            reactFlowWrapper.current = node;
+            dropRef(node);
+          }}>
           <ReactFlow
             colorMode="dark"
             nodes={nodes}
@@ -386,10 +407,12 @@ export const Workflow = forwardRef(
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            onDrop={onDrop}
+            deleteKeyCode={["Backspace", "Delete"]}
+            // onDrop={onDrop} // Remove native onDrop
             onDragOver={onDragOver}
             fitView
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             defaultEdgeOptions={{ type: "bezier" }}
             connectionLineStyle={{
               strokeDasharray: "10 10",
