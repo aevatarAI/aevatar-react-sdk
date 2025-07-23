@@ -14,4 +14,10 @@ export default {
 		class: "dark",
 	},
 	bodyAttributes: { class: "bg-background text-foreground" },
+  meta: {
+    data: {
+      // .client.js
+      env: { server: false, client: true }
+    }
+  }
 } satisfies Config;

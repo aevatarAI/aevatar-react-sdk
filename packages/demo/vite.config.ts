@@ -6,7 +6,6 @@ import { imagetools } from "vite-imagetools";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import svgr from "vite-plugin-svgr";
 import tailwindcss from "@tailwindcss/vite";
-import monacoEditorEsmPlugin from 'vite-plugin-monaco-editor-esm'
 // import mkcert from "vite-plugin-mkcert";
 
 export default defineConfig((config) => ({
@@ -17,7 +16,6 @@ export default defineConfig((config) => ({
     svgr(),
     imagetools(),
     tailwindcss(),
-    monacoEditorEsmPlugin()
     // mkcert(),
   ],
 

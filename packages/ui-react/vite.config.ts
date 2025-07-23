@@ -5,7 +5,6 @@ import svgr from "vite-plugin-svgr";
 import dts from "vite-plugin-dts";
 import tailwindcss from "@tailwindcss/vite";
 import pkg from "./package.json";
-import monacoEditorEsmPlugin from 'vite-plugin-monaco-editor-esm'
 import { vitestConfigObj } from "../../vitest-config";
 import { defineConfig as vitestConfig } from "vitest/config";
 
@@ -16,7 +15,6 @@ export default defineConfig({
     svgr({ include: "**/*.svg?react" }),
     dts({ insertTypesEntry: true, outDir: "dist/types" }),
     tailwindcss(),
-    monacoEditorEsmPlugin()
   ],
   build: {
     lib: {

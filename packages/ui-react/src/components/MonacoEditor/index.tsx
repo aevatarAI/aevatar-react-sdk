@@ -1,45 +1,51 @@
-import { useEffect, useRef } from "react";
-import type * as monaco from "monaco-editor";
+import { useEffect, useRef, useState } from "react";
 import "./index.css";
 
 function MonacoEditor({ data }: { data: any }) {
   const editorRef = useRef<HTMLDivElement | null>(null);
-  const editorInstanceRef = useRef<monaco.editor.IStandaloneCodeEditor>();
+  const editorInstanceRef = useRef<any>();
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     let dispose: () => void;
 
     const loadMonaco = async () => {
-      if (!editorRef.current) return;
+      if (!editorRef.current || typeof window === "undefined") return;
 
-      const monaco = await import("monaco-editor");
+      try {
+        // Dynamic import of Monaco Editor to prevent SSR issues
+        const monaco = await import("monaco-editor");
 
-      const editor = monaco.editor.create(editorRef.current, {
-        value: JSON.stringify(data, null, 2),
-        language: "javascript",
-        theme: "vs-dark",
-        automaticLayout: true,
-        fontSize: 14,
-        minimap: { enabled: false },
-        scrollBeyondLastLine: false,
-        wordWrap: "on",
-        formatOnPaste: true,
-        formatOnType: true,
-        tabSize: 4,
-        insertSpaces: true,
-        scrollbar: {
-          vertical: "hidden",
-          horizontal: "hidden",
-          verticalScrollbarSize: 0,
-          horizontalScrollbarSize: 0,
-          verticalSliderSize: 0,
-          horizontalSliderSize: 0,
-          useShadows: false,
-        },
-      });
+        const editor = monaco.editor.create(editorRef.current, {
+          value: JSON.stringify(data, null, 2),
+          language: "javascript",
+          theme: "vs-dark",
+          automaticLayout: true,
+          fontSize: 14,
+          minimap: { enabled: false },
+          scrollBeyondLastLine: false,
+          wordWrap: "on",
+          formatOnPaste: true,
+          formatOnType: true,
+          tabSize: 4,
+          insertSpaces: true,
+          scrollbar: {
+            vertical: "hidden",
+            horizontal: "hidden",
+            verticalScrollbarSize: 0,
+            horizontalScrollbarSize: 0,
+            verticalSliderSize: 0,
+            horizontalSliderSize: 0,
+            useShadows: false,
+          },
+        });
 
-      editorInstanceRef.current = editor;
-      dispose = () => editor.dispose();
+        editorInstanceRef.current = editor;
+        setIsLoaded(true);
+        dispose = () => editor.dispose();
+      } catch (error) {
+        console.error("Failed to load Monaco Editor:", error);
+      }
     };
 
     if (typeof window !== "undefined") {
@@ -50,6 +56,26 @@ function MonacoEditor({ data }: { data: any }) {
       dispose?.();
     };
   }, [data]);
+
+  // Show loading state until Monaco is loaded on client side
+  if (typeof window === "undefined" || !isLoaded) {
+    return (
+      <div
+        style={{
+          minHeight: "280px",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#1e1e1e",
+          color: "#cccccc",
+          fontSize: "14px"
+        }}
+      >
+        Loading editor...
+      </div>
+    );
+  }
 
   return <div ref={editorRef} style={{ minHeight: "280px", width: "100%" }} />;
 }

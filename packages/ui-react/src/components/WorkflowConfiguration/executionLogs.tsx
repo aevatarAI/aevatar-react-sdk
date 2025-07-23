@@ -8,7 +8,6 @@ import Search from "../../assets/svg/search.svg?react";
 import Clipboard from "../../assets/svg/clipboard.svg?react";
 import dayjs from "dayjs";
 import Copy from "../Copy";
-// import Editor from "@monaco-editor/react";
 import { useEffect, useState } from "react";
 import MonacoEditor from "../MonacoEditor";
 

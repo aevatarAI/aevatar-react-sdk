@@ -11,9 +11,6 @@ importers:
       '@changesets/cli':
         specifier: ^2.28.1
         version: 2.29.3
-      '@monaco-editor/react':
-        specifier: ^4.7.0
-        version: 4.7.0(monaco-editor@0.52.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query':
         specifier: ^5.83.0
         version: 5.83.0
@@ -29,9 +26,6 @@ importers:
       react-fullscreen:
         specifier: ^0.1.0
         version: 0.1.0
-      vite-plugin-monaco-editor:
-        specifier: ^1.1.0
-        version: 1.1.0(monaco-editor@0.52.2)
       wouter:
         specifier: ^3.7.1
         version: 3.7.1
@@ -78,9 +72,6 @@ importers:
       vite:
         specifier: ^6.1.0
         version: 6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)
-      vite-plugin-monaco-editor-esm:
-        specifier: ^2.0.2
-        version: 2.0.2(monaco-editor@0.52.2)
       vitest:
         specifier: ^2.1.8
         version: 2.1.9(@types/node@22.15.16)(@vitest/ui@2.1.9)(happy-dom@17.4.6)(jsdom@26.1.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(lightningcss@1.29.2)
@@ -120,7 +111,7 @@ importers:
         version: 6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)
       vite-plugin-dts:
         specifier: latest
-        version: 4.5.4(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.8.2)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
+        version: 4.5.4(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.7.3)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
       vitest:
         specifier: ^3.0.6
         version: 3.1.3(@types/node@22.15.16)(@vitest/ui@2.1.9(vitest@2.1.9))(happy-dom@17.4.6)(jiti@2.4.2)(jsdom@26.1.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(lightningcss@1.29.2)
@@ -160,9 +151,6 @@ importers:
       '@aevatar-react-sdk/utils':
         specifier: workspace:*
         version: link:../utils
-      '@monaco-editor/react':
-        specifier: ^4.7.0
-        version: 4.7.0(monaco-editor@0.52.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@rjsf/core':
         specifier: ^5.24.3
         version: 5.24.10(@rjsf/utils@5.24.10(react@18.3.1))(react@18.3.1)
@@ -175,9 +163,6 @@ importers:
       aelf-sdk:
         specifier: 3.4.16-alpha.7
         version: 3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1)
-      monaco-editor:
-        specifier: ^0.52.2
-        version: 0.52.2
       qs:
         specifier: ^6.14.0
         version: 6.14.0
@@ -236,9 +221,6 @@ importers:
       vite-plugin-mkcert:
         specifier: ^1.17.6
         version: 1.17.8(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
-      vite-plugin-monaco-editor:
-        specifier: ^1.1.0
-        version: 1.1.0(monaco-editor@0.52.2)
       vite-plugin-node-polyfills:
         specifier: ^0.23.0
         version: 0.23.0(rollup@4.40.2)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
@@ -499,7 +481,7 @@ importers:
         version: 6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)
       vite-plugin-dts:
         specifier: latest
-        version: 4.5.4(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.7.3)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
+        version: 4.5.4(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.8.2)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
       vitest:
         specifier: ^3.0.6
         version: 3.1.3(@types/node@22.15.16)(@vitest/ui@2.1.9(vitest@2.1.9))(happy-dom@17.4.6)(jiti@2.4.2)(jsdom@26.1.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(lightningcss@1.29.2)
@@ -1518,16 +1500,6 @@ packages:
 
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
-
-  '@monaco-editor/loader@1.5.0':
-    resolution: {integrity: sha512-hKoGSM+7aAc7eRTRjpqAZucPmoNOC4UUbknb/VNoTkEIkCPhqV8LfbsgM1webRM7S/z21eHEx9Fkwx8Z/C/+Xw==}
-
-  '@monaco-editor/react@4.7.0':
-    resolution: {integrity: sha512-cyzXQCtO47ydzxpQtCGSQGOC8Gk3ZUeBXFAxD+CWXYFo5OqZyZUonFl0DwUlTyAfRHntBfw2p3w4s9R6oe1eCA==}
-    peerDependencies:
-      monaco-editor: '>= 0.25.0 < 1'
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   '@noble/curves@1.4.2':
     resolution: {integrity: sha512-TavHr8qycMChk8UwMld0ZDRvatedkzWfH8IiaeGCfymOP5i0hSCozz9vHOL0nkwk7HRMlFnAiKpS2jrUmSybcw==}
@@ -6339,9 +6311,6 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
-  state-local@1.0.7:
-    resolution: {integrity: sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==}
-
   statuses@2.0.1:
     resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
     engines: {node: '>= 0.8'}
@@ -6835,16 +6804,6 @@ packages:
     engines: {node: '>=v16.7.0'}
     peerDependencies:
       vite: '>=3'
-
-  vite-plugin-monaco-editor-esm@2.0.2:
-    resolution: {integrity: sha512-XVkOpL/r0rw1NpbO30vUwG4S0THkC9KB1vjjV8olGd49h4/EQsKl3DrxB6KRDwyZNC9mKiiZgk2L6njUYj3oKQ==}
-    peerDependencies:
-      monaco-editor: '>=0.33.0'
-
-  vite-plugin-monaco-editor@1.1.0:
-    resolution: {integrity: sha512-IvtUqZotrRoVqwT0PBBDIZPNraya3BxN/bfcNfnxZ5rkJiGcNtO5eAOWWSgT7zullIAEqQwxMU83yL9J5k7gww==}
-    peerDependencies:
-      monaco-editor: '>=0.33.0'
 
   vite-plugin-node-polyfills@0.23.0:
     resolution: {integrity: sha512-4n+Ys+2bKHQohPBKigFlndwWQ5fFKwaGY6muNDMTb0fSQLyBzS+jjUNRZG9sKF0S/Go4ApG6LFnUGopjkILg3w==}
@@ -8544,17 +8503,6 @@ snapshots:
       resolve: 1.22.10
 
   '@microsoft/tsdoc@0.15.1': {}
-
-  '@monaco-editor/loader@1.5.0':
-    dependencies:
-      state-local: 1.0.7
-
-  '@monaco-editor/react@4.7.0(monaco-editor@0.52.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@monaco-editor/loader': 1.5.0
-      monaco-editor: 0.52.2
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
 
   '@noble/curves@1.4.2':
     dependencies:
@@ -14272,8 +14220,6 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  state-local@1.0.7: {}
-
   statuses@2.0.1: {}
 
   std-env@3.9.0: {}
@@ -14817,14 +14763,6 @@ snapshots:
       vite: 6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)
     transitivePeerDependencies:
       - supports-color
-
-  vite-plugin-monaco-editor-esm@2.0.2(monaco-editor@0.52.2):
-    dependencies:
-      monaco-editor: 0.52.2
-
-  vite-plugin-monaco-editor@1.1.0(monaco-editor@0.52.2):
-    dependencies:
-      monaco-editor: 0.52.2
 
   vite-plugin-node-polyfills@0.23.0(rollup@4.40.2)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)):
     dependencies:
