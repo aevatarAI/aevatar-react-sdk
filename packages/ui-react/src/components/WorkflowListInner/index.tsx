@@ -134,7 +134,7 @@ export default function WorkflowListInner({
           </Button>
         </div>
       </div>
-      {/* [TODO] <ExecutionLogs workflowId={""} /> */}
+
       <div className="sdk:w-full">
         <DataTable
           className={clsx(!loading && tableData?.length && "sdk:min-w-[600px]")}

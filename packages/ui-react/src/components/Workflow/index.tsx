@@ -405,7 +405,7 @@ export const Workflow = forwardRef(
               ) : (
                 <Play />
               )}
-              {isRunning ? "running" : "runER"}
+              {isRunning ? "running" : "run"}
             </Button>
             {nodes.length === 0 && <Background />}
             <Controls />
@@ -424,7 +424,6 @@ export const Workflow = forwardRef(
             <div className="sdk:absolute sdk:right-[0px] sdk:bottom-[0px] sdk:text-[#B9B9B9] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[11px] sdk:font-pro aevatar-ai-watermark">
               powered by aevatar.ai
             </div>
-            <ExecutionLogs workflowId="" />
           </ReactFlow>
         </div>
       </div>

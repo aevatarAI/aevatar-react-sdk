@@ -16,19 +16,40 @@ function MonacoEditor({ data }: { data: any }) {
         // Dynamic import of Monaco Editor to prevent SSR issues
         const monaco = await import("monaco-editor");
 
+        // Disable web workers to prevent issues
+        (window as any).MonacoEnvironment = {
+          getWorker: () => {
+            return {
+              postMessage: () => {},
+              terminate: () => {},
+              addEventListener: () => {},
+              removeEventListener: () => {},
+            };
+          },
+        };
+
         const editor = monaco.editor.create(editorRef.current, {
           value: JSON.stringify(data, null, 2),
-          language: "javascript",
+          language: "json",
           theme: "vs-dark",
           automaticLayout: true,
           fontSize: 14,
           minimap: { enabled: false },
           scrollBeyondLastLine: false,
           wordWrap: "on",
-          formatOnPaste: true,
-          formatOnType: true,
+          formatOnPaste: false, // Disabled to avoid web worker issues
+          formatOnType: false, // Disabled to avoid web worker issues
           tabSize: 4,
           insertSpaces: true,
+          // Disable features that require web workers
+          quickSuggestions: false,
+          suggestOnTriggerCharacters: false,
+          parameterHints: {
+            enabled: false,
+          },
+          hover: {
+            enabled: false,
+          },
           scrollbar: {
             vertical: "hidden",
             horizontal: "hidden",
@@ -45,6 +66,8 @@ function MonacoEditor({ data }: { data: any }) {
         dispose = () => editor.dispose();
       } catch (error) {
         console.error("Failed to load Monaco Editor:", error);
+        // Still set loaded to true to show the div, even if there's an error
+        setIsLoaded(true);
       }
     };
 
@@ -69,7 +92,7 @@ function MonacoEditor({ data }: { data: any }) {
           justifyContent: "center",
           backgroundColor: "#1e1e1e",
           color: "#cccccc",
-          fontSize: "14px"
+          fontSize: "14px",
         }}
       >
         Loading editor...

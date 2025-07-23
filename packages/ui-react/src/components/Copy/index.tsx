@@ -1,4 +1,4 @@
-import TickIcon from "../../assets/svg/tick.svg";
+import TickIcon from "../../assets/svg/tick.svg?react";
 import { useToast } from "../../hooks/use-toast";
 import clsx from "clsx";
 import { useCallback, useState } from "react";

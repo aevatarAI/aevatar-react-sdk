@@ -1,0 +1,14 @@
+.red {
+    background: red !important;
+}
+
+.wrapper {
+    min-width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: #171717 !important;
+    padding: 8px;
+    border: 1px solid #FFFFFF14;
+    border-radius: 8px;
+}

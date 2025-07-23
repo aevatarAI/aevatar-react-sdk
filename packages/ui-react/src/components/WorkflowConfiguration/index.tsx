@@ -462,7 +462,11 @@ const WorkflowConfiguration = ({
                   />
                 </DialogPortal>
               </Dialog>
-              <ExecutionLogs workflowId={workflowName} />
+              <ExecutionLogs
+                stateName="WorkflowExecutionRecordState"
+                workflowId={editWorkflow?.workflowAgentId}
+                roundId={1}
+              />
             </main>
           </div>
         </div>
