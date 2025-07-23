@@ -15,6 +15,7 @@ import DeleteIcon from "../../assets/svg/delete_agent.svg?react";
 import { Checkbox } from "../ui";
 import type React from "react";
 import { useState } from "react";
+import clsx from "clsx";
 
 export const renderSchemaField = ({
   form,
@@ -44,14 +45,20 @@ export const renderSchemaField = ({
     if (types.length === 1 && types[0] === "null") {
       return null;
     }
-    if (types.length === 2 && types.includes("null") && nonNullTypes.length === 1) {
+    if (
+      types.length === 2 &&
+      types.includes("null") &&
+      nonNullTypes.length === 1
+    ) {
       schema = { ...schema, type: nonNullTypes[0], nullable: true };
     } else {
       return <></>;
     }
   }
   const fieldName = parentName ? `${parentName}.${name}` : name;
-  const labelWithRequired = schema.required ? `*${label ?? name}` : (label ?? name);
+  const labelWithRequired = schema.required
+    ? `*${label ?? name}`
+    : label ?? name;
   // enum type
   if (schema.enum) {
     return (
@@ -78,7 +85,9 @@ export const renderSchemaField = ({
                 disabled={field?.disabled}
                 onValueChange={handleChange}>
                 <FormControl>
-                  <SelectTrigger aria-disabled={field?.disabled}>
+                  <SelectTrigger
+                    aria-disabled={field?.disabled}
+                    className={field?.disabled ? "sdk:bg-[#303030]" : ""}>
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                 </FormControl>
@@ -114,13 +123,20 @@ export const renderSchemaField = ({
             field.value?.length + JSON.stringify(field.value)
           );
           // Only update key when actionType is a structural change
-          const handleChange = (value: any, actionType?: 'add' | 'delete' | 'move' | 'update') => {
+          const handleChange = (
+            value: any,
+            actionType?: "add" | "delete" | "move" | "update"
+          ) => {
             field.onChange(value);
             onChange?.(value, { name: fieldName, schema });
             value?.forEach((item: any, idx: number) => {
               form.setValue(`${name}.${idx}`, item, { shouldDirty: true });
             });
-            if (actionType === 'add' || actionType === 'delete' || actionType === 'move') {
+            if (
+              actionType === "add" ||
+              actionType === "delete" ||
+              actionType === "move"
+            ) {
               setArrayKey(value?.length + JSON.stringify(value));
             }
           };
@@ -140,16 +156,25 @@ export const renderSchemaField = ({
                     value: any,
                     meta: { name: string; schema: any }
                   ) => {
-                    const baseArr = Array.isArray(field.value) ? field.value : [];
+                    const baseArr = Array.isArray(field.value)
+                      ? field.value
+                      : [];
                     const newValue = baseArr.map((it, i) => {
                       if (i !== idx) return it;
+                      if (typeof it === "undefined") {
+                        if (schema.itemsSchema.type === "object") {
+                          const key = meta.name.split(".").pop();
+                          return { [key]: value };
+                        }
+                        return value;
+                      }
                       if (typeof it === "object") {
                         const key = meta.name.split(".").pop();
                         return { ...it, [key]: value };
                       }
                       return value;
                     });
-                    handleChange(newValue, 'update');
+                    handleChange(newValue, "update");
                   };
                   return renderSchemaField({
                     form,
@@ -230,9 +255,10 @@ export const renderSchemaField = ({
                 <FormLabel>{labelWithRequired}</FormLabel>
                 <Button
                   type="button"
+                  disabled={disabled}
                   className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
                   onClick={handleAdd}>
-                  <AddIcon className="text-white" />
+                  <AddIcon />
                   <span className="sdk:text-[12px] sdk:leading-[14px]">
                     Add item
                   </span>
@@ -261,7 +287,10 @@ export const renderSchemaField = ({
                             defaultValue={k}
                             onBlur={(e) => handleKeyChange(k, e.target.value)}
                             placeholder="key"
-                            className="sdk:w-full"
+                            className={clsx(
+                              "sdk:w-full",
+                              disabled && "sdk:bg-[#303030]"
+                            )}
                           />
                         </FormControl>
                       </FormItem>
@@ -283,16 +312,17 @@ export const renderSchemaField = ({
                       type="button"
                       className="sdk:w-[40px] sdk:h-[40px] sdk:inline-block sdk:border-[#303030] sdk:p-[8px] sdk:px-[10px] sdk:hover:bg-[#303030] sdk:lowercase"
                       onClick={() => handleDelete(k)}>
-                      <DeleteIcon />
+                      <DeleteIcon className="sdk:text-white" />
                     </Button>
                   </div>
                 ))}
               </div>
               <Button
                 type="button"
+                disabled={disabled}
                 className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
                 onClick={handleAdd}>
-                <AddIcon className="text-white" />
+                <AddIcon />
                 <span className="sdk:text-[12px] sdk:leading-[14px]">
                   Add item
                 </span>
@@ -360,6 +390,9 @@ export const renderSchemaField = ({
                   {...field}
                   onChange={handleChange}
                   disabled={field.disabled ?? disabled}
+                  className={clsx(
+                    (field.disabled ?? disabled) && "sdk:bg-[#303030]"
+                  )}
                 />
               </FormControl>
               <FormMessage />
@@ -414,6 +447,9 @@ export const renderSchemaField = ({
                     {...field}
                     onChange={handleInputChange}
                     disabled={field.disabled ?? disabled}
+                    className={clsx(
+                      (field.disabled ?? disabled) && "sdk:bg-[#303030]"
+                    )}
                   />
                 ) : (
                   <Textarea
@@ -421,6 +457,9 @@ export const renderSchemaField = ({
                     {...field}
                     onChange={handleTextareaChange}
                     disabled={field.disabled ?? disabled}
+                    className={clsx(
+                      (field.disabled ?? disabled) && "sdk:bg-[#303030]"
+                    )}
                   />
                 )}
               </FormControl>
@@ -461,7 +500,10 @@ export const renderSchemaField = ({
                   placeholder={schema?.description ?? ""}
                   {...field}
                   onChange={handleChange}
-                  className="sdk:appearance-none sdk:[&::-webkit-outer-spin-button]:appearance-none sdk:[&::-webkit-inner-spin-button]:appearance-none sdk:[&::-ms-input-placeholder]:appearance-none"
+                  className={clsx(
+                    "sdk:appearance-none sdk:[&::-webkit-outer-spin-button]:appearance-none sdk:[&::-webkit-inner-spin-button]:appearance-none sdk:[&::-ms-input-placeholder]:appearance-none",
+                    (field.disabled ?? disabled) && "sdk:bg-[#303030]"
+                  )}
                   disabled={field.disabled ?? disabled}
                 />
               </FormControl>

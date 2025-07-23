@@ -46,7 +46,6 @@ export default function AevatarCardInner({
       data-testid="aevatar-card"
       className="sdk:group"
       onClick={(e) => {
-        e.stopPropagation();
         onClick?.(agentInfo, isNew, nodeId);
       }}>
       <div
@@ -72,7 +71,9 @@ export default function AevatarCardInner({
             )}
           </div>
           <div className="sdk:font-outfit sdk:text-[#B9B9B9] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:truncate">
-            {agentInfo?.agentType ?? "--"}
+            {agentInfo?.agentType
+              ? agentInfo?.agentType?.split(".")?.pop()
+              : "--"}
           </div>
         </div>
         <div className="sdk:font-outfit sdk:pb-[6px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
@@ -84,35 +85,42 @@ export default function AevatarCardInner({
 
             let value = schema.value;
 
-            if (schema.enum) {
+            let valueList = [value];
+            if (isNew) {
+              valueList = [];
+            } else if (value === undefined || value === null || value === "") {
+              valueList = [null];
+            } else if (schema.enum) {
               const valueIndex = schema.enum.indexOf(schema.value);
-              value = schema["x-enumNames"]?.[valueIndex];
-            }
 
-            // Always treat value as an array for uniform rendering
-            const valueList =
-              isArray && Array.isArray(value)
-                ? value
-                : !isArray &&
-                  value !== undefined &&
-                  value !== null &&
-                  value !== ""
-                ? [value]
-                : [];
-            // Only filter out empty values and arrays when not isNew
-            if (
-              !isNew &&
-              (valueList.length === 0 ||
-                valueList.every(
-                  (v) =>
-                    v === undefined ||
-                    v === null ||
-                    v === "" ||
-                    (Array.isArray(v) && v.length === 0)
-                ))
+              value = schema["x-enumNames"]?.[valueIndex];
+              valueList = [typeof value === "string" ? value : JSON.stringify(value)];
+              // const firstThree = value?.slice(0, 3);
+              // const remainingCount = value?.length - 3;
+
+              // if (remainingCount > 0) {
+              //   valueList = [...firstThree, `+${remainingCount}`];
+              // } else {
+              //   valueList = [firstThree];
+              // }
+            } else if (isArray) {
+              if (Array.isArray(value) && value.length > 0) {
+                valueList = [`${value.length} items`];
+              } else {
+                valueList = [null];
+              }
+            } else if (typeof value === "object") {
+              valueList = [`${Object.keys(value).length} items`];
+            } else if (
+              schema.type === "boolean" ||
+              typeof value === "boolean"
             ) {
-              return null;
+              valueList = [value.toString()];
+            } else {
+              valueList = [value ?? ""];
             }
+            console.log(valueList, value, schema, propName, "valueList==");
+
             return (
               <div key={propName} className={clsx(isNew && "sdk:w-full")}>
                 <div className="sdk:text-[#6F6F6F] sdk:text-[12px] sdk:pb-[10px]">
@@ -135,20 +143,30 @@ export default function AevatarCardInner({
                         className={clsx(
                           "sdk:p-[4px] sdk:bg-[var(--sdk-border-color)] sdk:text-[12px] sdk:text-white "
                         )}>
-                        <pre
-                          style={{
-                            whiteSpace: "pre-wrap",
-                            wordBreak: "break-all",
-                            margin: 0,
-                          }}>
-                          {/* If value is object, render as JSON string */}
-
-                          {typeof info === "object"
-                            ? JSON.stringify(info, null, 2)
-                            : typeof info === "boolean"
-                            ? info.toString() // Render boolean as string
-                            : info}
-                        </pre>
+                        {!info && (
+                          <div
+                            className={clsx(
+                              "sdk:h-[23px] sdk:w-full sdk:bg-[#303030]",
+                              "sdk:w-[100px]!"
+                            )}
+                          />
+                        )}
+                        {info && (
+                          <pre
+                            style={{
+                              whiteSpace: "pre-wrap",
+                              wordBreak: "break-all",
+                              margin: 0,
+                              display: "-webkit-box",
+                              WebkitLineClamp:
+                                typeof info === "object" ? "unset" : 2,
+                              WebkitBoxOrient: "vertical",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                            }}>
+                            {info}
+                          </pre>
+                        )}
                       </div>
                     );
                   })}

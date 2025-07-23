@@ -29,15 +29,15 @@ export default function Sidebar({
   hiddenGAevatarType,
   disabled,
 }: IWorkflowSidebarProps) {
-  const [_, setDragItem] = useDnD();
+  // const [_, setDragItem] = useDnD();
 
-  const onDragStart = useCallback(
-    (event: React.DragEvent<HTMLDivElement>, dragItem: IDragItem) => {
-      setDragItem(dragItem);
-      event.dataTransfer.effectAllowed = "move";
-    },
-    [setDragItem]
-  );
+  // const onDragStart = useCallback(
+  //   (event: React.DragEvent<HTMLDivElement>, dragItem: IDragItem) => {
+  //     setDragItem(dragItem);
+  //     event.dataTransfer.effectAllowed = "move";
+  //   },
+  //   [setDragItem]
+  // );
 
   const [agentDataMap, agentTypeDataMap] = useMemo(() => {
     const agentMap: Map<string, IAgentInfoDetail[]> = new Map();
@@ -103,14 +103,10 @@ export default function Sidebar({
                     <AevatarItemMini
                       name={item.name}
                       agentType={item.agentType}
-                      disabled={disabledGeavatarIds?.includes(item.id) || disabled}
-                      onDragStart={(event) =>
-                        onDragStart(event, {
-                          agentInfo: item,
-                          nodeType: "default",
-                        })
+                      agentInfo={item}
+                      disabled={
+                        disabledGeavatarIds?.includes(item.id) || disabled
                       }
-                      draggable
                     />
                   </div>
                 ))}
@@ -118,19 +114,17 @@ export default function Sidebar({
             )}
 
             <AevatarItemMini
-              disabled={!isNewGAevatar}
+              disabled={!isNewGAevatar || disabled}
               isnew={true}
-              onDragStart={(event) =>
-                onDragStart(event, {
-                  agentInfo: {
-                    agentType: ele[0],
-                    propertyJsonSchema: agentTypeDataMap.get(ele[0])
-                      ?.propertyJsonSchema,
-                  },
-                  nodeType: "new",
-                })
-              }
-              draggable
+              agentType={ele[0]}
+              agentInfo={{
+                agentType: ele[0],
+                propertyJsonSchema: agentTypeDataMap.get(ele[0])
+                  ?.propertyJsonSchema,
+              }}
+
+              // onDragStart
+              // draggable
             />
           </div>
         </div>

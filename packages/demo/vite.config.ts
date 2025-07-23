@@ -32,6 +32,7 @@ export default defineConfig((config) => ({
   },
 
   server: {
+    host: '0.0.0.0', // Allow IP access
     cors: true,
     allowedHosts: true,
     proxy: {

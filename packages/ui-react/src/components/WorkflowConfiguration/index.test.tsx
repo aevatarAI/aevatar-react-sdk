@@ -11,7 +11,7 @@ vi.mock("../../utils", () => ({
         edit: vi.fn().mockResolvedValue({}),
       },
       agent: {
-        addSubAgents: vi.fn().mockResolvedValue({}), // 补充 mock
+        addSubAgents: vi.fn().mockResolvedValue({}), // Supplementary mock
       },
     },
   },

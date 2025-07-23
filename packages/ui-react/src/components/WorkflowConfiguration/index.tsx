@@ -32,6 +32,11 @@ import { useAevatar } from "../context/AevatarProvider";
 import SidebarWithNewAgent from "./sidebarWithNewAgent";
 import { useWorkflowState } from "../../hooks/useWorkflowState";
 import { ExecutionLogs } from "./executionLogs";
+import WorkflowProvider, { useWorkflow } from "../context/WorkflowProvider";
+import { basicWorkflow } from "../context/WorkflowProvider/actions";
+import { DndProvider as ReactDndProvider } from "react-dnd";
+import { TouchBackend } from "react-dnd-touch-backend";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
@@ -57,7 +62,7 @@ export interface IWorkflowConfigurationProps {
   onGaevatarChange: IWorkflowAevatarEditProps["onGaevatarChange"];
 }
 
-const WorkflowConfiguration = ({
+const WorkflowConfigurationInner = ({
   sidebarConfig,
   editWorkflow,
   extraControlBar,
@@ -68,12 +73,9 @@ const WorkflowConfiguration = ({
   const [container, setContainer] = React.useState(null);
   const { toast } = useToast();
   const [editAgentOpen, setEditAgentOpen] = useState(false);
-  const [selectAgentInfo, setSelectAgentInfo] = useState<{
-    agent: Partial<IAgentInfoDetail>;
-    isNew?: boolean;
-    nodeId: string;
-  }>();
   const [{ hiddenGAevatarType }] = useAevatar();
+
+  const [{ selectedAgent: selectAgentInfo }, { dispatch }] = useWorkflow();
 
   const [newWorkflowState, setNewWorkflowState] =
     useState<IWorkflowConfigurationProps["editWorkflow"]>();
@@ -88,15 +90,38 @@ const WorkflowConfiguration = ({
 
   const onClickWorkflowItem = useCallback(
     (data: Partial<IAgentInfoDetail>, isNew: boolean, nodeId: string) => {
-      setSelectAgentInfo({ agent: data, isNew, nodeId });
+      dispatch(
+        basicWorkflow.setSelectedAgent.actions({ agent: data, isNew, nodeId })
+      );
       setEditAgentOpen(true);
     },
-    []
+    [dispatch]
   );
 
   useUpdateEffect(() => {
-    !editAgentOpen && setSelectAgentInfo(undefined);
+    !editAgentOpen &&
+      dispatch(basicWorkflow.setSelectedAgent.actions(undefined));
   }, [editAgentOpen]);
+
+  const selectAgentInfoRef = useRef<{
+    agent: Partial<IAgentInfoDetail>;
+    isNew?: boolean;
+    nodeId: string;
+  }>();
+
+  useEffect(() => {
+    selectAgentInfoRef.current = selectAgentInfo;
+  }, [selectAgentInfo]);
+
+  const onRemoveNode = useCallback(
+    (nodeId: string) => {
+      if (selectAgentInfoRef.current?.nodeId === nodeId) {
+        dispatch(basicWorkflow.setSelectedAgent.actions(undefined));
+        setEditAgentOpen(false);
+      }
+    },
+    [dispatch]
+  );
 
   const [btnLoading, setBtnLoading] = useState<boolean>();
 
@@ -191,10 +216,10 @@ const WorkflowConfiguration = ({
         });
         setEditAgentOpen(false);
         await sleep(50);
-        setSelectAgentInfo(undefined);
+        dispatch(basicWorkflow.setSelectedAgent.actions(undefined));
         return result;
       },
-      [onGaevatarChange]
+      [onGaevatarChange, dispatch]
     );
 
   // const [stimulateResult, setStimulateResult] = useState<{
@@ -266,11 +291,15 @@ const WorkflowConfiguration = ({
 
   useEffect(() => {
     if (editWorkflow?.workflowAgentId) {
-      getWorkflowState(editWorkflow.workflowAgentId).then((res) => {
-        if (res?.workflowStatus === WorkflowStatus.running) {
-          setIsRunning(true);
-        }
-      });
+      try {
+        getWorkflowState(editWorkflow.workflowAgentId).then((res) => {
+          if (res?.workflowStatus === WorkflowStatus.running) {
+            setIsRunning(true);
+          }
+        });
+      } catch (error) {
+        console.error("getWorkflowState error:", error);
+      }
     }
   }, [editWorkflow?.workflowAgentId, getWorkflowState]);
 
@@ -327,36 +356,35 @@ const WorkflowConfiguration = ({
   ]);
 
   return (
-    <ReactFlowProvider>
-      <DnDProvider>
-        <div className="sdk:h-full sdk:workflow-common flex flex-col sdk:font-outfit">
-          {/* header */}
-          <div className=" sdk:relative sdk:w-full sdk:flex sdk:justify-between sdk:items-center sdk:border-b-[1px] sdk:px-[20px] sdk:py-[12px] sdk:sm:px-[16px] sdk:sm:py-[8px] sdk:workflow-common-border">
-            <div
-              className={clsx(
-                "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-outfit sdk:workflow-title sdk:flex-wrap",
-                "sdk:items-center"
-              )}
-            >
-              {onBack && (
-                <BackArrow
-                  role="img"
-                  className="cursor-pointer"
-                  onClick={onUnsavedBack}
-                />
-              )}
-              <div>
-                <div className="sdk:font-semibold">workflow configuration</div>
-                <EditWorkflowNameDialog
-                  disabled={isRunning}
-                  className="sdk:inline-flex sdk:sm:hidden"
-                  defaultName={workflowName}
-                  onSave={setWorkflowName}
-                />
-              </div>
+    <>
+      <div className="sdk:h-full sdk:workflow-common flex flex-col sdk:font-outfit">
+        {/* header */}
+        <div className=" sdk:relative sdk:w-full sdk:flex sdk:justify-between sdk:items-center sdk:border-b-[1px] sdk:px-[20px] sdk:py-[12px] sdk:sm:px-[16px] sdk:sm:py-[8px] sdk:workflow-common-border">
+          <div
+            className={clsx(
+              "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-outfit sdk:workflow-title sdk:flex-wrap",
+              "sdk:items-center"
+            )}
+          >
+            {onBack && (
+              <BackArrow
+                role="img"
+                className="cursor-pointer"
+                onClick={onUnsavedBack}
+              />
+            )}
+            <div>
+              <div className="sdk:font-semibold">workflow configuration</div>
+              <EditWorkflowNameDialog
+                disabled={isRunning}
+                className="sdk:inline-flex sdk:sm:hidden"
+                defaultName={workflowName}
+                onSave={setWorkflowName}
+              />
             </div>
-            <div className="sdk:flex sdk:gap-[24px] ">
-              {/* <Dialog>
+          </div>
+          <div className="sdk:flex sdk:gap-[24px] ">
+            {/* <Dialog>
                 <DialogTrigger asChild>
                   <Button
                     onClick={onStimulate}
@@ -374,117 +402,137 @@ const WorkflowConfiguration = ({
                 </DialogPortal>
               </Dialog> */}
 
-              <EditWorkflowNameDialog
-                className="sdk:hidden! sdk:sm:inline-flex!"
-                disabled={isRunning}
-                defaultName={workflowName}
-                onSave={setWorkflowName}
-              />
-              <Button
-                variant="default"
-                onClick={onSave}
-                disabled={editAgentOpen || isRunning}
-                className={clsx(
-                  "sdk:workflow-title-button-save sdk:cursor-pointer sdk:h-[30px]",
-                  (editAgentOpen || isRunning) &&
-                    "sdk:workflow-title-button-save-disabled"
-                )}
-              >
-                {btnLoading && (
-                  <Loading
-                    key={"save"}
-                    className={clsx("aevatarai-loading-icon")}
-                    style={{ width: 14, height: 14 }}
-                  />
-                )}
-                save
-              </Button>
-            </div>
-          </div>
-          {/* content */}
-
-          <div
-            className="sdk:flex sdk:sm:h-[calc(100%-70px)] sdk:flex-1 sdk:relative sdk:sm:flex-row sdk:flex-col"
-            ref={setContainer}
-          >
-            {/* Sidebar */}
-            {sidebarConfig.type === "newAgent" && (
-              <SidebarWithNewAgent
-                disabled={isRunning}
-                gaevatarTypeList={sidebarConfig?.gaevatarTypeList}
-                hiddenGAevatarType={hiddenGAevatarType}
-              />
-            )}
-            {(!sidebarConfig.type || sidebarConfig.type === "allAgent") && (
-              <Sidebar
-                disabled={isRunning}
-                disabledGeavatarIds={disabledAgent}
-                hiddenGAevatarType={hiddenGAevatarType}
-                gaevatarList={sidebarConfig.gaevatarList}
-                isNewGAevatar={sidebarConfig.isNewGAevatar}
-                gaevatarTypeList={sidebarConfig?.gaevatarTypeList}
-              />
-            )}
-
-            {/* Main Content */}
-            <main className="sdk:flex-1 sdk:flex sdk:flex-col sdk:items-center sdk:justify-center sdk:relative">
-              <Workflow
-                extraControlBar={extraControlBar}
-                editWorkflow={editWorkflow}
-                editAgentOpen={editAgentOpen}
-                gaevatarList={sidebarConfig?.gaevatarList}
-                selectedNodeId={selectAgentInfo?.nodeId}
-                ref={workflowRef}
-                onCardClick={onClickWorkflowItem}
-                onNodesChanged={onNodesChanged}
-                onRunWorkflow={onRunWorkflow}
-                isRunning={isRunning}
-              />
-              <Dialog
-                open={editAgentOpen}
-                modal={false}
-                onOpenChange={(v) => {
-                  console.log(v, "editAgentOpen=onClickWorkflowItem");
-                  // setEditAgentOpen(v);
-                }}
-              >
-                <DialogPortal container={container} asChild>
-                  {/* <DialogOverlay /> */}
-                  <WorkflowDialog
-                    disabled={isRunning}
-                    agentItem={selectAgentInfo?.agent}
-                    isNew={selectAgentInfo?.isNew}
-                    nodeId={selectAgentInfo?.nodeId}
-                    onClose={() => {
-                      setEditAgentOpen(false);
-                    }}
-                    onGaevatarChange={onDefaultGaevatarChange}
-                  />
-                </DialogPortal>
-              </Dialog>
-              <ExecutionLogs
-                stateName="WorkflowExecutionRecordState"
-                workflowId={editWorkflow?.workflowAgentId}
-                roundId={1}
-              />
-            </main>
+            <EditWorkflowNameDialog
+              className="sdk:hidden! sdk:sm:inline-flex!"
+              disabled={isRunning}
+              defaultName={workflowName}
+              onSave={setWorkflowName}
+            />
+            <Button
+              variant="default"
+              onClick={onSave}
+              disabled={editAgentOpen || isRunning}
+              className={clsx(
+                "sdk:workflow-title-button-save sdk:cursor-pointer sdk:h-[30px]",
+                (editAgentOpen || isRunning) &&
+                  "sdk:workflow-title-button-save-disabled"
+              )}
+            >
+              {btnLoading && (
+                <Loading
+                  key={"save"}
+                  className={clsx("aevatarai-loading-icon")}
+                  style={{ width: 14, height: 14 }}
+                />
+              )}
+              save
+            </Button>
           </div>
         </div>
+        {/* content */}
 
-        <WorkflowSaveFailedModal
-          saveFailed={saveFailed}
-          // onSaveFailed={onSaveFailed}
-          onOpenChange={setSaveFailed}
-        />
+        <div
+          className="sdk:flex sdk:sm:h-[calc(100%-70px)] sdk:flex-1 sdk:relative sdk:sm:flex-row sdk:flex-col"
+          ref={setContainer}
+        >
+          {/* Sidebar */}
+          {sidebarConfig.type === "newAgent" && (
+            <SidebarWithNewAgent
+              disabled={isRunning}
+              gaevatarTypeList={sidebarConfig?.gaevatarTypeList}
+              hiddenGAevatarType={hiddenGAevatarType}
+            />
+          )}
+          {(!sidebarConfig.type || sidebarConfig.type === "allAgent") && (
+            <Sidebar
+              disabled={isRunning}
+              disabledGeavatarIds={disabledAgent}
+              hiddenGAevatarType={hiddenGAevatarType}
+              gaevatarList={sidebarConfig.gaevatarList}
+              isNewGAevatar={sidebarConfig.isNewGAevatar}
+              gaevatarTypeList={sidebarConfig?.gaevatarTypeList}
+            />
+          )}
 
-        <WorkflowUnsaveModal
-          open={unsavedModal}
-          onOpenChange={setUnsavedModal}
-          onSaveHandler={onConfirmSaveHandler}
-        />
-      </DnDProvider>
-    </ReactFlowProvider>
+          {/* Main Content */}
+          <main className="sdk:flex-1 sdk:flex sdk:flex-col sdk:items-center sdk:justify-center sdk:relative">
+            <Workflow
+              extraControlBar={extraControlBar}
+              editWorkflow={editWorkflow}
+              editAgentOpen={editAgentOpen}
+              gaevatarList={sidebarConfig?.gaevatarList}
+              ref={workflowRef}
+              onCardClick={onClickWorkflowItem}
+              onNodesChanged={onNodesChanged}
+              onRunWorkflow={onRunWorkflow}
+              onRemoveNode={onRemoveNode}
+              isRunning={isRunning}
+            />
+            <Dialog
+              open={editAgentOpen}
+              modal={false}
+              onOpenChange={(v) => {
+                console.log(v, "editAgentOpen=onClickWorkflowItem");
+                // setEditAgentOpen(v);
+              }}
+            >
+              <DialogPortal container={container} asChild>
+                {/* <DialogOverlay /> */}
+                <WorkflowDialog
+                  disabled={isRunning}
+                  agentItem={selectAgentInfo?.agent}
+                  isNew={selectAgentInfo?.isNew}
+                  nodeId={selectAgentInfo?.nodeId}
+                  onClose={() => {
+                    setEditAgentOpen(false);
+                  }}
+                  onGaevatarChange={onDefaultGaevatarChange}
+                />
+              </DialogPortal>
+            </Dialog>
+            <ExecutionLogs
+              stateName="WorkflowExecutionRecordState"
+              workflowId={editWorkflow?.workflowAgentId}
+              roundId={1}
+            />
+          </main>
+        </div>
+      </div>
+
+      <WorkflowSaveFailedModal
+        saveFailed={saveFailed}
+        // onSaveFailed={onSaveFailed}
+        onOpenChange={setSaveFailed}
+      />
+
+      <WorkflowUnsaveModal
+        open={unsavedModal}
+        onOpenChange={setUnsavedModal}
+        onSaveHandler={onConfirmSaveHandler}
+      />
+    </>
   );
 };
 
-export default WorkflowConfiguration;
+export default function WorkflowConfiguration(
+  props: IWorkflowConfigurationProps
+) {
+  // Determine if it is a mobile device
+  const isMobile =
+    typeof window !== "undefined" &&
+    ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  return (
+    <ReactFlowProvider>
+      <ReactDndProvider
+        backend={isMobile ? TouchBackend : HTML5Backend}
+        options={isMobile ? { enableMouseEvents: true } : undefined}
+      >
+        <DnDProvider>
+          <WorkflowProvider>
+            <WorkflowConfigurationInner {...props} />
+          </WorkflowProvider>
+        </DnDProvider>
+      </ReactDndProvider>
+    </ReactFlowProvider>
+  );
+}

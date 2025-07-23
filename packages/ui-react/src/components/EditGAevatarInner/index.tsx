@@ -322,7 +322,9 @@ function EditGAevatarInnerCom({
                         form.clearErrors();
                       }}>
                       <FormControl>
-                        <SelectTrigger aria-disabled={field?.disabled}>
+                        <SelectTrigger 
+                          aria-disabled={field?.disabled}
+                          className={clsx(field?.disabled && "sdk:bg-[#303030]")}>
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                       </FormControl>
@@ -354,6 +356,7 @@ function EditGAevatarInnerCom({
                         {...field}
                         value={field?.value}
                         onChange={field?.onChange}
+                        className={clsx(field?.disabled && "sdk:bg-[#303030]")}
                       />
                     </FormControl>
                     <FormMessage />

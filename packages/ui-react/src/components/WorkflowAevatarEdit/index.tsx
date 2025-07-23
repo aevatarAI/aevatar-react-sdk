@@ -150,7 +150,9 @@ export default function WorkflowAevatarEdit({
   );
 
   return (
-    <div key={nodeId}>
+    <div
+      className="sdk:px-[8px] sdk:sm:px-[8px] sdk:overflow-auto sdk:flex-1"
+      key={nodeId}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className={clsx("sdk:bg-[#141415] sdk:pb-[60px]")}>
@@ -170,6 +172,7 @@ export default function WorkflowAevatarEdit({
                         {...field}
                         value={field?.value}
                         onChange={field?.onChange}
+                        className={clsx(field?.disabled && "sdk:bg-[#303030]")}
                       />
                     </FormControl>
                     <FormMessage />
@@ -192,7 +195,9 @@ export default function WorkflowAevatarEdit({
                       // }}
                     >
                       <FormControl>
-                        <SelectTrigger aria-disabled={field?.disabled}>
+                        <SelectTrigger 
+                          aria-disabled={field?.disabled}
+                          className={clsx(field?.disabled && "sdk:bg-[#303030]")}>
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                       </FormControl>
@@ -223,10 +228,9 @@ export default function WorkflowAevatarEdit({
           </div>
           <Button
             key={"save"}
-            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[362px]"
+            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[calc(100%-16px)]"
             type="submit"
-            disabled={disabled}
-          >
+            disabled={disabled}>
             {btnLoading && (
               <Loading
                 key={"save"}
