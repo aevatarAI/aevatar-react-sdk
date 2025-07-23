@@ -31,7 +31,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "wouter";
-import { useNavigate } from "../../hooks/useNavigate";
 import { useEffect, useState } from "react";
 
 interface Workflow {
@@ -52,7 +51,6 @@ export const EditExecutionsFilterDialog = ({
   filter,
   onChange,
 }: CustomDialogProps) => {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [filterCount, setFilterCount] = useState(0);
   const form = useForm<TEditExecutionsFilterForm>({
@@ -119,9 +117,10 @@ export const EditExecutionsFilterDialog = ({
                           } else {
                             params.set("name", value);
                           }
-                          navigate(`?${params.toString()}`, {
-                            replace: true,
-                          });
+                          // [TODO]
+                          // navigate(`?${params.toString()}`, {
+                          //   replace: true,
+                          // });
 
                           onChange({
                             ...filter,
@@ -171,9 +170,11 @@ export const EditExecutionsFilterDialog = ({
 
                           const params = new URLSearchParams(searchParams);
                           params.set("status", value);
-                          navigate(`?${params.toString()}`, {
-                            replace: true,
-                          });
+
+                          // [TODO]
+                          // navigate(`?${params.toString()}`, {
+                          //   replace: true,
+                          // });
                           onChange({
                             ...filter,
                             status: value,
@@ -259,9 +260,10 @@ export const EditExecutionsFilterDialog = ({
                             ? params.set("execId", value)
                             : params.delete("execId");
 
-                          navigate(`?${params.toString()}`, {
-                            replace: true,
-                          });
+                          // [TODO]
+                          // navigate(`?${params.toString()}`, {
+                          //   replace: true,
+                          // });
 
                           onChange({
                             ...filter,
