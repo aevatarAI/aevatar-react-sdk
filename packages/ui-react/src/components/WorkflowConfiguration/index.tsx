@@ -31,6 +31,7 @@ import EditWorkflowNameDialog from "../EditWorkflowNameDialog";
 import { useAevatar } from "../context/AevatarProvider";
 import SidebarWithNewAgent from "./sidebarWithNewAgent";
 import { useWorkflowState } from "../../hooks/useWorkflowState";
+import { ExecutionLogs } from "./executionLogs";
 
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
@@ -335,7 +336,8 @@ const WorkflowConfiguration = ({
               className={clsx(
                 "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-outfit sdk:workflow-title sdk:flex-wrap",
                 "sdk:items-center"
-              )}>
+              )}
+            >
               {onBack && (
                 <BackArrow
                   role="img"
@@ -384,8 +386,10 @@ const WorkflowConfiguration = ({
                 disabled={editAgentOpen || isRunning}
                 className={clsx(
                   "sdk:workflow-title-button-save sdk:cursor-pointer sdk:h-[30px]",
-                  (editAgentOpen || isRunning) && "sdk:workflow-title-button-save-disabled"
-                )}>
+                  (editAgentOpen || isRunning) &&
+                    "sdk:workflow-title-button-save-disabled"
+                )}
+              >
                 {btnLoading && (
                   <Loading
                     key={"save"}
@@ -401,7 +405,8 @@ const WorkflowConfiguration = ({
 
           <div
             className="sdk:flex sdk:sm:h-[calc(100%-70px)] sdk:flex-1 sdk:relative sdk:sm:flex-row sdk:flex-col"
-            ref={setContainer}>
+            ref={setContainer}
+          >
             {/* Sidebar */}
             {sidebarConfig.type === "newAgent" && (
               <SidebarWithNewAgent
@@ -441,7 +446,8 @@ const WorkflowConfiguration = ({
                 onOpenChange={(v) => {
                   console.log(v, "editAgentOpen=onClickWorkflowItem");
                   // setEditAgentOpen(v);
-                }}>
+                }}
+              >
                 <DialogPortal container={container} asChild>
                   {/* <DialogOverlay /> */}
                   <WorkflowDialog
@@ -456,6 +462,7 @@ const WorkflowConfiguration = ({
                   />
                 </DialogPortal>
               </Dialog>
+              <ExecutionLogs workflowId={workflowName} />
             </main>
           </div>
         </div>

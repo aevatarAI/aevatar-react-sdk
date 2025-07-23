@@ -8,7 +8,6 @@ import {
   WorkflowConfiguration,
   ConfigProvider,
   WorkflowList,
-  ExecutionList,
   FullScreenIcon,
 } from "@aevatar-react-sdk/ui-react";
 // import "@aevatar-react-sdk/ui-react/ui-react.css";
@@ -21,6 +20,7 @@ import type {
   IAgentsConfiguration,
 } from "@aevatar-react-sdk/services";
 import type { IWorkflowListRef } from "../../../ui-react/dist/types/src/components/WorkflowList";
+// import "../../monaco-setup";
 
 const LoginButton = clientOnly(
   () => import("../../components/auth/LoginButton")
@@ -239,9 +239,6 @@ export default function UI() {
           show executions
         </Button>
 
-        {/* </>
-        )} */}
-
         <div className="text-[12px] lg:text-[24px]">aad</div>
 
         {stage === Stage.myGAevatar && (
@@ -333,15 +330,6 @@ export default function UI() {
               onEditWorkflow={(workflowAgentId) => {
                 onEditWorkflow(workflowAgentId);
               }}
-              onNewWorkflow={() => {
-                onShowWorkflow();
-              }}
-            />
-          </div>
-        )}
-        {stage === Stage.ExecutionList && (
-          <div className="h-[500px]">
-            <ExecutionList
               onNewWorkflow={() => {
                 onShowWorkflow();
               }}

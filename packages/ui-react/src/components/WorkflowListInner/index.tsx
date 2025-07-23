@@ -18,6 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { ExecutionLogs } from "../WorkflowConfiguration/executionLogs";
 
 interface WorkflowListInnerProps {
   workflowsList: (IWorkflowCoordinatorState & IAgentInfoDetail)[];
@@ -133,6 +134,7 @@ export default function WorkflowListInner({
           </Button>
         </div>
       </div>
+      {/* [TODO] <ExecutionLogs workflowId={""} /> */}
       <div className="sdk:w-full">
         <DataTable
           className={clsx(!loading && tableData?.length && "sdk:min-w-[600px]")}
