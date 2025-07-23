@@ -274,7 +274,12 @@ export const Workflow = forwardRef(
         }
         setEdges((eds) => {
           console.log(eds, "eds==onConnect");
-          if(eds.find(item => item.source === params.target && item.target === params.source)) {
+          if (
+            eds.find(
+              (item) =>
+                item.source === params.target && item.target === params.source
+            )
+          ) {
             return eds;
           }
           return addEdge(
@@ -392,13 +397,15 @@ export const Workflow = forwardRef(
         className={clsx(
           "dndflow sdk:w-full",
           editAgentOpen && "editAgentOpen-workflow-inner"
-        )}>
+        )}
+      >
         <div
           className="reactflow-wrapper sdk:relative"
           ref={(node) => {
             reactFlowWrapper.current = node;
             dropRef(node);
-          }}>
+          }}
+        >
           <ReactFlow
             colorMode="dark"
             nodes={nodes}
@@ -417,13 +424,15 @@ export const Workflow = forwardRef(
               strokeDasharray: "10 10",
               stroke: "#B9B9B9",
               strokeWidth: 2,
-            }}>
+            }}
+          >
             <div className="sdk:absolute sdk:left-[15px] sdk:bottom-[130px] sdk:z-5">
               {extraControlBar}
             </div>
             <Button
               onClick={onRunningHandler}
-              className="sdk:z-10 sdk:absolute sdk:cursor-pointer sdk:hover:text-[#000] sdk:right-[16px] sdk:top-[12px] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
+              className="sdk:z-10 sdk:absolute sdk:cursor-pointer sdk:hover:text-[#000] sdk:right-[16px] sdk:top-[12px] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]"
+            >
               {isRunning ? (
                 <Loading
                   key={"save"}

@@ -13,15 +13,15 @@ import {
 // import "@aevatar-react-sdk/ui-react/ui-react.css";
 import { useCallback, useRef, useState } from "react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
-
 import { clientOnly } from "vike-react/clientOnly";
 import { sleep } from "@aevatar-react-sdk/utils";
-
 import type {
   IAgentInfoDetail,
   IAgentsConfiguration,
 } from "@aevatar-react-sdk/services";
 import type { IWorkflowListRef } from "../../../ui-react/dist/types/src/components/WorkflowList";
+// import "../../monaco-setup";
+
 const LoginButton = clientOnly(
   () => import("../../components/auth/LoginButton")
 );
@@ -49,6 +49,7 @@ enum Stage {
   editGAevatar = "editGAevatar",
   Workflow = "Workflow",
   WorkflowList = "WorkflowList",
+  ExecutionList = "ExecutionList",
 }
 
 export default function UI() {
@@ -391,7 +392,6 @@ export default function UI() {
   );
 
   const fullscreenHandle = useFullScreenHandle();
-
   const workflowListRef = useRef<IWorkflowListRef>(null);
 
   const getWorkflowDetail = useCallback(async (workflowAgentId: string) => {
@@ -410,10 +410,12 @@ export default function UI() {
   return (
     <div className="min-w-[375px]">
       <AevatarProvider
-      hiddenGAevatarType={[
-        // "Aevatar.SignalR.GAgents.SignalRGAgent",
-        // "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
-      ]}
+        hiddenGAevatarType={
+          [
+            // "Aevatar.SignalR.GAgents.SignalRGAgent",
+            // "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
+          ]
+        }
       >
         <LoginButton />
 
@@ -428,25 +430,32 @@ export default function UI() {
         <Button
           onClick={() => {
             onEditWorkflow(localStorage.getItem("workflowAgentId") ?? "");
-          }}>
+          }}
+        >
           edit workflow
         </Button>
         <div className="h-[10px]" />
         <Button
           onClick={() => {
             setStage(Stage.WorkflowList);
-          }}>
+          }}
+        >
           show workflowList
         </Button>
         <Button
           onClick={() => {
             workflowListRef.current?.refresh();
-          }}>
+          }}
+        >
           refresh workflowList
         </Button>
-
-        {/* </>
-        )} */}
+        <Button
+          onClick={() => {
+            setStage(Stage.ExecutionList);
+          }}
+        >
+          show executions
+        </Button>
 
         <div className="text-[12px] lg:text-[24px]">aad</div>
 
@@ -502,7 +511,8 @@ export default function UI() {
                       fullscreenHandle.active
                         ? fullscreenHandle.exit()
                         : fullscreenHandle.enter();
-                    }}>
+                    }}
+                  >
                     <FullScreenIcon
                       style={{
                         width: 16,

@@ -31,6 +31,7 @@ import EditWorkflowNameDialog from "../EditWorkflowNameDialog";
 import { useAevatar } from "../context/AevatarProvider";
 import SidebarWithNewAgent from "./sidebarWithNewAgent";
 import { useWorkflowState } from "../../hooks/useWorkflowState";
+import { ExecutionLogs } from "./executionLogs";
 import WorkflowProvider, { useWorkflow } from "../context/WorkflowProvider";
 import { basicWorkflow } from "../context/WorkflowProvider/actions";
 import { DndProvider as ReactDndProvider } from "react-dnd";
@@ -363,7 +364,8 @@ const WorkflowConfigurationInner = ({
             className={clsx(
               "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-outfit sdk:workflow-title sdk:flex-wrap",
               "sdk:items-center"
-            )}>
+            )}
+          >
             {onBack && (
               <BackArrow
                 role="img"
@@ -414,7 +416,8 @@ const WorkflowConfigurationInner = ({
                 "sdk:workflow-title-button-save sdk:cursor-pointer sdk:h-[30px]",
                 (editAgentOpen || isRunning) &&
                   "sdk:workflow-title-button-save-disabled"
-              )}>
+              )}
+            >
               {btnLoading && (
                 <Loading
                   key={"save"}
@@ -430,7 +433,8 @@ const WorkflowConfigurationInner = ({
 
         <div
           className="sdk:flex sdk:sm:h-[calc(100%-70px)] sdk:flex-1 sdk:relative sdk:sm:flex-row sdk:flex-col"
-          ref={setContainer}>
+          ref={setContainer}
+        >
           {/* Sidebar */}
           {sidebarConfig.type === "newAgent" && (
             <SidebarWithNewAgent
@@ -470,7 +474,8 @@ const WorkflowConfigurationInner = ({
               onOpenChange={(v) => {
                 console.log(v, "editAgentOpen=onClickWorkflowItem");
                 // setEditAgentOpen(v);
-              }}>
+              }}
+            >
               <DialogPortal container={container} asChild>
                 {/* <DialogOverlay /> */}
                 <WorkflowDialog
@@ -485,6 +490,11 @@ const WorkflowConfigurationInner = ({
                 />
               </DialogPortal>
             </Dialog>
+            <ExecutionLogs
+              stateName="WorkflowExecutionRecordState"
+              workflowId={editWorkflow?.workflowAgentId}
+              roundId={1}
+            />
           </main>
         </div>
       </div>
@@ -515,7 +525,8 @@ export default function WorkflowConfiguration(
     <ReactFlowProvider>
       <ReactDndProvider
         backend={isMobile ? TouchBackend : HTML5Backend}
-        options={isMobile ? { enableMouseEvents: true } : undefined}>
+        options={isMobile ? { enableMouseEvents: true } : undefined}
+      >
         <DnDProvider>
           <WorkflowProvider>
             <WorkflowConfigurationInner {...props} />

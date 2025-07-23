@@ -1,0 +1,29 @@
+.monaco-editor .monaco-editor-background,
+.margin-view-overlays {
+  background-color: #30303050 !important;
+}
+
+.monaco-editor-container {
+  border: none !important;
+  outline: none !important;
+}
+
+.monaco-editor,
+.monaco-editor:focus,
+.monaco-editor:focus-within {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.monaco-editor .find-widget {
+  top: 0px !important;
+  right: 0px !important;
+  left: unset !important;
+
+  background: #000000 !important;
+}
+
+.view-lines {
+  border: none !important;
+}

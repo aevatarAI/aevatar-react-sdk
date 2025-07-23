@@ -18,6 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { ExecutionLogs } from "../WorkflowConfiguration/executionLogs";
 
 interface WorkflowListInnerProps {
   workflowsList: (IWorkflowCoordinatorState & IAgentInfoDetail)[];
@@ -30,6 +31,20 @@ interface WorkflowListInnerProps {
   ) => void;
   onNewWorkflow: () => void;
 }
+
+export const emptyNode = (
+  <div className="sdk:flex sdk:flex-col sdk:gap-4 sdk:items-center sdk:justify-center sdk:h-[394px] sdk:text-center sdk:w-full">
+    <div className="sdk:relative sdk:shrink-0 sdk:w-24 sdk:h-24">
+      <NoWorkflows />
+    </div>
+    <div
+      className="sdk:flex sdk:flex-col sdk:font-sourcecodepro sdk:font-normal sdk:justify-center sdk:leading-[0] sdk:lowercase sdk:min-w-full sdk:relative sdk:shrink-0 sdk:text-[#b9b9b9] sdk:text-[12px] sdk:text-center"
+      style={{ width: "min-content" }}
+    >
+      <p className="sdk:block sdk:leading-normal">No workflows created yet</p>
+    </div>
+  </div>
+);
 
 export default function WorkflowListInner({
   workflowsList = [],
@@ -48,8 +63,9 @@ export default function WorkflowListInner({
           // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
           <div
             className="sdk:text-[14px] sdk:pl-[15px] sdk:font-outfit sdk:font-semibold sdk:hover:underline sdk:hover:decoration-[#fff] sdk:cursor-pointer"
-            onClick={() => onEditWorkflow?.(item.id)}>
-            {item?.name ?? '-'}
+            onClick={() => onEditWorkflow?.(item.id)}
+          >
+            {item?.name ?? "-"}
           </div>
         ),
         operation: (
@@ -73,7 +89,8 @@ export default function WorkflowListInner({
                     "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
                     "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                   )}
-                  side="top">
+                  side="top"
+                >
                   edit
                 </TooltipContent>
               </Tooltip>
@@ -88,48 +105,36 @@ export default function WorkflowListInner({
     [workflowsList, onEditWorkflow, onDeleteWorkflow]
   );
 
-  const emptyNode = useMemo(() => {
-    return (
-      <div className="sdk:flex sdk:flex-col sdk:gap-4 sdk:items-center sdk:justify-center sdk:h-[394px] sdk:text-center sdk:w-full">
-        <div className="sdk:relative sdk:shrink-0 sdk:w-24 sdk:h-24">
-          <NoWorkflows />
-        </div>
-        <div
-          className="sdk:flex sdk:flex-col sdk:font-sourcecodepro sdk:font-normal sdk:justify-center sdk:leading-[0] sdk:lowercase sdk:min-w-full sdk:relative sdk:shrink-0 sdk:text-[#b9b9b9] sdk:text-[12px] sdk:text-center"
-          style={{ width: "min-content" }}>
-          <p className="sdk:block sdk:leading-normal">
-            No workflows created yet
-          </p>
-        </div>
-      </div>
-    );
-  }, []);
-
   return (
     <div
       className={clsx(
         "sdk:flex sdk:flex-col sdk:gap-[30px] sdk:items-start sdk:w-full sdk:box-border sdk:bg-[#000] sdk:h-full sdk:overflow-y-auto",
         className
       )}
-      id="node-6202_82359">
+      id="node-6202_82359"
+    >
       <div
         className="sdk:flex sdk:flex-row sdk:items-center sdk:w-full sdk:justify-between sdk:box-border"
-        id="node-6202_82360">
+        id="node-6202_82360"
+      >
         <div
           className="sdk:font-outfit sdk:font-semibold sdk:text-[18px] sdk:bg-gradient-to-r sdk:from-white sdk:to-[#999] sdk:bg-clip-text sdk:text-transparent sdk:lowercase"
           id="node-6202_82361"
-          style={{ WebkitTextFillColor: "transparent" }}>
+          style={{ WebkitTextFillColor: "transparent" }}
+        >
           <p>Workflows</p>
         </div>
         <div>
           <Button
             className="sdk:text-white sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:hover:text-black sdk:cursor-pointer"
-            onClick={onNewWorkflow}>
+            onClick={onNewWorkflow}
+          >
             <AddIcon style={{ width: 14, height: 14 }} />
             new workflow
           </Button>
         </div>
       </div>
+
       <div className="sdk:w-full">
         <DataTable
           className={clsx(!loading && tableData?.length && "sdk:min-w-[600px]")}

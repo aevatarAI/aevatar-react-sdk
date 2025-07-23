@@ -7,6 +7,7 @@ export { default as EditGAevatarInner } from "./EditGAevatarInner";
 export { default as WorkflowConfiguration } from "./WorkflowConfiguration";
 export { default as WorkflowList } from "./WorkflowList";
 export { default as WorkflowListInner } from "./WorkflowListInner";
+export { default as ExecutionList } from "./ExecutionList";
 
 export * from "./config-provider";
 export * from "./context";
