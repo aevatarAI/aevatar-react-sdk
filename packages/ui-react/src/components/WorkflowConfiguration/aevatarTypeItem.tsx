@@ -21,18 +21,27 @@ interface IAevatarTypeItemProps {
   propertyJsonSchema?: string;
   onDragStart?: (event: React.DragEvent<HTMLDivElement>) => void;
   draggable?: boolean;
+  defaultValues?: Record<string, any[]>;
 }
 export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
-  const { agentType, description, className, disabled, propertyJsonSchema } =
-    props;
+  const {
+    agentType,
+    description,
+    className,
+    disabled,
+    propertyJsonSchema,
+    defaultValues,
+  } = props;
   const { toast } = useToast();
   const [, setDragItem] = useDnD();
   const dragData: IDragItem = useMemo(
     () => ({
       nodeType: "new",
-      agentInfo: agentType ? { agentType, propertyJsonSchema } : undefined,
+      agentInfo: agentType
+        ? { agentType, propertyJsonSchema, defaultValues }
+        : undefined,
     }),
-    [agentType, propertyJsonSchema]
+    [agentType, propertyJsonSchema, defaultValues]
   );
 
   const [{ isDragging }, dragRef] = useDrag<

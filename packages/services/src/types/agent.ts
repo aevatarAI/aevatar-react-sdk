@@ -62,6 +62,7 @@ export interface IAgentsConfiguration {
   agentType: string;
   fullName: string;
   description?: string;
+  defaultValues?: Record<string, any[]>;
   agentParams?: IAgentParams[];
   propertyJsonSchema?: string;
 }

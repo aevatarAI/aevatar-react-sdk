@@ -14,7 +14,7 @@ export interface IAevatarCardInnerProps {
   onClick?: TNodeDataClick;
   deleteNode: (nodeId: string) => void;
   nodeId?: string;
-  agentInfo?: IAgentInfoDetail;
+  agentInfo?: IAgentInfoDetail & { defaultValues?: Record<string, any[]> };
   selected?: boolean;
 }
 
@@ -36,8 +36,13 @@ export default function AevatarCardInner({
   );
 
   const propertiesInfo = useMemo(
-    () => jsonSchemaParse(agentInfo?.propertyJsonSchema, agentInfo?.properties),
-    [agentInfo]
+    () =>
+      jsonSchemaParse(
+        agentInfo?.propertyJsonSchema,
+        agentInfo?.properties,
+        isNew ? agentInfo?.defaultValues : undefined
+      ),
+    [agentInfo, isNew]
   );
 
   return (

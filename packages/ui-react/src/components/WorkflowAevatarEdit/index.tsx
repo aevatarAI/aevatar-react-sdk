@@ -28,7 +28,9 @@ import { renderSchemaField } from "../utils/renderSchemaField";
 import { useUpdateEffect } from "react-use";
 
 export interface IWorkflowAevatarEditProps {
-  agentItem?: Partial<IAgentInfoDetail>;
+  agentItem?: Partial<
+    IAgentInfoDetail & { defaultValues?: Record<string, any[]> }
+  >;
   isNew?: boolean;
   nodeId?: string;
   disabled?: boolean;
@@ -109,11 +111,10 @@ export default function WorkflowAevatarEdit({
   const JSONSchemaProperties: [string, JSONSchemaType<any>][] = useMemo(() => {
     return jsonSchemaParse(
       agentItem?.propertyJsonSchema,
-      agentItem?.properties
+      agentItem?.properties,
+      isNew ? agentItem?.defaultValues : undefined
     );
-  }, [agentItem?.propertyJsonSchema, agentItem?.properties]);
-
-  console.log(JSONSchemaProperties, "JSONSchemaProperties==");
+  }, [agentItem, isNew]);
 
   const agentTypeList = useMemo(
     () => (agentItem?.agentType ? [agentItem?.agentType] : []),

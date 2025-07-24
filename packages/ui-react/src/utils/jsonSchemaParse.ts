@@ -143,7 +143,8 @@ export function parseJsonSchema(
 // Main entry: parse jsonSchemaString to [name, schema] pairs (top-level properties)
 export const jsonSchemaParse = (
   jsonSchemaString?: string,
-  properties?: Record<string, any>
+  properties?: Record<string, any>,
+  defaultValues?: Record<string, any[]>
 ): [string, any][] => {
   const jsonSchema = JSON.parse(
     (jsonSchemaString === "" ? "{}" : jsonSchemaString) ?? "{}"
@@ -168,13 +169,15 @@ export const jsonSchemaParse = (
 
     const propWithRequired = { ...((prop as any) ?? {}), required: isRequired };
 
+    const value = properties?.[name] ?? defaultValues?.[name]?.[0];
+
     return [
       name,
       parseJsonSchema(
         propWithRequired,
         jsonSchema,
         definitions,
-        properties?.[name]
+        value
       ),
     ];
   });
