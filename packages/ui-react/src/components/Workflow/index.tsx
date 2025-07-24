@@ -82,18 +82,18 @@ export const Workflow = forwardRef(
     }: IProps,
     ref
   ) => {
-    const deleteNode = useCallback(
-      (nodeId) => {
-        setNodes((prevNodes) => prevNodes.filter((node) => node.id !== nodeId));
-        onRemoveNode?.(nodeId);
-        setEdges((prevEdges) =>
-          prevEdges.filter(
-            (edge) => edge.source !== nodeId && edge.target !== nodeId
-          )
-        );
-      },
-      [onRemoveNode]
-    );
+    // Add state to track used indexes for each agent type
+    const [agentTypeUsedIndexes, setAgentTypeUsedIndexes] = useState<
+      Record<string, Set<number>>
+    >({});
+
+    // Use ref to synchronously manage usedIndexes
+    const usedIndexesRef = useRef<Record<string, Set<number>>>({});
+
+    // Sync ref with state
+    useEffect(() => {
+      usedIndexesRef.current = agentTypeUsedIndexes;
+    }, [agentTypeUsedIndexes]);
 
     const initialNodes = useMemo(() => {
       return [];
@@ -118,6 +118,70 @@ export const Workflow = forwardRef(
     const reactFlowWrapper = useRef(null);
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+    const deleteNode = useCallback(
+      (nodeId) => {
+        setNodes((prevNodes) => {
+          const newNodes = prevNodes.filter((node) => node.id !== nodeId);
+          console.log(newNodes, "newNodes==newNodes");
+          // Find the node to be deleted to get its agent type
+          const nodeToDelete = prevNodes.find((node) => node.id === nodeId);
+          console.log(nodeToDelete, nodes, nodeId, "nodeToDelete==Deleting");
+          // Update agent type count when deleting a new node
+          if (
+            nodeToDelete?.data?.isNew &&
+            nodeToDelete?.data?.agentInfo?.agentType
+          ) {
+            const agentType = nodeToDelete.data.agentInfo.agentType;
+            const name = nodeToDelete.data.agentInfo.name;
+
+            console.log("Deleting node:", {
+              agentType,
+              name,
+              usedIndexesRef: usedIndexesRef.current,
+            });
+
+            // Extract index from name (e.g., "AgentType 1" -> 1)
+            const match = name?.match(new RegExp(`^${agentType} (\\d+)$`));
+            if (match) {
+              const index = Number.parseInt(match[1], 10);
+              console.log("Extracted index:", index);
+
+              // Synchronously update ref
+              const currentIndexes =
+                usedIndexesRef.current[agentType] || new Set();
+              const newIndexes = new Set(currentIndexes);
+              newIndexes.delete(index);
+              usedIndexesRef.current = {
+                ...usedIndexesRef.current,
+                [agentType]: newIndexes,
+              };
+
+              console.log("After deletion:", {
+                agentType,
+                before: Array.from(currentIndexes),
+                after: Array.from(newIndexes),
+                usedIndexesRef: usedIndexesRef.current,
+              });
+
+              // Update state
+              setAgentTypeUsedIndexes(usedIndexesRef.current);
+            } else {
+              console.log("Failed to extract index from name:", name);
+            }
+          }
+          return newNodes;
+        });
+        onRemoveNode?.(nodeId);
+        setEdges((prevEdges) =>
+          prevEdges.filter(
+            (edge) => edge.source !== nodeId && edge.target !== nodeId
+          )
+        );
+      },
+      [nodes, onRemoveNode, setNodes, setEdges]
+    );
+
     const { screenToFlowPosition } = useReactFlow();
     const [dragInfo] = useDnD();
     console.log(dragInfo, "dragInfo===dragData");
@@ -149,6 +213,31 @@ export const Workflow = forwardRef(
       );
       setNodes(nodes);
       setEdges(edges);
+
+      // // Initialize agent type counts for existing new nodes
+      // const newNodesIndexes: Record<string, Set<number>> = {};
+      // nodes.forEach((node) => {
+      //   if (node.data.isNew && node.data.agentInfo?.agentType) {
+      //     const agentType = node.data.agentInfo.agentType;
+      //     const name = node.data.agentInfo.name;
+
+      //     // Extract index from name (e.g., "AgentType 1" -> 1)
+      //     const match = name?.match(new RegExp(`^${agentType} (\\d+)$`));
+      //     if (match) {
+      //       const index = Number.parseInt(match[1], 10);
+      //       if (!newNodesIndexes[agentType]) {
+      //         newNodesIndexes[agentType] = new Set();
+      //       }
+      //       newNodesIndexes[agentType].add(index);
+      //     }
+      //   }
+      // });
+
+      // if (Object.keys(newNodesIndexes).length > 0) {
+      //   setAgentTypeUsedIndexes(newNodesIndexes);
+      //   // Also update ref
+      //   usedIndexesRef.current = newNodesIndexes;
+      // }
 
       // setNodes((prevNodes) => {
       //   const merged = [...nodes, ...prevNodes];
@@ -314,6 +403,53 @@ export const Workflow = forwardRef(
           x: clientOffset.x,
           y: clientOffset.y,
         });
+
+        // Create a copy of agentInfo to avoid modifying the original
+        const agentInfoCopy = { ...dragInfo.agentInfo };
+
+        // Handle new node creation with indexing
+        if (dragInfo.nodeType === "new") {
+          const agentType = agentInfoCopy.agentType;
+
+          console.log("Creating new node:", {
+            agentType,
+            usedIndexesRef: usedIndexesRef.current,
+          });
+
+          // Synchronously find the smallest available index
+          const usedIndexes = usedIndexesRef.current[agentType] || new Set();
+          let newIndex = 1;
+
+          console.log("Current used indexes:", Array.from(usedIndexes));
+
+          // Find the smallest available index starting from 1
+          while (usedIndexes.has(newIndex)) {
+            newIndex++;
+          }
+
+          console.log("Found available index:", newIndex);
+
+          // Update agentInfo copy with new name (only for new nodes)
+          agentInfoCopy.name = `${agentType} ${newIndex}`;
+
+          // Synchronously update ref
+          const newUsedIndexes = new Set([...usedIndexes, newIndex]);
+          usedIndexesRef.current = {
+            ...usedIndexesRef.current,
+            [agentType]: newUsedIndexes,
+          };
+
+          console.log("After adding new index:", {
+            agentType,
+            newIndex,
+            usedIndexes: Array.from(newUsedIndexes),
+            usedIndexesRef: usedIndexesRef.current,
+          });
+
+          // Update state
+          setAgentTypeUsedIndexes(usedIndexesRef.current);
+        }
+
         const newNode =
           dragInfo.nodeType === "new"
             ? {
@@ -322,7 +458,7 @@ export const Workflow = forwardRef(
                 position,
                 data: {
                   label: "ScanCard Node",
-                  agentInfo: dragInfo.agentInfo,
+                  agentInfo: agentInfoCopy,
                   isNew: true,
                   onClick: onCardClick,
                   deleteNode,
@@ -350,7 +486,7 @@ export const Workflow = forwardRef(
               };
         setNodes((nds) => nds.concat(newNode as any));
         if (dragInfo.nodeType === "new")
-          onCardClick(dragInfo.agentInfo, true, newNode.id);
+          onCardClick(agentInfoCopy, true, newNode.id);
       },
       [screenToFlowPosition, dragInfo, setNodes, onCardClick, deleteNode]
     );
