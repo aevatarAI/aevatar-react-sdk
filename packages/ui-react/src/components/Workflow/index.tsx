@@ -485,7 +485,7 @@ export const Workflow = forwardRef(
           console.log("Found available index:", newIndex);
 
           // Update agentInfo copy with new name (only for new nodes)
-          agentInfoCopy.name = `${agentType} ${newIndex}`;
+          agentInfoCopy.name = `${agentType.split(".").pop()} ${newIndex}`;
 
           // Synchronously update ref
           const newUsedIndexes = new Set([...usedIndexes, newIndex]);
