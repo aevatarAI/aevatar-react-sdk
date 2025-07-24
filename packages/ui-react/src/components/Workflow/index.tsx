@@ -23,33 +23,44 @@ import "@xyflow/react/dist/style.css";
 import "./index.css";
 
 import { useDnD } from "./DnDContext";
-import ScanCardNode from "../AevatarItem4Workflow";
+import AevatarItem4Workflow from "../AevatarItem4Workflow";
 import Background from "./background";
 import type {
   IAgentInfoDetail,
   IWorkflowUnitListItem,
+  IWorkflowViewDataParams,
 } from "@aevatar-react-sdk/services";
 import type { Edge, INode } from "./types";
 import { generateWorkflowGraph } from "./utils";
 import { useUpdateEffect } from "react-use";
 import { Button } from "../ui";
+import Refresh from "../../assets/svg/refresh.svg?react";
 import Play from "../../assets/svg/play.svg?react";
 import clsx from "clsx";
 import { useDrop } from "react-dnd";
 import CustomEdge from "./CustomEdge";
+import { v4 as uuidv4 } from "uuid";
+import Stop from "../../assets/svg/stop.svg?react";
+import { useHistory } from "./hooks/useHistory";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
-let id = 0;
-const getId = () => `dndnode_${id++}`;
+const getId = () => `dndnode_${uuidv4()}`;
 
 interface IProps {
   gaevatarList?: IAgentInfoDetail[];
   editWorkflow?: {
     workflowAgentId: string;
     workflowName: string;
-    workUnitRelations: IWorkflowUnitListItem[];
+    workflowViewData: IWorkflowViewDataParams;
   };
   editAgentOpen?: boolean;
   isRunning?: boolean;
+  isStopping?: boolean;
   onCardClick: (
     data: Partial<IAgentInfoDetail>,
     isNew: boolean,
@@ -58,6 +69,7 @@ interface IProps {
   onNodesChanged?: (nodes: INode[]) => void;
   onRemoveNode?: (nodeId: string) => void;
   onRunWorkflow?: () => Promise<void>;
+  onStopWorkflow?: () => Promise<void>;
   extraControlBar?: React.ReactNode;
 }
 
@@ -74,9 +86,11 @@ export const Workflow = forwardRef(
       editWorkflow,
       editAgentOpen,
       isRunning,
+      isStopping,
       onCardClick,
       onNodesChanged,
       onRunWorkflow,
+      onStopWorkflow,
       onRemoveNode,
       extraControlBar,
     }: IProps,
@@ -120,9 +134,21 @@ export const Workflow = forwardRef(
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const { screenToFlowPosition } = useReactFlow();
     const [dragInfo] = useDnD();
-    console.log(dragInfo, "dragInfo===dragData");
     const nodesRef = useRef<INode[]>(nodes);
     const gaevatarListRef = useRef<IAgentInfoDetail[]>([]);
+
+    // History management
+    const {
+      canUndo,
+      canRedo,
+      undo,
+      redo,
+      pushState,
+      clearHistory,
+      initializeState,
+      updateFunction,
+    } = useHistory();
+    const isInitialized = useRef(false);
     useEffect(() => {
       nodesRef.current = nodes;
     }, [nodes]);
@@ -132,10 +158,10 @@ export const Workflow = forwardRef(
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
-      if (!editWorkflow?.workUnitRelations) return;
+      if (!editWorkflow?.workflowViewData) return;
 
       const { nodes, edges } = generateWorkflowGraph(
-        editWorkflow.workUnitRelations,
+        editWorkflow.workflowViewData,
         gaevatarListRef.current,
         onCardClick,
         deleteNode
@@ -144,11 +170,15 @@ export const Workflow = forwardRef(
         "useEffect===onNodesChanged",
         nodes,
         edges,
-        editWorkflow.workUnitRelations,
+        editWorkflow.workflowViewData,
         gaevatarListRef.current
       );
       setNodes(nodes);
       setEdges(edges);
+
+      // Clear history when loading new workflow
+      clearHistory();
+      isInitialized.current = false;
 
       // setNodes((prevNodes) => {
       //   const merged = [...nodes, ...prevNodes];
@@ -168,6 +198,7 @@ export const Workflow = forwardRef(
       editWorkflow,
       // deleteNode,
       onCardClick,
+      clearHistory,
       // setNodes,
       // setEdges,
     ]);
@@ -190,11 +221,31 @@ export const Workflow = forwardRef(
 
         return [...updateNodes];
       });
-    }, [gaevatarList]);
+    }, [gaevatarList, setNodes]);
 
     useUpdateEffect(() => {
       onNodesChanged?.(nodes);
-    }, [nodes, onNodesChanged]);
+    }, [nodes]);
+
+    useEffect(() => {
+      // Initialize history state on first load
+      if (!isInitialized.current && nodes.length > 0 && edges.length > 0) {
+        initializeState(nodes, edges);
+        isInitialized.current = true;
+        return;
+      }
+
+      // Record state changes in history
+      pushState(nodes, edges);
+    }, [nodes, edges, initializeState, pushState]);
+
+    // Update function references when they change
+    useEffect(() => {
+      // Update onCardClick function reference
+      if (onCardClick) {
+        // This will be handled by the function registry when functions are serialized
+      }
+    }, [onCardClick]);
 
     const getWorkUnitRelations: () => IWorkflowUnitListItem[] =
       useCallback(() => {
@@ -204,7 +255,7 @@ export const Workflow = forwardRef(
           const node = nodes[0];
           return [
             {
-              grainId: node.data.agentInfo.businessAgentGrainId,
+              grainId: node.id,
               nextGrainId: "",
               extendedData: {
                 xPosition: String(node.position.x),
@@ -214,13 +265,13 @@ export const Workflow = forwardRef(
           ];
         }
         const result = data.nodes.map((node) => {
-          const grainId = node.data.agentInfo.businessAgentGrainId;
+          const grainId = node.id;
 
           const nextGrainIds = data.edges
             .filter((edge) => edge.source === node.id)
             .map((edge) => {
               const targetNode = data.nodes.find((n) => n.id === edge.target);
-              return targetNode?.data.agentInfo.businessAgentGrainId || "";
+              return targetNode?.id || "";
             });
           // .filter((nextGrainId) => nextGrainId !== '');
 
@@ -274,7 +325,12 @@ export const Workflow = forwardRef(
         }
         setEdges((eds) => {
           console.log(eds, "eds==onConnect");
-          if(eds.find(item => item.source === params.target && item.target === params.source)) {
+          if (
+            eds.find(
+              (item) =>
+                item.source === params.target && item.target === params.source
+            )
+          ) {
             return eds;
           }
           return addEdge(
@@ -362,7 +418,7 @@ export const Workflow = forwardRef(
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     const nodeTypes = useMemo(
-      () => ({ ScanCard: ScanCardNode }),
+      () => ({ ScanCard: AevatarItem4Workflow }),
       [updaterList]
     );
 
@@ -386,6 +442,29 @@ export const Workflow = forwardRef(
       if (isRunningRef.current) return;
       await onRunWorkflow?.();
     }, [onRunWorkflow]);
+
+    const onStopHandler = useCallback(async () => {
+      if (isRunningRef.current) return;
+      await onStopWorkflow?.();
+    }, [onStopWorkflow]);
+
+    const onUndoHandler = useCallback(async () => {
+      console.log("onUndoHandler===");
+      const previousState = undo();
+      if (previousState) {
+        setNodes(previousState.nodes);
+        setEdges(previousState.edges);
+      }
+    }, [undo, setNodes, setEdges]);
+
+    const onRedoHandler = useCallback(async () => {
+      console.log("onRedoHandler===");
+      const nextState = redo();
+      if (nextState) {
+        setNodes(nextState.nodes);
+        setEdges(nextState.edges);
+      }
+    }, [redo, setNodes, setEdges]);
 
     return (
       <div
@@ -421,20 +500,91 @@ export const Workflow = forwardRef(
             <div className="sdk:absolute sdk:left-[15px] sdk:bottom-[130px] sdk:z-5">
               {extraControlBar}
             </div>
-            <Button
-              onClick={onRunningHandler}
-              className="sdk:z-10 sdk:absolute sdk:cursor-pointer sdk:hover:text-[#000] sdk:right-[16px] sdk:top-[12px] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
-              {isRunning ? (
-                <Loading
-                  key={"save"}
-                  className={clsx("aevatarai-loading-icon")}
-                  style={{ width: 14, height: 14 }}
-                />
-              ) : (
-                <Play />
-              )}
-              {isRunning ? "running" : "run"}
-            </Button>
+            <div className="sdk:absolute sdk:right-[16px] sdk:top-[12px] sdk:z-5 sdk:flex sdk:items-center sdk:gap-[8px]">
+              <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      className={clsx(
+                        "sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:p-[7px] sdk:border-[#303030]",
+                        !canUndo && "sdk:opacity-50 sdk:cursor-not-allowed"
+                      )}
+                      onClick={onUndoHandler}
+                      disabled={!canUndo}
+                      aria-label="undo">
+                      <Refresh />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className={clsx(
+                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                      "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                    )}
+                    side="top">
+                    undo
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      className={clsx(
+                        "sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:p-[7px] sdk:border-[#303030]",
+                        !canRedo && "sdk:opacity-50 sdk:cursor-not-allowed"
+                      )}
+                      onClick={onRedoHandler}
+                      disabled={!canRedo}
+                      aria-label="redo">
+                      <Refresh
+                        className=""
+                        style={{ transform: "scaleX(-1)" }}
+                      />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className={clsx(
+                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                      "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                    )}
+                    side="top">
+                    redo
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              <Button
+                onClick={onRunningHandler}
+                className="sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
+                {isRunning ? (
+                  <Loading
+                    key={"save"}
+                    className={clsx("aevatarai-loading-icon")}
+                    style={{ width: 14, height: 14 }}
+                  />
+                ) : (
+                  <Play />
+                )}
+                {isRunning ? "running" : "run"}
+              </Button>
+
+              <Button
+                onClick={onStopHandler}
+                className="sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
+                {isStopping ? (
+                  <Loading
+                    key={"save"}
+                    className={clsx("aevatarai-loading-icon")}
+                    style={{ width: 14, height: 14 }}
+                  />
+                ) : (
+                  <Stop />
+                )}
+                {isStopping ? "stopping" : "stop"}
+              </Button>
+            </div>
+
             {nodes.length === 0 && <Background />}
             <Controls />
             <MiniMap

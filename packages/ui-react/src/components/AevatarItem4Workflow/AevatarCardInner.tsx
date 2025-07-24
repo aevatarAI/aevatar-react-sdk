@@ -59,7 +59,7 @@ export default function AevatarCardInner({
           <div className="sdk:flex sdk:justify-between sdk:items-center sdk:pb-[9px]">
             <div
               className="sdk:font-outfit sdk:text-white sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
-            >{`${agentInfo?.name ?? "agent name"}`}</div>
+            >{`${agentInfo?.name || "agent name"}`}</div>
 
             {isNew ? (
               <DeleteWorkflowGAevatar handleDeleteClick={handleDeleteClick} />
@@ -86,15 +86,15 @@ export default function AevatarCardInner({
             let value = schema.value;
 
             let valueList = [value];
-            if (isNew) {
-              valueList = [];
-            } else if (value === undefined || value === null || value === "") {
+            if (value === undefined || value === null || value === "") {
               valueList = [null];
             } else if (schema.enum) {
               const valueIndex = schema.enum.indexOf(schema.value);
 
               value = schema["x-enumNames"]?.[valueIndex];
-              valueList = [typeof value === "string" ? value : JSON.stringify(value)];
+              valueList = [
+                typeof value === "string" ? value : JSON.stringify(value),
+              ];
               // const firstThree = value?.slice(0, 3);
               // const remainingCount = value?.length - 3;
 
@@ -119,7 +119,6 @@ export default function AevatarCardInner({
             } else {
               valueList = [value ?? ""];
             }
-            console.log(valueList, value, schema, propName, "valueList==");
 
             return (
               <div key={propName} className={clsx(isNew && "sdk:w-full")}>
@@ -171,14 +170,14 @@ export default function AevatarCardInner({
                     );
                   })}
                   {/* When isNew and valueList is empty, render a placeholder div for visual consistency */}
-                  {isNew && valueList.length === 0 && (
+                  {/* {isNew && valueList.length === 0 && (
                     <div
                       className={clsx(
                         "sdk:h-[23px] sdk:w-full sdk:bg-[#303030]",
                         schema.type !== "string" && "sdk:w-[100px]!"
                       )}
                     />
-                  )}
+                  )} */}
                 </div>
               </div>
             );

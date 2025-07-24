@@ -13,4 +13,5 @@ export * from "./context";
 export * from "./ui";
 export * from "./types";
 import "../index.css";
+export * from "./utils";
 export { default as FullScreenIcon } from "../assets/svg/fullscreen.svg?react";
