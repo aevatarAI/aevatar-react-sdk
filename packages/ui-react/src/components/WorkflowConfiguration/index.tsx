@@ -490,7 +490,7 @@ const WorkflowConfigurationInner = ({
                 />
               </DialogPortal>
             </Dialog>
-            <div className="sdk:min-w-[100%] sdk:pl-[8px] sdk:pr-[8px] sdk:pb-[8px]">
+            <div className="sdk:flex sdk:justify-center sdk:min-w-[100%] sdk:pl-[8px] sdk:pr-[8px] sdk:pb-[8px]">
               <ExecutionLogs
                 stateName="WorkflowExecutionRecordState"
                 workflowId={editWorkflow?.workflowAgentId}
