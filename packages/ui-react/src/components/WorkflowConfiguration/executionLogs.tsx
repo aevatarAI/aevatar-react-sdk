@@ -5,7 +5,6 @@ import ErrorIcon from "../../assets/svg/errorIcon.svg?react";
 import EmptyRun from "../../assets/svg/emptyRun.svg?react";
 import Close from "../../assets/svg/close.svg?react";
 import Browsers from "../../assets/svg/browsers.svg?react";
-import Search from "../../assets/svg/search.svg?react";
 import Clipboard from "../../assets/svg/clipboard.svg?react";
 import dayjs from "dayjs";
 import Copy from "../Copy";
@@ -46,8 +45,10 @@ export const useFetchExecutionLogs = ({
       try {
         setIsLoading(true);
 
+        const id = "26f52786-0aa7-4cf7-8599-f2c3d2ab92f0";
+
         const response = await fetch(
-          `/api/query/es?StateName=${stateName}&QueryString=workflowId:${workflowId}&&roundId:${roundId}`
+          `/api/query/es?StateName=${stateName}&QueryString=workflowId:${id}&&roundId:${roundId}`
         );
 
         const data = await response.json();
@@ -58,7 +59,14 @@ export const useFetchExecutionLogs = ({
             JSON.parse(d?.workUnitRecords)
           );
 
-          for (const record of records) {
+          const agentStates = data?.data?.items?.flatMap((d: any) =>
+            JSON.parse(d?.workUnitInfos)
+          );
+
+          for (let i = 0; i < records.length; i++) {
+            const record = records?.[i];
+            const agentState = agentStates?.[i];
+
             const inputData = JSON.parse(record.inputData);
             const outputData = JSON.parse(record.outputData);
             const executionTime = dayjs(record.endTime).diff(
@@ -74,15 +82,16 @@ export const useFetchExecutionLogs = ({
               inputData,
               outputData,
               executionTime,
+              agentState,
             };
 
             results.push(result);
           }
-
           setData(results);
         }
       } catch (e) {
         console.error(e);
+        setError("There was an error fetching data");
       } finally {
         setIsLoading(false);
       }
@@ -103,6 +112,7 @@ const DEFAULT = {
   agentName: "unknown",
   inputData: {},
   outputData: {},
+  agentState: {},
   executionTime: 783,
   status: "success",
 };
@@ -118,6 +128,7 @@ export const ExecutionLogs = ({
     roundId,
   });
   const [activeAgent, setActiveAgent] = useState(DEFAULT);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     if (data) {
@@ -125,13 +136,17 @@ export const ExecutionLogs = ({
     }
   }, [data]);
 
-  if (isLoading) {
+  if (isLoading || !isVisible) {
     return null;
   }
 
   return (
     <Wrapper>
-      <ExecutionLogHeader data={data} activeAgent={activeAgent} />
+      <ExecutionLogHeader
+        data={data}
+        activeAgent={activeAgent}
+        onToggle={setIsVisible}
+      />
       {data?.length > 0 ? (
         <ExecutionLogBody
           data={data}
@@ -149,6 +164,7 @@ interface Agent {
   agentName: string;
   inputData: any;
   outputData: any;
+  agentState: any;
   executionTime: number;
   status: string;
 }
@@ -156,11 +172,13 @@ interface Agent {
 interface IExecutionLogsHeaderProps {
   data: any;
   activeAgent: Agent;
+  onToggle: (callback: any) => void;
 }
 
 const ExecutionLogHeader = ({
   data,
   activeAgent,
+  onToggle,
 }: IExecutionLogsHeaderProps) => {
   const { agentName, executionTime, status } = activeAgent || {};
 
@@ -198,7 +216,13 @@ const ExecutionLogHeader = ({
           <button type="button">
             <Copy toCopy={JSON.stringify(activeAgent)} icon={<Browsers />} />
           </button>
-          <button type="button">
+          <button
+            type="button"
+            className="sdk:cursor-pointer"
+            onClick={() => {
+              onToggle((prev: boolean) => !prev);
+            }}
+          >
             <Close />
           </button>
         </span>
@@ -250,9 +274,6 @@ const ExecutionLogBody = ({
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[#B9B9B9] sdk:font-semibold">input</span>
             <span className="sdk:flex sdk:gap-2">
-              <button type="button" onClick={() => {}}>
-                <Search />
-              </button>
               <button type="button">
                 <Copy
                   toCopy={JSON.stringify(activeAgent?.inputData)}
@@ -266,9 +287,25 @@ const ExecutionLogBody = ({
 
         <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%]">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
+            <span className="sdk:text-[#B9B9B9] sdk:font-semibold">
+              agent state
+            </span>
+            <span className="sdk:flex sdk:gap-2">
+              <button type="button">
+                <Copy
+                  toCopy={JSON.stringify(activeAgent?.agentState)}
+                  icon={<Clipboard />}
+                />
+              </button>
+            </span>
+          </div>
+          <JsonView src={activeAgent?.agentState} className="sdk:text-[14px]" />
+        </div>
+
+        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%]">
+          <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[#B9B9B9] sdk:font-semibold">output</span>
             <span className="sdk:flex sdk:gap-2">
-              <Search />
               <button type="button">
                 <Copy
                   toCopy={JSON.stringify(activeAgent?.outputData)}
@@ -298,7 +335,7 @@ const Flex = ({ children }: { children: any }) => {
 
 const EmptyExecutionLog = () => {
   return (
-    <div className="sdk:flex sdk:items-center sdk:justify-center sdk:pt-[72.5px] sdk:pb-[72.5px]">
+    <div className="sdk:min-w-[100%] sdk:flex sdk:items-center sdk:justify-center sdk:pt-[72.5px] sdk:pb-[72.5px]">
       <div className="sdk:flex sdk:flex-col sdk:gap-4 sdk:items-center">
         <EmptyRun />
         <span className="sdk:text-[#6F6F6F] sdk:text-[13px]">

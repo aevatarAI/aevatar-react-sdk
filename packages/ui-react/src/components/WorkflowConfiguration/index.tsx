@@ -490,11 +490,13 @@ const WorkflowConfigurationInner = ({
                 />
               </DialogPortal>
             </Dialog>
-            <ExecutionLogs
-              stateName="WorkflowExecutionRecordState"
-              workflowId={editWorkflow?.workflowAgentId}
-              roundId={1}
-            />
+            <div className="sdk:min-w-[100%] sdk:pl-[8px] sdk:pr-[8px] sdk:pb-[8px]">
+              <ExecutionLogs
+                stateName="WorkflowExecutionRecordState"
+                workflowId={editWorkflow?.workflowAgentId}
+                roundId={1}
+              />
+            </div>
           </main>
         </div>
       </div>

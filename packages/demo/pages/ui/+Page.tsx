@@ -20,7 +20,6 @@ import type {
   IAgentsConfiguration,
 } from "@aevatar-react-sdk/services";
 import type { IWorkflowListRef } from "../../../ui-react/dist/types/src/components/WorkflowList";
-// import "../../monaco-setup";
 
 const LoginButton = clientOnly(
   () => import("../../components/auth/LoginButton")
@@ -39,7 +38,8 @@ const AuthButton = clientOnly(() => import("../../components/auth/AuthButton"));
 ConfigProvider.setConfig({
   requestDefaults: {
     timeout: 15000,
-    baseURL: "https://station-developer-dev-staging.aevatar.ai/tool-client",
+    baseURL:
+      "https://station-developer-dev-staging.aevatar.ai/developer-client",
   },
 });
 
@@ -56,7 +56,6 @@ export default function UI() {
   const [stage, setStage] = useState<Stage>();
   const [gaevatarList, setGaevatarList] = useState<IAgentInfoDetail[]>();
   const onNewGAevatar = useCallback(() => {
-    console.log("onNewGAevatar");
     setStage(Stage.newGAevatar);
   }, []);
 
@@ -70,7 +69,6 @@ export default function UI() {
 
   const onEditGaevatar = useCallback(async (id: string) => {
     const result = await aevatarAI.services.agent.getAgentInfo(id);
-    console.log(result, "result===onEditGaevatar");
     const agentTypeList = [result.agentType];
 
     setEditAgents({
@@ -355,17 +353,18 @@ export default function UI() {
   const [showAction, setShowAction] = useState<boolean>();
 
   const getTokenByclient = useCallback(async () => {
-    // await aevatarAI.getAuthTokenWithClient({
+    // const sdkToken = await aevatarAI.getAuthTokenWithClient({
     //   grant_type: "password",
     //   scope: "Aevatar",
-    //   username: "runulr@snapmail.cc", // "leotest@teml.net", // (import.meta as any).env.VITE_APP_SERVICE_USERNAME,
+    //   username: "leotest@teml.net", // "leotest@teml.net", // (import.meta as any).env.VITE_APP_SERVICE_USERNAME,
     //   client_id: "AevatarAuthServer",
-    //   password: "Aa1234!", //"Leo123!", //(import.meta as any).env.VITE_APP_SERVICE_PASSWORD,
+    //   password: "Leo123!", //"Leo123!", //(import.meta as any).env.VITE_APP_SERVICE_PASSWORD,
     // } as any);
+
+    const token = "";
     aevatarAI.fetchRequest.setHeaders({
       // authorization: sdkToken,
-      Authorization:
-        "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkJGRUI5QzEwMDMzNDJGNTdBQTMzOEM5RUI0MTAyRENFQzNEOEE2M0EiLCJ4NXQiOiJ2LXVjRUFNMEwxZXFNNHlldEJBdHpzUFlwam8iLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtcHJlLXN0YXRpb24tZGV2LXN0YWdpbmcuYWV2YXRhci5haS8iLCJleHAiOjE3NTI5OTY0ODUsImlhdCI6MTc1MjgyMzY4NiwiYXVkIjoiQWV2YXRhciIsInNjb3BlIjoiQWV2YXRhciBvZmZsaW5lX2FjY2VzcyIsImp0aSI6IjU0MWIyYTljLTFlYmEtNDhlNC04NWE0LWYzY2RjODcwNjg0ZSIsInN1YiI6ImUwYmEyYTA5LTlmNDMtYmE0MS1mN2M2LTNhMWFkNjIzNzVlOSIsInByZWZlcnJlZF91c2VybmFtZSI6InJ1bnVsciIsImVtYWlsIjoicnVudWxyQHNuYXBtYWlsLmNjIiwicm9sZSI6WyJiYXNpY1VzZXIiLCI5MzcyZjhmZC1hMTZiLWI0NDEtY2JlZC0zYTFiMDVkOGM0M2RfT3duZXIiLCI0YTc0MGJhYy0xNjA2LTU3NTgtZjRjMy0zYTFhZDYyNzI4NWRfT3duZXIiLCIyMGJkOWE3Mi1jOGM3LTJmZWItMmM1Zi0zYTFiMDVkMmJmOTlfT3duZXIiLCI0Nzk5YTVmMS0yZjVmLWYwODctMDNkZC0zYTFiMDVkNzgyZTJfT3duZXIiLCJkM2E5ZWMzMS1lNGQ4LWY4ZDctMDM5Ni0zYTFiMDVkZGM4YzNfT3duZXIiXSwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjoiRmFsc2UiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwidW5pcXVlX25hbWUiOiJydW51bHIiLCJzZWN1cml0eV9zdGFtcCI6IlFITDNHVFZIMkVVT0FHNEpGSUlXVVczVVNKWFRRNERKIiwib2lfcHJzdCI6IkFldmF0YXJBdXRoU2VydmVyIiwib2lfYXVfaWQiOiIwN2QwZDA3MS1mMmU3LTVhNzEtOGNmNS0zYTFiMjM4OGRiMzQiLCJjbGllbnRfaWQiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX3Rrbl9pZCI6ImRlMTE3M2VkLTc0ZmItZmI0My1kOTAyLTNhMWIyZTliYmViZSJ9.Ae2wSpHTM5XXdAVAEj8gpqozYv55txXljB5FosspPhmEf3IPVJQ5Z-QRDGKcozn5i_p2hBkklCKiF7Ytb14MHdQEjy8xj16d2MYV93_Ir0KQveyLVZK2tT0-axwHjtuUtZJ-uwHiD3kKlJxIh3AZqOFZa_XzR_cTSwDpTXxOLQfyenkeV2zCPtPbSxcnt2_e2WVbjMnMSaOVmRZWlWpMsHW_xulxBh2NaqY1oR9sMHpn7GNghOoN5kb9_MlmJ81__45PDJuEq9vK9aAkdI1pD0jH-JXtryZdTirickAXFSMJWTw6vkI8P-FueWovjJjTwJaAGlp8uZCN17EP1cjntg",
+      Authorization: token,
     });
     setShowAction(true);
   }, []);
