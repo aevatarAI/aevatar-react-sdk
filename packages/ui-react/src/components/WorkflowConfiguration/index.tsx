@@ -37,6 +37,7 @@ import { basicWorkflow } from "../context/WorkflowProvider/actions";
 import { DndProvider as ReactDndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { SidebarSheet } from "./SidebarSheet";
 
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
@@ -355,6 +356,8 @@ const WorkflowConfigurationInner = ({
     getWorkflowStateLoop,
   ]);
 
+  const [sidebarContainer, setSidebarContainer] = React.useState(null);
+
   return (
     <>
       <div className="sdk:h-full sdk:workflow-common flex flex-col sdk:font-outfit">
@@ -364,8 +367,7 @@ const WorkflowConfigurationInner = ({
             className={clsx(
               "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-outfit sdk:workflow-title sdk:flex-wrap",
               "sdk:items-center"
-            )}
-          >
+            )}>
             {onBack && (
               <BackArrow
                 role="img"
@@ -416,8 +418,7 @@ const WorkflowConfigurationInner = ({
                 "sdk:workflow-title-button-save sdk:cursor-pointer sdk:h-[30px]",
                 (editAgentOpen || isRunning) &&
                   "sdk:workflow-title-button-save-disabled"
-              )}
-            >
+              )}>
               {btnLoading && (
                 <Loading
                   key={"save"}
@@ -433,16 +434,19 @@ const WorkflowConfigurationInner = ({
 
         <div
           className="sdk:flex sdk:sm:h-[calc(100%-70px)] sdk:flex-1 sdk:relative sdk:sm:flex-row sdk:flex-col"
-          ref={setContainer}
-        >
+          ref={setContainer}>
           {/* Sidebar */}
-          {sidebarConfig.type === "newAgent" && (
-            <SidebarWithNewAgent
-              disabled={isRunning}
-              gaevatarTypeList={sidebarConfig?.gaevatarTypeList}
-              hiddenGAevatarType={hiddenGAevatarType}
-            />
-          )}
+          <div className="sdk:relative" ref={setSidebarContainer}>
+            {sidebarConfig.type === "newAgent" && (
+              <SidebarSheet
+                container={sidebarContainer}
+                disabled={isRunning}
+                gaevatarTypeList={sidebarConfig?.gaevatarTypeList}
+                hiddenGAevatarType={hiddenGAevatarType}
+              />
+            )}
+          </div>
+
           {(!sidebarConfig.type || sidebarConfig.type === "allAgent") && (
             <Sidebar
               disabled={isRunning}
@@ -474,8 +478,7 @@ const WorkflowConfigurationInner = ({
               onOpenChange={(v) => {
                 console.log(v, "editAgentOpen=onClickWorkflowItem");
                 // setEditAgentOpen(v);
-              }}
-            >
+              }}>
               <DialogPortal container={container} asChild>
                 {/* <DialogOverlay /> */}
                 <WorkflowDialog
@@ -527,8 +530,7 @@ export default function WorkflowConfiguration(
     <ReactFlowProvider>
       <ReactDndProvider
         backend={isMobile ? TouchBackend : HTML5Backend}
-        options={isMobile ? { enableMouseEvents: true } : undefined}
-      >
+        options={isMobile ? { enableMouseEvents: true } : undefined}>
         <DnDProvider>
           <WorkflowProvider>
             <WorkflowConfigurationInner {...props} />
