@@ -361,10 +361,9 @@ export default function UI() {
     //   password: "Leo123!", //"Leo123!", //(import.meta as any).env.VITE_APP_SERVICE_PASSWORD,
     // } as any);
 
-    const token = "";
     aevatarAI.fetchRequest.setHeaders({
       // authorization: sdkToken,
-      Authorization: token,
+      Authorization: "<YOUR_TOKEN>",
     });
     setShowAction(true);
   }, []);

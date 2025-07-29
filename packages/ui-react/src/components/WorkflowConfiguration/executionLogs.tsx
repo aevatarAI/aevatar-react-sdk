@@ -6,6 +6,7 @@ import EmptyRun from "../../assets/svg/emptyRun.svg?react";
 import Close from "../../assets/svg/close.svg?react";
 import Browsers from "../../assets/svg/browsers.svg?react";
 import Clipboard from "../../assets/svg/clipboard.svg?react";
+import Clock from "../../assets/svg/clock.svg?react";
 import dayjs from "dayjs";
 import Copy from "../Copy";
 import { useEffect, useState } from "react";
@@ -45,10 +46,8 @@ export const useFetchExecutionLogs = ({
       try {
         setIsLoading(true);
 
-        const id = "26f52786-0aa7-4cf7-8599-f2c3d2ab92f0";
-
         const response = await fetch(
-          `/api/query/es?StateName=${stateName}&QueryString=workflowId:${id}&&roundId:${roundId}`
+          `/api/query/es?StateName=${stateName}&QueryString=workflowId:${workflowId}&&roundId:${roundId}`
         );
 
         const data = await response.json();
@@ -136,8 +135,12 @@ export const ExecutionLogs = ({
     }
   }, [data]);
 
-  if (isLoading || !isVisible) {
+  if (isLoading) {
     return null;
+  }
+
+  if (!isVisible) {
+    return <ToggleModal onToggle={setIsVisible} />;
   }
 
   return (
@@ -343,5 +346,24 @@ const EmptyExecutionLog = () => {
         </span>
       </div>
     </div>
+  );
+};
+
+interface ToggleModalProps {
+  onToggle: (callback: any) => void;
+}
+
+const ToggleModal = ({ onToggle }: ToggleModalProps) => {
+  return (
+    <button
+      type="button"
+      className="sdk:flex sdk:gap-[5px] sdk:items-center sdk:pt-[8px] sdk:pb-[8px] sdk:pl-[18px] sdk:pr-[18px] sdk:border sdk:border-[#303030] sdk:cursor-pointer"
+      onClick={() => {
+        onToggle((prev) => !prev);
+      }}
+    >
+      <Clock />
+      <span>execution log</span>
+    </button>
   );
 };
