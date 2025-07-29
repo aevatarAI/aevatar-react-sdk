@@ -92,8 +92,10 @@ const SelectPrimitiveViewport: React.ElementType = SelectPrimitive.Viewport;
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content> &
-    React.HTMLAttributes<HTMLDivElement>
->(({ className, children, position = "popper", ...props }, ref) => (
+    React.HTMLAttributes<HTMLDivElement>& {
+      align?: "center" | "start" | "end";
+    }
+>(({ className, children, position = "popper", align= 'center', ...props }, ref) => (
   <SelectPrimitive.Portal>
     <SelectPrimitiveContent
       ref={ref}
@@ -105,6 +107,7 @@ const SelectContent = React.forwardRef<
         className
       )}
       position={position}
+      align={align}
       {...props}>
       {/* <SelectScrollUpButton /> */}
       <SelectPrimitiveViewport

@@ -28,7 +28,9 @@ import { renderSchemaField } from "../utils/renderSchemaField";
 import { useUpdateEffect } from "react-use";
 
 export interface IWorkflowAevatarEditProps {
-  agentItem?: Partial<IAgentInfoDetail>;
+  agentItem?: Partial<
+    IAgentInfoDetail & { defaultValues?: Record<string, any[]> }
+  >;
   isNew?: boolean;
   nodeId?: string;
   disabled?: boolean;
@@ -80,9 +82,10 @@ export default function WorkflowAevatarEdit({
   const JSONSchemaProperties: [string, JSONSchemaType<any>][] = useMemo(() => {
     return jsonSchemaParse(
       agentItem?.propertyJsonSchema,
-      agentItem?.properties
+      agentItem?.properties,
+      isNew ? agentItem?.defaultValues : undefined
     );
-  }, [agentItem]);
+  }, [agentItem, isNew]);
 
   const agentTypeList = useMemo(
     () => (agentItem?.agentType ? [agentItem?.agentType] : []),
@@ -195,9 +198,11 @@ export default function WorkflowAevatarEdit({
                       // }}
                     >
                       <FormControl>
-                        <SelectTrigger 
+                        <SelectTrigger
                           aria-disabled={field?.disabled}
-                          className={clsx(field?.disabled && "sdk:bg-[#303030]")}>
+                          className={clsx(
+                            field?.disabled && "sdk:bg-[#303030]"
+                          )}>
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                       </FormControl>

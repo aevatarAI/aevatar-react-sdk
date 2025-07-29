@@ -79,6 +79,7 @@ export default function SidebarWithNewAgent({
               key={ele?.agentType}
               disabled={disabled}
               agentType={ele?.agentType}
+              defaultValues={ele?.defaultValues}
               propertyJsonSchema={ele?.propertyJsonSchema}
               description={(ele as any)?.description || ele?.fullName}
             />
