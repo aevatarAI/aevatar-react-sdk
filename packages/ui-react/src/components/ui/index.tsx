@@ -10,4 +10,5 @@ export * from "./checkbox";
 export * from "./datepicker";
 export * from "./calendar";
 export * from "./popover";
+export * from "./sheet";
 export { default as SearchBar } from "./SearchBar";
