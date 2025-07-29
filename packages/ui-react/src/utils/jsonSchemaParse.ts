@@ -182,3 +182,13 @@ export const jsonSchemaParse = (
     ];
   });
 };
+
+export const getPropertiesByDefaultValues = (
+  defaultValues?: Record<string, any[]>
+) => {
+  const properties = {};
+  Object.entries(defaultValues ?? {}).forEach(([key, value]) => {
+    properties[key] = value[0];
+  });
+  return properties;
+};

@@ -19,6 +19,7 @@ import { AgentError } from "../../constants/error/agentError";
 import DeleteGAevatarConfirm from "../DeleteGAevatarConfirm";
 import clsx from "clsx";
 import Loading from "../../assets/svg/loading.svg?react";
+import { IS_NULL_ID } from "../../constants";
 
 export interface IWorkflowListProps {
   className?: string;
@@ -49,7 +50,7 @@ export default forwardRef(function WorkflowList(
           pageIndex,
           pageSize: 100,
           agentType:
-            "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
+            "Aevatar.GAgents.GroupChat.GAgent.Coordinator.WorkflowView.WorkflowViewGAgent",
         });
       } catch (error) {
         break;
@@ -82,29 +83,37 @@ export default forwardRef(function WorkflowList(
         return;
       }
 
-      const idList = allList.map((item) => item.id);
+      const idList = allList
+        .map((item) => item.properties?.workflowCoordinatorGAgentId)
+        .filter((item) => item && item !== IS_NULL_ID);
       // const workflowAgentMap = new Map<string, IAgentInfoDetail>();
       // allList.forEach((item) => {
       //   workflowAgentMap.set(item.id, item);
       // });
-      const queryString = `_id:${idList.join(" OR ")}`;
-      const workflowList =
-        await aevatarAI.services.workflow.getWorkflow<IWorkflowCoordinatorState>(
-          {
-            stateName: "WorkflowCoordinatorState",
-            queryString,
-          }
-        );
       const workflowListAgentInfoMap = new Map<
         string,
         IWorkflowCoordinatorState
       >();
-      workflowList.items.forEach((item) => {
-        workflowListAgentInfoMap.set(item.blackboardId, item);
-      });
+
+      if (idList.length) {
+        const queryString = `_id:${idList.join(" OR ")}`;
+        const workflowList =
+          await aevatarAI.services.workflow.getWorkflow<IWorkflowCoordinatorState>(
+            {
+              stateName: "WorkflowCoordinatorState",
+              queryString,
+            }
+          );
+
+        workflowList.items.forEach((item) => {
+          workflowListAgentInfoMap.set(item.blackboardId, item);
+        });
+      }
 
       const workflowListWithAgentInfo = allList.map((item) => {
-        const agentInfo = workflowListAgentInfoMap.get(item.id);
+        const agentInfo = workflowListAgentInfoMap.get(
+          item.properties?.workflowCoordinatorGAgentId
+        );
         return {
           ...item,
           ...agentInfo,
@@ -185,7 +194,6 @@ export default forwardRef(function WorkflowList(
 
   const onDeleteWorkflow = useCallback(
     async (workflow: IWorkflowCoordinatorState & IAgentInfoDetail) => {
-      console.log(workflow, "onDeleteWorkflow");
       deleteWorkflowIdRef.current = workflow.id;
       onDelete();
     },
@@ -213,8 +221,6 @@ export default forwardRef(function WorkflowList(
       dismiss();
 
       await onDelete();
-
-      console.log(result, "result==removeAllSubAgent");
     } catch (error) {
       console.error("removeAllSubAgent:", error);
       dismiss();
@@ -224,7 +230,6 @@ export default forwardRef(function WorkflowList(
         duration: 3000,
       });
     }
-    console.log("onDeleteConfirm");
   }, [onDelete, toast]);
 
   return (

@@ -186,7 +186,6 @@ export default function WorkflowAevatarEdit({
   const actualSubmit = useCallback((values: any) => {
     // Get current form values inside function to avoid frequent triggers
     const currentFormValues = values;
-    console.log(currentFormValues, "currentFormValues==", agentItemRef.current?.properties);
     // Calculate JSONSchemaProperties inside function to avoid dependency issues
     const currentJSONSchemaProperties = jsonSchemaParse(
       agentItemRef.current?.propertyJsonSchema,
@@ -220,17 +219,20 @@ export default function WorkflowAevatarEdit({
   }, []);
 
   // Debounced submit function with actual debounce logic
-  const debouncedSubmit = useCallback((values: any) => {
-    // Clear previous timer
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
+  const debouncedSubmit = useCallback(
+    (values: any) => {
+      // Clear previous timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
 
-    // Set new timer for debounced execution
-    debounceTimerRef.current = setTimeout(() => {
-      actualSubmit(values);
-    }, 500); // 500ms debounce delay
-  }, [actualSubmit]);
+      // Set new timer for debounced execution
+      debounceTimerRef.current = setTimeout(() => {
+        actualSubmit(values);
+      }, 500); // 500ms debounce delay
+    },
+    [actualSubmit]
+  );
 
   // Use form.subscribe to listen to form changes
   useEffect(() => {

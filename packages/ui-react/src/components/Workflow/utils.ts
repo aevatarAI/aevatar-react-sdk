@@ -1,16 +1,17 @@
 import type {
   IAgentInfoDetail,
-  IWorkflowNode,
-  IWorkflowUnitListItem,
+  IAgentsConfiguration,
   IWorkflowViewDataParams,
 } from "@aevatar-react-sdk/services";
 import type { Edge, INode, TDeleteNode, TNodeDataClick } from "./types";
+import { IS_NULL_ID } from "../../constants";
 let id = 0;
 const getId = () => `edge_id_${id++}`;
 
 export const generateWorkflowGraph = (
   workflowViewData: IWorkflowViewDataParams,
   agentInfos: IAgentInfoDetail[],
+  gaevatarTypeList: IAgentsConfiguration[],
   onClick: TNodeDataClick,
   deleteNode: TDeleteNode
 ): { nodes: INode[]; edges: Edge[] } => {
@@ -22,29 +23,38 @@ export const generateWorkflowGraph = (
     agentInfoMap.set(agent.id, agent);
   }
 
-  const workflowNodeListMap: Map<string, IWorkflowNode> = new Map();
-  for (const node of workflowViewData.properties.workflowNodeList) {
-    workflowNodeListMap.set(node.nodeId, node);
-  }
+  // First, create all nodes from workflowNodeList
+  for (const workflowNode of workflowViewData.properties.workflowNodeList) {
+    const nodeAgentId =
+      !workflowNode?.agentId || workflowNode?.agentId === IS_NULL_ID
+        ? workflowNode.nodeId
+        : workflowNode.agentId;
 
-  for (const node of workflowViewData.properties.workflowNodeUnitList) {
-    const nodeAgent = workflowNodeListMap.get(node.nodeId);
-    let agentInfo = agentInfoMap.get(nodeAgent?.nodeId);
+    const nodeId = workflowNode.nodeId;
+
+    const jsonSchema = gaevatarTypeList.find(
+      (v) => v.agentType === workflowNode.agentType
+    )?.propertyJsonSchema;
+
+    let agentInfo = agentInfoMap.get(nodeAgentId);
     if (!agentInfo) {
       agentInfo = {
-        ...nodeAgent,
-        id: nodeAgent?.nodeId,
-        businessAgentGrainId: nodeAgent?.nodeId,
-        agentGuid: nodeAgent?.nodeId,
+        id: nodeAgentId,
+        businessAgentGrainId: nodeAgentId,
+        agentGuid: nodeAgentId,
+        propertyJsonSchema: jsonSchema,
+        ...workflowNode,
       };
     }
 
+    agentInfo.propertyJsonSchema = jsonSchema;
+
     nodes.push({
-      id: agentInfo.id,
+      id: nodeId,
       type: "ScanCard",
       position: {
-        x: Number(nodeAgent?.extendedData?.xPosition),
-        y: Number(nodeAgent?.extendedData?.yPosition),
+        x: Number(workflowNode.extendedData?.xPosition),
+        y: Number(workflowNode.extendedData?.yPosition),
       },
       data: {
         label: "ScanCard Node",
@@ -58,25 +68,27 @@ export const generateWorkflowGraph = (
         height: 301,
       },
     });
+  }
 
-    if (node.nextNodeId) {
-      const targetAgent = workflowNodeListMap.get(node.nextNodeId);
-      let targetAgentInfo = agentInfoMap.get(targetAgent?.nodeId);
-      if (!targetAgentInfo) {
-        targetAgentInfo = {
-          id: targetAgent?.nodeId,
-          businessAgentGrainId: targetAgent?.nodeId,
-          agentGuid: targetAgent?.nodeId,
-          ...targetAgent,
-        };
-      }
+  // Then, create edges from workflowNodeUnitList
+  for (const nodeUnit of workflowViewData.properties.workflowNodeUnitList) {
+    if (nodeUnit.nextNodeId) {
+      const sourceAgentId =
+        !nodeUnit?.nodeId || nodeUnit?.nodeId === IS_NULL_ID
+          ? nodeUnit.nodeId
+          : nodeUnit.nodeId;
+      const targetAgentId =
+        !nodeUnit?.nextNodeId || nodeUnit?.nextNodeId === IS_NULL_ID
+          ? nodeUnit.nextNodeId
+          : nodeUnit.nextNodeId;
 
+      // Create edge between source and target nodes
       edges.push({
-        id: `edge__${agentInfo.id}__${targetAgentInfo.id}__${getId()}`,
+        id: `edge__${sourceAgentId}__${targetAgentId}__${getId()}`,
         type: "bezier",
-        source: agentInfo.id,
+        source: sourceAgentId,
         sourceHandle: "b",
-        target: targetAgentInfo.id,
+        target: targetAgentId,
         style: {
           strokeWidth: 2,
           stroke: "#B9B9B9",

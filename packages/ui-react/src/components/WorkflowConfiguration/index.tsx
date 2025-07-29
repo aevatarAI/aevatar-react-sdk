@@ -5,9 +5,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Button, Dialog, DialogPortal } from "../ui";
+import { Dialog, DialogPortal } from "../ui";
 import { type IWorkflowInstance, Workflow } from "../Workflow";
-import { ReactFlowProvider } from "@xyflow/react";
+import { type Edge, ReactFlowProvider } from "@xyflow/react";
 import { DnDProvider } from "../Workflow/DnDContext";
 import WorkflowDialog from "./dialog";
 import BackArrow from "../../assets/svg/back-arrow.svg?react";
@@ -19,14 +19,13 @@ import type {
   IAgentInfo,
   IAgentInfoDetail,
   IAgentsConfiguration,
+  IWorkflowNode,
   IWorkflowViewDataParams,
 } from "@aevatar-react-sdk/services";
 import { WorkflowStatus } from "@aevatar-react-sdk/services";
 import type { IWorkflowAevatarEditProps } from "../WorkflowAevatarEdit";
 import { sleep } from "@aevatar-react-sdk/utils";
-import Loading from "../../assets/svg/loading.svg?react";
 import { aevatarAI } from "../../utils";
-import { handleErrorMessage } from "../../utils/error";
 import { useToast } from "../../hooks/use-toast";
 import type { INode } from "../Workflow/types";
 import clsx from "clsx";
@@ -42,28 +41,23 @@ import { TouchBackend } from "react-dnd-touch-backend";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { getWorkflowViewDataByUnit } from "../utils";
 import dayjs from "dayjs";
+import { IS_NULL_ID } from "../../constants";
 
+export interface IWorkflowConfigurationState {
+  workflowAgentId: string;
+  workflowId?: string;
+  workflowName: string;
+  workflowViewData: IWorkflowViewDataParams;
+}
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
     gaevatarList?: IAgentInfoDetail[];
     gaevatarTypeList?: IAgentsConfiguration[];
     isNewGAevatar?: boolean;
   };
-  editWorkflow?: {
-    workflowAgentId: string;
-    workflowName: string;
-    workflowViewData: IWorkflowViewDataParams;
-  };
+  editWorkflow?: IWorkflowConfigurationState;
   extraControlBar?: React.ReactNode;
   onBack?: () => void;
-  // onSave?: (
-  //   workflowAgentId: string,
-  //   {
-  //     workflowViewData,
-  //     workflowName,
-  //   }: { workflowViewData: IWorkflowViewDataParams; workflowName: string }
-  // ) => void;
-  // onGaevatarChange: IWorkflowAevatarEditProps["onGaevatarChange"];
 }
 
 const WorkflowConfigurationInner = ({
@@ -119,7 +113,6 @@ IWorkflowConfigurationProps) => {
 
   const onClickWorkflowItem = useCallback(
     (data: Partial<IAgentInfoDetail>, isNew: boolean, nodeId: string) => {
-      console.log(data.properties, "data===onClickWorkflowItem");
       dispatch(
         basicWorkflow.setSelectedAgent.actions({ agent: data, isNew, nodeId })
       );
@@ -156,6 +149,12 @@ IWorkflowConfigurationProps) => {
   const [workflowName, setWorkflowName] = useState<string>(
     editWorkflow?.workflowName ?? "untitled_workflow"
   );
+  const [nodeList, setNodeList] = useState<INode[]>();
+  const nodeListRef = useRef<INode[]>();
+  useEffect(() => {
+    nodeListRef.current = nodeList;
+  }, [nodeList]);
+
   const isSaveRef = useRef<boolean>(true);
 
   useUpdateEffect(() => {
@@ -163,18 +162,9 @@ IWorkflowConfigurationProps) => {
   }, [editWorkflow?.workflowName]);
 
   const publishWorkflow = useCallback(
-    async ({
-      agentId,
-      eventProperties,
-    }: {
-      agentId: string;
-      eventProperties: any;
-    }) => {
+    async ({ agentId }: { agentId: string }) => {
       try {
-        await aevatarAI.services.workflow.publishWorkflowViewData({
-          agentId,
-          eventProperties,
-        });
+        return aevatarAI.services.workflow.publishWorkflowViewData(agentId);
       } catch (error) {
         console.error("publishWorkflow error:", error);
       }
@@ -185,7 +175,11 @@ IWorkflowConfigurationProps) => {
   const getWorkflowViewData = useCallback(async () => {
     const workUnitRelations = workflowRef.current.getWorkUnitRelations();
     const { workflowNodeList, workflowNodeUnitList } =
-      getWorkflowViewDataByUnit(gaevatarList, workUnitRelations);
+      getWorkflowViewDataByUnit(
+        gaevatarListRef.current,
+        workUnitRelations,
+        nodeListRef.current
+      );
     return {
       name: workflowName,
       properties: {
@@ -194,61 +188,99 @@ IWorkflowConfigurationProps) => {
         name: workflowName,
       },
     };
-  }, [gaevatarList, workflowName]);
+  }, [workflowName]);
+
+  const updateNodeList = useCallback((nodeList: IWorkflowNode[]) => {
+    setNodeList((n) => {
+      return n?.map((item) => {
+        const node = nodeList.find((v) => v.nodeId === item.id);
+        if (node)
+          item.data.agentInfo = {
+            ...item.data.agentInfo,
+            ...node,
+            id: node.agentId || item.data.agentInfo.id,
+          };
+        return item;
+      });
+    });
+  }, []);
 
   const onSaveHandler = useCallback(async () => {
     const workflowViewData = await getWorkflowViewData();
     let result: IAgentInfo;
-    if (editWorkflow?.workflowAgentId) {
+
+    const workflowId = newWorkflowState?.workflowId || editWorkflow?.workflowId;
+
+    if (newWorkflowState?.workflowAgentId || editWorkflow?.workflowAgentId) {
+      const updateParam: any = { ...workflowViewData };
+      updateParam.properties.workflowCoordinatorGAgentId = workflowId;
+
       result = await aevatarAI.services.workflow.updateWorkflowViewData(
-        editWorkflow.workflowAgentId,
-        workflowViewData
+        newWorkflowState?.workflowAgentId || editWorkflow?.workflowAgentId,
+        updateParam
       );
     } else {
+      if (
+        !workflowViewData.properties.workflowNodeList.length &&
+        !workflowViewData.properties.workflowNodeUnitList.length
+      ) {
+        throw new Error("workflowNodeList or workflowNodeUnitList is empty");
+      }
       result = await aevatarAI.services.workflow.createWorkflowViewData(
         workflowViewData
       );
     }
-    console.log(result, "result===");
 
-    await publishWorkflow({ agentId: result.id, eventProperties: {} });
+    const newState = {
+      workflowAgentId: result.id,
+      workflowViewData,
+      workflowName: workflowViewData.name,
+    };
+    setNewWorkflowState((v) => ({ ...v, ...newState }));
+
+    const publishResult = await publishWorkflow({ agentId: result.id });
+    updateNodeList(publishResult.properties.workflowNodeList);
+    setNewWorkflowState((v) => ({
+      ...v,
+      workflowId: publishResult.properties.workflowCoordinatorGAgentId,
+    }));
     return {
       workflowAgentId: result.id,
       workflowViewData,
       workflowName: workflowViewData.name,
     };
-  }, [getWorkflowViewData, publishWorkflow, editWorkflow?.workflowAgentId]);
-
-  const onSave = useCallback(async () => {
-    try {
-      const result = await onSaveHandler();
-      setNewWorkflowState(result);
-    } catch (error) {
-      console.error("onSaveWorkflow error:", error);
-    }
-  }, [onSaveHandler]);
+  }, [
+    getWorkflowViewData,
+    publishWorkflow,
+    newWorkflowState,
+    editWorkflow,
+    updateNodeList,
+  ]);
 
   // Auto save with debounce when nodeList changes
   const autoSaveTimerRef = useRef<NodeJS.Timeout>();
-  const onSaveRef = useRef(onSave);
+  const onSaveRef = useRef(onSaveHandler);
 
   // Update ref when onSave changes
   useEffect(() => {
-    onSaveRef.current = onSave;
-  }, [onSave]);
+    onSaveRef.current = onSaveHandler;
+  }, [onSaveHandler]);
 
   const debouncedAutoSave = useCallback(() => {
     if (autoSaveTimerRef.current) {
       clearTimeout(autoSaveTimerRef.current);
     }
+    isSaveRef.current = false;
     autoSaveTimerRef.current = setTimeout(async () => {
       try {
         await onSaveRef.current();
         setAutoSavedTime(Date.now());
+        isSaveRef.current = true;
       } catch (error) {
         console.error("Auto save failed:", error);
+        isSaveRef.current = false;
       }
-    }, 7000); // 7 seconds delay
+    }, 5000); // 7 seconds delay
   }, []); // No dependencies to prevent recreation
 
   // Cleanup timer on unmount
@@ -260,12 +292,17 @@ IWorkflowConfigurationProps) => {
     };
   }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    debouncedAutoSave();
+  }, [debouncedAutoSave, workflowName]);
+
   const onConfirmSaveHandler = useCallback(
     (saved?: boolean) => {
       if (!saved) return onBack?.();
-      return onSave?.();
+      return onSaveHandler?.();
     },
-    [onBack, onSave]
+    [onBack, onSaveHandler]
   );
 
   // TODO: mock api create gaevatar
@@ -288,7 +325,6 @@ IWorkflowConfigurationProps) => {
           else newList.push(agentInfo);
           return newList;
         });
-        console.log(agentInfo, "agentInfo===");
         dispatch(
           basicWorkflow.setSelectedAgent.actions({
             agent: agentInfo,
@@ -305,10 +341,7 @@ IWorkflowConfigurationProps) => {
     useCallback(
       async (...params) => {
         const nodeId = params[2];
-        console.log(
-          params[1].params.properties,
-          "params===onDefaultGaevatarChange"
-        );
+
         const result = await onGaevatarChange(...params);
 
         if (!result) return;
@@ -327,7 +360,6 @@ IWorkflowConfigurationProps) => {
       [onGaevatarChange]
     );
 
-  const [, setNodeList] = useState<INode[]>();
   const onUnsavedBack = useCallback(() => {
     if (!isSaveRef.current) {
       setUnsavedModal(true);
@@ -338,8 +370,19 @@ IWorkflowConfigurationProps) => {
 
   const onNodesChanged = useCallback(
     (nodes: INode[]) => {
-      console.log(nodes, "nodes===onNodesChanged");
-      setNodeList(nodes);
+      setNodeList((n) => {
+        return nodes.map((item) => {
+          const node = n?.find((v) => v?.id === item?.id);
+          if (
+            node &&
+            (item.data.agentInfo.id === item.id || !item.data.agentInfo.id)
+          ) {
+            item.data.agentInfo.id =
+              node.data.agentInfo.id || item.data.agentInfo.id;
+          }
+          return item;
+        });
+      });
       const isHasNode = nodes.some((i) => {
         return i.id === selectAgentInfo?.nodeId;
       });
@@ -360,15 +403,23 @@ IWorkflowConfigurationProps) => {
     );
   }, [gaevatarList, selectAgentInfo?.nodeId, selectAgentInfo?.agent]);
 
-  console.log(selectAgent, "selectAgent===");
-
   const { getWorkflowState } = useWorkflowState();
+  const looperWorkflowIdRef = useRef<string>();
+
+  useEffect(() => {
+    return () => {
+      looperWorkflowIdRef.current = undefined;
+    };
+  }, []);
+
   const getWorkflowStateLoop = useCallback(
     async (workflowAgentId: string, term: number) => {
       let workflowStatus = WorkflowStatus.pending;
       let currentTerm = term;
+      looperWorkflowIdRef.current = workflowAgentId;
       while (workflowStatus === WorkflowStatus.pending) {
         try {
+          if (looperWorkflowIdRef.current !== workflowAgentId) return;
           await sleep(1500);
           const workflowState = await getWorkflowState(workflowAgentId);
           if (!workflowState) throw "workflow not found";
@@ -389,9 +440,9 @@ IWorkflowConfigurationProps) => {
   const [isRunning, setIsRunning] = useState(false);
   const [isStopping, setIsStopping] = useState(false);
   useEffect(() => {
-    if (editWorkflow?.workflowAgentId) {
+    if (editWorkflow?.workflowId) {
       try {
-        getWorkflowState(editWorkflow.workflowAgentId).then((res) => {
+        getWorkflowState(editWorkflow.workflowId).then((res) => {
           if (res?.workflowStatus === WorkflowStatus.running) {
             setIsRunning(true);
           }
@@ -400,10 +451,9 @@ IWorkflowConfigurationProps) => {
         console.error("getWorkflowState error:", error);
       }
     }
-  }, [editWorkflow?.workflowAgentId, getWorkflowState]);
+  }, [editWorkflow?.workflowId, getWorkflowState]);
 
   const onRunWorkflow = useCallback(async () => {
-    console.log("onRunWorkflow===");
     try {
       setIsRunning(true);
       const workUnitRelations = workflowRef.current.getWorkUnitRelations();
@@ -415,14 +465,13 @@ IWorkflowConfigurationProps) => {
         });
         return;
       }
-      let workflowAgentId =
-        editWorkflow?.workflowAgentId ?? newWorkflowState?.workflowAgentId;
-      if (!workflowAgentId) {
+      let workflowId = editWorkflow?.workflowId ?? newWorkflowState?.workflowId;
+      if (!workflowId) {
         // TODO auto save and publish workflow
         const result = await onSaveHandler();
-        workflowAgentId = result.workflowAgentId;
+        workflowId = result.workflowAgentId;
       }
-      const workflowState = await getWorkflowState(workflowAgentId);
+      const workflowState = await getWorkflowState(workflowId);
       if (!workflowState) throw "workflow not found";
       if (workflowState.workflowStatus === WorkflowStatus.running)
         throw "workflow is running";
@@ -431,10 +480,10 @@ IWorkflowConfigurationProps) => {
       const term = workflowState.term;
 
       await aevatarAI.services.workflow.start({
-        agentId: workflowAgentId,
+        agentId: workflowId,
         eventProperties: {},
       });
-      const workflowStatus = await getWorkflowStateLoop(workflowAgentId, term);
+      const workflowStatus = await getWorkflowStateLoop(workflowId, term);
       if (workflowStatus === WorkflowStatus.failed)
         throw "workflow is failed, please check the workflow";
       if (workflowStatus === WorkflowStatus.running) {
@@ -460,11 +509,31 @@ IWorkflowConfigurationProps) => {
   ]);
 
   const onStopWorkflow = useCallback(async () => {
-    console.log("onStopWorkflow===");
     setIsStopping(true);
     await sleep(1000);
     setIsStopping(false);
   }, []);
+
+  const onNewNode = useCallback((nodeAgentInfo: Partial<IAgentInfoDetail>) => {
+    setGaevatarList((v) => {
+      const newList = [...v];
+      const index = newList.findIndex((v) => v.id === nodeAgentInfo.id);
+      if (index !== -1)
+        newList[index] = {
+          ...newList[index],
+          ...nodeAgentInfo,
+        } as IAgentInfoDetail;
+      else newList.push(nodeAgentInfo as IAgentInfoDetail);
+      return newList;
+    });
+  }, []);
+
+  const onEdgesChanged = useCallback(
+    (_edges: Edge[]) => {
+      debouncedAutoSave();
+    },
+    [debouncedAutoSave]
+  );
 
   return (
     <>
@@ -561,12 +630,15 @@ IWorkflowConfigurationProps) => {
               editWorkflow={editWorkflow}
               editAgentOpen={editAgentOpen}
               gaevatarList={gaevatarList}
+              gaevatarTypeList={sidebarConfig?.gaevatarTypeList}
               ref={workflowRef}
               onCardClick={onClickWorkflowItem}
               onNodesChanged={onNodesChanged}
+              onEdgesChanged={onEdgesChanged}
               onRunWorkflow={onRunWorkflow}
               onStopWorkflow={onStopWorkflow}
               onRemoveNode={onRemoveNode}
+              onNewNode={onNewNode}
               isRunning={isRunning}
               isStopping={isStopping}
             />

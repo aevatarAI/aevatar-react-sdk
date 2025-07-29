@@ -43,15 +43,10 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
       },
     });
   }
-  publishWorkflowViewData(params: IStartWorkflowParams): Promise<IAgentInfo> {
+  publishWorkflowViewData(id: string): Promise<IAgentInfo> {
     return this._request.send({
       method: "POST",
-      url: "/api/agent/publishEvent",
-      params: {
-        ...params,
-        agentType:
-          "Aevatar.GAgents.GroupChat.GAgent.Coordinator.WorkflowView.GEvent.CreateWorkflowGEvent",
-      },
+      url: `/api/workflow-view/${id}/publish-workflow`,
     });
   }
   edit(id: string, params: IUpdateAgentInfo): Promise<IAgentInfoDetail> {

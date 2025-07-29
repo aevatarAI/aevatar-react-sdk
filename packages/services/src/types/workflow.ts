@@ -45,9 +45,9 @@ export interface IStartWorkflowParams {
 }
 
 export enum WorkflowStatus {
-  pending = '0',
-  running = '1',
-  failed = '2',
+  pending = "0",
+  running = "1",
+  failed = "2",
 }
 
 export interface IWorkflowCoordinatorState {
@@ -99,6 +99,7 @@ export interface IGetWorkflowResult<T = any> {
 
 export interface IWorkflowNode {
   nodeId: string;
+  agentId?: string;
   name: string;
   agentType: string;
   properties: any;
@@ -107,7 +108,7 @@ export interface IWorkflowNode {
 
 export interface IWorkflowNodeUnit {
   nodeId: string;
-  nextNodeId: string;
+  nextNodeId?: string;
 }
 
 export interface IWorkflowViewDataParams {
@@ -118,6 +119,14 @@ export interface IWorkflowViewDataParams {
   };
 }
 
+export interface IWorkflowViewUpdateDataParams {
+  name: string;
+  properties: {
+    workflowCoordinatorGAgentId: string;
+    workflowNodeList: IWorkflowNode[];
+    workflowNodeUnitList: IWorkflowNodeUnit[];
+  };
+}
 
 export interface IWorkflowService {
   create(params: ICreateWorkflowParams): Promise<IAgentInfo>;
@@ -129,6 +138,9 @@ export interface IWorkflowService {
   ): Promise<IGetWorkflowResult<T>>;
   start<T = any>(params: IStartWorkflowParams): Promise<T>;
   createWorkflowViewData(params: IWorkflowViewDataParams): Promise<IAgentInfo>;
-  updateWorkflowViewData(id: string, params: IWorkflowViewDataParams): Promise<IAgentInfo>;
-  publishWorkflowViewData(params: IStartWorkflowParams): Promise<IAgentInfo>;
+  updateWorkflowViewData(
+    id: string,
+    params: IWorkflowViewUpdateDataParams
+  ): Promise<IAgentInfo>;
+  publishWorkflowViewData(id: string): Promise<IAgentInfo>;
 }

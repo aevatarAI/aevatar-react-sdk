@@ -41,7 +41,7 @@ export default function AevatarCardInner({
         agentInfo?.propertyJsonSchema,
         agentInfo?.properties,
         isNew ? agentInfo?.defaultValues : undefined
-      ),
+      ).slice(0, 3), // Only take first 3 properties
     [agentInfo, isNew]
   );
 
@@ -58,6 +58,7 @@ export default function AevatarCardInner({
           "sdk:aevatar-item-background sdk:w-[234px]  sdk:border sdk:border-[#141415]  sdk:group-hover:border-[#303030]",
           selected && "sdk:border-[#AFC6DD]! ",
           "sdk:border-b-[0px]!",
+          "sdk:max-h-[300px] sdk:overflow-y-auto",
           className
         )}>
         <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">

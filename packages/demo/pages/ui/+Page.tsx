@@ -39,8 +39,7 @@ const AuthButton = clientOnly(() => import("../../components/auth/AuthButton"));
 ConfigProvider.setConfig({
   requestDefaults: {
     timeout: 15000,
-    baseURL:
-      "https://station-developer-dev-staging.aevatar.ai/snow-client",
+    baseURL: "https://station-developer-dev-staging.aevatar.ai/snow-client",
   },
 });
 
@@ -102,7 +101,6 @@ export default function UI() {
       }),
       aevatarAI.services.agent.getAllAgentsConfiguration(),
     ]);
-    console.log(gaevatarList, agentTypeList, "gaevatarList==");
 
     setAgentTypeList(agentTypeList);
     const list = gaevatarList.map((item) => {
@@ -128,14 +126,14 @@ export default function UI() {
 
   const onEditWorkflow = useCallback(
     async (workflowAgentId: string) => {
-      const result = await aevatarAI.getWorkflowUnitRelationByAgentId(
+      const result = await aevatarAI.getWorkflowViewDataByAgentId(
         workflowAgentId
       );
       setEditWorkflow({
         workflowAgentId,
+        workflowId: result.workflowId,
         workflowName: result.workflowName,
-        // workUnitRelations: workUnitRelations,
-        workUnitRelations: result.workUnitRelations,
+        workflowViewData: result.workflowViewData,
       });
       onShowWorkflow();
       console.log(workflowAgentId, result, "onEditWorkflow=");
@@ -156,32 +154,11 @@ export default function UI() {
     aevatarAI.fetchRequest.setHeaders({
       // authorization: sdkToken,
       Authorization:
-        "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkJGRUI5QzEwMDMzNDJGNTdBQTMzOEM5RUI0MTAyRENFQzNEOEE2M0EiLCJ4NXQiOiJ2LXVjRUFNMEwxZXFNNHlldEJBdHpzUFlwam8iLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtcHJlLXN0YXRpb24tZGV2LXN0YWdpbmcuYWV2YXRhci5haS8iLCJleHAiOjE3NTM0NDUyMjQsImlhdCI6MTc1MzI3MjQyNSwiYXVkIjoiQWV2YXRhciIsInNjb3BlIjoiQWV2YXRhciBvZmZsaW5lX2FjY2VzcyIsImp0aSI6ImY0OWI0ODhjLTM2NjUtNDY5Zi1iNzI5LTNhNDkxYTBlYTNmNSIsInN1YiI6IjFmYzdkMWU4LTUyNjItYWUxZS04YzM0LTNhMWFkYjU5ZTdlZSIsInByZWZlcnJlZF91c2VybmFtZSI6Imxlb3Rlc3QiLCJlbWFpbCI6Imxlb3Rlc3RAdGVtbC5uZXQiLCJyb2xlIjpbImU0Y2IxYTM5LWUxM2ItZWViMi1iYjg2LTNhMWFkYjY3YTZkY19Pd25lciIsImY2NGFiNjMwLTNiNDYtNzVkNi1lN2EyLTNhMWIwNjA4YTQyMV9Pd25lciIsImJhc2ljVXNlciIsIjA0N2YxM2JiLTMyNWItODhlYi1lZjcyLTNhMWIxOTM0ZjI1N19SZWFkZXIiLCI4ZTcwYWE5My1hNjY1LTkyMGYtZTY3NS0zYTFiMWYyYTlmMzRfT3duZXIiLCIyYmU1MTJkOS1jZDU0LWEwYTgtOWJhNi0zYTFiMGEzMDRlNDNfT3duZXIiLCJkNGJjMTczMC0zODM2LTBhOTItNjk5YS0zYTFiNDk1YWFmYWFfT3duZXIiLCIwNTczOGY2Ny1lOTgwLTEwNGMtNWJiMi0zYTFhZGMxNjFlMmRfT3duZXIiLCI5MjQzZGY0Ni05ZWU3LWNkMzktMGI0YS0zYTFiMDYwZjZmZDlfT3duZXIiXSwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjoiRmFsc2UiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwidW5pcXVlX25hbWUiOiJsZW90ZXN0Iiwic2VjdXJpdHlfc3RhbXAiOiJPNk5SNVNOT0o3WUdYVktESDY2UERJSEhUSjQ1TFc0TSIsIm9pX3Byc3QiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX2F1X2lkIjoiODliZTJjOTItOWJkMi0wZDhjLTBjNDgtM2ExYjQ5NWFmMjlkIiwiY2xpZW50X2lkIjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV90a25faWQiOiI3MWZjMDhkMS05ZTM5LWY4NDEtYjUwYi0zYTFiNDk1YWYyYTEifQ.jBHxE560XsLjigHMgGi_nhl1NBG1bdJkvL8mIzWqVVNTfePhL0D17JUeh3_YvP7oRhcgVvJTpEmheZYK-NoxGEXIWLfE1JylJFLzNB0TFa1C9fT6XX60Dv7u_JYi1ORDYF6it9FumZDF9wJIkjbxyHgDdKKY3DtYsWTTP1LsxC1Vv12Uq4KPBBbd2tldnMXmbik9bb2fX01w_xD4YUwQLYnHhbSm6WeC-hYd78bn0M74jgGDGDtin00Pru4oM8iaGJ1zrJYQFbML7XllMB8ttwWF5WVmtZCXhQn55VEqklN-YQxVrVOsm3kAIYeSTL4P6xS2Y4jFCrHluPjY-MZ-IA",
+        "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkJGRUI5QzEwMDMzNDJGNTdBQTMzOEM5RUI0MTAyRENFQzNEOEE2M0EiLCJ4NXQiOiJ2LXVjRUFNMEwxZXFNNHlldEJBdHpzUFlwam8iLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtcHJlLXN0YXRpb24tZGV2LXN0YWdpbmcuYWV2YXRhci5haS8iLCJleHAiOjE3NTM4NDIyMjQsImlhdCI6MTc1MzY2OTQyNSwiYXVkIjoiQWV2YXRhciIsInNjb3BlIjoiQWV2YXRhciBvZmZsaW5lX2FjY2VzcyIsImp0aSI6IjYyNzM4NWU2LTE0YWMtNGMwNi05ZTFhLWRhYTBhY2ZjNTgyMCIsInN1YiI6IjFmYzdkMWU4LTUyNjItYWUxZS04YzM0LTNhMWFkYjU5ZTdlZSIsInByZWZlcnJlZF91c2VybmFtZSI6Imxlb3Rlc3QiLCJlbWFpbCI6Imxlb3Rlc3RAdGVtbC5uZXQiLCJyb2xlIjpbImU0Y2IxYTM5LWUxM2ItZWViMi1iYjg2LTNhMWFkYjY3YTZkY19Pd25lciIsImY2NGFiNjMwLTNiNDYtNzVkNi1lN2EyLTNhMWIwNjA4YTQyMV9Pd25lciIsImJhc2ljVXNlciIsIjA0N2YxM2JiLTMyNWItODhlYi1lZjcyLTNhMWIxOTM0ZjI1N19SZWFkZXIiLCI4ZTcwYWE5My1hNjY1LTkyMGYtZTY3NS0zYTFiMWYyYTlmMzRfT3duZXIiLCIyYmU1MTJkOS1jZDU0LWEwYTgtOWJhNi0zYTFiMGEzMDRlNDNfT3duZXIiLCJkNGJjMTczMC0zODM2LTBhOTItNjk5YS0zYTFiNDk1YWFmYWFfT3duZXIiLCIwNTczOGY2Ny1lOTgwLTEwNGMtNWJiMi0zYTFhZGMxNjFlMmRfT3duZXIiLCI5MjQzZGY0Ni05ZWU3LWNkMzktMGI0YS0zYTFiMDYwZjZmZDlfT3duZXIiXSwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjoiRmFsc2UiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwidW5pcXVlX25hbWUiOiJsZW90ZXN0Iiwic2VjdXJpdHlfc3RhbXAiOiJPNk5SNVNOT0o3WUdYVktESDY2UERJSEhUSjQ1TFc0TSIsIm9pX3Byc3QiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX2F1X2lkIjoiMDU3ZGZhYzMtMDkxZS01ODlhLTEzMTUtM2ExYjRkZmRhZjdjIiwiY2xpZW50X2lkIjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV90a25faWQiOiI3ZTcxNjZiMy02Zjc1LTMxNTItZjg5Ni0zYTFiNjEwNGFmZTgifQ.d2OmGmsVwdBBbc-8SbMW0TrO944VBk4Hnri67sTiTZViOyj1wmS_dh-97P_MSQ4ob3rHTqqN7XNQWi8t5rTCTqW-omZEcTlONIOH8RBFAJwJyxOu3vYGwzTGwOUuWMLGldTqYg07Bo81JKk8nWh64N3yry95L2H3epDfezVzxTLUA1-ToTpeBeLs0B09A5d7E5xXnoZS9wWAtF0-74-LB4AB9XP-lKeDftH-I94SP2RkDlRuyAW_bO7YnZ5VD1NdFYMbzmeI2B8jGy8oBiu6boXURtzPrMTSq6pfW_YCCUx_V9SPAloG3AegnHmwSsuFaym7PXvXG1sP2WRcQOXS0A",
     });
 
     setShowAction(true);
   }, []);
-
-  const onGaevatarChange = useCallback(
-    async (isCreate: boolean, data: { params: any; agentId?: string }) => {
-      console.log(isCreate, data, "isCreate, data=");
-      let result: IAgentInfoDetail;
-      if (isCreate) {
-        result = await aevatarAI.services.agent.createAgent(data.params);
-      } else {
-        if (!data.agentId) throw "Not agentId";
-        result = await aevatarAI.services.agent.updateAgentInfo(
-          data.agentId,
-          data.params
-        );
-      }
-      await sleep(2000);
-      await refreshGaevatarList();
-
-      return result;
-    },
-    [refreshGaevatarList]
-  );
 
   const fullscreenHandle = useFullScreenHandle();
 
@@ -284,7 +261,6 @@ export default function UI() {
                 gaevatarList, //: [],
                 isNewGAevatar: true,
                 gaevatarTypeList: agentTypeList,
-                type: "newAgent",
               }}
               extraControlBar={
                 <div className="w-full h-full bg-[#141415] flex flow-row border-[1px] border-[#303030]">
@@ -315,14 +291,7 @@ export default function UI() {
               onBack={() => {
                 setStage(undefined);
               }}
-              onSave={(workflowAgentId: string) => {
-                console.log(workflowAgentId, "workflowAgentId==");
-                workflowAgentId &&
-                  localStorage.setItem("workflowAgentId", workflowAgentId);
-                getWorkflowDetail(workflowAgentId);
-              }}
               editWorkflow={editWorkflow}
-              // onGaevatarChange={onGaevatarChange}
             />
           </FullScreen>
         )}

@@ -27,6 +27,7 @@ import AevatarItem4Workflow from "../AevatarItem4Workflow";
 import Background from "./background";
 import type {
   IAgentInfoDetail,
+  IAgentsConfiguration,
   IWorkflowUnitListItem,
   IWorkflowViewDataParams,
 } from "@aevatar-react-sdk/services";
@@ -48,8 +49,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { getPropertiesByDefaultValues } from "../../utils/jsonSchemaParse";
 
-const getId = () => `dndnode_${uuidv4()}`;
+const getId = () => `${uuidv4()}`;
 
 interface IProps {
   gaevatarList?: IAgentInfoDetail[];
@@ -61,15 +63,22 @@ interface IProps {
   editAgentOpen?: boolean;
   isRunning?: boolean;
   isStopping?: boolean;
+  gaevatarTypeList?: IAgentsConfiguration[];
   onCardClick: (
     data: Partial<IAgentInfoDetail>,
     isNew: boolean,
     nodeId: string
   ) => void;
   onNodesChanged?: (nodes: INode[]) => void;
+  onEdgesChanged?: (edges: Edge[]) => void;
   onRemoveNode?: (nodeId: string) => void;
   onRunWorkflow?: () => Promise<void>;
   onStopWorkflow?: () => Promise<void>;
+  onNewNode?: (
+    agentInfo: Partial<IAgentInfoDetail> & {
+      defaultValues?: Record<string, any[]>;
+    }
+  ) => void;
   extraControlBar?: React.ReactNode;
 }
 
@@ -92,7 +101,10 @@ export const Workflow = forwardRef(
       onRunWorkflow,
       onStopWorkflow,
       onRemoveNode,
+      onEdgesChanged,
+      onNewNode,
       extraControlBar,
+      gaevatarTypeList,
     }: IProps,
     ref
   ) => {
@@ -137,10 +149,8 @@ export const Workflow = forwardRef(
       (nodeId) => {
         setNodes((prevNodes) => {
           const newNodes = prevNodes.filter((node) => node.id !== nodeId);
-          console.log(newNodes, "newNodes==newNodes");
           // Find the node to be deleted to get its agent type
           const nodeToDelete = prevNodes.find((node) => node.id === nodeId);
-          console.log(nodeToDelete, nodes, nodeId, "nodeToDelete==Deleting");
           // Update agent type count when deleting a new node
           if (
             nodeToDelete?.data?.isNew &&
@@ -149,17 +159,10 @@ export const Workflow = forwardRef(
             const agentType = nodeToDelete.data.agentInfo.agentType;
             const name = nodeToDelete.data.agentInfo.name;
 
-            console.log("Deleting node:", {
-              agentType,
-              name,
-              usedIndexesRef: usedIndexesRef.current,
-            });
-
             // Extract index from name (e.g., "AgentType 1" -> 1)
             const match = name?.match(new RegExp(`^${agentType} (\\d+)$`));
             if (match) {
               const index = Number.parseInt(match[1], 10);
-              console.log("Extracted index:", index);
 
               // Synchronously update ref
               const currentIndexes =
@@ -170,13 +173,6 @@ export const Workflow = forwardRef(
                 ...usedIndexesRef.current,
                 [agentType]: newIndexes,
               };
-
-              console.log("After deletion:", {
-                agentType,
-                before: Array.from(currentIndexes),
-                after: Array.from(newIndexes),
-                usedIndexesRef: usedIndexesRef.current,
-              });
 
               // Update state
               setAgentTypeUsedIndexes(usedIndexesRef.current);
@@ -193,14 +189,14 @@ export const Workflow = forwardRef(
           )
         );
       },
-      [nodes, onRemoveNode, setNodes, setEdges]
+      [onRemoveNode, setNodes, setEdges]
     );
 
     const { screenToFlowPosition } = useReactFlow();
     const [dragInfo] = useDnD();
     const nodesRef = useRef<INode[]>(nodes);
     const gaevatarListRef = useRef<IAgentInfoDetail[]>([]);
-
+    const gaevatarTypeListRef = useRef<IAgentsConfiguration[]>([]);
     // History management
     const {
       canUndo,
@@ -220,6 +216,10 @@ export const Workflow = forwardRef(
       gaevatarListRef.current = gaevatarList;
     }, [gaevatarList]);
 
+    useEffect(() => {
+      gaevatarTypeListRef.current = gaevatarTypeList;
+    }, [gaevatarTypeList]);
+
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
       if (!editWorkflow?.workflowViewData) return;
@@ -227,16 +227,11 @@ export const Workflow = forwardRef(
       const { nodes, edges } = generateWorkflowGraph(
         editWorkflow.workflowViewData,
         gaevatarListRef.current,
+        gaevatarTypeListRef.current,
         onCardClick,
         deleteNode
       );
-      console.log(
-        "useEffect===onNodesChanged",
-        nodes,
-        edges,
-        editWorkflow.workflowViewData,
-        gaevatarListRef.current
-      );
+
       setNodes(nodes);
       setEdges(edges);
 
@@ -314,6 +309,10 @@ export const Workflow = forwardRef(
     useUpdateEffect(() => {
       onNodesChanged?.(nodes);
     }, [nodes]);
+
+    useUpdateEffect(() => {
+      onEdgesChanged?.(edges);
+    }, [edges]);
 
     useEffect(() => {
       // Initialize history state on first load
@@ -407,12 +406,10 @@ export const Workflow = forwardRef(
 
     const onConnect = useCallback(
       (params) => {
-        console.log(params, "params==onConnect");
         if (params.source === params.target) {
           return;
         }
         setEdges((eds) => {
-          console.log(eds, "eds==onConnect");
           if (
             eds.find(
               (item) =>
@@ -466,23 +463,14 @@ export const Workflow = forwardRef(
         if (dragInfo.nodeType === "new") {
           const agentType = agentInfoCopy.agentType;
 
-          console.log("Creating new node:", {
-            agentType,
-            usedIndexesRef: usedIndexesRef.current,
-          });
-
           // Synchronously find the smallest available index
           const usedIndexes = usedIndexesRef.current[agentType] || new Set();
           let newIndex = 1;
-
-          console.log("Current used indexes:", Array.from(usedIndexes));
 
           // Find the smallest available index starting from 1
           while (usedIndexes.has(newIndex)) {
             newIndex++;
           }
-
-          console.log("Found available index:", newIndex);
 
           // Update agentInfo copy with new name (only for new nodes)
           agentInfoCopy.name = `${agentType.split(".").pop()} ${newIndex}`;
@@ -493,13 +481,6 @@ export const Workflow = forwardRef(
             ...usedIndexesRef.current,
             [agentType]: newUsedIndexes,
           };
-
-          console.log("After adding new index:", {
-            agentType,
-            newIndex,
-            usedIndexes: Array.from(newUsedIndexes),
-            usedIndexesRef: usedIndexesRef.current,
-          });
 
           // Update state
           setAgentTypeUsedIndexes(usedIndexesRef.current);
@@ -540,10 +521,28 @@ export const Workflow = forwardRef(
                 },
               };
         setNodes((nds) => nds.concat(newNode as any));
-        if (dragInfo.nodeType === "new")
+        if (dragInfo.nodeType === "new") {
           onCardClick(agentInfoCopy, true, newNode.id);
+          onNewNode?.({
+            id: agentInfoCopy.id || newNode.id,
+            name: agentInfoCopy.name,
+            agentType: agentInfoCopy.agentType,
+            properties: getPropertiesByDefaultValues(
+              agentInfoCopy?.defaultValues
+            ),
+            propertyJsonSchema: agentInfoCopy.propertyJsonSchema,
+            defaultValues: agentInfoCopy?.defaultValues,
+          });
+        }
       },
-      [screenToFlowPosition, dragInfo, setNodes, onCardClick, deleteNode]
+      [
+        screenToFlowPosition,
+        dragInfo,
+        setNodes,
+        onCardClick,
+        deleteNode,
+        onNewNode,
+      ]
     );
 
     const [, dropRef] = useDrop({
@@ -584,7 +583,6 @@ export const Workflow = forwardRef(
     }, [onStopWorkflow]);
 
     const onUndoHandler = useCallback(async () => {
-      console.log("onUndoHandler===");
       const previousState = undo();
       if (previousState) {
         setNodes(previousState.nodes);
@@ -593,7 +591,6 @@ export const Workflow = forwardRef(
     }, [undo, setNodes, setEdges]);
 
     const onRedoHandler = useCallback(async () => {
-      console.log("onRedoHandler===");
       const nextState = redo();
       if (nextState) {
         setNodes(nextState.nodes);
