@@ -41,6 +41,54 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { SidebarSheet } from "./SidebarSheet";
 import { Textarea } from "../ui/textarea";
 
+export const usePostAIWorkflowGeneration = (prompt: string) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState();
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const generate = async (prompt: string) => {
+      if (!prompt) return;
+
+      try {
+        setIsLoading(true);
+        const response = await fetch(
+          "https://station-developer-dev-staging.aevatar.ai/snow-client/api/workflow/generate",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization:
+                "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkJGRUI5QzEwMDMzNDJGNTdBQTMzOEM5RUI0MTAyRENFQzNEOEE2M0EiLCJ4NXQiOiJ2LXVjRUFNMEwxZXFNNHlldEJBdHpzUFlwam8iLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtcHJlLXN0YXRpb24tZGV2LXN0YWdpbmcuYWV2YXRhci5haS8iLCJleHAiOjE3NTQwMjc4NTksImlhdCI6MTc1Mzg1NTA2MCwiYXVkIjoiQWV2YXRhciIsInNjb3BlIjoiQWV2YXRhciBvZmZsaW5lX2FjY2VzcyIsImp0aSI6IjIwZjVjM2FlLTA3NWQtNGU5YS1iNDQ2LWQ0MDE2ZTc3NGM1ZSIsInN1YiI6ImYwODM5NjRiLTJkNDktNGMzOS1iMjdhLWRiYzJjMTdjNzkzNiIsInByZWZlcnJlZF91c2VybmFtZSI6ImNqaHJveTk4QGdtYWlsLmNvbUBnb29nbGUiLCJlbWFpbCI6IjIzYWExYjU1MjJjZTQxOWNiNGY2YmIxZjkzMDA5ZDIwQEFCUC5JTyIsInJvbGUiOlsiYmFzaWNVc2VyIiwiM2ExNTRiNjQtZWI0YS1jMjNmLWNkMDMtM2ExYjFhN2FjYTlkX093bmVyIl0sInBob25lX251bWJlcl92ZXJpZmllZCI6IkZhbHNlIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsInVuaXF1ZV9uYW1lIjoiY2pocm95OThAZ21haWwuY29tQGdvb2dsZSIsInNlY3VyaXR5X3N0YW1wIjoiT0VBSVpPRkVNMkNDVERZV1Y0VkdYU0g0Q1pUVDJOVlEiLCJvaV9wcnN0IjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV9hdV9pZCI6IjQxNWJiNmJmLWUyZDEtMzk2ZS1jNDRiLTNhMWI2YzE1M2Y2OSIsImNsaWVudF9pZCI6IkFldmF0YXJBdXRoU2VydmVyIiwib2lfdGtuX2lkIjoiN2NmNzkwNjgtMmI1My0wNmNlLTRiZjktM2ExYjZjMTU0MjgzIn0.EqdmuAghmcPin9BDOu9fd4zrTvHZA4-ws48G6IisX5QWZLr4FZrADSun9kGvIkEw_Yklt-V0Sb5u1VbtRT2FQ6OY_kcRHEmA2mEtPV6OWvHwrcevFCwD_WPZGyw2vOFyju1MJSPhYgWJPWJFQexU6DlOtVr32POBj6EyeUsrj-cxXrXDGRsOawOj7q86dPmtYpThQCGF_WGGYsXJTB7mz5yyFQj8OeTw3rXqTiROhFAPtVtVy_aeKNy_T-nH7Hfg6nKcrXrXxigICnTG0hGZw8Ft4ikVhYwm4BRM5EMBuwICJMQ-Jd013kMScsXJDg3IQusIovkZv_8h1lUf3TWEKg",
+            },
+            body: JSON.stringify({
+              userGoal: prompt,
+            }),
+          }
+        );
+
+        const d = await response.json();
+
+        console.log("response: ", d);
+
+        // if (response.data.code === "20000") {
+        // }
+
+        setData(d);
+      } catch (e) {
+        console.error(e);
+        setError("Error generating workflow");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    generate(prompt);
+  }, [prompt]);
+
+  return { isLoading, data, error };
+};
+
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
     gaevatarList?: IAgentInfoDetail[];
@@ -506,57 +554,7 @@ const WorkflowConfigurationInner = ({
                 roundId={1}
               />
             </div>
-            <div className="sdk:flex sdk:justify-center sdk:p-[20px] sdk:bg-[#171717] sdk:absolute sdk:top-[25%] sdk:border-[#303030] sdk:rounded-md">
-              <div className="sdk:flex sdk:flex-col sdk:gap-[28px]">
-                <div className="sdk:flex sdk:justify-between">
-                  <span className="sdk:font-semibold">
-                    generate workflow with ai
-                  </span>
-                  <button type="button">
-                    <Close />
-                  </button>
-                </div>
-
-                <div className="sdk:flex sdk:flex-col sdk:gap-2">
-                  <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
-                    prompt
-                  </span>
-                  <Textarea
-                    className="sdk:bg-[#171717] sdk:min-w-[595px] sdk:min-h-[120px]"
-                    placeholder="please describe what kind of agent workflow you want to create"
-                    onChange={(e) => {
-                      console.log("e", e.target.value);
-                    }}
-                  />
-                </div>
-
-                <div className="sdk:flex sdk:flex-row sdk:justify-between">
-                  <Button
-                    type="button"
-                    className="max-w-[35px] max-h-[35px]"
-                    disabled={true}
-                    onClick={() => {}}
-                  >
-                    <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
-                      skip
-                    </span>
-                  </Button>
-                  <Button
-                    type="button"
-                    className="max-w-[35px] max-h-[35px]"
-                    disabled={false}
-                    onClick={() => {}}
-                  >
-                    <div className="sdk:flex sdk:flex-row sdk:items-center sdk:gap-[5px]">
-                      <AIStar />
-                      <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
-                        generate
-                      </span>
-                    </div>
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <WorkflowGenerationModal />
           </main>
         </div>
       </div>
@@ -598,3 +596,76 @@ export default function WorkflowConfiguration(
     </ReactFlowProvider>
   );
 }
+
+export const WorkflowGenerationModal = () => {
+  const [isVisible, setIsVisible] = useState(true);
+  const { isLoading, data, error } = usePostAIWorkflowGeneration(
+    "generate a new workflow"
+  );
+
+  const handleClose = () => {
+    // stop all outgoing requests
+
+    setIsVisible(false);
+  };
+
+  if (!isVisible) {
+    return null;
+  }
+
+  return (
+    <>
+      <div className="sdk:bg-[#000000] sdk:fixed sdk:inset-0 sdk:opacity-50 sdk:z-99" />
+
+      <div className="sdk:flex sdk:justify-center sdk:p-[20px] sdk:bg-[#171717] sdk:absolute sdk:top-[25%] sdk:border-[#303030] sdk:rounded-md sdk:z-100">
+        <div className="sdk:flex sdk:flex-col sdk:gap-[28px]">
+          <div className="sdk:flex sdk:justify-between">
+            <span className="sdk:font-semibold">generate workflow with ai</span>
+            <button type="button" onClick={handleClose}>
+              <Close />
+            </button>
+          </div>
+
+          <div className="sdk:flex sdk:flex-col sdk:gap-2">
+            <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
+              prompt
+            </span>
+            <Textarea
+              className="sdk:bg-[#171717] sdk:min-w-[595px] sdk:min-h-[120px]"
+              placeholder="please describe what kind of agent workflow you want to create"
+              onChange={(e) => {
+                console.log("e", e.target.value);
+              }}
+            />
+          </div>
+
+          <div className="sdk:flex sdk:flex-row sdk:justify-between">
+            <Button
+              type="button"
+              className="max-w-[35px] max-h-[35px]"
+              disabled={isLoading}
+              onClick={handleClose}
+            >
+              <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
+                skip
+              </span>
+            </Button>
+            <Button
+              type="button"
+              className="max-w-[35px] max-h-[35px]"
+              disabled={isLoading}
+              onClick={() => {}}
+            >
+              <div className="sdk:flex sdk:flex-row sdk:items-center sdk:gap-[5px]">
+                <AIStar />
+                <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
+                  generate
+                </span>
+              </div>
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
