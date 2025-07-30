@@ -30,7 +30,6 @@ import {
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useSearchParams } from "wouter";
 import { useEffect, useState } from "react";
 
 interface Workflow {
@@ -51,7 +50,6 @@ export const EditExecutionsFilterDialog = ({
   filter,
   onChange,
 }: CustomDialogProps) => {
-  const [searchParams] = useSearchParams();
   const [filterCount, setFilterCount] = useState(0);
   const form = useForm<TEditExecutionsFilterForm>({
     resolver: zodResolver(editExecutionsFilterForm),
@@ -109,19 +107,6 @@ export const EditExecutionsFilterDialog = ({
                         disabled={field?.disabled}
                         onValueChange={(value: string) => {
                           field.onChange(value);
-
-                          const params = new URLSearchParams(searchParams);
-
-                          if (value === "all") {
-                            params.set("name", "all");
-                          } else {
-                            params.set("name", value);
-                          }
-                          // [TODO]
-                          // navigate(`?${params.toString()}`, {
-                          //   replace: true,
-                          // });
-
                           onChange({
                             ...filter,
                             name: value,
@@ -167,14 +152,6 @@ export const EditExecutionsFilterDialog = ({
                         disabled={field?.disabled}
                         onValueChange={(value: string) => {
                           field?.onChange(value);
-
-                          const params = new URLSearchParams(searchParams);
-                          params.set("status", value);
-
-                          // [TODO]
-                          // navigate(`?${params.toString()}`, {
-                          //   replace: true,
-                          // });
                           onChange({
                             ...filter,
                             status: value,
@@ -254,17 +231,6 @@ export const EditExecutionsFilterDialog = ({
                           // Do a debounce here
                           const value = e.target.value;
                           field.onChange(value);
-
-                          const params = new URLSearchParams(searchParams);
-                          value
-                            ? params.set("execId", value)
-                            : params.delete("execId");
-
-                          // [TODO]
-                          // navigate(`?${params.toString()}`, {
-                          //   replace: true,
-                          // });
-
                           onChange({
                             ...filter,
                             id: value,
