@@ -42,13 +42,16 @@ import { SidebarSheet } from "./SidebarSheet";
 import { Textarea } from "../ui/textarea";
 
 export const usePostAIWorkflowGeneration = (prompt: string) => {
+  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState();
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const generate = async (prompt: string) => {
+  const refetch = useCallback(
+    async (prompt: string) => {
       if (!prompt) return;
+
+      const token = "";
 
       try {
         setIsLoading(true);
@@ -58,8 +61,7 @@ export const usePostAIWorkflowGeneration = (prompt: string) => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization:
-                "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkJGRUI5QzEwMDMzNDJGNTdBQTMzOEM5RUI0MTAyRENFQzNEOEE2M0EiLCJ4NXQiOiJ2LXVjRUFNMEwxZXFNNHlldEJBdHpzUFlwam8iLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtcHJlLXN0YXRpb24tZGV2LXN0YWdpbmcuYWV2YXRhci5haS8iLCJleHAiOjE3NTQwMjc4NTksImlhdCI6MTc1Mzg1NTA2MCwiYXVkIjoiQWV2YXRhciIsInNjb3BlIjoiQWV2YXRhciBvZmZsaW5lX2FjY2VzcyIsImp0aSI6IjIwZjVjM2FlLTA3NWQtNGU5YS1iNDQ2LWQ0MDE2ZTc3NGM1ZSIsInN1YiI6ImYwODM5NjRiLTJkNDktNGMzOS1iMjdhLWRiYzJjMTdjNzkzNiIsInByZWZlcnJlZF91c2VybmFtZSI6ImNqaHJveTk4QGdtYWlsLmNvbUBnb29nbGUiLCJlbWFpbCI6IjIzYWExYjU1MjJjZTQxOWNiNGY2YmIxZjkzMDA5ZDIwQEFCUC5JTyIsInJvbGUiOlsiYmFzaWNVc2VyIiwiM2ExNTRiNjQtZWI0YS1jMjNmLWNkMDMtM2ExYjFhN2FjYTlkX093bmVyIl0sInBob25lX251bWJlcl92ZXJpZmllZCI6IkZhbHNlIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsInVuaXF1ZV9uYW1lIjoiY2pocm95OThAZ21haWwuY29tQGdvb2dsZSIsInNlY3VyaXR5X3N0YW1wIjoiT0VBSVpPRkVNMkNDVERZV1Y0VkdYU0g0Q1pUVDJOVlEiLCJvaV9wcnN0IjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV9hdV9pZCI6IjQxNWJiNmJmLWUyZDEtMzk2ZS1jNDRiLTNhMWI2YzE1M2Y2OSIsImNsaWVudF9pZCI6IkFldmF0YXJBdXRoU2VydmVyIiwib2lfdGtuX2lkIjoiN2NmNzkwNjgtMmI1My0wNmNlLTRiZjktM2ExYjZjMTU0MjgzIn0.EqdmuAghmcPin9BDOu9fd4zrTvHZA4-ws48G6IisX5QWZLr4FZrADSun9kGvIkEw_Yklt-V0Sb5u1VbtRT2FQ6OY_kcRHEmA2mEtPV6OWvHwrcevFCwD_WPZGyw2vOFyju1MJSPhYgWJPWJFQexU6DlOtVr32POBj6EyeUsrj-cxXrXDGRsOawOj7q86dPmtYpThQCGF_WGGYsXJTB7mz5yyFQj8OeTw3rXqTiROhFAPtVtVy_aeKNy_T-nH7Hfg6nKcrXrXxigICnTG0hGZw8Ft4ikVhYwm4BRM5EMBuwICJMQ-Jd013kMScsXJDg3IQusIovkZv_8h1lUf3TWEKg",
+              Authorization: token,
             },
             body: JSON.stringify({
               userGoal: prompt,
@@ -67,26 +69,25 @@ export const usePostAIWorkflowGeneration = (prompt: string) => {
           }
         );
 
-        const d = await response.json();
+        const results = await response.json();
 
-        console.log("response: ", d);
-
-        // if (response.data.code === "20000") {
-        // }
-
-        setData(d);
-      } catch (e) {
-        console.error(e);
-        setError("Error generating workflow");
+        setData(results);
+      } catch (_) {
+        const description = "Error generating workflow";
+        toast({ description });
+        setError(description);
       } finally {
         setIsLoading(false);
       }
-    };
+    },
+    [toast]
+  );
 
-    generate(prompt);
-  }, [prompt]);
+  useEffect(() => {
+    refetch(prompt);
+  }, [refetch, prompt]);
 
-  return { isLoading, data, error };
+  return { isLoading, data, refetch, error };
 };
 
 export interface IWorkflowConfigurationProps {
@@ -121,6 +122,7 @@ const WorkflowConfigurationInner = ({
   onSave: onSaveHandler,
   onGaevatarChange,
 }: IWorkflowConfigurationProps) => {
+  const { isLoading, data, refetch } = usePostAIWorkflowGeneration("");
   const [container, setContainer] = React.useState(null);
   const { toast } = useToast();
   const [editAgentOpen, setEditAgentOpen] = useState(false);
@@ -514,6 +516,7 @@ const WorkflowConfigurationInner = ({
           {/* Main Content */}
           <main className="sdk:flex-1 sdk:flex sdk:flex-col sdk:items-center sdk:justify-center sdk:relative">
             <Workflow
+              data={data}
               extraControlBar={extraControlBar}
               editWorkflow={editWorkflow}
               editAgentOpen={editAgentOpen}
@@ -554,14 +557,13 @@ const WorkflowConfigurationInner = ({
                 roundId={1}
               />
             </div>
-            <WorkflowGenerationModal />
+            <WorkflowGenerationModal isLoading={isLoading} refetch={refetch} />
           </main>
         </div>
       </div>
 
       <WorkflowSaveFailedModal
         saveFailed={saveFailed}
-        // onSaveFailed={onSaveFailed}
         onOpenChange={setSaveFailed}
       />
 
@@ -597,15 +599,28 @@ export default function WorkflowConfiguration(
   );
 }
 
-export const WorkflowGenerationModal = () => {
+interface IWorkflowGenerationModalProps {
+  isLoading: boolean;
+  refetch: (prompt: string) => void;
+}
+
+export const WorkflowGenerationModal = ({
+  isLoading,
+  refetch,
+}: IWorkflowGenerationModalProps) => {
   const [isVisible, setIsVisible] = useState(true);
-  const { isLoading, data, error } = usePostAIWorkflowGeneration(
-    "generate a new workflow"
-  );
+  const [inputPrompt, setInputPrompt] = useState("");
 
   const handleClose = () => {
-    // stop all outgoing requests
+    setIsVisible(false);
+  };
 
+  const handleChange = (e) => {
+    setInputPrompt(e.target.value);
+  };
+
+  const handleClick = async () => {
+    await refetch(inputPrompt);
     setIsVisible(false);
   };
 
@@ -617,11 +632,17 @@ export const WorkflowGenerationModal = () => {
     <>
       <div className="sdk:bg-[#000000] sdk:fixed sdk:inset-0 sdk:opacity-50 sdk:z-99" />
 
-      <div className="sdk:flex sdk:justify-center sdk:p-[20px] sdk:bg-[#171717] sdk:absolute sdk:top-[25%] sdk:border-[#303030] sdk:rounded-md sdk:z-100">
+      <div className="sdk:flex sdk:justify-center sdk:p-[20px] sdk:bg-[#171717] sdk:absolute sdk:top-[25%] sdk:border sdk:border-[#FFFFFF14] sdk:rounded-md sdk:z-100">
         <div className="sdk:flex sdk:flex-col sdk:gap-[28px]">
           <div className="sdk:flex sdk:justify-between">
-            <span className="sdk:font-semibold">generate workflow with ai</span>
-            <button type="button" onClick={handleClose}>
+            <span className="sdk:font-outfit sdk:font-semibold sdk:text-[18px] sdk:bg-gradient-to-r sdk:from-white sdk:to-[#999] sdk:bg-clip-text sdk:text-transparent sdk:lowercase">
+              generate workflow with ai
+            </span>
+            <button
+              className="sdk:cursor-pointer"
+              type="button"
+              onClick={handleClose}
+            >
               <Close />
             </button>
           </div>
@@ -631,11 +652,10 @@ export const WorkflowGenerationModal = () => {
               prompt
             </span>
             <Textarea
-              className="sdk:bg-[#171717] sdk:min-w-[595px] sdk:min-h-[120px]"
+              className="sdk:text-[13px] sdk:bg-[#171717] sdk:min-w-[595px] sdk:min-h-[120px]"
               placeholder="please describe what kind of agent workflow you want to create"
-              onChange={(e) => {
-                console.log("e", e.target.value);
-              }}
+              onChange={handleChange}
+              disabled={isLoading}
             />
           </div>
 
@@ -643,8 +663,8 @@ export const WorkflowGenerationModal = () => {
             <Button
               type="button"
               className="max-w-[35px] max-h-[35px]"
-              disabled={isLoading}
               onClick={handleClose}
+              disabled={isLoading}
             >
               <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
                 skip
@@ -652,16 +672,24 @@ export const WorkflowGenerationModal = () => {
             </Button>
             <Button
               type="button"
-              className="max-w-[35px] max-h-[35px]"
-              disabled={isLoading}
-              onClick={() => {}}
+              className={`sdk:min-w-[114px] ${isLoading && "sdk:bg-[#ffffff]"}`}
+              disabled={!inputPrompt || isLoading}
+              onClick={handleClick}
             >
-              <div className="sdk:flex sdk:flex-row sdk:items-center sdk:gap-[5px]">
-                <AIStar />
-                <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
-                  generate
-                </span>
-              </div>
+              {isLoading ? (
+                <Loading
+                  key="generate"
+                  className={clsx("aevatarai-loading-icon")}
+                  style={{ width: 10, height: 10 }}
+                />
+              ) : (
+                <div className="sdk:flex sdk:flex-row sdk:items-center sdk:gap-[5px]">
+                  <AIStar />
+                  <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
+                    generate
+                  </span>
+                </div>
+              )}
             </Button>
           </div>
         </div>

@@ -14,7 +14,6 @@ import {
   useEdgesState,
   Controls,
   useReactFlow,
-  MarkerType,
   MiniMap,
   Background as BackgroundFlow,
 } from "@xyflow/react";
@@ -42,6 +41,7 @@ let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 interface IProps {
+  data?: any;
   gaevatarList?: IAgentInfoDetail[];
   editWorkflow?: {
     workflowAgentId: string;
@@ -70,6 +70,7 @@ export interface IWorkflowInstance {
 export const Workflow = forwardRef(
   (
     {
+      data,
       gaevatarList,
       editWorkflow,
       editAgentOpen,
@@ -82,6 +83,63 @@ export const Workflow = forwardRef(
     }: IProps,
     ref
   ) => {
+    // [INFO] - Initializes nodes and edges when user prompts
+    useEffect(() => {
+      if (!data) return;
+
+      const generateNodes = (
+        nodeList: any[],
+        onCardClick: any,
+        deleteNode: any
+      ) => {
+        return nodeList.map((nodeData) => ({
+          id: nodeData.nodeId,
+          type: "ScanCard",
+          position: {
+            x: Number.parseFloat(nodeData.extendedData.xPosition),
+            y: Number.parseFloat(nodeData.extendedData.yPosition),
+          },
+          data: {
+            label: "ScanCard Node",
+            agentInfo: {
+              agentType: nodeData.agentType,
+              propertyJsonSchema: JSON.stringify(nodeData.properties),
+              name: nodeData.name,
+            },
+            isNew: true,
+            onClick: onCardClick,
+            deleteNode,
+          },
+        }));
+      };
+
+      const generateEdges = (edgeList: any[]) => {
+        return edgeList.map((edgeData) => ({
+          id: crypto.randomUUID(),
+          type: "bezier",
+          source: edgeData.nodeId,
+          sourceHandle: "b",
+          target: edgeData.nextNodeId,
+          style: {
+            strokeWidth: 2,
+            stroke: "#B9B9B9",
+          },
+        }));
+      };
+
+      const dataNodes = generateNodes(
+        data?.data?.properties?.workflowNodeList,
+        onCardClick,
+        deleteNode
+      );
+      const dataEdges = generateEdges(
+        data?.data?.properties?.workflowNodeUnitList
+      );
+
+      setNodes(dataNodes);
+      setEdges(dataEdges);
+    }, [data, onCardClick]);
+
     // Add state to track used indexes for each agent type
     const [agentTypeUsedIndexes, setAgentTypeUsedIndexes] = useState<
       Record<string, Set<number>>
@@ -95,38 +153,15 @@ export const Workflow = forwardRef(
       usedIndexesRef.current = agentTypeUsedIndexes;
     }, [agentTypeUsedIndexes]);
 
-    const initialNodes = useMemo(() => {
-      return [];
-      // const initialNodes = [
-      //   {
-      //     id: getId(),
-      //     type: "ScanCard",
-      //     position: {
-      //       x: 100,
-      //       y: 300,
-      //     },
-      //     data: {
-      //       label: "ScanCard Node",
-      //       isNew: true,
-      //       onClick,
-      //       deleteNode,
-      //     },
-      //   },
-      // ];
-    }, []);
-
     const reactFlowWrapper = useRef(null);
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
     const deleteNode = useCallback(
       (nodeId) => {
         setNodes((prevNodes) => {
-          const newNodes = prevNodes.filter((node) => node.id !== nodeId);
-          console.log(newNodes, "newNodes==newNodes");
-          // Find the node to be deleted to get its agent type
+          const newNodes = prevNodes.filter((node) => node.id !== nodeId); // Find the node to be deleted to get its agent type
           const nodeToDelete = prevNodes.find((node) => node.id === nodeId);
-          console.log(nodeToDelete, nodes, nodeId, "nodeToDelete==Deleting");
           // Update agent type count when deleting a new node
           if (
             nodeToDelete?.data?.isNew &&
@@ -135,17 +170,10 @@ export const Workflow = forwardRef(
             const agentType = nodeToDelete.data.agentInfo.agentType;
             const name = nodeToDelete.data.agentInfo.name;
 
-            console.log("Deleting node:", {
-              agentType,
-              name,
-              usedIndexesRef: usedIndexesRef.current,
-            });
-
             // Extract index from name (e.g., "AgentType 1" -> 1)
             const match = name?.match(new RegExp(`^${agentType} (\\d+)$`));
             if (match) {
               const index = Number.parseInt(match[1], 10);
-              console.log("Extracted index:", index);
 
               // Synchronously update ref
               const currentIndexes =
@@ -156,13 +184,6 @@ export const Workflow = forwardRef(
                 ...usedIndexesRef.current,
                 [agentType]: newIndexes,
               };
-
-              console.log("After deletion:", {
-                agentType,
-                before: Array.from(currentIndexes),
-                after: Array.from(newIndexes),
-                usedIndexesRef: usedIndexesRef.current,
-              });
 
               // Update state
               setAgentTypeUsedIndexes(usedIndexesRef.current);
@@ -179,17 +200,18 @@ export const Workflow = forwardRef(
           )
         );
       },
-      [nodes, onRemoveNode, setNodes, setEdges]
+      [onRemoveNode, setNodes, setEdges]
     );
 
     const { screenToFlowPosition } = useReactFlow();
     const [dragInfo] = useDnD();
-    console.log(dragInfo, "dragInfo===dragData");
     const nodesRef = useRef<INode[]>(nodes);
     const gaevatarListRef = useRef<IAgentInfoDetail[]>([]);
+
     useEffect(() => {
       nodesRef.current = nodes;
     }, [nodes]);
+
     useEffect(() => {
       gaevatarListRef.current = gaevatarList;
     }, [gaevatarList]);
@@ -204,13 +226,7 @@ export const Workflow = forwardRef(
         onCardClick,
         deleteNode
       );
-      console.log(
-        "useEffect===onNodesChanged",
-        nodes,
-        edges,
-        editWorkflow.workUnitRelations,
-        gaevatarListRef.current
-      );
+
       setNodes(nodes);
       setEdges(edges);
 
@@ -253,13 +269,7 @@ export const Workflow = forwardRef(
       //   merged.forEach((edge) => map.set(edge.id, edge));
       //   return Array.from(map.values());
       // });
-    }, [
-      editWorkflow,
-      // deleteNode,
-      onCardClick,
-      // setNodes,
-      // setEdges,
-    ]);
+    }, [editWorkflow, onCardClick]);
 
     const [updaterList, setUpdaterList] = useState<IAgentInfoDetail[]>();
 
@@ -357,12 +367,10 @@ export const Workflow = forwardRef(
 
     const onConnect = useCallback(
       (params) => {
-        console.log(params, "params==onConnect");
         if (params.source === params.target) {
           return;
         }
         setEdges((eds) => {
-          console.log(eds, "eds==onConnect");
           if (
             eds.find(
               (item) =>
@@ -416,23 +424,14 @@ export const Workflow = forwardRef(
         if (dragInfo.nodeType === "new") {
           const agentType = agentInfoCopy.agentType;
 
-          console.log("Creating new node:", {
-            agentType,
-            usedIndexesRef: usedIndexesRef.current,
-          });
-
           // Synchronously find the smallest available index
           const usedIndexes = usedIndexesRef.current[agentType] || new Set();
           let newIndex = 1;
-
-          console.log("Current used indexes:", Array.from(usedIndexes));
 
           // Find the smallest available index starting from 1
           while (usedIndexes.has(newIndex)) {
             newIndex++;
           }
-
-          console.log("Found available index:", newIndex);
 
           // Update agentInfo copy with new name (only for new nodes)
           agentInfoCopy.name = `${agentType} ${newIndex}`;
@@ -443,13 +442,6 @@ export const Workflow = forwardRef(
             ...usedIndexesRef.current,
             [agentType]: newUsedIndexes,
           };
-
-          console.log("After adding new index:", {
-            agentType,
-            newIndex,
-            usedIndexes: Array.from(newUsedIndexes),
-            usedIndexesRef: usedIndexesRef.current,
-          });
 
           // Update state
           setAgentTypeUsedIndexes(usedIndexesRef.current);
