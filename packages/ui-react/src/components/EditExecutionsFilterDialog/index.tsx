@@ -50,7 +50,6 @@ export const EditExecutionsFilterDialog = ({
   filter,
   onChange,
 }: CustomDialogProps) => {
-  const searchParams = new URLSearchParams(window.location.search);
   const [filterCount, setFilterCount] = useState(0);
   const form = useForm<TEditExecutionsFilterForm>({
     resolver: zodResolver(editExecutionsFilterForm),
@@ -108,17 +107,6 @@ export const EditExecutionsFilterDialog = ({
                         disabled={field?.disabled}
                         onValueChange={(value: string) => {
                           field.onChange(value);
-
-                          if (value === "all") {
-                            searchParams.set("name", "all");
-                          } else {
-                            searchParams.set("name", value);
-                          }
-                          // [TODO]
-                          // navigate(`?${params.toString()}`, {
-                          //   replace: true,
-                          // });
-
                           onChange({
                             ...filter,
                             name: value,
@@ -164,13 +152,6 @@ export const EditExecutionsFilterDialog = ({
                         disabled={field?.disabled}
                         onValueChange={(value: string) => {
                           field?.onChange(value);
-
-                          searchParams.set("status", value);
-
-                          // [TODO]
-                          // navigate(`?${params.toString()}`, {
-                          //   replace: true,
-                          // });
                           onChange({
                             ...filter,
                             status: value,
@@ -250,16 +231,6 @@ export const EditExecutionsFilterDialog = ({
                           // Do a debounce here
                           const value = e.target.value;
                           field.onChange(value);
-
-                          value
-                            ? searchParams.set("execId", value)
-                            : searchParams.delete("execId");
-
-                          // [TODO]
-                          // navigate(`?${params.toString()}`, {
-                          //   replace: true,
-                          // });
-
                           onChange({
                             ...filter,
                             id: value,
