@@ -701,7 +701,7 @@ export const Workflow = forwardRef(
                 {isRunning ? "running" : "run"}
               </Button>
 
-              <Button
+              {/* <Button
                 onClick={onStopHandler}
                 className="sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
                 {isStopping ? (
@@ -714,7 +714,7 @@ export const Workflow = forwardRef(
                   <Stop />
                 )}
                 {isStopping ? "stopping" : "stop"}
-              </Button>
+              </Button> */}
             </div>
 
             {nodes.length === 0 && <Background />}

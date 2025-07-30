@@ -154,6 +154,7 @@ export default forwardRef(function WorkflowList(
   }, [getWorkflowsLoop]);
 
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const deleteWorkflowViewIdRef = useRef<string>();
   const deleteWorkflowIdRef = useRef<string>();
 
   const onDelete = useCallback(async () => {
@@ -170,10 +171,16 @@ export default forwardRef(function WorkflowList(
       duration: 0,
     });
     try {
-      await aevatarAI.services.agent.deleteAgent(deleteWorkflowIdRef.current);
+      if (deleteWorkflowIdRef.current)
+        await aevatarAI.services.agent.deleteAgent(deleteWorkflowIdRef.current);
+
+      await aevatarAI.services.agent.deleteAgent(
+        deleteWorkflowViewIdRef.current
+      );
+
       dismiss();
       // TODO There will be some delay in cqrs
-      await sleep(3000);
+      await sleep(1500);
       getWorkflowsLoop();
     } catch (error) {
       console.error("deleteAgent:", error);
@@ -194,7 +201,18 @@ export default forwardRef(function WorkflowList(
 
   const onDeleteWorkflow = useCallback(
     async (workflow: IWorkflowCoordinatorState & IAgentInfoDetail) => {
-      deleteWorkflowIdRef.current = workflow.id;
+      deleteWorkflowViewIdRef.current = workflow.id;
+
+      const workflowCoordinatorGAgentId =
+        workflow.properties?.workflowCoordinatorGAgentId;
+      if (
+        workflowCoordinatorGAgentId &&
+        workflowCoordinatorGAgentId !== IS_NULL_ID
+      ) {
+        deleteWorkflowIdRef.current = workflowCoordinatorGAgentId;
+      } else {
+        deleteWorkflowIdRef.current = undefined;
+      }
       onDelete();
     },
     [onDelete]
@@ -215,9 +233,13 @@ export default forwardRef(function WorkflowList(
       duration: 0,
     });
     try {
-      const result = await aevatarAI.services.agent.removeAllSubAgent(
-        deleteWorkflowIdRef.current
-      );
+      if (deleteWorkflowIdRef.current)
+        await aevatarAI.services.agent.removeAllSubAgent(
+          deleteWorkflowIdRef.current
+        );
+      // const result = await aevatarAI.services.agent.removeAllSubAgent(
+      //   deleteWorkflowViewIdRef.current
+      // );
       dismiss();
 
       await onDelete();

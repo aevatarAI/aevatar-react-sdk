@@ -29,7 +29,7 @@ interface UseHistoryReturn {
 }
 
 const MAX_HISTORY_SIZE = 50;
-const DEBOUNCE_DELAY = 500; // 500ms debounce delay
+const DEBOUNCE_DELAY = 300; // 500ms debounce delay
 
 export const useHistory = (): UseHistoryReturn => {
   const [canUndo, setCanUndo] = useState(false);
@@ -50,7 +50,7 @@ export const useHistory = (): UseHistoryReturn => {
     (nodes: INode[], edges: Edge[]) => {
       // Serialize nodes to replace functions with IDs
       const serializedNodes = serializeNodes(nodes);
-      
+
       const newState: HistoryState = {
         nodes: deepClone(serializedNodes), // Deep clone with serialized functions
         edges: deepClone(edges), // Deep clone preserving functions
@@ -62,8 +62,8 @@ export const useHistory = (): UseHistoryReturn => {
         currentState.current &&
         isStateEqual(
           {
-            nodes: currentState.current.nodes,
-            edges: currentState.current.edges,
+            nodes: currentState.current?.nodes,
+            edges: currentState.current?.edges,
           },
           { nodes: newState.nodes, edges: newState.edges }
         )
@@ -113,7 +113,7 @@ export const useHistory = (): UseHistoryReturn => {
     (nodes: INode[], edges: Edge[]) => {
       // Serialize nodes to replace functions with IDs
       const serializedNodes = serializeNodes(nodes);
-      
+
       const initialState: HistoryState = {
         nodes: deepClone(serializedNodes), // Deep clone with serialized functions
         edges: deepClone(edges), // Deep clone preserving functions
@@ -183,10 +183,10 @@ export const useHistory = (): UseHistoryReturn => {
     if (!currentState.current) {
       return null;
     }
-    
+
     // Deserialize nodes to restore function references
     const deserializedNodes = deserializeNodes(currentState.current.nodes);
-    
+
     return {
       nodes: deserializedNodes,
       edges: currentState.current.edges,
@@ -202,9 +202,12 @@ export const useHistory = (): UseHistoryReturn => {
     };
   }, []);
 
-  const updateFunction = useCallback((fnId: string, fn: (...args: any[]) => any) => {
-    functionRegistry.update(fnId, fn);
-  }, []);
+  const updateFunction = useCallback(
+    (fnId: string, fn: (...args: any[]) => any) => {
+      functionRegistry.update(fnId, fn);
+    },
+    []
+  );
 
   return {
     canUndo,
