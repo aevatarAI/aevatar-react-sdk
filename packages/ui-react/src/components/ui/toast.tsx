@@ -17,7 +17,7 @@ const ToastViewport = React.forwardRef<
   <ToastViewportEle
     ref={ref}
     className={cn(
-      "sdk:absolute sdk:top-[env(safe-area-inset-top,0px)] sdk:left-[50vw] sdk:-translate-x-[50%] sdk:bg-[#141415] sdk:w-auto sdk:z-[9999] sdk:flex sdk:flex-col sdk:transform-gpu sdk:will-change-transform sdk:backface-visibility-hidden sdk:sm:top-auto sdk:sm:bottom-[calc(22px+env(safe-area-inset-bottom,0px))] sdk:sm:right-[30px] sdk:sm:left-auto sdk:sm:-translate-x-0 sdk:sm:max-w-[420px] sdk:max-h-screen",
+      "sdk:absolute sdk:top-[10px] sdk:left-[50vw] sdk:-translate-x-[50%] sdk:bg-[#141415] sdk:w-auto sdk:z-[9999] sdk:flex sdk:flex-col sdk:transform-gpu sdk:will-change-transform sdk:backface-visibility-hidden sdk:sm:top-auto sdk:sm:bottom-[calc(22px+env(safe-area-inset-bottom,0px))] sdk:sm:right-[30px] sdk:sm:left-auto sdk:sm:-translate-x-0 sdk:sm:max-w-[420px] sdk:max-h-screen",
       className
     )}
     {...props}
