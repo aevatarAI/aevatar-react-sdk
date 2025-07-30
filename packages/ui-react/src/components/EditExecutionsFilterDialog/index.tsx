@@ -30,7 +30,6 @@ import {
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useSearchParams } from "wouter";
 import { useEffect, useState } from "react";
 
 interface Workflow {
@@ -51,7 +50,7 @@ export const EditExecutionsFilterDialog = ({
   filter,
   onChange,
 }: CustomDialogProps) => {
-  const [searchParams] = useSearchParams();
+  const searchParams = new URLSearchParams(window.location.search);
   const [filterCount, setFilterCount] = useState(0);
   const form = useForm<TEditExecutionsFilterForm>({
     resolver: zodResolver(editExecutionsFilterForm),
@@ -110,12 +109,10 @@ export const EditExecutionsFilterDialog = ({
                         onValueChange={(value: string) => {
                           field.onChange(value);
 
-                          const params = new URLSearchParams(searchParams);
-
                           if (value === "all") {
-                            params.set("name", "all");
+                            searchParams.set("name", "all");
                           } else {
-                            params.set("name", value);
+                            searchParams.set("name", value);
                           }
                           // [TODO]
                           // navigate(`?${params.toString()}`, {
@@ -168,8 +165,7 @@ export const EditExecutionsFilterDialog = ({
                         onValueChange={(value: string) => {
                           field?.onChange(value);
 
-                          const params = new URLSearchParams(searchParams);
-                          params.set("status", value);
+                          searchParams.set("status", value);
 
                           // [TODO]
                           // navigate(`?${params.toString()}`, {
@@ -255,10 +251,9 @@ export const EditExecutionsFilterDialog = ({
                           const value = e.target.value;
                           field.onChange(value);
 
-                          const params = new URLSearchParams(searchParams);
                           value
-                            ? params.set("execId", value)
-                            : params.delete("execId");
+                            ? searchParams.set("execId", value)
+                            : searchParams.delete("execId");
 
                           // [TODO]
                           // navigate(`?${params.toString()}`, {

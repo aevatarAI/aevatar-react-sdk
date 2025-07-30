@@ -44,7 +44,6 @@
     "monaco-editor": "^0.52.2",
     "react-day-picker": "^9.8.0",
     "react-fullscreen": "^0.1.0",
-    "react18-json-view": "^0.2.9",
-    "wouter": "^3.7.1"
+    "react18-json-view": "^0.2.9"
   }
 }
