@@ -21,6 +21,8 @@ import {
 import type { IWorkflowAevatarEditProps } from "../WorkflowAevatarEdit";
 import { sleep } from "@aevatar-react-sdk/utils";
 import Loading from "../../assets/svg/loading.svg?react";
+import AIStar from "../../assets/svg/aiStar.svg?react";
+import Close from "../../assets/svg/close.svg?react";
 import { aevatarAI } from "../../utils";
 import { handleErrorMessage } from "../../utils/error";
 import { useToast } from "../../hooks/use-toast";
@@ -29,7 +31,6 @@ import clsx from "clsx";
 import { useUpdateEffect } from "react-use";
 import EditWorkflowNameDialog from "../EditWorkflowNameDialog";
 import { useAevatar } from "../context/AevatarProvider";
-import SidebarWithNewAgent from "./sidebarWithNewAgent";
 import { useWorkflowState } from "../../hooks/useWorkflowState";
 import { ExecutionLogs } from "./executionLogs";
 import WorkflowProvider, { useWorkflow } from "../context/WorkflowProvider";
@@ -38,6 +39,7 @@ import { DndProvider as ReactDndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { SidebarSheet } from "./SidebarSheet";
+import { Textarea } from "../ui/textarea";
 
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
@@ -367,7 +369,8 @@ const WorkflowConfigurationInner = ({
             className={clsx(
               "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-outfit sdk:workflow-title sdk:flex-wrap",
               "sdk:items-center"
-            )}>
+            )}
+          >
             {onBack && (
               <BackArrow
                 role="img"
@@ -418,7 +421,8 @@ const WorkflowConfigurationInner = ({
                 "sdk:workflow-title-button-save sdk:cursor-pointer sdk:h-[30px]",
                 (editAgentOpen || isRunning) &&
                   "sdk:workflow-title-button-save-disabled"
-              )}>
+              )}
+            >
               {btnLoading && (
                 <Loading
                   key={"save"}
@@ -434,7 +438,8 @@ const WorkflowConfigurationInner = ({
 
         <div
           className="sdk:flex sdk:sm:h-[calc(100%-70px)] sdk:flex-1 sdk:relative sdk:sm:flex-row sdk:flex-col"
-          ref={setContainer}>
+          ref={setContainer}
+        >
           {/* Sidebar */}
           <div className="sdk:relative" ref={setSidebarContainer}>
             {sidebarConfig.type === "newAgent" && (
@@ -478,7 +483,8 @@ const WorkflowConfigurationInner = ({
               onOpenChange={(v) => {
                 console.log(v, "editAgentOpen=onClickWorkflowItem");
                 // setEditAgentOpen(v);
-              }}>
+              }}
+            >
               <DialogPortal container={container} asChild>
                 {/* <DialogOverlay /> */}
                 <WorkflowDialog
@@ -499,6 +505,57 @@ const WorkflowConfigurationInner = ({
                 workflowId={editWorkflow?.workflowAgentId}
                 roundId={1}
               />
+            </div>
+            <div className="sdk:flex sdk:justify-center sdk:p-[20px] sdk:bg-[#171717] sdk:absolute sdk:top-[25%] sdk:border-[#303030] sdk:rounded-md">
+              <div className="sdk:flex sdk:flex-col sdk:gap-[28px]">
+                <div className="sdk:flex sdk:justify-between">
+                  <span className="sdk:font-semibold">
+                    generate workflow with ai
+                  </span>
+                  <button type="button">
+                    <Close />
+                  </button>
+                </div>
+
+                <div className="sdk:flex sdk:flex-col sdk:gap-2">
+                  <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
+                    prompt
+                  </span>
+                  <Textarea
+                    className="sdk:bg-[#171717] sdk:min-w-[595px] sdk:min-h-[120px]"
+                    placeholder="please describe what kind of agent workflow you want to create"
+                    onChange={(e) => {
+                      console.log("e", e.target.value);
+                    }}
+                  />
+                </div>
+
+                <div className="sdk:flex sdk:flex-row sdk:justify-between">
+                  <Button
+                    type="button"
+                    className="max-w-[35px] max-h-[35px]"
+                    disabled={true}
+                    onClick={() => {}}
+                  >
+                    <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
+                      skip
+                    </span>
+                  </Button>
+                  <Button
+                    type="button"
+                    className="max-w-[35px] max-h-[35px]"
+                    disabled={false}
+                    onClick={() => {}}
+                  >
+                    <div className="sdk:flex sdk:flex-row sdk:items-center sdk:gap-[5px]">
+                      <AIStar />
+                      <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
+                        generate
+                      </span>
+                    </div>
+                  </Button>
+                </div>
+              </div>
             </div>
           </main>
         </div>
@@ -530,7 +587,8 @@ export default function WorkflowConfiguration(
     <ReactFlowProvider>
       <ReactDndProvider
         backend={isMobile ? TouchBackend : HTML5Backend}
-        options={isMobile ? { enableMouseEvents: true } : undefined}>
+        options={isMobile ? { enableMouseEvents: true } : undefined}
+      >
         <DnDProvider>
           <WorkflowProvider>
             <WorkflowConfigurationInner {...props} />
