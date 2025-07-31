@@ -16,6 +16,7 @@ import { Checkbox } from "../ui";
 import type React from "react";
 import { useState } from "react";
 import clsx from "clsx";
+import { validateSchemaField } from "../../utils/jsonSchemaValidate";
 
 export const renderSchemaField = ({
   form,
@@ -39,6 +40,17 @@ export const renderSchemaField = ({
   onChange?: (value: any, meta: { name: string; schema: any }) => void;
   disabled?: boolean;
 }) => {
+  // Create validation rule for this field
+  const createValidationRule = () => ({
+    validate: (value: any) => {
+      const { errors } = validateSchemaField(name, schema, value, parentName);
+      if (errors.length > 0) {
+        return errors[0].error;
+      }
+      return true;
+    }
+  });
+
   if (Array.isArray(schema.type)) {
     const types = schema.type;
     const nonNullTypes = types.filter((t) => t !== "null");
@@ -68,6 +80,7 @@ export const renderSchemaField = ({
         defaultValue={schema.value}
         name={fieldName}
         disabled={disabled}
+        rules={createValidationRule()}
         render={({ field }) => {
           // Wrap onValueChange to call both field.onChange and external onChange
           const handleChange = (value: any) => {
@@ -117,6 +130,7 @@ export const renderSchemaField = ({
         name={fieldName}
         defaultValue={schema.value || []}
         disabled={disabled}
+        rules={createValidationRule()}
         render={({ field }) => {
           // Use useState to maintain the key for ArrayField
           const [arrayKey, setArrayKey] = useState(
@@ -209,6 +223,7 @@ export const renderSchemaField = ({
         name={fieldName}
         defaultValue={schema.value || {}}
         disabled={disabled}
+        rules={createValidationRule()}
         render={({ field }) => {
           const value = field.value || {};
           const handleKeyChange = (oldKey: string, newKey: string) => {
@@ -342,6 +357,7 @@ export const renderSchemaField = ({
         name={fieldName}
         defaultValue={schema.value || {}}
         disabled={disabled}
+        rules={createValidationRule()}
         render={({ field }) => (
           <div className="sdk:w-full sdk:mb-2">
             <FormLabel>{labelWithRequired}</FormLabel>
@@ -411,6 +427,7 @@ export const renderSchemaField = ({
         defaultValue={schema.value}
         name={fieldName}
         disabled={disabled}
+        rules={createValidationRule()}
         render={({ field }) => {
           // For string under object, use Input; otherwise use Textarea
           const handleInputChange = (
@@ -479,6 +496,7 @@ export const renderSchemaField = ({
         defaultValue={schema.value}
         name={fieldName}
         disabled={disabled}
+        rules={createValidationRule()}
         render={({ field }) => {
           // Wrap onChange to call both field.onChange and external onChange
           const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -523,6 +541,7 @@ export const renderSchemaField = ({
         defaultValue={schema.value}
         name={fieldName}
         disabled={disabled}
+        rules={createValidationRule()}
         render={({ field }) => {
           // Wrap onChange to call both field.onChange and external onChange
           const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

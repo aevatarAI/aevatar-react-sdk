@@ -5,7 +5,7 @@ export type NodeType = "default" | "new";
 
 export interface IDragItem {
   nodeType: NodeType;
-  agentInfo?: Partial<IAgentInfoDetail>;
+  agentInfo?: Partial<IAgentInfoDetail> & { defaultValues?: Record<string, any[]> };
 }
 
 const DnDContext = createContext<

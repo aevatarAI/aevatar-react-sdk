@@ -22,7 +22,6 @@ export default function AevatarItem4Workflow({
 }: IAevatarItem4WorkflowProps) {
   const { isNew, onClick, deleteNode, agentInfo } = data;
   const [{ selectedAgent }] = useWorkflow();
-  console.log(nodeId, selected, selectedAgent, "selectedNodeId===");
   return (
     <>
       <Handle
