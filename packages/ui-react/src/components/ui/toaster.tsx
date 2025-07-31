@@ -11,7 +11,7 @@ import {
 } from "./toast";
 
 export function Toaster() {
-  const { toasts } = useToast();
+  const { toasts = [] } = useToast();
 
   return (
     <ToastProvider>

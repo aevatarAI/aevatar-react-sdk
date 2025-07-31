@@ -1,46 +1,57 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import React from "react";
+import { render, screen } from "@testing-library/react";
 import { describe, it, vi, expect } from "vitest";
 import Sidebar from "./sidebar";
-import { useDnD } from "../Workflow/DnDContext";
-import React from "react";
-import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import "@testing-library/jest-dom";
 
-// Mock useDnD
-const setDragItemMock = vi.fn();
-vi.mock("../Workflow/DnDContext", () => ({
-  __esModule: true,
-  useDnD: vi.fn(() => [null, setDragItemMock]),
-}));
-
-// Mock AevatarItemMini
+// Mock AevatarItemMini component
 vi.mock("./aevatarItemMini", () => ({
   __esModule: true,
-  default: (props: any) => {
-    const { name, agentType, disabled, isnew, disabledGeavatarIds } = props;
-    return (
-      <div
-        data-testid={isnew ? "new-aevatar-item-mini" : "aevatar-item-mini"}
-        data-disabled={disabled}
-        data-name={name}
-        data-agent-type={agentType}
-        onDragStart={props.onDragStart}
-        draggable={props.draggable}>
-        {name || (isnew ? "New Aevatar" : "Aevatar Item")}
-      </div>
-    );
-  },
+  default: ({ name, agentType, disabled, isnew }: any) => (
+    <div
+      data-testid={isnew ? "new-aevatar-item-mini" : "aevatar-item-mini"}
+      data-disabled={disabled ? "true" : "false"}
+    >
+      {isnew ? "+ new agent" : `${name} - ${agentType}`}
+    </div>
+  ),
 }));
 
-vi.mock("../../..", () => ({
-  useAevatar: () => [{ hiddenGAevatarType: [] }],
+// Mock SVG imports
+vi.mock("../../assets/svg/aevatarItem.svg?react", () => ({
+  __esModule: true,
+  default: () => <svg data-testid="aevatar-item-icon" />,
+}));
+vi.mock("../../assets/svg/aevatarItem-hover.svg?react", () => ({
+  __esModule: true,
+  default: () => <svg data-testid="aevatar-item-hover-icon" />,
+}));
+vi.mock("../../assets/svg/new-aevatarItem.svg?react", () => ({
+  __esModule: true,
+  default: () => <svg data-testid="new-aevatar-item-icon" />,
+}));
+vi.mock("../../assets/svg/new-aevatarItem-hover.svg?react", () => ({
+  __esModule: true,
+  default: () => <svg data-testid="new-aevatar-item-hover-icon" />,
+}));
+
+// Mock useDnD hook
+vi.mock("../Workflow/DnDContext", () => ({
+  useDnD: () => [null, vi.fn()],
+}));
+
+// Mock useToast hook
+vi.mock("../../hooks/use-toast", () => ({
+  useToast: () => ({
+    toast: vi.fn(),
+  }),
 }));
 
 describe("Sidebar Component", () => {
-  const mockGaeavatarList: IAgentInfoDetail[] = [
+  const mockGaeavatarList = [
     {
       id: "1",
-      name: "Agent1",
+      name: "Agent 1",
       agentType: "Type A",
       propertyJsonSchema: JSON.stringify({}),
       properties: {},

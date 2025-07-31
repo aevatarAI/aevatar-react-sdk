@@ -5,6 +5,7 @@ import { describe, it, vi, expect } from "vitest";
 import AevatarItem4Workflow from "./index";
 import AevatarCardInner from "./AevatarCardInner";
 import React from "react";
+import WorkflowProvider from "../context/WorkflowProvider";
 
 // Mock the `AevatarCardInner` component to simplify testing
 vi.mock("./AevatarCardInner", () => ({
@@ -39,6 +40,11 @@ vi.mock("@xyflow/react", async () => {
   };
 });
 
+// Mock Toaster component to avoid context issues
+vi.mock("../ui/toaster", () => ({
+  Toaster: () => <div data-testid="toaster" />,
+}));
+
 describe("AevatarItem4Workflow", () => {
   const mockOnClick = vi.fn();
   const mockDeleteNode = vi.fn();
@@ -66,9 +72,11 @@ describe("AevatarItem4Workflow", () => {
 
   it("renders correctly with left and right `Handle` components", () => {
     render(
-      <ReactFlowProvider>
-        <AevatarItem4Workflow {...mockProps} />
-      </ReactFlowProvider>
+      <WorkflowProvider>
+        <ReactFlowProvider>
+          <AevatarItem4Workflow {...mockProps} />
+        </ReactFlowProvider>
+      </WorkflowProvider>
     );
 
     // Assert that the left `Handle` is rendered with correct position and styles
@@ -92,9 +100,11 @@ describe("AevatarItem4Workflow", () => {
 
   it("renders AevatarCardInner with the correct props", () => {
     render(
-      <ReactFlowProvider>
-        <AevatarItem4Workflow {...mockProps} />
-      </ReactFlowProvider>
+      <WorkflowProvider>
+        <ReactFlowProvider>
+          <AevatarItem4Workflow {...mockProps} />
+        </ReactFlowProvider>
+      </WorkflowProvider>
     );
 
     // Assert AevatarCardInner is rendered
