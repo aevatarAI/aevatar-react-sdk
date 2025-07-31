@@ -14,14 +14,12 @@ import {
   useEdgesState,
   Controls,
   useReactFlow,
-  MarkerType,
   MiniMap,
   Background as BackgroundFlow,
 } from "@xyflow/react";
 import Loading from "../../assets/svg/loading.svg?react";
 import "@xyflow/react/dist/style.css";
 import "./index.css";
-
 import { useDnD } from "./DnDContext";
 import AevatarItem4Workflow from "../AevatarItem4Workflow";
 import Background from "./background";
@@ -41,7 +39,6 @@ import clsx from "clsx";
 import { useDrop } from "react-dnd";
 import CustomEdge from "./CustomEdge";
 import { v4 as uuidv4 } from "uuid";
-import Stop from "../../assets/svg/stop.svg?react";
 import { useHistory } from "./hooks/useHistory";
 import {
   Tooltip,
@@ -86,6 +83,9 @@ export interface IWorkflowInstance {
   getWorkUnitRelations: () => IWorkflowUnitListItem[];
   setNodes: React.Dispatch<React.SetStateAction<any[]>>;
   setEdges: React.Dispatch<React.SetStateAction<any[]>>;
+  onAiGenerateWorkflow: (
+    aiGenerateWorkflowViewData: IWorkflowViewDataParams
+  ) => Promise<void>;
 }
 
 export const Workflow = forwardRef(
@@ -286,6 +286,21 @@ export const Workflow = forwardRef(
       // setEdges,
     ]);
 
+    const onAiGenerateWorkflow = useCallback(
+      async (aiGenerateWorkflowViewData: IWorkflowViewDataParams) => {
+        const { nodes, edges } = generateWorkflowGraph(
+          aiGenerateWorkflowViewData,
+          gaevatarListRef.current,
+          gaevatarTypeListRef.current,
+          onCardClick,
+          deleteNode
+        );
+        setNodes(nodes);
+        setEdges(edges);
+      },
+      [onCardClick, deleteNode, setNodes, setEdges]
+    );
+
     const [updaterList, setUpdaterList] = useState<IAgentInfoDetail[]>();
 
     useUpdateEffect(() => {
@@ -400,8 +415,9 @@ export const Workflow = forwardRef(
         getWorkUnitRelations,
         setNodes,
         setEdges,
+        onAiGenerateWorkflow,
       }),
-      [getWorkUnitRelations, setNodes, setEdges]
+      [getWorkUnitRelations, setNodes, setEdges, onAiGenerateWorkflow]
     );
 
     const onConnect = useCallback(
@@ -646,7 +662,8 @@ export const Workflow = forwardRef(
                       )}
                       onClick={onUndoHandler}
                       disabled={!canUndo}
-                      aria-label="undo">
+                      aria-label="undo"
+                    >
                       <Refresh />
                     </Button>
                   </TooltipTrigger>
@@ -655,7 +672,8 @@ export const Workflow = forwardRef(
                       "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
-                    side="top">
+                    side="top"
+                  >
                     undo
                   </TooltipContent>
                 </Tooltip>
@@ -671,7 +689,8 @@ export const Workflow = forwardRef(
                       )}
                       onClick={onRedoHandler}
                       disabled={!canRedo}
-                      aria-label="redo">
+                      aria-label="redo"
+                    >
                       <Refresh
                         className=""
                         style={{ transform: "scaleX(-1)" }}
@@ -683,7 +702,8 @@ export const Workflow = forwardRef(
                       "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
-                    side="top">
+                    side="top"
+                  >
                     redo
                   </TooltipContent>
                 </Tooltip>
@@ -691,7 +711,8 @@ export const Workflow = forwardRef(
 
               <Button
                 onClick={onRunningHandler}
-                className="sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
+                className="sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]"
+              >
                 {isRunning ? (
                   <Loading
                     key={"save"}

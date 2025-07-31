@@ -1,5 +1,8 @@
 import type { IAgentInfo, IAgentInfoDetail, IUpdateAgentInfo } from "./agent";
 
+export interface IGenerateWorkflowProps {
+  userGoal: string;
+}
 export interface IWorkUnitRelationsItem {
   grainId: string;
   nextGrainId: string;
@@ -136,6 +139,7 @@ export interface IWorkflowService {
   getWorkflow<T = any>(
     query: IGetWorkflowQuery
   ): Promise<IGetWorkflowResult<T>>;
+  generate<T = any>(props: IGenerateWorkflowProps): Promise<T>;
   start<T = any>(params: IStartWorkflowParams): Promise<T>;
   createWorkflowViewData(params: IWorkflowViewDataParams): Promise<IAgentInfo>;
   updateWorkflowViewData(

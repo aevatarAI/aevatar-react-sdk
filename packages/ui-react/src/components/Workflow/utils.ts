@@ -13,7 +13,7 @@ export const generateWorkflowGraph = (
   agentInfos: IAgentInfoDetail[],
   gaevatarTypeList: IAgentsConfiguration[],
   onClick: TNodeDataClick,
-  deleteNode: TDeleteNode
+  deleteNode: TDeleteNode,
 ): { nodes: INode[]; edges: Edge[] } => {
   const nodes: INode[] = [];
   const edges: Edge[] = [];
@@ -33,7 +33,7 @@ export const generateWorkflowGraph = (
     const nodeId = workflowNode.nodeId;
 
     const jsonSchema = gaevatarTypeList.find(
-      (v) => v.agentType === workflowNode.agentType
+      (v) => v.agentType === workflowNode.agentType,
     )?.propertyJsonSchema;
 
     let agentInfo = agentInfoMap.get(nodeAgentId);

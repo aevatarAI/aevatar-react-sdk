@@ -40,6 +40,7 @@ import { DndProvider as ReactDndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { SidebarSheet } from "./SidebarSheet";
+import { WorkflowGenerationModal } from "../WorkflowGenerationModal";
 import { getWorkflowViewDataByUnit } from "../utils";
 import { isWorkflowDataEqual } from "../../utils/workflowDataComparison";
 import dayjs from "dayjs";
@@ -575,7 +576,8 @@ IWorkflowConfigurationProps) => {
             className={clsx(
               "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-outfit sdk:workflow-title sdk:flex-wrap",
               "sdk:items-center"
-            )}>
+            )}
+          >
             {onBack && (
               <BackArrow
                 role="img"
@@ -630,7 +632,8 @@ IWorkflowConfigurationProps) => {
                 "sdk:workflow-title-button-save sdk:cursor-pointer sdk:h-[30px]",
                 (editAgentOpen || isRunning) &&
                   "sdk:workflow-title-button-save-disabled"
-              )}>
+              )}
+            >
               {btnLoading && (
                 <Loading
                   key={"save"}
@@ -646,7 +649,8 @@ IWorkflowConfigurationProps) => {
 
         <div
           className="sdk:flex sdk:sm:h-[calc(100%-70px)] sdk:flex-1 sdk:relative sdk:sm:flex-row sdk:flex-col"
-          ref={setContainer}>
+          ref={setContainer}
+        >
           {/* Sidebar */}
           <div className="sdk:relative" ref={setSidebarContainer}>
             <SidebarSheet
@@ -682,7 +686,8 @@ IWorkflowConfigurationProps) => {
               onOpenChange={(v) => {
                 console.log(v, "editAgentOpen=onClickWorkflowItem");
                 // setEditAgentOpen(v);
-              }}>
+              }}
+            >
               <DialogPortal container={container} asChild>
                 {/* <DialogOverlay /> */}
                 <WorkflowDialog
@@ -704,13 +709,13 @@ IWorkflowConfigurationProps) => {
                 roundId={1}
               />
             </div>
+            <WorkflowGenerationModal workflowRef={workflowRef} />
           </main>
         </div>
       </div>
 
       <WorkflowSaveFailedModal
         saveFailed={saveFailed}
-        // onSaveFailed={onSaveFailed}
         onOpenChange={setSaveFailed}
       />
 
@@ -734,7 +739,8 @@ export default function WorkflowConfiguration(
     <ReactFlowProvider>
       <ReactDndProvider
         backend={isMobile ? TouchBackend : HTML5Backend}
-        options={isMobile ? { enableMouseEvents: true } : undefined}>
+        options={isMobile ? { enableMouseEvents: true } : undefined}
+      >
         <DnDProvider>
           <WorkflowProvider>
             <WorkflowConfigurationInner {...props} />
