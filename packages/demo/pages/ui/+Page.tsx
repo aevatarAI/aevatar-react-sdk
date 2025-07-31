@@ -38,8 +38,7 @@ const AuthButton = clientOnly(() => import("../../components/auth/AuthButton"));
 ConfigProvider.setConfig({
   requestDefaults: {
     timeout: 15000,
-    baseURL:
-      "https://station-developer-dev-staging.aevatar.ai/developer-client",
+    baseURL: "https://station-developer-dev-staging.aevatar.ai/snow-client",
   },
 });
 
@@ -100,216 +99,6 @@ export default function UI() {
       }),
       aevatarAI.services.agent.getAllAgentsConfiguration(),
     ]);
-    // const gaevatarList: IAgentInfoDetail[] = [];
-    // const agentTypeList: any[] = [
-    //   {
-    //     agentType: "Aevatar.SignalR.GAgents.SignalRGAgent",
-    //     fullName: "Aevatar.SignalR.GAgents.SignalRGAgent",
-    //     agentParams: [
-    //       {
-    //         name: "ConnectionId",
-    //         type: "System.String",
-    //       },
-    //     ],
-    //     propertyJsonSchema:
-    //       '{\n  "$schema": "http://json-schema.org/draft-04/schema#",\n  "title": "SignalRGAgentConfiguration",\n  "type": "object",\n  "additionalProperties": false,\n  "properties": {\n    "correlationId": {\n      "type": [\n        "null",\n        "string"\n      ],\n      "format": "guid"\n    },\n    "publisherGrainId": {\n      "$ref": "#/definitions/GrainId"\n    },\n    "connectionId": {\n      "type": "string"\n    }\n  },\n  "definitions": {\n    "GrainId": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "type": {\n          "$ref": "#/definitions/GrainType"\n        },\n        "key": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "GrainType": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "IdSpan": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/ReadOnlyMemoryOfByte"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "ReadOnlyMemoryOfByte": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        },\n        "span": {\n          "$ref": "#/definitions/ReadOnlySpanOfByte"\n        }\n      }\n    },\n    "ReadOnlySpanOfByte": {\n      "type": "object",\n      "x-deprecated": true,\n      "x-deprecatedMessage": "Types with embedded references are not supported in this version of your compiler.",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        }\n      }\n    }\n  }\n}',
-    //   },
-    //   {
-    //     agentType: "agentchildtest",
-    //     fullName: "Aevatar.Application.Grains.Agents.TestAgent.AgentChildTest",
-    //     agentParams: null,
-    //     propertyJsonSchema: null,
-    //   },
-    //   {
-    //     agentType: "agentparenttest",
-    //     fullName: "Aevatar.Application.Grains.Agents.TestAgent.AgentParentTest",
-    //     agentParams: null,
-    //     propertyJsonSchema: null,
-    //   },
-    //   {
-    //     agentType: "agentpermissiontest",
-    //     fullName:
-    //       "Aevatar.Application.Grains.Agents.TestAgent.AgentPermissionTest",
-    //     agentParams: null,
-    //     propertyJsonSchema: null,
-    //   },
-    //   {
-    //     agentType: "agenttest",
-    //     fullName: "Aevatar.Application.Grains.Agents.TestAgent.AgentTest",
-    //     agentParams: null,
-    //     propertyJsonSchema: null,
-    //   },
-    //   {
-    //     agentType:
-    //       "Aevatar.Application.Grains.Agents.TestAgent.SignalRTestGAgent",
-    //     fullName:
-    //       "Aevatar.Application.Grains.Agents.TestAgent.SignalRTestGAgent",
-    //     agentParams: null,
-    //     propertyJsonSchema: null,
-    //   },
-    //   {
-    //     agentType: "demo.dynamictoolai",
-    //     fullName:
-    //       "Aevatar.Application.Grains.Agents.TestAgent.DynamicToolAIGAgent",
-    //     agentParams: null,
-    //     propertyJsonSchema: null,
-    //   },
-    //   {
-    //     agentType: "Aevatar.Application.Grains.Agents.Creator.CreatorGAgent",
-    //     fullName: "Aevatar.Application.Grains.Agents.Creator.CreatorGAgent",
-    //     agentParams: null,
-    //     propertyJsonSchema: null,
-    //   },
-    //   {
-    //     agentType: "aevatar.result",
-    //     fullName: "Aevatar.GAgents.Executor.ResultGAgent",
-    //     agentParams: [
-    //       {
-    //         name: "ExecutionId",
-    //         type: "System.String",
-    //       },
-    //       {
-    //         name: "StreamProvider",
-    //         type: "System.String",
-    //       },
-    //       {
-    //         name: "StreamNamespace",
-    //         type: "System.String",
-    //       },
-    //       {
-    //         name: "ExpectedResultType",
-    //         type: "System.Type",
-    //       },
-    //     ],
-    //     propertyJsonSchema:
-    //       '{\n  "$schema": "http://json-schema.org/draft-04/schema#",\n  "title": "ResultGAgentConfiguration",\n  "type": "object",\n  "additionalProperties": false,\n  "properties": {\n    "correlationId": {\n      "type": [\n        "null",\n        "string"\n      ],\n      "format": "guid"\n    },\n    "publisherGrainId": {\n      "$ref": "#/definitions/GrainId"\n    },\n    "executionId": {\n      "type": "string"\n    },\n    "streamProvider": {\n      "type": "string"\n    },\n    "streamNamespace": {\n      "type": "string"\n    },\n    "expectedResultType": {\n      "type": [\n        "null",\n        "string"\n      ]\n    }\n  },\n  "definitions": {\n    "GrainId": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "type": {\n          "$ref": "#/definitions/GrainType"\n        },\n        "key": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "GrainType": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "IdSpan": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/ReadOnlyMemoryOfByte"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "ReadOnlyMemoryOfByte": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        },\n        "span": {\n          "$ref": "#/definitions/ReadOnlySpanOfByte"\n        }\n      }\n    },\n    "ReadOnlySpanOfByte": {\n      "type": "object",\n      "x-deprecated": true,\n      "x-deprecatedMessage": "Types with embedded references are not supported in this version of your compiler.",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        }\n      }\n    }\n  }\n}',
-    //   },
-    //   {
-    //     agentType:
-    //       "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
-    //     fullName:
-    //       "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
-    //     agentParams: [
-    //       {
-    //         name: "WorkflowUnitList",
-    //         type: "System.Collections.Generic.List`1[Aevatar.GAgents.GroupChat.WorkflowCoordinator.Dto.WorkflowUnitDto]",
-    //       },
-    //       {
-    //         name: "InitContent",
-    //         type: "System.String",
-    //       },
-    //     ],
-    //     propertyJsonSchema:
-    //       '{\n  "$schema": "http://json-schema.org/draft-04/schema#",\n  "title": "WorkflowCoordinatorConfigDto",\n  "type": "object",\n  "additionalProperties": false,\n  "properties": {\n    "correlationId": {\n      "type": [\n        "null",\n        "string"\n      ],\n      "format": "guid"\n    },\n    "publisherGrainId": {\n      "$ref": "#/definitions/GrainId"\n    },\n    "workflowUnitList": {\n      "type": "array",\n      "items": {\n        "$ref": "#/definitions/WorkflowUnitDto"\n      }\n    },\n    "initContent": {\n      "type": [\n        "null",\n        "string"\n      ]\n    }\n  },\n  "definitions": {\n    "GrainId": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "type": {\n          "$ref": "#/definitions/GrainType"\n        },\n        "key": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "GrainType": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "IdSpan": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/ReadOnlyMemoryOfByte"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "ReadOnlyMemoryOfByte": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        },\n        "span": {\n          "$ref": "#/definitions/ReadOnlySpanOfByte"\n        }\n      }\n    },\n    "ReadOnlySpanOfByte": {\n      "type": "object",\n      "x-deprecated": true,\n      "x-deprecatedMessage": "Types with embedded references are not supported in this version of your compiler.",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        }\n      }\n    },\n    "WorkflowUnitDto": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "grainId": {\n          "type": "string"\n        },\n        "nextGrainId": {\n          "type": "string"\n        },\n        "extendedData": {\n          "type": "object",\n          "additionalProperties": {\n            "type": "string"\n          }\n        }\n      }\n    }\n  }\n}',
-    //   },
-    //   {
-    //     agentType: "blackboardgagent",
-    //     fullName: "GroupChat.GAgent.Feature.Blackboard.BlackboardGAgent",
-    //     agentParams: null,
-    //     propertyJsonSchema: null,
-    //   },
-    //   {
-    //     agentType: "Aevatar.GAgents.InputGAgent.GAgent.InputGAgent",
-    //     fullName: "Aevatar.GAgents.InputGAgent.GAgent.InputGAgent",
-    //     agentParams: [
-    //       {
-    //         name: "Input",
-    //         type: "System.String",
-    //       },
-    //     ],
-    //     propertyJsonSchema:
-    //       '{\n  "$schema": "http://json-schema.org/draft-04/schema#",\n  "title": "InputConfigDto",\n  "type": "object",\n  "additionalProperties": false,\n  "properties": {\n    "memberName": {\n      "type": "string"\n    },\n    "correlationId": {\n      "type": [\n        "null",\n        "string"\n      ],\n      "format": "guid"\n    },\n    "publisherGrainId": {\n      "$ref": "#/definitions/GrainId"\n    },\n    "input": {\n      "type": "string"\n    }\n  },\n  "definitions": {\n    "GrainId": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "type": {\n          "$ref": "#/definitions/GrainType"\n        },\n        "key": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "GrainType": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "IdSpan": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/ReadOnlyMemoryOfByte"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "ReadOnlyMemoryOfByte": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        },\n        "span": {\n          "$ref": "#/definitions/ReadOnlySpanOfByte"\n        }\n      }\n    },\n    "ReadOnlySpanOfByte": {\n      "type": "object",\n      "x-deprecated": true,\n      "x-deprecatedMessage": "Types with embedded references are not supported in this version of your compiler.",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        }\n      }\n    }\n  }\n}',
-    //   },
-    //   {
-    //     agentType: "aevatar.mcp",
-    //     fullName: "Aevatar.GAgents.MCP.GAgents.MCPGAgent",
-    //     agentParams: [
-    //       {
-    //         name: "Server",
-    //         type: "Aevatar.GAgents.MCP.Options.MCPServerConfig",
-    //       },
-    //       {
-    //         name: "RequestTimeout",
-    //         type: "System.TimeSpan",
-    //       },
-    //       {
-    //         name: "EnableToolDiscovery",
-    //         type: "System.Boolean",
-    //       },
-    //     ],
-    //     propertyJsonSchema:
-    //       '{\n  "$schema": "http://json-schema.org/draft-04/schema#",\n  "title": "MCPGAgentConfig",\n  "type": "object",\n  "additionalProperties": false,\n  "properties": {\n    "memberName": {\n      "type": "string"\n    },\n    "correlationId": {\n      "type": [\n        "null",\n        "string"\n      ],\n      "format": "guid"\n    },\n    "publisherGrainId": {\n      "$ref": "#/definitions/GrainId"\n    },\n    "server": {\n      "$ref": "#/definitions/MCPServerConfig"\n    },\n    "requestTimeout": {\n      "type": "string",\n      "format": "duration"\n    },\n    "enableToolDiscovery": {\n      "type": "boolean"\n    }\n  },\n  "definitions": {\n    "GrainId": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "type": {\n          "$ref": "#/definitions/GrainType"\n        },\n        "key": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "GrainType": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "IdSpan": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/ReadOnlyMemoryOfByte"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "ReadOnlyMemoryOfByte": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        },\n        "span": {\n          "$ref": "#/definitions/ReadOnlySpanOfByte"\n        }\n      }\n    },\n    "ReadOnlySpanOfByte": {\n      "type": "object",\n      "x-deprecated": true,\n      "x-deprecatedMessage": "Types with embedded references are not supported in this version of your compiler.",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        }\n      }\n    },\n    "MCPServerConfig": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "serverName": {\n          "type": "string"\n        },\n        "command": {\n          "type": "string"\n        },\n        "args": {\n          "type": "array",\n          "items": {\n            "type": "string"\n          }\n        },\n        "env": {\n          "type": "object",\n          "additionalProperties": {\n            "type": "string"\n          }\n        },\n        "description": {\n          "type": "string"\n        },\n        "autoReconnect": {\n          "type": "boolean"\n        },\n        "reconnectDelay": {\n          "type": "string",\n          "format": "duration"\n        },\n        "url": {\n          "type": [\n            "null",\n            "string"\n          ]\n        },\n        "transportType": {\n          "type": [\n            "null",\n            "string"\n          ]\n        },\n        "initialDelayMs": {\n          "type": [\n            "integer",\n            "null"\n          ],\n          "format": "int32"\n        },\n        "maxRetries": {\n          "type": [\n            "integer",\n            "null"\n          ],\n          "format": "int32"\n        },\n        "toolDiscoveryEndpoint": {\n          "type": [\n            "null",\n            "string"\n          ]\n        },\n        "predefinedTools": {\n          "type": [\n            "array",\n            "null"\n          ],\n          "items": {\n            "$ref": "#/definitions/MCPToolDefinition"\n          }\n        }\n      }\n    },\n    "MCPToolDefinition": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "name": {\n          "type": "string"\n        },\n        "description": {\n          "type": "string"\n        },\n        "parameters": {\n          "type": [\n            "null",\n            "object"\n          ],\n          "additionalProperties": {\n            "$ref": "#/definitions/MCPParameterDefinition"\n          }\n        }\n      }\n    },\n    "MCPParameterDefinition": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "type": {\n          "type": "string"\n        },\n        "description": {\n          "type": [\n            "null",\n            "string"\n          ]\n        },\n        "required": {\n          "type": "boolean"\n        }\n      }\n    }\n  }\n}',
-    //   },
-    //   {
-    //     agentType: "psi.omni",
-    //     fullName: "Aevatar.GAgents.PsiOmni.PsiOmniGAgent",
-    //     agentParams: [
-    //       {
-    //         name: "Depth",
-    //         type: "System.Int32",
-    //       },
-    //       {
-    //         name: "LLMConfig",
-    //         type: "Aevatar.GAgents.AIGAgent.Dtos.LLMConfigDto",
-    //       },
-    //     ],
-    //     propertyJsonSchema:
-    //       '{\n  "$schema": "http://json-schema.org/draft-04/schema#",\n  "title": "PsiOmniGAgentConfig",\n  "type": "object",\n  "additionalProperties": false,\n  "properties": {\n    "memberName": {\n      "type": "string"\n    },\n    "correlationId": {\n      "type": [\n        "null",\n        "string"\n      ],\n      "format": "guid"\n    },\n    "publisherGrainId": {\n      "$ref": "#/definitions/GrainId"\n    },\n    "depth": {\n      "type": "integer",\n      "format": "int32"\n    },\n    "llmConfig": {\n      "oneOf": [\n        {\n          "type": "null"\n        },\n        {\n          "$ref": "#/definitions/LLMConfigDto"\n        }\n      ]\n    }\n  },\n  "definitions": {\n    "GrainId": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "type": {\n          "$ref": "#/definitions/GrainType"\n        },\n        "key": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "GrainType": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "IdSpan": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/ReadOnlyMemoryOfByte"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "ReadOnlyMemoryOfByte": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        },\n        "span": {\n          "$ref": "#/definitions/ReadOnlySpanOfByte"\n        }\n      }\n    },\n    "ReadOnlySpanOfByte": {\n      "type": "object",\n      "x-deprecated": true,\n      "x-deprecatedMessage": "Types with embedded references are not supported in this version of your compiler.",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        }\n      }\n    },\n    "LLMConfigDto": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "systemLLM": {\n          "type": [\n            "null",\n            "string"\n          ]\n        },\n        "selfLLMConfig": {\n          "oneOf": [\n            {\n              "type": "null"\n            },\n            {\n              "$ref": "#/definitions/SelfLLMConfig"\n            }\n          ]\n        }\n      }\n    },\n    "SelfLLMConfig": {\n      "type": "object",\n      "additionalProperties": false,\n      "required": [\n        "providerEnum",\n        "modelId"\n      ],\n      "properties": {\n        "providerEnum": {\n          "$ref": "#/definitions/LLMProviderEnum"\n        },\n        "modelId": {\n          "$ref": "#/definitions/ModelIdEnum"\n        },\n        "modelName": {\n          "type": "string"\n        },\n        "apiKey": {\n          "type": "string"\n        },\n        "endpoint": {\n          "type": "string"\n        },\n        "memo": {\n          "type": [\n            "null",\n            "object"\n          ],\n          "additionalProperties": {}\n        }\n      }\n    },\n    "LLMProviderEnum": {\n      "type": "integer",\n      "description": "0 = Azure\\n1 = OpenAI\\n2 = DeepSeek\\n3 = Google",\n      "x-enumNames": [\n        "Azure",\n        "OpenAI",\n        "DeepSeek",\n        "Google"\n      ],\n      "enum": [\n        0,\n        1,\n        2,\n        3\n      ]\n    },\n    "ModelIdEnum": {\n      "type": "integer",\n      "description": "0 = OpenAI\\n1 = DeepSeek\\n2 = Gemini\\n3 = OpenAITextToImage",\n      "x-enumNames": [\n        "OpenAI",\n        "DeepSeek",\n        "Gemini",\n        "OpenAITextToImage"\n      ],\n      "enum": [\n        0,\n        1,\n        2,\n        3\n      ]\n    }\n  }\n}',
-    //   },
-    //   {
-    //     agentType: "Aevatar.GAgents.Twitter.Agent.TwitterGAgent",
-    //     fullName: "Aevatar.GAgents.Twitter.Agent.TwitterGAgent",
-    //     agentParams: [
-    //       {
-    //         name: "ConsumerKey",
-    //         type: "System.String",
-    //       },
-    //       {
-    //         name: "ConsumerSecret",
-    //         type: "System.String",
-    //       },
-    //       {
-    //         name: "EncryptionPassword",
-    //         type: "System.String",
-    //       },
-    //       {
-    //         name: "BearerToken",
-    //         type: "System.String",
-    //       },
-    //       {
-    //         name: "ReplyLimit",
-    //         type: "System.Int32",
-    //       },
-    //     ],
-    //     propertyJsonSchema:
-    //       '{\n  "$schema": "http://json-schema.org/draft-04/schema#",\n  "title": "InitTwitterOptionsDto",\n  "type": "object",\n  "additionalProperties": false,\n  "properties": {\n    "correlationId": {\n      "type": [\n        "null",\n        "string"\n      ],\n      "format": "guid"\n    },\n    "publisherGrainId": {\n      "$ref": "#/definitions/GrainId"\n    },\n    "consumerKey": {\n      "type": "string"\n    },\n    "consumerSecret": {\n      "type": "string"\n    },\n    "encryptionPassword": {\n      "type": "string"\n    },\n    "bearerToken": {\n      "type": "string"\n    },\n    "replyLimit": {\n      "type": "integer",\n      "format": "int32"\n    }\n  },\n  "definitions": {\n    "GrainId": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "type": {\n          "$ref": "#/definitions/GrainType"\n        },\n        "key": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "GrainType": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "IdSpan": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/ReadOnlyMemoryOfByte"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "ReadOnlyMemoryOfByte": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        },\n        "span": {\n          "$ref": "#/definitions/ReadOnlySpanOfByte"\n        }\n      }\n    },\n    "ReadOnlySpanOfByte": {\n      "type": "object",\n      "x-deprecated": true,\n      "x-deprecatedMessage": "Types with embedded references are not supported in this version of your compiler.",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        }\n      }\n    }\n  }\n}',
-    //   },
-    //   {
-    //     agentType: "Aevatar.GAgents.Twitter.GAgents.ChatAIAgent.ChatAIGAgent",
-    //     fullName: "Aevatar.GAgents.Twitter.GAgents.ChatAIAgent.ChatAIGAgent",
-    //     agentParams: [
-    //       {
-    //         name: "Instructions",
-    //         type: "System.String",
-    //       },
-    //       {
-    //         name: "SystemLLM",
-    //         type: "System.String",
-    //       },
-    //       {
-    //         name: "MCPServers",
-    //         type: "System.Collections.Generic.List`1[Aevatar.GAgents.MCP.Options.MCPServerConfig]",
-    //       },
-    //       {
-    //         name: "SelectedGAgents",
-    //         type: "System.Collections.Generic.List`1[Orleans.Runtime.GrainType]",
-    //       },
-    //     ],
-    //     propertyJsonSchema:
-    //       '{\n  "$schema": "http://json-schema.org/draft-04/schema#",\n  "title": "ChatAIGAgentConfigDto",\n  "type": "object",\n  "additionalProperties": false,\n  "properties": {\n    "memberName": {\n      "type": "string"\n    },\n    "correlationId": {\n      "type": [\n        "null",\n        "string"\n      ],\n      "format": "guid"\n    },\n    "publisherGrainId": {\n      "$ref": "#/definitions/GrainId"\n    },\n    "instructions": {\n      "type": "string"\n    },\n    "systemLLM": {\n      "type": "string"\n    },\n    "mcpServers": {\n      "type": "array",\n      "items": {\n        "$ref": "#/definitions/MCPServerConfig"\n      }\n    },\n    "selectedGAgents": {\n      "type": "array",\n      "items": {\n        "$ref": "#/definitions/GrainType"\n      }\n    }\n  },\n  "definitions": {\n    "GrainId": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "type": {\n          "$ref": "#/definitions/GrainType"\n        },\n        "key": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "GrainType": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/IdSpan"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "IdSpan": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "value": {\n          "$ref": "#/definitions/ReadOnlyMemoryOfByte"\n        },\n        "isDefault": {\n          "type": "boolean"\n        }\n      }\n    },\n    "ReadOnlyMemoryOfByte": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        },\n        "span": {\n          "$ref": "#/definitions/ReadOnlySpanOfByte"\n        }\n      }\n    },\n    "ReadOnlySpanOfByte": {\n      "type": "object",\n      "x-deprecated": true,\n      "x-deprecatedMessage": "Types with embedded references are not supported in this version of your compiler.",\n      "additionalProperties": false,\n      "properties": {\n        "length": {\n          "type": "integer",\n          "format": "int32"\n        },\n        "isEmpty": {\n          "type": "boolean"\n        }\n      }\n    },\n    "MCPServerConfig": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "serverName": {\n          "type": "string"\n        },\n        "command": {\n          "type": "string"\n        },\n        "args": {\n          "type": "array",\n          "items": {\n            "type": "string"\n          }\n        },\n        "env": {\n          "type": "object",\n          "additionalProperties": {\n            "type": "string"\n          }\n        },\n        "description": {\n          "type": "string"\n        },\n        "autoReconnect": {\n          "type": "boolean"\n        },\n        "reconnectDelay": {\n          "type": "string",\n          "format": "duration"\n        },\n        "url": {\n          "type": [\n            "null",\n            "string"\n          ]\n        },\n        "transportType": {\n          "type": [\n            "null",\n            "string"\n          ]\n        },\n        "initialDelayMs": {\n          "type": [\n            "integer",\n            "null"\n          ],\n          "format": "int32"\n        },\n        "maxRetries": {\n          "type": [\n            "integer",\n            "null"\n          ],\n          "format": "int32"\n        },\n        "toolDiscoveryEndpoint": {\n          "type": [\n            "null",\n            "string"\n          ]\n        },\n        "predefinedTools": {\n          "type": [\n            "array",\n            "null"\n          ],\n          "items": {\n            "$ref": "#/definitions/MCPToolDefinition"\n          }\n        }\n      }\n    },\n    "MCPToolDefinition": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "name": {\n          "type": "string"\n        },\n        "description": {\n          "type": "string"\n        },\n        "parameters": {\n          "type": [\n            "null",\n            "object"\n          ],\n          "additionalProperties": {\n            "$ref": "#/definitions/MCPParameterDefinition"\n          }\n        }\n      }\n    },\n    "MCPParameterDefinition": {\n      "type": "object",\n      "additionalProperties": false,\n      "properties": {\n        "type": {\n          "type": "string"\n        },\n        "description": {\n          "type": [\n            "null",\n            "string"\n          ]\n        },\n        "required": {\n          "type": "boolean"\n        }\n      }\n    }\n  }\n}',
-    //   },
-    // ];
-    console.log(gaevatarList, agentTypeList, "gaevatarList==");
 
     setAgentTypeList(agentTypeList);
     const list = gaevatarList.map((item) => {
@@ -335,14 +124,14 @@ export default function UI() {
 
   const onEditWorkflow = useCallback(
     async (workflowAgentId: string) => {
-      const result = await aevatarAI.getWorkflowUnitRelationByAgentId(
+      const result = await aevatarAI.getWorkflowViewDataByAgentId(
         workflowAgentId
       );
       setEditWorkflow({
         workflowAgentId,
+        workflowId: result.workflowId,
         workflowName: result.workflowName,
-        // workUnitRelations: workUnitRelations,
-        workUnitRelations: result.workUnitRelations,
+        workflowViewData: result.workflowViewData,
       });
       onShowWorkflow();
       console.log(workflowAgentId, result, "onEditWorkflow=");
@@ -366,29 +155,9 @@ export default function UI() {
       Authorization:
         "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkJGRUI5QzEwMDMzNDJGNTdBQTMzOEM5RUI0MTAyRENFQzNEOEE2M0EiLCJ4NXQiOiJ2LXVjRUFNMEwxZXFNNHlldEJBdHpzUFlwam8iLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtcHJlLXN0YXRpb24tZGV2LXN0YWdpbmcuYWV2YXRhci5haS8iLCJleHAiOjE3NTQwMjc4NTksImlhdCI6MTc1Mzg1NTA2MCwiYXVkIjoiQWV2YXRhciIsInNjb3BlIjoiQWV2YXRhciBvZmZsaW5lX2FjY2VzcyIsImp0aSI6IjIwZjVjM2FlLTA3NWQtNGU5YS1iNDQ2LWQ0MDE2ZTc3NGM1ZSIsInN1YiI6ImYwODM5NjRiLTJkNDktNGMzOS1iMjdhLWRiYzJjMTdjNzkzNiIsInByZWZlcnJlZF91c2VybmFtZSI6ImNqaHJveTk4QGdtYWlsLmNvbUBnb29nbGUiLCJlbWFpbCI6IjIzYWExYjU1MjJjZTQxOWNiNGY2YmIxZjkzMDA5ZDIwQEFCUC5JTyIsInJvbGUiOlsiYmFzaWNVc2VyIiwiM2ExNTRiNjQtZWI0YS1jMjNmLWNkMDMtM2ExYjFhN2FjYTlkX093bmVyIl0sInBob25lX251bWJlcl92ZXJpZmllZCI6IkZhbHNlIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsInVuaXF1ZV9uYW1lIjoiY2pocm95OThAZ21haWwuY29tQGdvb2dsZSIsInNlY3VyaXR5X3N0YW1wIjoiT0VBSVpPRkVNMkNDVERZV1Y0VkdYU0g0Q1pUVDJOVlEiLCJvaV9wcnN0IjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV9hdV9pZCI6IjQxNWJiNmJmLWUyZDEtMzk2ZS1jNDRiLTNhMWI2YzE1M2Y2OSIsImNsaWVudF9pZCI6IkFldmF0YXJBdXRoU2VydmVyIiwib2lfdGtuX2lkIjoiN2NmNzkwNjgtMmI1My0wNmNlLTRiZjktM2ExYjZjMTU0MjgzIn0.EqdmuAghmcPin9BDOu9fd4zrTvHZA4-ws48G6IisX5QWZLr4FZrADSun9kGvIkEw_Yklt-V0Sb5u1VbtRT2FQ6OY_kcRHEmA2mEtPV6OWvHwrcevFCwD_WPZGyw2vOFyju1MJSPhYgWJPWJFQexU6DlOtVr32POBj6EyeUsrj-cxXrXDGRsOawOj7q86dPmtYpThQCGF_WGGYsXJTB7mz5yyFQj8OeTw3rXqTiROhFAPtVtVy_aeKNy_T-nH7Hfg6nKcrXrXxigICnTG0hGZw8Ft4ikVhYwm4BRM5EMBuwICJMQ-Jd013kMScsXJDg3IQusIovkZv_8h1lUf3TWEKg",
     });
+
     setShowAction(true);
   }, []);
-
-  const onGaevatarChange = useCallback(
-    async (isCreate: boolean, data: { params: any; agentId?: string }) => {
-      console.log(isCreate, data, "isCreate, data=");
-      let result: IAgentInfoDetail;
-      if (isCreate) {
-        result = await aevatarAI.services.agent.createAgent(data.params);
-      } else {
-        if (!data.agentId) throw "Not agentId";
-        result = await aevatarAI.services.agent.updateAgentInfo(
-          data.agentId,
-          data.params
-        );
-      }
-      await sleep(2000);
-      await refreshGaevatarList();
-
-      return result;
-    },
-    [refreshGaevatarList]
-  );
 
   const fullscreenHandle = useFullScreenHandle();
   const workflowListRef = useRef<IWorkflowListRef>(null);
@@ -409,12 +178,12 @@ export default function UI() {
   return (
     <div className="min-w-[375px]">
       <AevatarProvider
-        hiddenGAevatarType={
-          [
-            // "Aevatar.SignalR.GAgents.SignalRGAgent",
-            // "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
-          ]
-        }
+      // hiddenGAevatarType={
+      //   [
+      //     // "Aevatar.SignalR.GAgents.SignalRGAgent",
+      //     // "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
+      //   ]
+      // }
       >
         <LoginButton />
 
@@ -425,34 +194,36 @@ export default function UI() {
         {/* {showAction && (
           <> */}
         <Button onClick={onShowGaevatar}>show gaevatar</Button>
-        <Button onClick={onShowWorkflow}>show workflow</Button>
+        <Button
+          onClick={() => {
+            setEditWorkflow(undefined);
+            onShowWorkflow();
+          }}>
+          show workflow
+        </Button>
         <Button
           onClick={() => {
             onEditWorkflow(localStorage.getItem("workflowAgentId") ?? "");
-          }}
-        >
+          }}>
           edit workflow
         </Button>
         <div className="h-[10px]" />
         <Button
           onClick={() => {
             setStage(Stage.WorkflowList);
-          }}
-        >
+          }}>
           show workflowList
         </Button>
         <Button
           onClick={() => {
             workflowListRef.current?.refresh();
-          }}
-        >
+          }}>
           refresh workflowList
         </Button>
         <Button
           onClick={() => {
             setStage(Stage.ExecutionList);
-          }}
-        >
+          }}>
           show executions
         </Button>
 
@@ -497,7 +268,6 @@ export default function UI() {
                 gaevatarList, //: [],
                 isNewGAevatar: true,
                 gaevatarTypeList: agentTypeList,
-                type: "newAgent",
               }}
               extraControlBar={
                 <div className="w-full h-full bg-[#141415] flex flow-row border-[1px] border-[#303030]">
@@ -510,8 +280,7 @@ export default function UI() {
                       fullscreenHandle.active
                         ? fullscreenHandle.exit()
                         : fullscreenHandle.enter();
-                    }}
-                  >
+                    }}>
                     <FullScreenIcon
                       style={{
                         width: 16,
@@ -529,14 +298,7 @@ export default function UI() {
               onBack={() => {
                 setStage(undefined);
               }}
-              onSave={(workflowAgentId: string) => {
-                console.log(workflowAgentId, "workflowAgentId==");
-                workflowAgentId &&
-                  localStorage.setItem("workflowAgentId", workflowAgentId);
-                getWorkflowDetail(workflowAgentId);
-              }}
               editWorkflow={editWorkflow}
-              onGaevatarChange={onGaevatarChange}
             />
           </FullScreen>
         )}
@@ -548,6 +310,7 @@ export default function UI() {
                 onEditWorkflow(workflowAgentId);
               }}
               onNewWorkflow={() => {
+                setEditWorkflow(undefined);
                 onShowWorkflow();
               }}
             />

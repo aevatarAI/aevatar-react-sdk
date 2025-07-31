@@ -18,6 +18,7 @@ const INITIAL_STATE = {
   theme: "dark",
   hiddenGAevatarType: [
     "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
+    "Aevatar.GAgents.GroupChat.GAgent.Coordinator.WorkflowView.WorkflowViewGAgent"
   ],
 };
 const AevatarContext = createContext<any>(INITIAL_STATE);

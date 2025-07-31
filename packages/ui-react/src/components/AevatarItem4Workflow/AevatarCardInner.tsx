@@ -41,7 +41,7 @@ export default function AevatarCardInner({
         agentInfo?.propertyJsonSchema,
         agentInfo?.properties,
         isNew ? agentInfo?.defaultValues : undefined
-      ),
+      ).slice(0, 3), // Only take first 3 properties
     [agentInfo, isNew]
   );
 
@@ -58,13 +58,14 @@ export default function AevatarCardInner({
           "sdk:aevatar-item-background sdk:w-[234px]  sdk:border sdk:border-[#141415]  sdk:group-hover:border-[#303030]",
           selected && "sdk:border-[#AFC6DD]! ",
           "sdk:border-b-[0px]!",
+          "sdk:max-h-[300px] sdk:overflow-y-auto",
           className
         )}>
         <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
           <div className="sdk:flex sdk:justify-between sdk:items-center sdk:pb-[9px]">
             <div
               className="sdk:font-outfit sdk:text-white sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
-            >{`${agentInfo?.name ?? "agent name"}`}</div>
+            >{`${agentInfo?.name || "agent name"}`}</div>
 
             {isNew ? (
               <DeleteWorkflowGAevatar handleDeleteClick={handleDeleteClick} />
@@ -91,9 +92,7 @@ export default function AevatarCardInner({
             let value = schema.value;
 
             let valueList = [value];
-            if (isNew) {
-              valueList = [];
-            } else if (value === undefined || value === null || value === "") {
+            if (value === undefined || value === null || value === "") {
               valueList = [null];
             } else if (schema.enum) {
               const valueIndex = schema.enum.indexOf(schema.value);
@@ -126,7 +125,6 @@ export default function AevatarCardInner({
             } else {
               valueList = [value ?? ""];
             }
-            console.log(valueList, value, schema, propName, "valueList==");
 
             return (
               <div key={propName} className={clsx(isNew && "sdk:w-full")}>
@@ -178,14 +176,14 @@ export default function AevatarCardInner({
                     );
                   })}
                   {/* When isNew and valueList is empty, render a placeholder div for visual consistency */}
-                  {isNew && valueList.length === 0 && (
+                  {/* {isNew && valueList.length === 0 && (
                     <div
                       className={clsx(
                         "sdk:h-[23px] sdk:w-full sdk:bg-[#303030]",
                         schema.type !== "string" && "sdk:w-[100px]!"
                       )}
                     />
-                  )}
+                  )} */}
                 </div>
               </div>
             );
