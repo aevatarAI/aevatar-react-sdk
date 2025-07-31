@@ -13,6 +13,7 @@ import type {
   IStartWorkflowProps,
   IGetWorkflowQuery,
   IGetWorkflowResult,
+  IGenerateWorkflowProps
 } from "../types/workflow";
 
 export class WorkflowService<T extends IBaseRequest = IBaseRequest>
@@ -88,5 +89,13 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
         ...params,
       },
     });
+  }
+
+  generate<T = any>(params: IGenerateWorkflowProps): Promise<T> {
+    return this._request.send({
+      method: "POST",
+      url: "/api/workflow/generate",
+      params
+    }) 
   }
 }

@@ -21,8 +21,6 @@ import {
 import type { IWorkflowAevatarEditProps } from "../WorkflowAevatarEdit";
 import { sleep } from "@aevatar-react-sdk/utils";
 import Loading from "../../assets/svg/loading.svg?react";
-import AIStar from "../../assets/svg/aiStar.svg?react";
-import Close from "../../assets/svg/close.svg?react";
 import { aevatarAI } from "../../utils";
 import { handleErrorMessage } from "../../utils/error";
 import { useToast } from "../../hooks/use-toast";
@@ -39,57 +37,8 @@ import { DndProvider as ReactDndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { SidebarSheet } from "./SidebarSheet";
-import { Textarea } from "../ui/textarea";
-
-export const usePostAIWorkflowGeneration = (prompt: string) => {
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState();
-  const [error, setError] = useState("");
-
-  const refetch = useCallback(
-    async (prompt: string) => {
-      if (!prompt) return;
-
-      const token = "";
-
-      try {
-        setIsLoading(true);
-        const response = await fetch(
-          "https://station-developer-dev-staging.aevatar.ai/snow-client/api/workflow/generate",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: token,
-            },
-            body: JSON.stringify({
-              userGoal: prompt,
-            }),
-          }
-        );
-
-        const results = await response.json();
-
-        setData(results);
-      } catch (_) {
-        const description = "Error generating workflow";
-        toast({ description });
-        setError(description);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [toast]
-  );
-
-  useEffect(() => {
-    refetch(prompt);
-  }, [refetch, prompt]);
-
-  return { isLoading, data, refetch, error };
-};
-
+import { usePostAIWorkflowGeneration } from "../../hooks/usePostAIWorkflowGeneration";
+import { WorkflowGenerationModal } from "../WorkflowGenerationModal";
 export interface IWorkflowConfigurationProps {
   sidebarConfig: {
     gaevatarList?: IAgentInfoDetail[];
@@ -122,7 +71,7 @@ const WorkflowConfigurationInner = ({
   onSave: onSaveHandler,
   onGaevatarChange,
 }: IWorkflowConfigurationProps) => {
-  const { isLoading, data, refetch } = usePostAIWorkflowGeneration("");
+  const { isLoading, data, refetch } = usePostAIWorkflowGeneration();
   const [container, setContainer] = React.useState(null);
   const { toast } = useToast();
   const [editAgentOpen, setEditAgentOpen] = useState(false);
@@ -598,102 +547,3 @@ export default function WorkflowConfiguration(
     </ReactFlowProvider>
   );
 }
-
-interface IWorkflowGenerationModalProps {
-  isLoading: boolean;
-  refetch: (prompt: string) => void;
-}
-
-export const WorkflowGenerationModal = ({
-  isLoading,
-  refetch,
-}: IWorkflowGenerationModalProps) => {
-  const [isVisible, setIsVisible] = useState(true);
-  const [inputPrompt, setInputPrompt] = useState("");
-
-  const handleClose = () => {
-    setIsVisible(false);
-  };
-
-  const handleChange = (e) => {
-    setInputPrompt(e.target.value);
-  };
-
-  const handleClick = async () => {
-    await refetch(inputPrompt);
-    setIsVisible(false);
-  };
-
-  if (!isVisible) {
-    return null;
-  }
-
-  return (
-    <>
-      <div className="sdk:bg-[#000000] sdk:fixed sdk:inset-0 sdk:opacity-50 sdk:z-99" />
-
-      <div className="sdk:flex sdk:justify-center sdk:p-[20px] sdk:bg-[#171717] sdk:absolute sdk:top-[25%] sdk:border sdk:border-[#FFFFFF14] sdk:rounded-md sdk:z-100">
-        <div className="sdk:flex sdk:flex-col sdk:gap-[28px]">
-          <div className="sdk:flex sdk:justify-between">
-            <span className="sdk:font-outfit sdk:font-semibold sdk:text-[18px] sdk:bg-gradient-to-r sdk:from-white sdk:to-[#999] sdk:bg-clip-text sdk:text-transparent sdk:lowercase">
-              generate workflow with ai
-            </span>
-            <button
-              className="sdk:cursor-pointer"
-              type="button"
-              onClick={handleClose}
-            >
-              <Close />
-            </button>
-          </div>
-
-          <div className="sdk:flex sdk:flex-col sdk:gap-2">
-            <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
-              prompt
-            </span>
-            <Textarea
-              className="sdk:text-[13px] sdk:bg-[#171717] sdk:min-w-[595px] sdk:min-h-[120px]"
-              placeholder="please describe what kind of agent workflow you want to create"
-              onChange={handleChange}
-              disabled={isLoading}
-            />
-          </div>
-
-          <div className="sdk:flex sdk:flex-row sdk:justify-between">
-            <Button
-              type="button"
-              className="max-w-[35px] max-h-[35px]"
-              onClick={handleClose}
-              disabled={isLoading}
-            >
-              <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
-                skip
-              </span>
-            </Button>
-            <Button
-              type="button"
-              className={`sdk:min-w-[114px] ${isLoading && "sdk:bg-[#ffffff]"}`}
-              disabled={!inputPrompt || isLoading}
-              onClick={handleClick}
-            >
-              {isLoading ? (
-                <Loading
-                  key="generate"
-                  className={clsx("aevatarai-loading-icon")}
-                  style={{ width: 10, height: 10 }}
-                />
-              ) : (
-                <div className="sdk:flex sdk:flex-row sdk:items-center sdk:gap-[5px]">
-                  <AIStar />
-                  <span className="sdk:text-[14px] sdk:text-[#B9B9B9]-600">
-                    generate
-                  </span>
-                </div>
-              )}
-            </Button>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
