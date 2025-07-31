@@ -32,7 +32,6 @@ import clsx from "clsx";
 import { useUpdateEffect } from "react-use";
 import EditWorkflowNameDialog from "../EditWorkflowNameDialog";
 import { useAevatar } from "../context/AevatarProvider";
-import SidebarWithNewAgent from "./sidebarWithNewAgent";
 import { useWorkflowState } from "../../hooks/useWorkflowState";
 import { ExecutionLogs } from "./executionLogs";
 import WorkflowProvider, { useWorkflow } from "../context/WorkflowProvider";
@@ -44,6 +43,7 @@ import { SidebarSheet } from "./SidebarSheet";
 import { getWorkflowViewDataByUnit } from "../utils";
 import { isWorkflowDataEqual } from "../../utils/workflowDataComparison";
 import dayjs from "dayjs";
+import { handleErrorMessage } from "../../utils/error";
 
 export interface IWorkflowConfigurationState {
   workflowAgentId: string;
@@ -315,7 +315,10 @@ IWorkflowConfigurationProps) => {
         console.error("onConfirmSaveHandler error:", error);
         toast({
           title: "error",
-          description: "save failed, please try again.",
+          description: handleErrorMessage(
+            error,
+            "save failed, please try again."
+          ),
           duration: 3000,
         });
       }
