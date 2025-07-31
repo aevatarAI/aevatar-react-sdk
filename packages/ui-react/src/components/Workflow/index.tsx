@@ -86,6 +86,9 @@ export interface IWorkflowInstance {
   getWorkUnitRelations: () => IWorkflowUnitListItem[];
   setNodes: React.Dispatch<React.SetStateAction<any[]>>;
   setEdges: React.Dispatch<React.SetStateAction<any[]>>;
+  onAiGenerateWorkflow: (
+    aiGenerateWorkflowViewData: IWorkflowViewDataParams
+  ) => Promise<void>;
 }
 
 export const Workflow = forwardRef(
@@ -286,6 +289,21 @@ export const Workflow = forwardRef(
       // setEdges,
     ]);
 
+    const onAiGenerateWorkflow = useCallback(
+      async (aiGenerateWorkflowViewData: IWorkflowViewDataParams) => {
+        const { nodes, edges } = generateWorkflowGraph(
+          aiGenerateWorkflowViewData,
+          gaevatarListRef.current,
+          gaevatarTypeListRef.current,
+          onCardClick,
+          deleteNode
+        );
+        setNodes(nodes);
+        setEdges(edges);
+      },
+      [onCardClick, deleteNode, setNodes, setEdges]
+    );
+
     const [updaterList, setUpdaterList] = useState<IAgentInfoDetail[]>();
 
     useUpdateEffect(() => {
@@ -400,8 +418,9 @@ export const Workflow = forwardRef(
         getWorkUnitRelations,
         setNodes,
         setEdges,
+        onAiGenerateWorkflow,
       }),
-      [getWorkUnitRelations, setNodes, setEdges]
+      [getWorkUnitRelations, setNodes, setEdges, onAiGenerateWorkflow]
     );
 
     const onConnect = useCallback(
@@ -603,15 +622,13 @@ export const Workflow = forwardRef(
         className={clsx(
           "dndflow sdk:w-full",
           editAgentOpen && "editAgentOpen-workflow-inner"
-        )}
-      >
+        )}>
         <div
           className="reactflow-wrapper sdk:relative"
           ref={(node) => {
             reactFlowWrapper.current = node;
             dropRef(node);
-          }}
-        >
+          }}>
           <ReactFlow
             colorMode="dark"
             nodes={nodes}
@@ -630,8 +647,7 @@ export const Workflow = forwardRef(
               strokeDasharray: "10 10",
               stroke: "#B9B9B9",
               strokeWidth: 2,
-            }}
-          >
+            }}>
             <div className="sdk:absolute sdk:left-[15px] sdk:bottom-[130px] sdk:z-5">
               {extraControlBar}
             </div>
