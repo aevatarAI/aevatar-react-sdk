@@ -44,7 +44,8 @@ export interface IWorkflowAevatarEditProps {
       };
       agentId?: string;
     },
-    nodeId: string
+    nodeId: string,
+    propertyJsonSchema: string
   ) => Promise<IAgentInfoDetail>;
 }
 
@@ -55,7 +56,7 @@ export default function WorkflowAevatarEdit({
   onGaevatarChange,
   disabled,
 }: IWorkflowAevatarEditProps) {
-  const form = useForm<any>();
+  const form = useForm<any>({ mode: "onBlur" });
   const [btnLoading, setBtnLoading] = useState<boolean>();
   const { toast } = useToast();
 
@@ -63,6 +64,32 @@ export default function WorkflowAevatarEdit({
   useEffect(() => {
     btnLoadingRef.current = btnLoading;
   }, [btnLoading]);
+
+  const onGaevatarChangeRef = useRef(onGaevatarChange);
+  useEffect(() => {
+    onGaevatarChangeRef.current = onGaevatarChange;
+  }, [onGaevatarChange]);
+
+  // Debounce timer reference
+  const debounceTimerRef = useRef<NodeJS.Timeout>();
+
+  // Store latest values to avoid circular triggers
+  const agentItemRef = useRef(agentItem);
+  const isNewRef = useRef(isNew);
+  const nodeIdRef = useRef(nodeId);
+
+  // Update refs with latest values
+  useEffect(() => {
+    agentItemRef.current = agentItem;
+  }, [agentItem]);
+
+  useEffect(() => {
+    isNewRef.current = isNew;
+  }, [isNew]);
+
+  useEffect(() => {
+    nodeIdRef.current = nodeId;
+  }, [nodeId]);
 
   // useUpdateEffect(() => {
   //   form.setValue("agentName", agentItem?.name);
@@ -73,11 +100,13 @@ export default function WorkflowAevatarEdit({
   // }, [agentItem?.agentType]);
 
   useUpdateEffect(() => {
-    form.reset({
-      agentName: agentItem?.name ?? "",
-      agentType: agentItem?.agentType ?? "",
-    });
-  }, [agentItem, nodeId]);
+    form.setValue("agentName", agentItem?.name ?? "");
+    form.setValue("agentType", agentItem?.agentType ?? "");
+    // form.reset({
+    //   agentName: agentItem?.name ?? "",
+    //   agentType: agentItem?.agentType ?? "",
+    // });
+  }, [agentItem?.name, agentItem?.agentType, nodeId]);
 
   const JSONSchemaProperties: [string, JSONSchemaType<any>][] = useMemo(() => {
     return jsonSchemaParse(
@@ -89,7 +118,7 @@ export default function WorkflowAevatarEdit({
 
   const agentTypeList = useMemo(
     () => (agentItem?.agentType ? [agentItem?.agentType] : []),
-    [agentItem]
+    [agentItem?.agentType]
   );
 
   const onSubmit = useCallback(
@@ -128,7 +157,8 @@ export default function WorkflowAevatarEdit({
         await onGaevatarChange(
           isNew,
           { params: submitParams, agentId: agentItem?.id },
-          nodeId
+          nodeId,
+          agentItem?.propertyJsonSchema
         );
         await sleep(2000);
         setBtnLoading(undefined);
@@ -152,6 +182,81 @@ export default function WorkflowAevatarEdit({
     ]
   );
 
+  // Actual submit function (will be called after debounce)
+  const actualSubmit = useCallback((values: any) => {
+    // Get current form values inside function to avoid frequent triggers
+    const currentFormValues = values;
+    // Calculate JSONSchemaProperties inside function to avoid dependency issues
+    const currentJSONSchemaProperties = jsonSchemaParse(
+      agentItemRef.current?.propertyJsonSchema,
+      agentItemRef.current?.properties
+    );
+
+    const params: any = {};
+    currentJSONSchemaProperties?.forEach(([name, schema]) => {
+      const { param } = validateSchemaField(
+        name,
+        schema,
+        currentFormValues[name]
+      );
+      if (param !== undefined) params[name] = param;
+    });
+
+    const submitParams = {
+      agentType: currentFormValues.agentType ?? agentItemRef.current?.agentType,
+      name: currentFormValues.agentName,
+      properties: params,
+    };
+    onGaevatarChangeRef.current(
+      isNewRef.current,
+      {
+        params: submitParams,
+        agentId: agentItemRef.current?.id || nodeIdRef.current,
+      },
+      nodeIdRef.current,
+      agentItemRef.current?.propertyJsonSchema
+    );
+  }, []);
+
+  // Debounced submit function with actual debounce logic
+  const debouncedSubmit = useCallback(
+    (values: any) => {
+      // Clear previous timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+
+      // Set new timer for debounced execution
+      debounceTimerRef.current = setTimeout(() => {
+        actualSubmit(values);
+      }, 500); // 500ms debounce delay
+    },
+    [actualSubmit]
+  );
+
+  // Use form.subscribe to listen to form changes
+  useEffect(() => {
+    // make sure to unsubscribe;
+    const callback = form.subscribe({
+      formState: {
+        values: true,
+        isDirty: true,
+      },
+      callback: ({ values }) => {
+        debouncedSubmit(values);
+      },
+    });
+
+    return () => {
+      // Clean up subscription
+      callback();
+      // Clean up debounce timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [form, debouncedSubmit]);
+
   return (
     <div
       className="sdk:px-[8px] sdk:sm:px-[8px] sdk:overflow-auto sdk:flex-1"
@@ -166,6 +271,12 @@ export default function WorkflowAevatarEdit({
                 disabled={disabled}
                 defaultValue={agentItem?.name}
                 name={"agentName"}
+                rules={{
+                  validate: (value: any) => {
+                    if (!value) return "required";
+                    return true;
+                  },
+                }}
                 render={({ field }) => (
                   <FormItem aria-labelledby="agentNameLabel">
                     <FormLabel id="agentNameLabel">agent name</FormLabel>
@@ -231,7 +342,7 @@ export default function WorkflowAevatarEdit({
               )}
             </div>
           </div>
-          <Button
+          {/* <Button
             key={"save"}
             className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[calc(100%-16px)]"
             type="submit"
@@ -246,7 +357,7 @@ export default function WorkflowAevatarEdit({
             <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
               save
             </span>
-          </Button>
+          </Button> */}
         </form>
       </Form>
     </div>

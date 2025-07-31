@@ -110,8 +110,6 @@ function EditGAevatarInnerCom({
       const result = await aevatarAI.services.agent.removeAllSubAgent(agentId);
 
       await onDelete(true);
-
-      console.log(result, "result==removeAllSubAgent");
     } catch (error) {
       console.error("removeAllSubAgent:", error);
       toast({
@@ -120,7 +118,6 @@ function EditGAevatarInnerCom({
         duration: 3000,
       });
     }
-    console.log("onDeleteConfirm");
   }, [onDelete, toast, agentId]);
 
   const rightEle = useMemo(() => {
@@ -187,14 +184,10 @@ function EditGAevatarInnerCom({
     );
   }, [onBack]);
 
-  console.log(JSON.parse(jsonSchemaString ?? "{}"), "jsonSchemaString===");
-
   // Use recursively parsed schema
   const JSONSchemaProperties: [string, any][] = useMemo(() => {
     return jsonSchemaParse(jsonSchemaString, properties);
   }, [jsonSchemaString, properties]);
-
-  console.log(JSONSchemaProperties, "JSONSchemaProperties=");
 
   const form = useForm<any>();
   useEffect(() => {
@@ -209,7 +202,6 @@ function EditGAevatarInnerCom({
 
   const onSubmit = useCallback(
     async (values: any) => {
-      console.log("onSubmit====", values);
       form.clearErrors();
       try {
         if (btnLoadingRef.current) return;
@@ -221,7 +213,6 @@ function EditGAevatarInnerCom({
             schema,
             values[name]
           );
-          console.log(errors, param, "errors===onSubmit");
           errorFields.push(...errors);
           if (param !== undefined) params[name] = param;
         });
@@ -240,7 +231,6 @@ function EditGAevatarInnerCom({
           name: values.agentName,
           properties: params,
         };
-        console.log(submitParams, defaultAgentType, "params==updateAgentInfo");
         if (type === "create") {
           const result = await aevatarAI.services.agent.createAgent(
             submitParams
@@ -322,9 +312,11 @@ function EditGAevatarInnerCom({
                         form.clearErrors();
                       }}>
                       <FormControl>
-                        <SelectTrigger 
+                        <SelectTrigger
                           aria-disabled={field?.disabled}
-                          className={clsx(field?.disabled && "sdk:bg-[#303030]")}>
+                          className={clsx(
+                            field?.disabled && "sdk:bg-[#303030]"
+                          )}>
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                       </FormControl>

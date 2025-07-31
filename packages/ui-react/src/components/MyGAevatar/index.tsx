@@ -68,7 +68,7 @@ export default function MyGAevatar({
       try {
         currentPageData = await aevatarAI.services.agent.getAgents({
           pageIndex,
-          pageSize: 10,
+          pageSize: 20,
         });
       } catch (error) {
         toast({
