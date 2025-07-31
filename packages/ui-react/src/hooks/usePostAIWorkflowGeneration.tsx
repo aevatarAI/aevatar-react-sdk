@@ -18,11 +18,10 @@ export const usePostAIWorkflowGeneration = () => {
           userGoal,
         });
 
-        const results = await response.json();
-
-        setData(results);
+        setData(response);
       } catch (_) {
         const description = "Error generating workflow";
+
         toast({ description });
         setError(description);
       } finally {

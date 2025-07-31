@@ -31,7 +31,7 @@ import type {
   IWorkflowViewDataParams,
 } from "@aevatar-react-sdk/services";
 import type { Edge, INode } from "./types";
-import { generateWorkflowGraph } from "./utils";
+import { generateEdges, generateNodes, generateWorkflowGraph } from "./utils";
 import { useUpdateEffect } from "react-use";
 import { Button } from "../ui";
 import Refresh from "../../assets/svg/refresh.svg?react";
@@ -53,7 +53,6 @@ import { getPropertiesByDefaultValues } from "../../utils/jsonSchemaParse";
 const getId = () => `${uuidv4()}`;
 
 interface IProps {
-  data?: any;
   gaevatarList?: IAgentInfoDetail[];
   editWorkflow?: {
     workflowAgentId: string;
@@ -83,6 +82,7 @@ interface IProps {
 }
 
 export interface IWorkflowInstance {
+  onAiGenerateWorkflow: (data: any) => any;
   getWorkUnitRelations: () => IWorkflowUnitListItem[];
   setNodes: React.Dispatch<React.SetStateAction<any[]>>;
   setEdges: React.Dispatch<React.SetStateAction<any[]>>;
@@ -91,7 +91,6 @@ export interface IWorkflowInstance {
 export const Workflow = forwardRef(
   (
     {
-      data,
       gaevatarList,
       editWorkflow,
       editAgentOpen,
@@ -109,63 +108,6 @@ export const Workflow = forwardRef(
     }: IProps,
     ref
   ) => {
-    // [INFO] - Initializes nodes and edges when user prompts
-    useEffect(() => {
-      if (!data) return;
-
-      const generateNodes = (
-        nodeList: any[],
-        onCardClick: any,
-        deleteNode: any
-      ) => {
-        return nodeList.map((nodeData) => ({
-          id: nodeData.nodeId,
-          type: "ScanCard",
-          position: {
-            x: Number.parseFloat(nodeData.extendedData.xPosition),
-            y: Number.parseFloat(nodeData.extendedData.yPosition),
-          },
-          data: {
-            label: "ScanCard Node",
-            agentInfo: {
-              agentType: nodeData.agentType,
-              propertyJsonSchema: JSON.stringify(nodeData.properties),
-              name: nodeData.name,
-            },
-            isNew: true,
-            onClick: onCardClick,
-            deleteNode,
-          },
-        }));
-      };
-
-      const generateEdges = (edgeList: any[]) => {
-        return edgeList.map((edgeData) => ({
-          id: crypto.randomUUID(),
-          type: "bezier",
-          source: edgeData.nodeId,
-          sourceHandle: "b",
-          target: edgeData.nextNodeId,
-          style: {
-            strokeWidth: 2,
-            stroke: "#B9B9B9",
-          },
-        }));
-      };
-
-      const dataNodes = generateNodes(
-        data?.data?.properties?.workflowNodeList,
-        onCardClick,
-        deleteNode
-      );
-      const dataEdges = generateEdges(
-        data?.data?.properties?.workflowNodeUnitList
-      );
-
-      setNodes(dataNodes);
-      setEdges(dataEdges);
-    }, [data, onCardClick]);
-
     // Add state to track used indexes for each agent type
     const [agentTypeUsedIndexes, setAgentTypeUsedIndexes] = useState<
       Record<string, Set<number>>
@@ -373,6 +315,23 @@ export const Workflow = forwardRef(
       }
     }, [onCardClick]);
 
+    const onAiGenerateWorkflow = useCallback(
+      (data) => {
+        if (!data) return;
+
+        const nodes = generateNodes(
+          data?.properties?.workflowNodeList,
+          onCardClick,
+          deleteNode
+        );
+        const edges = generateEdges(data?.properties?.workflowNodeUnitList);
+
+        setNodes(nodes);
+        setEdges(edges);
+      },
+      [deleteNode, onCardClick, setNodes, setEdges]
+    );
+
     const getWorkUnitRelations: () => IWorkflowUnitListItem[] =
       useCallback(() => {
         const data = { nodes, edges } as { nodes: INode[]; edges: Edge[] };
@@ -436,11 +395,12 @@ export const Workflow = forwardRef(
     useImperativeHandle(
       ref,
       () => ({
+        onAiGenerateWorkflow,
         getWorkUnitRelations,
         setNodes,
         setEdges,
       }),
-      [getWorkUnitRelations, setNodes, setEdges]
+      [onAiGenerateWorkflow, getWorkUnitRelations, setNodes, setEdges]
     );
 
     const onConnect = useCallback(

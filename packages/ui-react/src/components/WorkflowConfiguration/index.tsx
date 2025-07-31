@@ -40,7 +40,6 @@ import { DndProvider as ReactDndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { SidebarSheet } from "./SidebarSheet";
-import { usePostAIWorkflowGeneration } from "../../hooks/usePostAIWorkflowGeneration";
 import { WorkflowGenerationModal } from "../WorkflowGenerationModal";
 import { getWorkflowViewDataByUnit } from "../utils";
 import { isWorkflowDataEqual } from "../../utils/workflowDataComparison";
@@ -71,7 +70,6 @@ const WorkflowConfigurationInner = ({
 }: // onSave: onSaveHandler,
 // onGaevatarChange,
 IWorkflowConfigurationProps) => {
-  const { data, isLoading, refetch } = usePostAIWorkflowGeneration();
   const [container, setContainer] = React.useState(null);
   const { toast } = useToast();
   const [editAgentOpen, setEditAgentOpen] = useState(false);
@@ -662,7 +660,6 @@ IWorkflowConfigurationProps) => {
           {/* Main Content */}
           <main className="sdk:flex-1 sdk:flex sdk:flex-col sdk:items-center sdk:justify-center sdk:relative">
             <Workflow
-              data={data}
               extraControlBar={extraControlBar}
               editWorkflow={editWorkflow}
               editAgentOpen={editAgentOpen}
@@ -708,7 +705,7 @@ IWorkflowConfigurationProps) => {
                 roundId={1}
               />
             </div>
-            <WorkflowGenerationModal isLoading={isLoading} refetch={refetch} />
+            <WorkflowGenerationModal workflowRef={workflowRef} />
           </main>
         </div>
       </div>

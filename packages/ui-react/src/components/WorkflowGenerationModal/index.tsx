@@ -1,22 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui";
 import Loading from "../../assets/svg/loading.svg?react";
 import AIStar from "../../assets/svg/aiStar.svg?react";
 import Close from "../../assets/svg/close.svg?react";
 import clsx from "clsx";
+import { usePostAIWorkflowGeneration } from "../../hooks/usePostAIWorkflowGeneration";
 
 interface IWorkflowGenerationModalProps {
-  isLoading: boolean;
-  refetch: (prompt: string) => void;
+  workflowRef: any;
 }
 
 export const WorkflowGenerationModal = ({
-  isLoading,
-  refetch,
+  workflowRef,
 }: IWorkflowGenerationModalProps) => {
+  const { data, isLoading, refetch } = usePostAIWorkflowGeneration();
   const [isVisible, setIsVisible] = useState(true);
   const [inputPrompt, setInputPrompt] = useState("");
+
+  useEffect(() => {
+    if (data && workflowRef) {
+      workflowRef?.current.onAiGenerateWorkflow(data);
+    }
+  }, [data, workflowRef]);
 
   const handleClose = () => {
     setIsVisible(false);

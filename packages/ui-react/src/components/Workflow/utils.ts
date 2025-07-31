@@ -13,7 +13,7 @@ export const generateWorkflowGraph = (
   agentInfos: IAgentInfoDetail[],
   gaevatarTypeList: IAgentsConfiguration[],
   onClick: TNodeDataClick,
-  deleteNode: TDeleteNode
+  deleteNode: TDeleteNode,
 ): { nodes: INode[]; edges: Edge[] } => {
   const nodes: INode[] = [];
   const edges: Edge[] = [];
@@ -33,7 +33,7 @@ export const generateWorkflowGraph = (
     const nodeId = workflowNode.nodeId;
 
     const jsonSchema = gaevatarTypeList.find(
-      (v) => v.agentType === workflowNode.agentType
+      (v) => v.agentType === workflowNode.agentType,
     )?.propertyJsonSchema;
 
     let agentInfo = agentInfoMap.get(nodeAgentId);
@@ -98,4 +98,44 @@ export const generateWorkflowGraph = (
   }
 
   return { nodes, edges };
+};
+
+export const generateNodes = (
+  nodeList: any[],
+  onCardClick: TNodeDataClick,
+  deleteNode: TDeleteNode,
+) => {
+  return nodeList.map((nodeData) => ({
+    id: nodeData.nodeId,
+    type: "ScanCard",
+    position: {
+      x: Number.parseFloat(nodeData.extendedData.xPosition),
+      y: Number.parseFloat(nodeData.extendedData.yPosition),
+    },
+    data: {
+      label: "ScanCard Node",
+      agentInfo: {
+        agentType: nodeData.agentType,
+        propertyJsonSchema: JSON.stringify(nodeData.properties),
+        name: nodeData.name,
+      },
+      isNew: true,
+      onClick: onCardClick,
+      deleteNode,
+    },
+  }));
+};
+
+export const generateEdges = (edgeList: any[]) => {
+  return edgeList.map((edgeData) => ({
+    id: crypto.randomUUID(),
+    type: "bezier",
+    source: edgeData.nodeId,
+    sourceHandle: "b",
+    target: edgeData.nextNodeId,
+    style: {
+      strokeWidth: 2,
+      stroke: "#B9B9B9",
+    },
+  }));
 };
