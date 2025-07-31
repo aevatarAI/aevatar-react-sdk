@@ -20,7 +20,6 @@ import {
 import Loading from "../../assets/svg/loading.svg?react";
 import "@xyflow/react/dist/style.css";
 import "./index.css";
-
 import { useDnD } from "./DnDContext";
 import AevatarItem4Workflow from "../AevatarItem4Workflow";
 import Background from "./background";
@@ -31,7 +30,7 @@ import type {
   IWorkflowViewDataParams,
 } from "@aevatar-react-sdk/services";
 import type { Edge, INode } from "./types";
-import { generateEdges, generateNodes, generateWorkflowGraph } from "./utils";
+import { generateWorkflowGraph } from "./utils";
 import { useUpdateEffect } from "react-use";
 import { Button } from "../ui";
 import Refresh from "../../assets/svg/refresh.svg?react";
@@ -40,7 +39,6 @@ import clsx from "clsx";
 import { useDrop } from "react-dnd";
 import CustomEdge from "./CustomEdge";
 import { v4 as uuidv4 } from "uuid";
-import Stop from "../../assets/svg/stop.svg?react";
 import { useHistory } from "./hooks/useHistory";
 import {
   Tooltip,
@@ -82,10 +80,12 @@ interface IProps {
 }
 
 export interface IWorkflowInstance {
-  onAiGenerateWorkflow: (data: any) => any;
   getWorkUnitRelations: () => IWorkflowUnitListItem[];
   setNodes: React.Dispatch<React.SetStateAction<any[]>>;
   setEdges: React.Dispatch<React.SetStateAction<any[]>>;
+  onAiGenerateWorkflow: (
+    aiGenerateWorkflowViewData: IWorkflowViewDataParams
+  ) => Promise<void>;
 }
 
 export const Workflow = forwardRef(
@@ -121,8 +121,28 @@ export const Workflow = forwardRef(
       usedIndexesRef.current = agentTypeUsedIndexes;
     }, [agentTypeUsedIndexes]);
 
+    const initialNodes = useMemo(() => {
+      return [];
+      // const initialNodes = [
+      //   {
+      //     id: getId(),
+      //     type: "ScanCard",
+      //     position: {
+      //       x: 100,
+      //       y: 300,
+      //     },
+      //     data: {
+      //       label: "ScanCard Node",
+      //       isNew: true,
+      //       onClick,
+      //       deleteNode,
+      //     },
+      //   },
+      // ];
+    }, []);
+
     const reactFlowWrapper = useRef(null);
-    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
     const deleteNode = useCallback(
@@ -192,7 +212,6 @@ export const Workflow = forwardRef(
     useEffect(() => {
       nodesRef.current = nodes;
     }, [nodes]);
-
     useEffect(() => {
       gaevatarListRef.current = gaevatarList;
     }, [gaevatarList]);
@@ -267,6 +286,21 @@ export const Workflow = forwardRef(
       // setEdges,
     ]);
 
+    const onAiGenerateWorkflow = useCallback(
+      async (aiGenerateWorkflowViewData: IWorkflowViewDataParams) => {
+        const { nodes, edges } = generateWorkflowGraph(
+          aiGenerateWorkflowViewData,
+          gaevatarListRef.current,
+          gaevatarTypeListRef.current,
+          onCardClick,
+          deleteNode
+        );
+        setNodes(nodes);
+        setEdges(edges);
+      },
+      [onCardClick, deleteNode, setNodes, setEdges]
+    );
+
     const [updaterList, setUpdaterList] = useState<IAgentInfoDetail[]>();
 
     useUpdateEffect(() => {
@@ -314,23 +348,6 @@ export const Workflow = forwardRef(
         // This will be handled by the function registry when functions are serialized
       }
     }, [onCardClick]);
-
-    const onAiGenerateWorkflow = useCallback(
-      (data) => {
-        if (!data) return;
-
-        const nodes = generateNodes(
-          data?.properties?.workflowNodeList,
-          onCardClick,
-          deleteNode
-        );
-        const edges = generateEdges(data?.properties?.workflowNodeUnitList);
-
-        setNodes(nodes);
-        setEdges(edges);
-      },
-      [deleteNode, onCardClick, setNodes, setEdges]
-    );
 
     const getWorkUnitRelations: () => IWorkflowUnitListItem[] =
       useCallback(() => {
@@ -395,12 +412,12 @@ export const Workflow = forwardRef(
     useImperativeHandle(
       ref,
       () => ({
-        onAiGenerateWorkflow,
         getWorkUnitRelations,
         setNodes,
         setEdges,
+        onAiGenerateWorkflow,
       }),
-      [onAiGenerateWorkflow, getWorkUnitRelations, setNodes, setEdges]
+      [getWorkUnitRelations, setNodes, setEdges, onAiGenerateWorkflow]
     );
 
     const onConnect = useCallback(
