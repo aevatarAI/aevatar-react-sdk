@@ -80,6 +80,7 @@ export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
           {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
           <div
             ref={dragRef}
+            data-testid="aevatar-type-item-root"
             className={clsx(
               "sdk:relative sdk:min-w-[124px] sdk:max-w-[124px] sdk:h-[45px] sdk:cursor-grab sdk:active:cursor-grabbing sdk:group sdk:no-user-select",
               disabled && "sdk:cursor-not-allowed sdk:opacity-50",
