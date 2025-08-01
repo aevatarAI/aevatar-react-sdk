@@ -105,7 +105,6 @@ export interface IWorkflowNode {
   agentId?: string;
   name: string;
   agentType: string;
-  properties?: Record<string, any>;
   jsonProperties: string;
   extendedData: IWorkflowUnitPosition;
 }

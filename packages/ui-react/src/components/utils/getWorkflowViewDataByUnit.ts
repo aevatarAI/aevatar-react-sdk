@@ -54,7 +54,6 @@ export const getWorkflowViewDataByUnit = (
       ..._workflowNode,
       name: agentInfo?.name,
       agentType: agentInfo?.agentType,
-      properties,
       jsonProperties: JSON.stringify(properties),
       extendedData: {
         xPosition: String(item.extendedData.xPosition),
