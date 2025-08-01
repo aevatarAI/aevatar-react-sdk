@@ -267,6 +267,13 @@ IWorkflowConfigurationProps) => {
   const autoSaveTimerRef = useRef<NodeJS.Timeout>();
   const onSaveRef = useRef(onSaveHandler);
 
+  const [isRunning, setIsRunning] = useState(false);
+  const [isStopping, setIsStopping] = useState(false);
+  const isRunningRef = useRef(isRunning);
+  useEffect(() => {
+    isRunningRef.current = isRunning;
+  }, [isRunning]);
+
   // Update ref when onSave changes
   useEffect(() => {
     onSaveRef.current = onSaveHandler;
@@ -383,6 +390,10 @@ IWorkflowConfigurationProps) => {
     );
 
   const onUnsavedBack = useCallback(() => {
+    if (isRunningRef.current) {
+      onBack?.();
+      return;
+    }
     const viewData = getWorkflowViewData();
     const preViewData =
       workflowViewDataRef.current ?? editWorkflow?.workflowViewData;
@@ -462,13 +473,6 @@ IWorkflowConfigurationProps) => {
     },
     [getWorkflowState]
   );
-
-  const [isRunning, setIsRunning] = useState(false);
-  const [isStopping, setIsStopping] = useState(false);
-  const isRunningRef = useRef(isRunning);
-  useEffect(() => {
-    isRunningRef.current = isRunning;
-  }, [isRunning]);
 
   useEffect(() => {
     if (editWorkflow?.workflowId) {
