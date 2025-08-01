@@ -1,12 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Textarea } from "../ui/textarea";
-import { Button, Dialog, DialogContent, DialogTrigger } from "../ui";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui";
 import Loading from "../../assets/svg/loading.svg?react";
 import AIStar from "../../assets/svg/aiStar.svg?react";
 import Close from "../../assets/svg/close.svg?react";
 import clsx from "clsx";
 import { usePostAIWorkflowGeneration } from "../../hooks/usePostAIWorkflowGeneration";
-
+import { useGetAutoCompleteGeneration } from "../../hooks/useGetAutoCompleteGeneration";
+import getCaretCoordinates from "textarea-caret";
 interface IWorkflowGenerationModalProps {
   workflowRef: any;
 }
@@ -14,6 +25,7 @@ interface IWorkflowGenerationModalProps {
 export const WorkflowGenerationModal = ({
   workflowRef,
 }: IWorkflowGenerationModalProps) => {
+  const { data: results, refetch: refetching } = useGetAutoCompleteGeneration();
   const { data, isLoading, refetch } = usePostAIWorkflowGeneration();
   const [isVisible, setIsVisible] = useState(true);
   const [inputPrompt, setInputPrompt] = useState("");
@@ -28,13 +40,18 @@ export const WorkflowGenerationModal = ({
     setIsVisible(false);
   };
 
-  const handleChange = (e) => {
-    setInputPrompt(e.target.value);
+  const handleChange = async (value: string) => {
+    setInputPrompt(value);
+    await refetching(value);
   };
 
   const handleClick = async () => {
     await refetch(inputPrompt);
     setIsVisible(false);
+  };
+
+  const handleSelectChange = (value: string) => {
+    setInputPrompt(value);
   };
 
   if (!isVisible) {
@@ -67,11 +84,13 @@ export const WorkflowGenerationModal = ({
             <div className="sdk:font-outfit sdk:font-semibold sdk:text-[14px] sdk:text-[#B9B9B9]">
               prompt
             </div>
-            <Textarea
-              className="sdk:text-[13px] sdk:bg-[#171717] sdk:min-w-[595px] sdk:min-h-[120px]"
-              placeholder="please describe what kind of agent workflow you want to create"
+            <SmartTextArea
+              input={inputPrompt}
+              isLoading={isLoading}
+              data={results}
               onChange={handleChange}
-              disabled={isLoading}
+              onInputChange={setInputPrompt}
+              onSelectChange={handleSelectChange}
             />
           </div>
 
@@ -106,5 +125,79 @@ export const WorkflowGenerationModal = ({
         </div>
       </DialogContent>
     </Dialog>
+  );
+};
+
+interface SmartTextAreaProps {
+  input: string;
+  isLoading: boolean;
+  data: string[];
+  onChange: (value: any) => void;
+  onInputChange: (value: string) => void;
+  onSelectChange: (value: string) => void;
+}
+
+export const SmartTextArea = ({
+  input,
+  isLoading,
+  data,
+  onChange,
+  onInputChange,
+  onSelectChange,
+}: SmartTextAreaProps) => {
+  const [caretPos, setCaretPos] = useState({ top: 0, left: 0 });
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (textareaRef?.current) {
+      const { top, left } = getCaretCoordinates(
+        textareaRef.current,
+        textareaRef.current.selectionStart
+      );
+      // const rect = textareaRef.current.getBoundingClientRect();
+      setCaretPos({
+        top: top + textareaRef.current.scrollTop,
+        left: left,
+      });
+    }
+  }, [input]);
+
+  return (
+    <div className="sdk:flex sdk:flex-col sdk:relative sdk:w-full">
+      <Textarea
+        ref={textareaRef}
+        className="sdk:text-[13px] sdk:bg-[#171717] sdk:min-w-[595px] sdk:min-h-[120px]"
+        placeholder="please describe what kind of agent workflow you want to create"
+        onChange={(e) => {
+          onInputChange(e.target.value);
+          onChange?.(e.target.value);
+        }}
+        value={input}
+        disabled={isLoading}
+      />
+      <div
+        className="sdk:absolute sdk:bg-[#171717]"
+        style={{
+          top: caretPos.top + 20, // offset to appear *below* the line
+          left: 14,
+          zIndex: 50,
+        }}
+      >
+        <Select onValueChange={onSelectChange} open={data?.length > 0}>
+          <SelectTrigger className="sdk:invisible" />
+          <SelectContent className="sdk:min-w-[571px] sdk:left-[46%]">
+            {data?.map((item) => (
+              <SelectItem
+                className="text-[14px] lower-case"
+                key={crypto.randomUUID()}
+                value={item}
+              >
+                {item}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
   );
 };

@@ -1,8 +1,18 @@
 import type { IAgentInfo, IAgentInfoDetail, IUpdateAgentInfo } from "./agent";
 
+export interface IAutoCompleteProps {
+  userGoal: string;
+}
 export interface IGenerateWorkflowProps {
   userGoal: string;
 }
+
+export interface IFetchExecutionLogsProps {
+  stateName: string;
+  workflowId: string;
+  roundId: number;
+}
+
 export interface IWorkUnitRelationsItem {
   grainId: string;
   nextGrainId: string;
@@ -137,14 +147,16 @@ export interface IWorkflowService {
   edit(id: string, params: IUpdateAgentInfo): Promise<IAgentInfoDetail>;
   editPublishEvent(params: IEditWorkflowParams): Promise<IAgentInfo>;
   getWorkflow<T = any>(
-    query: IGetWorkflowQuery
+    query: IGetWorkflowQuery,
   ): Promise<IGetWorkflowResult<T>>;
   generate<T = any>(props: IGenerateWorkflowProps): Promise<T>;
+  autocomplete<T = any>(props: IAutoCompleteProps): Promise<T>;
+  fetchExecutionLogs<T = any>(props: IFetchExecutionLogsProps): Promise<T>;
   start<T = any>(params: IStartWorkflowParams): Promise<T>;
   createWorkflowViewData(params: IWorkflowViewDataParams): Promise<IAgentInfo>;
   updateWorkflowViewData(
     id: string,
-    params: IWorkflowViewUpdateDataParams
+    params: IWorkflowViewUpdateDataParams,
   ): Promise<IAgentInfo>;
   publishWorkflowViewData(id: string): Promise<IAgentInfo>;
 }
