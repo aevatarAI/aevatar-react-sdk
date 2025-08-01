@@ -36,7 +36,7 @@ export const getWorkflowViewDataByUnit = (
       }
     }
 
-    if (agentInfo?.id !== nodeId) _workflowNode.agentId = agentInfo.id;
+    if (agentInfo && agentInfo.id !== nodeId) _workflowNode.agentId = agentInfo.id;
 
     let properties = agentInfo?.properties ?? {};
     if (Object.keys(properties).length === 0) {
