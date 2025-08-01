@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { aevatarAI } from "../utils";
 
 const transformStatus = (status: number) => {
   switch (status) {
@@ -34,9 +35,11 @@ export const useFetchExecutionLogs = ({
       try {
         setIsLoading(true);
 
-        const response = await fetch(
-          `/api/query/es?StateName=${stateName}&QueryString=workflowId:${workflowId}&&roundId:${roundId}`
-        );
+        const response = await aevatarAI.services.workflow.fetchExecutionLogs({
+          stateName,
+          workflowId,
+          roundId,
+        });
 
         const data = await response.json();
 
