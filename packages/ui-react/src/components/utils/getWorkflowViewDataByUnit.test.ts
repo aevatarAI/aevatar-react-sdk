@@ -37,12 +37,12 @@ describe("getWorkflowViewDataByUnit", () => {
     {
       grainId: "agent1",
       nextGrainId: "agent2",
-      extendedData: { xPosition: 100, yPosition: 200 },
+      extendedData: { xPosition: "100", yPosition: "200" },
     },
     {
       grainId: "agent2",
       nextGrainId: "",
-      extendedData: { xPosition: 300, yPosition: 400 },
+      extendedData: { xPosition: "300", yPosition: "400" },
     },
   ];
 
@@ -156,7 +156,7 @@ describe("getWorkflowViewDataByUnit", () => {
       {
         grainId: "missingAgent",
         nextGrainId: "agent2",
-        extendedData: { xPosition: 500, yPosition: 600 },
+        extendedData: { xPosition: "500", yPosition: "600" },
       },
     ];
 
@@ -182,7 +182,7 @@ describe("getWorkflowViewDataByUnit", () => {
       {
         grainId: "agent1",
         nextGrainId: "",
-        extendedData: { xPosition: 100, yPosition: 200 },
+        extendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 
@@ -213,7 +213,7 @@ describe("getWorkflowViewDataByUnit", () => {
       {
         grainId: "agent1",
         nextGrainId: "agent2",
-        extendedData: { xPosition: 100, yPosition: 200 },
+        extendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 
@@ -246,7 +246,7 @@ describe("getWorkflowViewDataByUnit", () => {
       {
         grainId: "agent1",
         nextGrainId: "agent2",
-        extendedData: { xPosition: 100, yPosition: 200 },
+        extendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 
@@ -269,17 +269,17 @@ describe("getWorkflowViewDataByUnit", () => {
       {
         grainId: "agent1",
         nextGrainId: "agent2",
-        extendedData: { xPosition: 100, yPosition: 200 },
+        extendedData: { xPosition: "100", yPosition: "200" },
       },
       {
         grainId: "agent2",
         nextGrainId: "agent3",
-        extendedData: { xPosition: 300, yPosition: 400 },
+        extendedData: { xPosition: "300", yPosition: "400" },
       },
       {
         grainId: "agent3",
         nextGrainId: "",
-        extendedData: { xPosition: 500, yPosition: 600 },
+        extendedData: { xPosition: "500", yPosition: "600" },
       },
     ];
 
@@ -359,7 +359,7 @@ describe("getWorkflowViewDataByUnit", () => {
       {
         grainId: "agent1",
         nextGrainId: "agent2",
-        extendedData: { xPosition: 100, yPosition: 200 },
+        extendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 
@@ -398,7 +398,7 @@ describe("getWorkflowViewDataByUnit", () => {
       {
         grainId: "agent1",
         nextGrainId: "",
-        extendedData: { xPosition: 100, yPosition: 200 },
+        extendedData: { xPosition: "100", yPosition: "200" },
       },
     ];
 
@@ -415,7 +415,7 @@ describe("getWorkflowViewDataByUnit", () => {
       prop1: "value1",
       prop2: "value2",
     });
-    expect(node.properties.publisherGrainId).toBeUndefined();
-    expect(node.properties.correlationId).toBeUndefined();
+    expect(node.properties?.publisherGrainId).toBeUndefined();
+    expect(node.properties?.correlationId).toBeUndefined();
   });
 }); 

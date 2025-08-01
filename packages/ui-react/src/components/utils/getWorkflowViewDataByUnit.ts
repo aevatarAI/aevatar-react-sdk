@@ -36,7 +36,7 @@ export const getWorkflowViewDataByUnit = (
       }
     }
 
-    if (agentInfo?.id !== nodeId) _workflowNode.agentId = agentInfo.id;
+    if (agentInfo?.id !== nodeId) _workflowNode.agentId = agentInfo?.id;
 
     let properties = agentInfo?.properties ?? {};
     if (Object.keys(properties).length === 0) {
@@ -54,16 +54,13 @@ export const getWorkflowViewDataByUnit = (
       ..._workflowNode,
       name: agentInfo?.name,
       agentType: agentInfo?.agentType,
+      properties,
       jsonProperties: JSON.stringify(properties),
       extendedData: {
         xPosition: String(item.extendedData.xPosition),
         yPosition: String(item.extendedData.yPosition),
       },
     };
-    if (_workflowNode.properties) {
-      // biome-ignore lint/performance/noDelete: <explanation>
-      delete _workflowNode.properties;
-    }
 
     const _workflowNodeUnit: IWorkflowNodeUnit = {
       nodeId,
