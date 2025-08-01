@@ -77,6 +77,7 @@ interface IProps {
   onNewNode?: (
     agentInfo: Partial<IAgentInfoDetail> & {
       defaultValues?: Record<string, any[]>;
+      jsonProperties?: string;
     }
   ) => void;
   extraControlBar?: React.ReactNode;
@@ -530,6 +531,7 @@ export const Workflow = forwardRef(
             properties: getPropertiesByDefaultValues(
               agentInfoCopy?.defaultValues
             ),
+            jsonProperties: JSON.stringify(agentInfoCopy?.properties),
             propertyJsonSchema: agentInfoCopy.propertyJsonSchema,
             defaultValues: agentInfoCopy?.defaultValues,
           });

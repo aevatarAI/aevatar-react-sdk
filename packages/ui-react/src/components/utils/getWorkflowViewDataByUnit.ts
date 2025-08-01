@@ -36,36 +36,41 @@ export const getWorkflowViewDataByUnit = (
       }
     }
 
-    if (agentInfo && agentInfo.id !== nodeId) _workflowNode.agentId = agentInfo.id;
+    if (agentInfo?.id !== nodeId) _workflowNode.agentId = agentInfo.id;
 
     let properties = agentInfo?.properties ?? {};
     if (Object.keys(properties).length === 0) {
       properties = defaultValues;
     }
+    if ("publisherGrainId" in properties) {
+      // biome-ignore lint/performance/noDelete: <explanation>
+      delete properties.publisherGrainId;
+    }
+    if ("correlationId" in properties) {
+      // biome-ignore lint/performance/noDelete: <explanation>
+      delete properties.correlationId;
+    }
     _workflowNode = {
       ..._workflowNode,
       name: agentInfo?.name,
       agentType: agentInfo?.agentType,
-      properties,
+      jsonProperties: JSON.stringify(properties),
       extendedData: {
         xPosition: String(item.extendedData.xPosition),
         yPosition: String(item.extendedData.yPosition),
       },
     };
+    if (_workflowNode.properties) {
+      // biome-ignore lint/performance/noDelete: <explanation>
+      delete _workflowNode.properties;
+    }
 
     const _workflowNodeUnit: IWorkflowNodeUnit = {
       nodeId,
     };
 
     if (item.nextGrainId) _workflowNodeUnit.nextNodeId = item.nextGrainId;
-    if ("publisherGrainId" in _workflowNode.properties) {
-      // biome-ignore lint/performance/noDelete: <explanation>
-      delete _workflowNode.properties.publisherGrainId;
-    }
-    if ("correlationId" in _workflowNode.properties) {
-      // biome-ignore lint/performance/noDelete: <explanation>
-      delete _workflowNode.properties.correlationId;
-    }
+
     workflowNodeMap.set(nodeId, _workflowNode as IWorkflowNode);
     if (_workflowNodeUnit.nextNodeId && _workflowNodeUnit.nodeId)
       workflowNodeUnitList.push(_workflowNodeUnit);

@@ -46,7 +46,7 @@ export const isWorkflowDataEqual = (
       viewNode.agentType !== preNode.agentType ||
       JSON.stringify(viewNode.extendedData) !==
         JSON.stringify(preNode.extendedData) ||
-      JSON.stringify(viewNode.properties) !== JSON.stringify(preNode.properties)
+      viewNode.jsonProperties !== preNode.jsonProperties
     ) {
       return false;
     }

@@ -17,7 +17,6 @@ export function SidebarSheet({
   container: HTMLElement;
 }) {
   const [open, setOpen] = useState(false);
-  console.log(container, "container===");
 
   useEffect(() => {
     sleep(500).then(() => {

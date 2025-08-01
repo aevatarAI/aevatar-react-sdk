@@ -37,6 +37,10 @@ export const generateWorkflowGraph = (
     )?.propertyJsonSchema;
 
     let agentInfo = agentInfoMap.get(nodeAgentId);
+    const jsonProperties = workflowNode.jsonProperties
+      ? workflowNode.jsonProperties
+      : JSON.stringify(agentInfo?.properties ?? {});
+
     if (!agentInfo) {
       agentInfo = {
         id: nodeAgentId,
@@ -44,7 +48,15 @@ export const generateWorkflowGraph = (
         agentGuid: nodeAgentId,
         propertyJsonSchema: jsonSchema,
         ...workflowNode,
+        properties: JSON.parse(jsonProperties),
       };
+    }
+    
+    if (
+      !agentInfo.properties ||
+      Object.keys(agentInfo.properties).length === 0
+    ) {
+      agentInfo.properties = JSON.parse(jsonProperties);
     }
 
     agentInfo.propertyJsonSchema = jsonSchema;
