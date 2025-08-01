@@ -200,6 +200,7 @@ IWorkflowConfigurationProps) => {
           item.data.agentInfo = {
             ...item.data.agentInfo,
             ...node,
+            properties: JSON.parse(node.jsonProperties ?? "{}"),
             id: node.agentId || item.data.agentInfo.id,
           };
         return item;
@@ -376,7 +377,14 @@ IWorkflowConfigurationProps) => {
         if (!result) return;
         workflowRef.current.setNodes((n) => {
           const newNodeList = n.map((item) => {
-            if (item.id === nodeId) item.data.agentInfo = result;
+            const agentId = nodeListRef.current?.find((v) => v.id === nodeId)
+              ?.data.agentInfo.id;
+            if (item.id === nodeId)
+              item.data.agentInfo = {
+                ...item.data.agentInfo,
+                ...result,
+                id: agentId || item.data.agentInfo.id || result.id,
+              };
             return item;
           });
           return [...newNodeList];
@@ -410,13 +418,9 @@ IWorkflowConfigurationProps) => {
       setNodeList((n) => {
         return nodes.map((item) => {
           const node = n?.find((v) => v?.id === item?.id);
-          if (
-            node &&
-            (item.data.agentInfo.id === item.id || !item.data.agentInfo.id)
-          ) {
-            item.data.agentInfo.id =
-              node.data.agentInfo.id || item.data.agentInfo.id;
-          }
+
+          item.data.agentInfo.id =
+            node?.data?.agentInfo?.id || item.data.agentInfo.id;
           return item;
         });
       });

@@ -52,6 +52,7 @@ export default function WorkflowDialog({
           </p>
         </DialogTitle>
         <WorkflowAevatarEdit
+          key={nodeId || 'default'}
           disabled={disabled}
           isNew={isNew}
           agentItem={agentItem}
