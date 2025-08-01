@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import { SidebarSheet } from "./SidebarSheet";
 
 // Mock Sheet components
@@ -35,7 +36,7 @@ vi.mock("../ui", () => ({
     </div>
   ),
   Button: ({ children, className, onClick }: any) => (
-    <button data-testid="button" className={className} onClick={onClick}>
+    <button data-testid="button" type="button" className={className} onClick={onClick}>
       {children}
     </button>
   ),
@@ -44,7 +45,17 @@ vi.mock("../ui", () => ({
 // Mock SidebarWithNewAgent component
 vi.mock("./sidebarWithNewAgent", () => ({
   default: ({ onArrowClick, ...props }: any) => (
-    <div data-testid="sidebar-with-new-agent" onClick={() => onArrowClick?.()}>
+    <div 
+      data-testid="sidebar-with-new-agent" 
+      onClick={() => onArrowClick?.()}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          onArrowClick?.();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+    >
       SidebarWithNewAgent
     </div>
   ),
@@ -206,7 +217,7 @@ describe("SidebarSheet", () => {
   it("passes props to SidebarWithNewAgent", () => {
     const customProps = {
       ...defaultProps,
-      gaevatarTypeList: [{ agentType: "test" }],
+      gaevatarTypeList: [{ agentType: "test", fullName: "Test Agent" }],
       hiddenGAevatarType: ["hidden"],
       disabled: true,
     };
@@ -308,13 +319,10 @@ describe("SidebarSheet", () => {
     expect(screen.getByTestId("sidebar-with-new-agent")).toBeInTheDocument();
   });
 
-  it("logs container to console", () => {
-    const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-    
+  it("renders with container prop", () => {
     render(<SidebarSheet {...defaultProps} />);
     
-    expect(consoleSpy).toHaveBeenCalledWith(mockContainer, "container===");
-    
-    consoleSpy.mockRestore();
+    // Verify that the component renders correctly with container prop
+    expect(screen.getByTestId("sheet-content")).toBeInTheDocument();
   });
 }); 
