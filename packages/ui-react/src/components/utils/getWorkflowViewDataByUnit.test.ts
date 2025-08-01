@@ -85,7 +85,7 @@ describe("getWorkflowViewDataByUnit", () => {
     expect(firstNode.nodeId).toBe("agent1");
     expect(firstNode.name).toBe("Agent 1");
     expect(firstNode.agentType).toBe("type1");
-    expect(firstNode.properties).toEqual({ prop1: "value1", prop2: "value2" });
+    expect(firstNode.jsonProperties).toBe(JSON.stringify({ prop1: "value1", prop2: "value2" }));
     expect(firstNode.extendedData).toEqual({
       xPosition: "100",
       yPosition: "200",
@@ -96,7 +96,7 @@ describe("getWorkflowViewDataByUnit", () => {
     expect(secondNode.nodeId).toBe("agent2");
     expect(secondNode.name).toBeUndefined();
     expect(secondNode.agentType).toBeUndefined();
-    expect(secondNode.properties).toEqual({ defaultProp: "defaultValue" });
+    expect(secondNode.jsonProperties).toBe(JSON.stringify({ defaultProp: "defaultValue" }));
     expect(secondNode.extendedData).toEqual({
       xPosition: "300",
       yPosition: "400",
@@ -174,7 +174,7 @@ describe("getWorkflowViewDataByUnit", () => {
     expect(node.name).toBeUndefined();
     expect(node.agentType).toBeUndefined();
     // Should use default values from getPropertiesByDefaultValues
-    expect(node.properties).toEqual({ defaultProp: "defaultValue" });
+    expect(node.jsonProperties).toBe(JSON.stringify({ defaultProp: "defaultValue" }));
   });
 
   it("should handle workUnitRelations without nextGrainId", () => {
@@ -226,7 +226,7 @@ describe("getWorkflowViewDataByUnit", () => {
     expect(result.workflowNodeList).toHaveLength(1);
     const node = result.workflowNodeList[0];
     // Should use properties from nodeList when gaevatarList properties are empty
-    expect(node.properties).toEqual({ prop1: "value1", prop2: "value2" });
+    expect(node.jsonProperties).toBe(JSON.stringify({ prop1: "value1", prop2: "value2" }));
   });
 
   it("should handle agentInfo with different agentId", () => {
@@ -411,11 +411,12 @@ describe("getWorkflowViewDataByUnit", () => {
     expect(result.workflowNodeList).toHaveLength(1);
     const node = result.workflowNodeList[0];
     // The properties should NOT include publisherGrainId and correlationId since they are deleted
-    expect(node.properties).toEqual({
+    expect(node.jsonProperties).toBe(JSON.stringify({
       prop1: "value1",
       prop2: "value2",
-    });
-    expect(node.properties?.publisherGrainId).toBeUndefined();
-    expect(node.properties?.correlationId).toBeUndefined();
+    }));
+    const parsedProperties = JSON.parse(node.jsonProperties);
+    expect(parsedProperties.publisherGrainId).toBeUndefined();
+    expect(parsedProperties.correlationId).toBeUndefined();
   });
 }); 
