@@ -78,6 +78,8 @@ interface IProps {
     }
   ) => void;
   extraControlBar?: React.ReactNode;
+  onUndoAction?: () => void;
+  onRedoAction?: () => void;
 }
 
 export interface IWorkflowInstance {
@@ -106,6 +108,8 @@ export const Workflow = forwardRef(
       onNewNode,
       extraControlBar,
       gaevatarTypeList,
+      onUndoAction,
+      onRedoAction,
     }: IProps,
     ref
   ) => {
@@ -605,16 +609,18 @@ export const Workflow = forwardRef(
       if (previousState) {
         setNodes(previousState.nodes);
         setEdges(previousState.edges);
+        onUndoAction?.();
       }
-    }, [undo, setNodes, setEdges]);
+    }, [undo, setNodes, setEdges, onUndoAction]);
 
     const onRedoHandler = useCallback(async () => {
       const nextState = redo();
       if (nextState) {
         setNodes(nextState.nodes);
         setEdges(nextState.edges);
+        onRedoAction?.();
       }
-    }, [redo, setNodes, setEdges]);
+    }, [redo, setNodes, setEdges, onRedoAction]);
 
     return (
       <div

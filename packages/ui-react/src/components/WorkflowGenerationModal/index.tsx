@@ -9,13 +9,15 @@ import { usePostAIWorkflowGeneration } from "../../hooks/usePostAIWorkflowGenera
 
 interface IWorkflowGenerationModalProps {
   workflowRef: any;
+  defaultVisible?: boolean;
 }
 
 export const WorkflowGenerationModal = ({
   workflowRef,
+  defaultVisible = true,
 }: IWorkflowGenerationModalProps) => {
   const { data, isLoading, refetch } = usePostAIWorkflowGeneration();
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(defaultVisible);
   const [inputPrompt, setInputPrompt] = useState("");
 
   useEffect(() => {

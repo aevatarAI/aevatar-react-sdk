@@ -127,7 +127,7 @@ export const ExecutionLogs = ({
     roundId,
   });
   const [activeAgent, setActiveAgent] = useState(DEFAULT);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(workflowId);
 
   useEffect(() => {
     if (data) {
