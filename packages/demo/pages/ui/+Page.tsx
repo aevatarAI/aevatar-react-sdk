@@ -38,7 +38,7 @@ const AuthButton = clientOnly(() => import("../../components/auth/AuthButton"));
 ConfigProvider.setConfig({
   requestDefaults: {
     timeout: 15000,
-    baseURL: "https://station-developer-dev-staging.aevatar.ai/snow-client",
+    baseURL: "https://station-developer-dev-staging.aevatar.ai/proj1-client",
   },
 });
 
@@ -92,27 +92,10 @@ export default function UI() {
   const [agentTypeList, setAgentTypeList] = useState<IAgentsConfiguration[]>();
 
   const refreshGaevatarList = useCallback(async () => {
-    const [gaevatarList, agentTypeList] = await Promise.all([
-      aevatarAI.services.agent.getAgents({
-        pageIndex: 0,
-        pageSize: 100,
-      }),
-      aevatarAI.services.agent.getAllAgentsConfiguration(),
-    ]);
+    const agentTypeList =
+      await aevatarAI.services.agent.getAllAgentsConfiguration();
 
     setAgentTypeList(agentTypeList);
-    const list = gaevatarList.map((item) => {
-      const agentType = agentTypeList.find(
-        (type) => type.agentType === item.agentType
-      );
-      item.propertyJsonSchema = agentType?.propertyJsonSchema;
-      // TODO
-      item.businessAgentGrainId =
-        item.businessAgentGrainId ??
-        `${item.agentType}/${item.id.replace(/-/g, "")}`;
-      return { ...item };
-    });
-    setGaevatarList(list);
   }, []);
 
   const onShowWorkflow = useCallback(async () => {
@@ -152,7 +135,8 @@ export default function UI() {
 
     aevatarAI.fetchRequest.setHeaders({
       // authorization: sdkToken,
-      Authorization: "",
+      Authorization:
+        "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjUwRjA2OTE5QzIzMUFFQUUxNDZEMzI0ODcyNTU3OEVCNjEyODU2NzUiLCJ4NXQiOiJVUEJwR2NJeHJxNFViVEpJY2xWNDYyRW9WblUiLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtc3RhdGlvbi1kZXYtc3RhZ2luZy5hZXZhdGFyLmFpLyIsImV4cCI6MTc1NDQ1MjY1OCwiaWF0IjoxNzU0Mjc5ODU5LCJhdWQiOiJBZXZhdGFyIiwic2NvcGUiOiJBZXZhdGFyIG9mZmxpbmVfYWNjZXNzIiwianRpIjoiOTA5MmRmZWMtNTFmMi00NTFlLTkxNTAtYThkYWMxYmIwODI0Iiwic3ViIjoiMWZjN2QxZTgtNTI2Mi1hZTFlLThjMzQtM2ExYWRiNTllN2VlIiwicHJlZmVycmVkX3VzZXJuYW1lIjoibGVvdGVzdCIsImVtYWlsIjoibGVvdGVzdEB0ZW1sLm5ldCIsInJvbGUiOlsiZTRjYjFhMzktZTEzYi1lZWIyLWJiODYtM2ExYWRiNjdhNmRjX093bmVyIiwiZjY0YWI2MzAtM2I0Ni03NWQ2LWU3YTItM2ExYjA2MDhhNDIxX093bmVyIiwiYmFzaWNVc2VyIiwiOGU3MGFhOTMtYTY2NS05MjBmLWU2NzUtM2ExYjFmMmE5ZjM0X093bmVyIiwiMmJlNTEyZDktY2Q1NC1hMGE4LTliYTYtM2ExYjBhMzA0ZTQzX093bmVyIiwiZDRiYzE3MzAtMzgzNi0wYTkyLTY5OWEtM2ExYjQ5NWFhZmFhX093bmVyIiwiMDU3MzhmNjctZTk4MC0xMDRjLTViYjItM2ExYWRjMTYxZTJkX093bmVyIiwiOTI0M2RmNDYtOWVlNy1jZDM5LTBiNGEtM2ExYjA2MGY2ZmQ5X093bmVyIl0sInBob25lX251bWJlcl92ZXJpZmllZCI6IkZhbHNlIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsInVuaXF1ZV9uYW1lIjoibGVvdGVzdCIsInNlY3VyaXR5X3N0YW1wIjoiTzZOUjVTTk9KN1lHWFZLREg2NlBESUhIVEo0NUxXNE0iLCJvaV9wcnN0IjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV9hdV9pZCI6IjM0ODBmOTEwLTk0MmMtYzczYS1mZjYwLTNhMWI3NmJlZjY3OSIsImNsaWVudF9pZCI6IkFldmF0YXJBdXRoU2VydmVyIiwib2lfdGtuX2lkIjoiZTRlNDY5ZDAtY2JlMi03YjhiLWE5ZDItM2ExYjg1NjcyZTM4In0.JtgfKy3C6lsm-9ZOlJEJ0g4KRAxgpImguJKanXr3DghTHFUMqqvkqpln-mvHnoShZA_asZfPtC_yi1krgZ-l7X9XGYXHBZH9BNacbL_dRez6TEtf-6tFCflm4xyqRT-nFPMg5k6PtE-3zy4Kiy-g6oM-7Oai5QvbWxjbsCbG5Yo6twtgSGONhO2k8KS8wqV3jEMO3rBWE0jzicI3ENw_6BUD9YsRiJYmdDi385mcbiK4GSUAP-4jpUPsNMSvqULAi4lVDBJVkFZCX65zEF-J2ZtP0wVbrEBITGPBZ-gaTMCHCBN0Ty_rqZfPXP0_gaBcMT46BpmI4yKmZYVucibwhQ",
     });
 
     setShowAction(true);
@@ -197,37 +181,32 @@ export default function UI() {
           onClick={() => {
             setEditWorkflow(undefined);
             onShowWorkflow();
-          }}
-        >
+          }}>
           show workflow
         </Button>
         <Button
           onClick={() => {
             onEditWorkflow(localStorage.getItem("workflowAgentId") ?? "");
-          }}
-        >
+          }}>
           edit workflow
         </Button>
         <div className="h-[10px]" />
         <Button
           onClick={() => {
             setStage(Stage.WorkflowList);
-          }}
-        >
+          }}>
           show workflowList
         </Button>
         <Button
           onClick={() => {
             workflowListRef.current?.refresh();
-          }}
-        >
+          }}>
           refresh workflowList
         </Button>
         <Button
           onClick={() => {
             setStage(Stage.ExecutionList);
-          }}
-        >
+          }}>
           show executions
         </Button>
 
@@ -284,8 +263,7 @@ export default function UI() {
                       fullscreenHandle.active
                         ? fullscreenHandle.exit()
                         : fullscreenHandle.enter();
-                    }}
-                  >
+                    }}>
                     <FullScreenIcon
                       style={{
                         width: 16,

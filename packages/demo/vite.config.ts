@@ -37,7 +37,7 @@ export default defineConfig((config) => ({
     allowedHosts: true,
     proxy: {
       "/connect": {
-        target: "https://auth-pre-station-dev-staging.aevatar.ai",
+        target: "https://auth-station-dev-staging.aevatar.ai",
         changeOrigin: true,
         secure: true,
         // rewrite: (path) => path.replace(/^\/auth/, ''),
