@@ -270,7 +270,11 @@ const ExecutionLogBody = ({
                 )}
                 <span className="sdk:text-[14px]">{d.agentName}</span>
               </span>
-              {d.status === "success" ? <SuccessCheck /> : <ErrorIcon />}
+              {["success", "running", "pending"].includes(d.status) ? (
+                <SuccessCheck />
+              ) : (
+                <ErrorIcon />
+              )}
             </div>
           </button>
         ))}
