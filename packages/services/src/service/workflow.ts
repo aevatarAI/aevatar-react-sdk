@@ -111,14 +111,15 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   }
 
   fetchExecutionLogs<T = any>(query: IFetchExecutionLogsProps): Promise<T> {
-    const urlParams = new URLSearchParams();
-    urlParams.append("stateName", query.stateName);
-    urlParams.append("workflowId", query.workflowId);
-    urlParams.append("roundId", String(query.roundId));
+    const params = new URLSearchParams({
+      queryString: `workflowId:${query.workflowId}`,
+      stateName: query.stateName,
+      roundId: String(query.roundId),
+    });
 
     return this._request.send({
       method: "GET",
-      url: `/api/query/es?${urlParams.toString()}`,
+      url: `/api/query/es?${params.toString()}`,
     });
   }
 
