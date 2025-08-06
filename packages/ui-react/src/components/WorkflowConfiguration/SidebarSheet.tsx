@@ -19,7 +19,7 @@ export function SidebarSheet({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    sleep(500).then(() => {
+    sleep(0).then(() => {
       setOpen(true);
     });
   }, []);

@@ -438,11 +438,8 @@ IWorkflowConfigurationProps) => {
   );
 
   const selectAgent = useMemo(() => {
-    return (
-      gaevatarList.find((item) => item.id === selectAgentInfo?.nodeId) ||
-      selectAgentInfo?.agent
-    );
-  }, [gaevatarList, selectAgentInfo?.nodeId, selectAgentInfo?.agent]);
+    return selectAgentInfo?.agent;
+  }, [selectAgentInfo?.agent]);
 
   const { getWorkflowState } = useWorkflowState();
   const looperWorkflowIdRef = useRef<string>();
