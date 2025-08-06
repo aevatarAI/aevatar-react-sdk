@@ -38,7 +38,9 @@ const AuthButton = clientOnly(() => import("../../components/auth/AuthButton"));
 ConfigProvider.setConfig({
   requestDefaults: {
     timeout: 15000,
-    baseURL: "https://station-developer-dev-staging.aevatar.ai/proj1-client",
+    // baseURL: "https://station-developer-dev-staging.aevatar.ai/proj1-client",
+    baseURL:
+      "https://station-developer-dev-staging.aevatar.ai/testproject3-client",
   },
 });
 
@@ -133,10 +135,11 @@ export default function UI() {
     //   password: "Leo123!", //"Leo123!", //(import.meta as any).env.VITE_APP_SERVICE_PASSWORD,
     // } as any);
 
+    const TOKEN =
+      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjUwRjA2OTE5QzIzMUFFQUUxNDZEMzI0ODcyNTU3OEVCNjEyODU2NzUiLCJ4NXQiOiJVUEJwR2NJeHJxNFViVEpJY2xWNDYyRW9WblUiLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtc3RhdGlvbi1kZXYtc3RhZ2luZy5hZXZhdGFyLmFpLyIsImV4cCI6MTc1NDYyNjQ1NiwiaWF0IjoxNzU0NDUzNjU3LCJhdWQiOiJBZXZhdGFyIiwic2NvcGUiOiJBZXZhdGFyIG9mZmxpbmVfYWNjZXNzIiwianRpIjoiZTYzZjAwNjAtNjlhZC00MjY5LWIxNGMtY2FiMDkzNWY1MWIyIiwic3ViIjoiZjA4Mzk2NGItMmQ0OS00YzM5LWIyN2EtZGJjMmMxN2M3OTM2IiwicHJlZmVycmVkX3VzZXJuYW1lIjoiY2pocm95OThAZ21haWwuY29tQGdvb2dsZSIsImVtYWlsIjoiMjNhYTFiNTUyMmNlNDE5Y2I0ZjZiYjFmOTMwMDlkMjBAQUJQLklPIiwicm9sZSI6WyJiYXNpY1VzZXIiLCIzYTE1NGI2NC1lYjRhLWMyM2YtY2QwMy0zYTFiMWE3YWNhOWRfT3duZXIiXSwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjoiRmFsc2UiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwidW5pcXVlX25hbWUiOiJjamhyb3k5OEBnbWFpbC5jb21AZ29vZ2xlIiwic2VjdXJpdHlfc3RhbXAiOiJPRUFJWk9GRU0yQ0NURFlXVjRWR1hTSDRDWlRUMk5WUSIsIm9pX3Byc3QiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX2F1X2lkIjoiODBjMDIzOTktZjY0Zi1hYTBhLTI0ZGItM2ExYjhmNzVhNDBmIiwiY2xpZW50X2lkIjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV90a25faWQiOiI0OTA4YWE4NC02ZmM3LTNjNWQtYzI1NC0zYTFiOGZjMzIxNTMifQ.Bt6ZNqRNmcxdSMVO-wz139oSa_rbRZYNgDElMXkIE2tkUjGBVztkpT4P1O4vOO86t-BUktaRcSOyxVR6BKzTJW1K6sVmV7IewN5Gr17yKPmjLp-8gyphZbyuvYewjKVVXcSW2qig9DTeOJ825xaxNW4Zq8llcXzMqxL1h5WtdXzA2U7sc6ai352oieYMcDCWAIAZcWEl5EqJqWl6HCDOkGRQvU0hV01kAV79s_fTrP0hPuaG48p9Y9xKUPvQhC3vSyjdBZQFCFgPJrPY153l8CqzaeBCQSKVrfGqituvbzpBFvwELSPNtUmltjFfpelKKVw-As1NwZsaAVmUOAhB_Q";
     aevatarAI.fetchRequest.setHeaders({
       // authorization: sdkToken,
-      Authorization:
-        "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjUwRjA2OTE5QzIzMUFFQUUxNDZEMzI0ODcyNTU3OEVCNjEyODU2NzUiLCJ4NXQiOiJVUEJwR2NJeHJxNFViVEpJY2xWNDYyRW9WblUiLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtc3RhdGlvbi1kZXYtc3RhZ2luZy5hZXZhdGFyLmFpLyIsImV4cCI6MTc1NDQ1MjY1OCwiaWF0IjoxNzU0Mjc5ODU5LCJhdWQiOiJBZXZhdGFyIiwic2NvcGUiOiJBZXZhdGFyIG9mZmxpbmVfYWNjZXNzIiwianRpIjoiOTA5MmRmZWMtNTFmMi00NTFlLTkxNTAtYThkYWMxYmIwODI0Iiwic3ViIjoiMWZjN2QxZTgtNTI2Mi1hZTFlLThjMzQtM2ExYWRiNTllN2VlIiwicHJlZmVycmVkX3VzZXJuYW1lIjoibGVvdGVzdCIsImVtYWlsIjoibGVvdGVzdEB0ZW1sLm5ldCIsInJvbGUiOlsiZTRjYjFhMzktZTEzYi1lZWIyLWJiODYtM2ExYWRiNjdhNmRjX093bmVyIiwiZjY0YWI2MzAtM2I0Ni03NWQ2LWU3YTItM2ExYjA2MDhhNDIxX093bmVyIiwiYmFzaWNVc2VyIiwiOGU3MGFhOTMtYTY2NS05MjBmLWU2NzUtM2ExYjFmMmE5ZjM0X093bmVyIiwiMmJlNTEyZDktY2Q1NC1hMGE4LTliYTYtM2ExYjBhMzA0ZTQzX093bmVyIiwiZDRiYzE3MzAtMzgzNi0wYTkyLTY5OWEtM2ExYjQ5NWFhZmFhX093bmVyIiwiMDU3MzhmNjctZTk4MC0xMDRjLTViYjItM2ExYWRjMTYxZTJkX093bmVyIiwiOTI0M2RmNDYtOWVlNy1jZDM5LTBiNGEtM2ExYjA2MGY2ZmQ5X093bmVyIl0sInBob25lX251bWJlcl92ZXJpZmllZCI6IkZhbHNlIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsInVuaXF1ZV9uYW1lIjoibGVvdGVzdCIsInNlY3VyaXR5X3N0YW1wIjoiTzZOUjVTTk9KN1lHWFZLREg2NlBESUhIVEo0NUxXNE0iLCJvaV9wcnN0IjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV9hdV9pZCI6IjM0ODBmOTEwLTk0MmMtYzczYS1mZjYwLTNhMWI3NmJlZjY3OSIsImNsaWVudF9pZCI6IkFldmF0YXJBdXRoU2VydmVyIiwib2lfdGtuX2lkIjoiZTRlNDY5ZDAtY2JlMi03YjhiLWE5ZDItM2ExYjg1NjcyZTM4In0.JtgfKy3C6lsm-9ZOlJEJ0g4KRAxgpImguJKanXr3DghTHFUMqqvkqpln-mvHnoShZA_asZfPtC_yi1krgZ-l7X9XGYXHBZH9BNacbL_dRez6TEtf-6tFCflm4xyqRT-nFPMg5k6PtE-3zy4Kiy-g6oM-7Oai5QvbWxjbsCbG5Yo6twtgSGONhO2k8KS8wqV3jEMO3rBWE0jzicI3ENw_6BUD9YsRiJYmdDi385mcbiK4GSUAP-4jpUPsNMSvqULAi4lVDBJVkFZCX65zEF-J2ZtP0wVbrEBITGPBZ-gaTMCHCBN0Ty_rqZfPXP0_gaBcMT46BpmI4yKmZYVucibwhQ",
+      Authorization: TOKEN,
     });
 
     setShowAction(true);
@@ -181,32 +184,37 @@ export default function UI() {
           onClick={() => {
             setEditWorkflow(undefined);
             onShowWorkflow();
-          }}>
+          }}
+        >
           show workflow
         </Button>
         <Button
           onClick={() => {
             onEditWorkflow(localStorage.getItem("workflowAgentId") ?? "");
-          }}>
+          }}
+        >
           edit workflow
         </Button>
         <div className="h-[10px]" />
         <Button
           onClick={() => {
             setStage(Stage.WorkflowList);
-          }}>
+          }}
+        >
           show workflowList
         </Button>
         <Button
           onClick={() => {
             workflowListRef.current?.refresh();
-          }}>
+          }}
+        >
           refresh workflowList
         </Button>
         <Button
           onClick={() => {
             setStage(Stage.ExecutionList);
-          }}>
+          }}
+        >
           show executions
         </Button>
 
@@ -263,7 +271,8 @@ export default function UI() {
                       fullscreenHandle.active
                         ? fullscreenHandle.exit()
                         : fullscreenHandle.enter();
-                    }}>
+                    }}
+                  >
                     <FullScreenIcon
                       style={{
                         width: 16,
