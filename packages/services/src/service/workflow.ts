@@ -15,6 +15,7 @@ import type {
   IGetWorkflowResult,
   IGenerateWorkflowProps,
   IWorkflowViewDataParams,
+  IFetchExecutionLogsProps,
 } from "../types/workflow";
 
 export class WorkflowService<T extends IBaseRequest = IBaseRequest>
@@ -34,7 +35,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   }
   updateWorkflowViewData(
     id: string,
-    params: IWorkflowViewDataParams
+    params: IWorkflowViewDataParams,
   ): Promise<IAgentInfo> {
     return this._request.send({
       method: "PUT",
@@ -91,7 +92,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   }
 
   getWorkflow<T = any>(
-    query: IGetWorkflowQuery
+    query: IGetWorkflowQuery,
   ): Promise<IGetWorkflowResult<T>> {
     const params = new URLSearchParams();
     params.append("stateName", query.stateName);
@@ -106,6 +107,18 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
     return this._request.send({
       method: "GET",
       url: `/api/query/es?${params.toString()}`,
+    });
+  }
+
+  fetchExecutionLogs<T = any>(query: IFetchExecutionLogsProps): Promise<T> {
+    const urlParams = new URLSearchParams();
+    urlParams.append("stateName", query.stateName);
+    urlParams.append("workflowId", query.workflowId);
+    urlParams.append("roundId", String(query.roundId));
+
+    return this._request.send({
+      method: "GET",
+      url: `/api/query/es?${urlParams.toString()}`,
     });
   }
 
@@ -125,7 +138,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
     return this._request.send({
       method: "POST",
       url: "/api/workflow/generate",
-      params
-    }) 
+      params,
+    });
   }
 }
