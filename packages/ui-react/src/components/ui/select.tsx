@@ -19,8 +19,10 @@ const SelectPrimitiveIcon: React.ElementType = SelectPrimitive.Icon;
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
-    React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => {
+    React.HTMLAttributes<HTMLDivElement> & {
+      downIcon?: React.ReactNode;
+    }
+>(({ className, children, downIcon, ...props }, ref) => {
   return (
     <SelectPrimitiveTrigger
       ref={ref}
@@ -36,7 +38,7 @@ const SelectTrigger = React.forwardRef<
       <SelectPrimitiveIcon
         asChild
         className={props["aria-disabled"] ? "hidden" : undefined}>
-        <DownIcon />
+        {downIcon ?? <DownIcon />}
       </SelectPrimitiveIcon>
     </SelectPrimitiveTrigger>
   );
