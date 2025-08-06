@@ -114,14 +114,14 @@ export default function WorkflowListInner({
                   value={ActionType.OpenWorkflow}>
                   open workflow
                 </SelectItem>
-                <SelectItem
+                {/* <SelectItem
                   className={clsx(
                     actionItemCls,
                     "aevatar-workflow-action-select-view"
                   )}
                   value={ActionType.ViewExecutions}>
                   view executions
-                </SelectItem>
+                </SelectItem> */}
                 <SelectItem
                   className={clsx(
                     actionItemCls,
