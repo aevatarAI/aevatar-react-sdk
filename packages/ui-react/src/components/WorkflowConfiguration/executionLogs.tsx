@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
 import "react18-json-view/src/dark.css";
+import { aevatarAI } from "../../utils";
 
 const transformStatus = (status: number) => {
   switch (status) {
@@ -46,19 +47,18 @@ export const useFetchExecutionLogs = ({
       try {
         setIsLoading(true);
 
-        const response = await fetch(
-          `/api/query/es?StateName=${stateName}&QueryString=workflowId:${workflowId}&&roundId:${roundId}`
-        );
+        const response = await aevatarAI.services.workflow.fetchExecutionLogs({
+          stateName,
+          workflowId,
+          roundId,
+        });
 
-        const data = await response.json();
-
-        if (data.code === "20000") {
+        if (response?.items.length > 0) {
           const results = [];
-          const records = data?.data?.items?.flatMap((d: any) =>
+          const records = response?.items?.flatMap((d: any) =>
             JSON.parse(d?.workUnitRecords)
           );
-
-          const agentStates = data?.data?.items?.flatMap((d: any) =>
+          const agentStates = response?.items?.flatMap((d: any) =>
             JSON.parse(d?.workUnitInfos)
           );
 
@@ -73,7 +73,8 @@ export const useFetchExecutionLogs = ({
             );
 
             const agentName =
-              inputData?.find((d: any) => d?.AgentName)?.AgentName || "unknown";
+              inputData?.find((d: any) => d?.AgentName)?.AgentName ||
+              `unnamed_agent_${i}`;
 
             const result = {
               agentName,
@@ -83,7 +84,6 @@ export const useFetchExecutionLogs = ({
               executionTime,
               agentState,
             };
-
             results.push(result);
           }
           setData(results);
@@ -198,16 +198,20 @@ const ExecutionLogHeader = ({
               <span className="sdk:text-[14px]">{agentName}</span>
             </div>
             <span className="sdk:text-[#6F6F6F] sdk:text-[14px]">
-              {executionTime}s
+              {executionTime ? `${executionTime}s` : "-"}
             </span>
             <div
               className={`sdk:flex sdk:items-center ${
-                status === "success"
+                ["success", "running", "pending"].includes(status)
                   ? "sdk:text-[#53FF8A]"
                   : "sdk:text-[#FF2E2E]"
               }`}
             >
-              {status === "success" ? <SuccessCheck /> : <ErrorIcon />}
+              {["success", "running", "pending"].includes(status) ? (
+                <SuccessCheck />
+              ) : (
+                <ErrorIcon />
+              )}
               <span className="sdk:w-[2px]" />
               <span className="sdk:text-[14px]">{status}</span>
             </div>
