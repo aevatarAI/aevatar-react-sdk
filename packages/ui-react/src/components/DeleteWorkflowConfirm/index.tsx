@@ -12,47 +12,27 @@ import {
 import clsx from "clsx";
 
 export interface IDeleteWorkflowConfirmProps {
+  open?: boolean;
+  onOpenChange?: (open?: boolean) => void;
   handleConfirm: () => void;
 }
 
 export default function DeleteWorkflowConfirm({
+  open,
+  onOpenChange,
   handleConfirm,
 }: IDeleteWorkflowConfirmProps) {
-  const [open, setOpen] = useState(false);
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <TooltipProvider delayDuration={0}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div>
-                <Delete
-                  className="sdk:cursor-pointer sdk:text-[#606060] sdk:w-[14px] sdk:h-[14px]"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOpen(true);
-                  }}
-                />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent
-              className={clsx(
-                "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
-                "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
-              )}
-              side="top">
-              delete
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTrigger asChild />
+
       <DialogContent
         onClick={(e) => e.stopPropagation()}
         aria-describedby="delete g-agent"
         className="sdk:w-[328px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-[6px] sdk:border sdk:border-[#303030]">
         <div className="sdk:flex sdk:items-center sdk:justify-between">
           <div />
-          <Close onClick={() => setOpen(false)} />
+          <Close onClick={() => onOpenChange(false)} />
         </div>
         <div className="sdk:flex sdk:flex-col sdk:items-center sdk:gap-[16px] sdk:pt-[10px]">
           <DeleteTip />
@@ -65,7 +45,7 @@ export default function DeleteWorkflowConfirm({
           <Button
             className="sdk:text-[12px] sdk:py-[7px] sdk:leading-[14px] sdk:font-semibold sdk:text-[#fff] sdk:flex-1"
             onClick={() => {
-              setOpen(false);
+              onOpenChange(false);
             }}>
             cancel
           </Button>
@@ -74,7 +54,7 @@ export default function DeleteWorkflowConfirm({
             onClick={(e) => {
               e.stopPropagation();
               handleConfirm();
-              setOpen(false);
+              onOpenChange(false);
             }}>
             yes
           </Button>
