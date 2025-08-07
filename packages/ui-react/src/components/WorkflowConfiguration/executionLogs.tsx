@@ -153,7 +153,7 @@ export const ExecutionLogs = ({
 
   useEffect(() => {
     if (data) {
-      setActiveAgent(data?.[0]);
+      setActiveAgent({ ...data?.[0], index: 0 });
     }
   }, [data]);
 
@@ -302,9 +302,7 @@ const ExecutionLogBody = ({
           <button
             key={`${d?.agentState?.grainId}-${index}`}
             className={`sdk:cursor-pointer sdk:pt-[2px] sdk:pb-[2px] sdk:pr-[4px] sdk:pl-[4px] sdk:rounded-sm ${
-              activeAgent?.agentState?.grainId === d?.agentState?.grainId &&
-              activeAgent?.index === index &&
-              "sdk:bg-[#303030]"
+              activeAgent?.index === index && "sdk:bg-[#303030]"
             }`}
             type="button"
             onClick={() => {
