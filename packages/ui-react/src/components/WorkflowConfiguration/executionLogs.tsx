@@ -355,6 +355,7 @@ const ExecutionLogBody = ({
             </span>
           </div>
           <JsonView
+            collapsed={false}
             enableClipboard={false}
             src={activeAgent?.inputData}
             className="sdk:text-[14px]"
@@ -398,6 +399,8 @@ const ExecutionLogBody = ({
             </span>
           </div>
           <JsonView
+            collapseStringsAfterLength={Number.POSITIVE_INFINITY}
+            collapsed={false}
             enableClipboard={false}
             src={activeAgent?.outputData}
             className="sdk:text-[14px]"
