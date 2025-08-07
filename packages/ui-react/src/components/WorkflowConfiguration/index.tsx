@@ -212,7 +212,7 @@ IWorkflowConfigurationProps) => {
     const workflowViewData = getWorkflowViewData();
     let result: IAgentInfo;
 
-    const workflowId = newWorkflowState?.workflowId || editWorkflow?.workflowId;
+    let workflowId = newWorkflowState?.workflowId || editWorkflow?.workflowId;
 
     if (newWorkflowState?.workflowAgentId || editWorkflow?.workflowAgentId) {
       const updateParam: any = { ...workflowViewData };
@@ -243,16 +243,20 @@ IWorkflowConfigurationProps) => {
     setNewWorkflowState((v) => ({ ...v, ...newState }));
 
     const publishResult = await publishWorkflow({ agentId: result.id });
+    if (!workflowId)
+      workflowId = publishResult.properties.workflowCoordinatorGAgentId;
+
     if (publishResult) {
       updateNodeList(publishResult?.properties?.workflowNodeList);
       setNewWorkflowState((v) => ({
         ...v,
-        workflowId: publishResult.properties.workflowCoordinatorGAgentId,
+        workflowId,
       }));
     }
 
     return {
       workflowAgentId: result.id,
+      workflowId,
       workflowViewData,
       workflowName: workflowViewData.name,
     };
@@ -397,21 +401,25 @@ IWorkflowConfigurationProps) => {
       [onGaevatarChange]
     );
 
+  const getIsStage = useCallback(() => {
+    const viewData = getWorkflowViewData();
+    const preViewData =
+      workflowViewDataRef.current ?? editWorkflow?.workflowViewData;
+    return !isWorkflowDataEqual(viewData, preViewData);
+  }, [getWorkflowViewData, editWorkflow?.workflowViewData]);
+
   const onUnsavedBack = useCallback(() => {
     if (isRunningRef.current) {
       onBack?.();
       return;
     }
-    const viewData = getWorkflowViewData();
-    const preViewData =
-      workflowViewDataRef.current ?? editWorkflow?.workflowViewData;
-    console.log(viewData, preViewData, "viewData===");
-    if (isWorkflowDataEqual(viewData, preViewData)) {
+
+    if (!getIsStage()) {
       onBack?.();
     } else {
       setUnsavedModal(true);
     }
-  }, [onBack, getWorkflowViewData, editWorkflow?.workflowViewData]);
+  }, [onBack, getIsStage]);
 
   const onNodesChanged = useCallback(
     (nodes: INode[]) => {
@@ -455,17 +463,21 @@ IWorkflowConfigurationProps) => {
       let workflowStatus = WorkflowStatus.pending;
       let currentTerm = term;
       looperWorkflowIdRef.current = workflowId;
-      while (workflowStatus === WorkflowStatus.pending) {
+      while (workflowStatus !== WorkflowStatus.failed) {
         try {
           if (looperWorkflowIdRef.current !== workflowId) return;
           await sleep(1500);
-          const workflowState = await getWorkflowState(workflowId);
-          if (!workflowState) throw "workflow not found";
-          currentTerm = workflowState.term;
+          const workflowStateRes = await getWorkflowState(workflowId);
+          if (!workflowStateRes) throw "workflow not found";
+          currentTerm = workflowStateRes.term;
 
-          if (currentTerm > term) return WorkflowStatus.running;
+          if (
+            currentTerm > term &&
+            workflowStateRes.workflowStatus === WorkflowStatus.pending
+          )
+            return workflowStateRes.workflowStatus;
 
-          workflowStatus = workflowState.workflowStatus;
+          workflowStatus = workflowStateRes.workflowStatus;
         } catch (error) {
           workflowStatus = WorkflowStatus.failed;
         }
@@ -502,10 +514,11 @@ IWorkflowConfigurationProps) => {
         return;
       }
       let workflowId = editWorkflow?.workflowId ?? newWorkflowState?.workflowId;
-      if (!workflowId) {
+      if (!workflowId || getIsStage()) {
         // TODO auto save and publish workflow
         const result = await onSaveHandler();
-        workflowId = result.workflowAgentId;
+        if (!workflowId) workflowId = result.workflowId;
+        await sleep(3000);
       }
       const workflowState = await getWorkflowState(workflowId);
       if (!workflowState) throw "workflow not found";
@@ -522,13 +535,11 @@ IWorkflowConfigurationProps) => {
       const workflowStatus = await getWorkflowStateLoop(workflowId, term);
       if (workflowStatus === WorkflowStatus.failed)
         throw "workflow is failed, please check the workflow";
-      if (workflowStatus === WorkflowStatus.running) {
-        toast({
-          title: "success",
-          description: "workflow executed successfully.",
-          duration: 3000,
-        });
-      }
+      toast({
+        title: "success",
+        description: "workflow executed successfully.",
+        duration: 3000,
+      });
     } catch (error) {
       console.error("run workflow error:", error);
       setSaveFailed(SaveFailedError.workflowExecutionFailed);
@@ -538,6 +549,7 @@ IWorkflowConfigurationProps) => {
   }, [
     editWorkflow,
     newWorkflowState,
+    getIsStage,
     toast,
     getWorkflowState,
     getWorkflowStateLoop,
