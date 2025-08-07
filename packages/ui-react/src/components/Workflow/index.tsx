@@ -54,6 +54,7 @@ interface IProps {
   gaevatarList?: IAgentInfoDetail[];
   editWorkflow?: {
     workflowAgentId: string;
+    workflowId?: string;
     workflowName: string;
     workflowViewData: IWorkflowViewDataParams;
   };
@@ -113,6 +114,13 @@ export const Workflow = forwardRef(
     }: IProps,
     ref
   ) => {
+    // [TODO]
+    // const { refetch } = useFetchExecutionLogs({
+    //   stateName: "WorkflowCoordinatorState",
+    //   workflowId: editWorkflow?.workflowId,
+    //   roundId: 1,
+    // });
+
     // Add state to track used indexes for each agent type
     const [agentTypeUsedIndexes, setAgentTypeUsedIndexes] = useState<
       Record<string, Set<number>>
@@ -718,7 +726,9 @@ export const Workflow = forwardRef(
               </TooltipProvider>
 
               <Button
-                onClick={onRunningHandler}
+                onClick={async () => {
+                  onRunningHandler();
+                }}
                 className="sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]"
               >
                 {isRunning ? (

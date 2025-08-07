@@ -4,6 +4,10 @@ export interface IGenerateWorkflowProps {
   userGoal: string;
 }
 
+export interface IFetchAgentDetailsProps {
+  formattedBusinessAgentGrainId: string;
+  stateName: string;
+}
 export interface IFetchExecutionLogsProps {
   stateName: string;
   workflowId: string;
@@ -146,6 +150,7 @@ export interface IWorkflowService {
     query: IGetWorkflowQuery,
   ): Promise<IGetWorkflowResult<T>>;
   fetchExecutionLogs<T = any>(props: IFetchExecutionLogsProps): Promise<T>;
+  fetchAgentDetails<T = any>(props: IFetchAgentDetailsProps): Promise<T>;
   generate<T = any>(props: IGenerateWorkflowProps): Promise<T>;
   start<T = any>(params: IStartWorkflowParams): Promise<T>;
   createWorkflowViewData(params: IWorkflowViewDataParams): Promise<IAgentInfo>;
