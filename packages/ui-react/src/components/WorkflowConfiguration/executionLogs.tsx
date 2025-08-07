@@ -7,13 +7,15 @@ import Close from "../../assets/svg/close.svg?react";
 import Browsers from "../../assets/svg/browsers.svg?react";
 import Clipboard from "../../assets/svg/clipboard.svg?react";
 import Clock from "../../assets/svg/clock.svg?react";
+import Loading from "../../assets/svg/loading.svg?react";
 import dayjs from "dayjs";
 import Copy from "../Copy";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
 import "react18-json-view/src/dark.css";
 import { aevatarAI } from "../../utils";
+import clsx from "clsx";
 
 const transformStatus = (status: number) => {
   switch (status) {
@@ -41,66 +43,85 @@ export const useFetchExecutionLogs = ({
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
+  const [trigger, setTrigger] = useState(0);
 
-  useEffect(() => {
-    const fetchExecutionLogs = async () => {
-      try {
-        setIsLoading(true);
+  const refetch = useCallback(() => {
+    console.log({ trigger });
+    setTrigger((prev) => prev + 1);
+  }, [trigger]);
 
-        const response = await aevatarAI.services.workflow.fetchExecutionLogs({
-          stateName,
-          workflowId,
-          roundId,
+  const fetchData = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError("");
+
+      const response = await aevatarAI.services.workflow.fetchExecutionLogs({
+        stateName,
+        workflowId,
+        roundId,
+      });
+
+      if (response?.items.length > 0) {
+        const results = [];
+        const records = response?.items?.flatMap((d: any) =>
+          JSON.parse(d?.workUnitRecords)
+        );
+        const agentStates = response?.items?.flatMap((d: any) =>
+          JSON.parse(d?.workUnitInfos)
+        );
+
+        const promises = agentStates?.map((agentState) => {
+          return aevatarAI.services.workflow.fetchAgentDetails({
+            formattedBusinessAgentGrainId: agentState.grainId,
+            stateName: "creatorGagentstate",
+          });
         });
 
-        if (response?.items.length > 0) {
-          const results = [];
-          const records = response?.items?.flatMap((d: any) =>
-            JSON.parse(d?.workUnitRecords)
+        const agentDetailsData = await Promise.all(promises);
+
+        for (let i = 0; i < records.length; i++) {
+          const record = records?.[i];
+          const agentState = agentStates?.[i];
+
+          const inputData = JSON.parse(record.inputData);
+          const outputData = JSON.parse(record.outputData);
+          const executionTime = dayjs(record.endTime).diff(
+            dayjs(record.startTime)
           );
-          const agentStates = response?.items?.flatMap((d: any) =>
-            JSON.parse(d?.workUnitInfos)
-          );
 
-          for (let i = 0; i < records.length; i++) {
-            const record = records?.[i];
-            const agentState = agentStates?.[i];
+          const agentName =
+            inputData?.find((d: any) => d?.AgentName)?.AgentName ||
+            agentDetailsData?.[i]?.items?.[0]?.name ||
+            "-";
 
-            const inputData = JSON.parse(record.inputData);
-            const outputData = JSON.parse(record.outputData);
-            const executionTime = dayjs(record.endTime).diff(
-              dayjs(record.startTime)
-            );
-
-            const agentName =
-              inputData?.find((d: any) => d?.AgentName)?.AgentName ||
-              `unnamed_agent_${i}`;
-
-            const result = {
-              agentName,
-              status: transformStatus(record.status),
-              inputData,
-              outputData,
-              executionTime,
-              agentState,
-            };
-            results.push(result);
-          }
-          setData(results);
+          const result = {
+            agentName,
+            status: transformStatus(record.status),
+            inputData,
+            outputData,
+            executionTime,
+            agentState,
+          };
+          results.push(result);
         }
-      } catch (e) {
-        console.error(e);
-        setError("There was an error fetching data");
-      } finally {
-        setIsLoading(false);
+        setData(results);
       }
-    };
-
-    fetchExecutionLogs();
+    } catch (e) {
+      console.error(e);
+      setError("There was an error fetching data");
+    } finally {
+      setIsLoading(false);
+    }
   }, [stateName, workflowId, roundId]);
 
-  return { isLoading, data, error };
+  useEffect(() => {
+    console.log({ trigger });
+    fetchData();
+  }, [fetchData, trigger]);
+
+  return { isLoading, data, error, refetch };
 };
+
 interface IExecutionLogsProps {
   stateName: string;
   workflowId: string;
@@ -114,6 +135,7 @@ const DEFAULT = {
   agentState: {},
   executionTime: 783,
   status: "success",
+  index: 0,
 };
 
 export const ExecutionLogs = ({
@@ -136,7 +158,16 @@ export const ExecutionLogs = ({
   }, [data]);
 
   if (isLoading) {
-    return null;
+    return (
+      <Loading
+        key={"save"}
+        className={clsx(
+          "aevatarai-loading-icon",
+          "sdk:absolute",
+          "sdk:bottom-[22px]"
+        )}
+      />
+    );
   }
 
   if (!isVisible) {
@@ -170,7 +201,15 @@ interface Agent {
   agentState: any;
   executionTime: number;
   status: string;
+  index: number;
 }
+
+const getStatus = (status: string) => {
+  const isSuccess = ["success"].includes(status);
+  const isPending = ["running", "pending"].includes(status);
+
+  return { isPending, isSuccess };
+};
 
 interface IExecutionLogsHeaderProps {
   data: any;
@@ -184,6 +223,7 @@ const ExecutionLogHeader = ({
   onToggle,
 }: IExecutionLogsHeaderProps) => {
   const { agentName, executionTime, status } = activeAgent || {};
+  const { isPending, isSuccess } = getStatus(status);
 
   return (
     <div className="sdk:flex sdk:flex-row sdk:justify-between sdk:items-center sdk:gap-[16px]">
@@ -202,12 +242,16 @@ const ExecutionLogHeader = ({
             </span>
             <div
               className={`sdk:flex sdk:items-center ${
-                ["success", "running", "pending"].includes(status)
+                isPending
+                  ? ""
+                  : isSuccess
                   ? "sdk:text-[#53FF8A]"
                   : "sdk:text-[#FF2E2E]"
               }`}
             >
-              {["success", "running", "pending"].includes(status) ? (
+              {isPending ? (
+                <Loading key="load-header" style={{ width: 14, height: 14 }} />
+              ) : isSuccess ? (
                 <SuccessCheck />
               ) : (
                 <ErrorIcon />
@@ -249,28 +293,47 @@ const ExecutionLogBody = ({
   activeAgent,
   onChange,
 }: IExecutionLogsBodyProps) => {
+  const { isPending, isSuccess } = getStatus(activeAgent?.status);
+
   return (
     <Flex>
-      <div className="sdk:flex sdk:flex-col sdk:min-w-[202px]">
-        {data.map((d) => (
+      <div className="sdk:flex sdk:flex-col sdk:min-w-[202px] sdk:max-w-[202px] sdk:overflow-auto">
+        {data.map((d, index) => (
           <button
+            key={`${d?.agentState?.grainId}-${index}`}
             className={`sdk:cursor-pointer sdk:pt-[2px] sdk:pb-[2px] sdk:pr-[4px] sdk:pl-[4px] sdk:rounded-sm ${
-              activeAgent?.agentName === d.agentName ? "sdk:bg-[#303030]" : ""
+              activeAgent?.agentState?.grainId === d?.agentState?.grainId &&
+              activeAgent?.index === index &&
+              "sdk:bg-[#303030]"
             }`}
-            key={d.agentName}
             type="button"
-            onClick={() => onChange(d)}
+            onClick={() => {
+              const agent = { ...d, index };
+              onChange(agent);
+            }}
           >
             <div className="sdk:flex sdk:items-center sdk:justify-between">
               <span className="sdk:flex sdk:items-center sdk:gap-1">
-                {activeAgent?.agentName === d.agentName ? (
-                  <AIStarWhite />
-                ) : (
-                  <AIStar />
-                )}
+                {activeAgent?.index === index ? <AIStarWhite /> : <AIStar />}
                 <span className="sdk:text-[14px]">{d.agentName}</span>
               </span>
-              {["success", "running", "pending"].includes(d.status) ? (
+              {activeAgent?.index === index ? (
+                isPending ? (
+                  <Loading
+                    key="loader-body-style"
+                    style={{ width: 14, height: 14 }}
+                  />
+                ) : isSuccess ? (
+                  <SuccessCheck />
+                ) : (
+                  <ErrorIcon />
+                )
+              ) : ["pending", "running"].includes(d.status) ? (
+                <Loading
+                  key="loader-body-style"
+                  style={{ width: 14, height: 14 }}
+                />
+              ) : ["success"].includes(d.status) ? (
                 <SuccessCheck />
               ) : (
                 <ErrorIcon />
@@ -293,7 +356,12 @@ const ExecutionLogBody = ({
               </button>
             </span>
           </div>
-          <JsonView src={activeAgent?.inputData} className="sdk:text-[14px]" />
+          <JsonView
+            enableClipboard={false}
+            src={activeAgent?.inputData}
+            className="sdk:text-[14px]"
+            theme="vscode"
+          />
         </div>
 
         <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%]">
@@ -310,7 +378,13 @@ const ExecutionLogBody = ({
               </button>
             </span>
           </div>
-          <JsonView src={activeAgent?.agentState} className="sdk:text-[14px]" />
+          <JsonView
+            enableClipboard={false}
+            src={activeAgent?.agentState}
+            className="sdk:text-[14px]"
+            collapseStringsAfterLength={24}
+            theme="vscode"
+          />
         </div>
 
         <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%]">
@@ -325,7 +399,12 @@ const ExecutionLogBody = ({
               </button>
             </span>
           </div>
-          <JsonView src={activeAgent?.outputData} className="sdk:text-[14px]" />
+          <JsonView
+            enableClipboard={false}
+            src={activeAgent?.outputData}
+            className="sdk:text-[14px]"
+            theme="vscode"
+          />
         </div>
       </div>
     </Flex>
@@ -334,7 +413,7 @@ const ExecutionLogBody = ({
 
 const Wrapper = ({ children }: { children: any }) => {
   return (
-    <div className="sdk:min-w-[100%] sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#171717] sdk:p-[8px] sdk:border sdk:border-[#FFFFFF14] sdk:rounded-sm">
+    <div className="sdk:min-h-[240px] sdk:max-h-[201px] sdk:overflow-auto sdk:min-w-[100%] sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#171717] sdk:p-[8px] sdk:border sdk:border-[#FFFFFF14] sdk:rounded-sm">
       {children}
     </div>
   );
@@ -365,7 +444,7 @@ const ToggleModal = ({ onToggle }: ToggleModalProps) => {
   return (
     <button
       type="button"
-      className="sdk:flex sdk:gap-[5px] sdk:items-center sdk:pt-[8px] sdk:pb-[8px] sdk:pl-[18px] sdk:pr-[18px] sdk:border sdk:border-[#303030] sdk:cursor-pointer"
+      className="sdk:absolute sdk:bottom-[22px] sdk:flex sdk:gap-[5px] sdk:items-center sdk:pt-[8px] sdk:pb-[8px] sdk:pl-[18px] sdk:pr-[18px] sdk:border sdk:border-[#303030] sdk:cursor-pointer"
       onClick={() => {
         onToggle((prev) => !prev);
       }}

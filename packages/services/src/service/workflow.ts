@@ -16,6 +16,7 @@ import type {
   IGenerateWorkflowProps,
   IWorkflowViewDataParams,
   IFetchExecutionLogsProps,
+  IFetchAgentDetailsProps,
 } from "../types/workflow";
 
 export class WorkflowService<T extends IBaseRequest = IBaseRequest>
@@ -104,6 +105,18 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
       params.append("pageSize", String(query.pageSize));
     if (query.sortFields && query.sortFields.length > 0)
       params.append("sortFields", query.sortFields.join(","));
+    return this._request.send({
+      method: "GET",
+      url: `/api/query/es?${params.toString()}`,
+    });
+  }
+
+  fetchAgentDetails<T = any>(query: IFetchAgentDetailsProps): Promise<T> {
+    const params = new URLSearchParams({
+      queryString: `formattedBusinessAgentGrainId:"${query.formattedBusinessAgentGrainId}"`,
+      stateName: query.stateName,
+    });
+
     return this._request.send({
       method: "GET",
       url: `/api/query/es?${params.toString()}`,
