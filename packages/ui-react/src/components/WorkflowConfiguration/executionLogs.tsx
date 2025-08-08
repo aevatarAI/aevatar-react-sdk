@@ -8,122 +8,13 @@ import Browsers from "../../assets/svg/browsers.svg?react";
 import Clipboard from "../../assets/svg/clipboard.svg?react";
 import Clock from "../../assets/svg/clock.svg?react";
 import Loading from "../../assets/svg/loading.svg?react";
-import dayjs from "dayjs";
 import Copy from "../Copy";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
 import "react18-json-view/src/dark.css";
-import { aevatarAI } from "../../utils";
 import clsx from "clsx";
-
-const transformStatus = (status: number) => {
-  switch (status) {
-    case 0:
-      return "pending";
-    case 1:
-      return "running";
-    case 2:
-      return "success";
-    default:
-      return "failed";
-  }
-};
-interface FetchExecutionLogsProps {
-  stateName: string;
-  workflowId: string;
-  roundId: number;
-}
-
-export const useFetchExecutionLogs = ({
-  stateName,
-  workflowId,
-  roundId,
-}: FetchExecutionLogsProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const [error, setError] = useState("");
-  const [trigger, setTrigger] = useState(0);
-
-  const refetch = useCallback(() => {
-    console.log({ trigger });
-    setTrigger((prev) => prev + 1);
-  }, [trigger]);
-
-  const fetchData = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError("");
-
-      const response = await aevatarAI.services.workflow.fetchExecutionLogs({
-        stateName,
-        workflowId,
-        roundId,
-      });
-
-      if (response?.items.length > 0) {
-        const results = [];
-        const records = response?.items?.flatMap((d: any) =>
-          JSON.parse(d?.workUnitRecords)
-        );
-        const agentStates = response?.items?.flatMap((d: any) =>
-          JSON.parse(d?.workUnitInfos)
-        );
-
-        const promises = agentStates?.map((agentState) => {
-          return aevatarAI.services.workflow.fetchAgentDetails({
-            formattedBusinessAgentGrainId: agentState.grainId,
-            stateName: "creatorGagentstate",
-          });
-        });
-
-        const agentDetailsData = await Promise.all(promises);
-
-        for (let i = 0; i < records.length; i++) {
-          const record = records?.[i];
-          const agentState = agentStates?.[i];
-
-          const inputData = JSON.parse(record.inputData);
-          const outputData = JSON.parse(record.outputData);
-          const executionTime = dayjs(record.endTime).diff(
-            dayjs(record.startTime)
-          );
-
-          const agentName = agentDetailsData?.[i]?.items?.[0]?.name || "-";
-
-          const result = {
-            agentName,
-            status: transformStatus(record.status),
-            inputData,
-            outputData,
-            executionTime,
-            agentState,
-          };
-          results.push(result);
-        }
-        setData(results);
-      }
-    } catch (e) {
-      console.error(e);
-      setError("There was an error fetching data");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [stateName, workflowId, roundId]);
-
-  useEffect(() => {
-    console.log({ trigger });
-    fetchData();
-  }, [fetchData, trigger]);
-
-  return { isLoading, data, error, refetch };
-};
-
-interface IExecutionLogsProps {
-  stateName: string;
-  workflowId: string;
-  roundId: number;
-}
+import { useFetchExecutionLogs } from "../Workflow/hooks/useFetchExecutionLogs";
 
 const DEFAULT = {
   agentName: "unknown",
@@ -135,6 +26,12 @@ const DEFAULT = {
   index: 0,
 };
 
+interface IExecutionLogsProps {
+  stateName: string;
+  workflowId: string;
+  roundId: number;
+}
+
 export const ExecutionLogs = ({
   workflowId,
   stateName,
@@ -145,6 +42,7 @@ export const ExecutionLogs = ({
     workflowId,
     roundId,
   });
+  console.log({ data });
   const [activeAgent, setActiveAgent] = useState(DEFAULT);
   const [isVisible, setIsVisible] = useState(workflowId);
 
