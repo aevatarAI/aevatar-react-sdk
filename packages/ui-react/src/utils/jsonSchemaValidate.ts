@@ -1,7 +1,10 @@
 // Recursive validation for JSON Schema fields
 // Supports object, array, enum, boolean, file, string, number, etc.
+
+import { validateSchemaFieldAjv } from "./jsonSchemaValidateAjv";
+
 // Returns { errors, param } where errors is an array of { name, error }, param is the validated value
-export function validateSchemaField(
+export function validateSchemaFieldCustom(
   name: string,
   schema: any,
   _value: any,
@@ -186,3 +189,7 @@ export function validateSchemaField(
   param = value;
   return { errors, param };
 }
+
+const validateSchemaField = validateSchemaFieldAjv;
+
+export { validateSchemaField };

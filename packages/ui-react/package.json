@@ -82,6 +82,8 @@
     "@tanstack/react-table": "^8.20.6",
     "@tanstack/table-core": "^8.21.3",
     "@xyflow/react": "^12.4.2",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
