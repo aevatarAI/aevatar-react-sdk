@@ -28,8 +28,6 @@ const fetchExecutionLogs = async (
       roundId,
     });
 
-    console.log({ response });
-
     if (!response?.items || response.items.length === 0) {
       return results;
     }
@@ -94,5 +92,6 @@ export const useFetchExecutionLogs = ({
     queryFn: () => {
       return fetchExecutionLogs(stateName, workflowId, roundId);
     },
+    refetchInterval: 5000,
   });
 };

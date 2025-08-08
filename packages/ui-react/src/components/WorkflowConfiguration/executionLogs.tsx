@@ -42,7 +42,6 @@ export const ExecutionLogs = ({
     workflowId,
     roundId,
   });
-  console.log({ data });
   const [activeAgent, setActiveAgent] = useState(DEFAULT);
   const [isVisible, setIsVisible] = useState(workflowId);
 
