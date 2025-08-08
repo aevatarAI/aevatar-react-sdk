@@ -144,7 +144,11 @@ const ExecutionLogHeader = ({
               }`}
             >
               {isPending ? (
-                <Loading key="load-header" style={{ width: 14, height: 14 }} />
+                <Loading
+                  key={"save"}
+                  className={clsx("aevatarai-loading-icon")}
+                  style={{ width: 14, height: 14 }}
+                />
               ) : isSuccess ? (
                 <SuccessCheck />
               ) : (
@@ -192,47 +196,56 @@ const ExecutionLogBody = ({
   return (
     <Flex>
       <div className="sdk:flex sdk:flex-col sdk:min-w-[202px] sdk:max-w-[202px] sdk:overflow-auto">
-        {data.map((d, index) => (
-          <button
-            key={`${d?.agentState?.grainId}-${index}`}
-            className={`sdk:cursor-pointer sdk:pt-[2px] sdk:pb-[2px] sdk:pr-[4px] sdk:pl-[4px] sdk:rounded-sm ${
-              activeAgent?.index === index && "sdk:bg-[#303030]"
-            }`}
-            type="button"
-            onClick={() => {
-              const agent = { ...d, index };
-              onChange(agent);
-            }}
-          >
-            <div className="sdk:flex sdk:items-center sdk:justify-between">
-              <span className="sdk:flex sdk:items-center sdk:gap-1">
-                {activeAgent?.index === index ? <AIStarWhite /> : <AIStar />}
-                <span className="sdk:text-[14px]">{d.agentName}</span>
-              </span>
-              {activeAgent?.index === index ? (
-                isPending ? (
-                  <Loading
-                    key="loader-body-style"
-                    style={{ width: 14, height: 14 }}
-                  />
-                ) : isSuccess ? (
-                  <SuccessCheck />
-                ) : (
-                  <ErrorIcon />
-                )
-              ) : ["pending", "running"].includes(d.status) ? (
+        {data.map((d, index) => {
+          const isActive = activeAgent?.index === index;
+
+          const getStatusIcon = () => {
+            const currentStatus = isActive
+              ? isPending
+                ? "pending"
+                : isSuccess
+                ? "success"
+                : "error"
+              : d.status;
+
+            const iconProps = { style: { width: 14, height: 14 } };
+
+            if (["pending", "running"].includes(currentStatus)) {
+              return (
                 <Loading
-                  key="loader-body-style"
-                  style={{ width: 14, height: 14 }}
+                  key="save"
+                  className={clsx("aevatarai-loading-icon")}
+                  {...iconProps}
                 />
-              ) : ["success"].includes(d.status) ? (
-                <SuccessCheck />
-              ) : (
-                <ErrorIcon />
-              )}
-            </div>
-          </button>
-        ))}
+              );
+            }
+
+            return currentStatus === "success" ? (
+              <SuccessCheck />
+            ) : (
+              <ErrorIcon />
+            );
+          };
+
+          return (
+            <button
+              key={`${d?.agentState?.grainId}-${index}`}
+              className={`sdk:cursor-pointer sdk:pt-[2px] sdk:pb-[2px] sdk:pr-[4px] sdk:pl-[4px] sdk:rounded-sm ${
+                isActive ? "sdk:bg-[#303030]" : ""
+              }`}
+              type="button"
+              onClick={() => onChange({ ...d, index })}
+            >
+              <div className="sdk:flex sdk:items-center sdk:justify-between">
+                <span className="sdk:flex sdk:items-center sdk:gap-1">
+                  {isActive ? <AIStarWhite /> : <AIStar />}
+                  <span className="sdk:text-[14px]">{d.agentName}</span>
+                </span>
+                {getStatusIcon()}
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       <div className="sdk:flex sdk:flex-row sdk:gap-2 sdk:w-[100%]">
