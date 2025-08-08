@@ -45,6 +45,7 @@ import { getWorkflowViewDataByUnit } from "../utils";
 import { isWorkflowDataEqual } from "../../utils/workflowDataComparison";
 import dayjs from "dayjs";
 import { handleErrorMessage } from "../../utils/error";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export interface IWorkflowConfigurationState {
   workflowAgentId: string;
@@ -728,9 +729,7 @@ IWorkflowConfigurationProps) => {
             <div className="sdk:flex sdk:justify-center sdk:min-w-[100%] sdk:pl-[8px] sdk:pr-[8px] sdk:pb-[8px]">
               <ExecutionLogs
                 stateName="WorkflowExecutionRecordState"
-                workflowId={
-                  newWorkflowState?.workflowId || editWorkflow?.workflowId
-                }
+                workflowId={editWorkflow?.workflowId} //|| newWorkflowState?.workflowId
                 roundId={1}
               />
             </div>
@@ -756,6 +755,8 @@ IWorkflowConfigurationProps) => {
   );
 };
 
+const queryClient = new QueryClient();
+
 export default function WorkflowConfiguration(
   props: IWorkflowConfigurationProps
 ) {
@@ -764,17 +765,19 @@ export default function WorkflowConfiguration(
     typeof window !== "undefined" &&
     ("ontouchstart" in window || navigator.maxTouchPoints > 0);
   return (
-    <ReactFlowProvider>
-      <ReactDndProvider
-        backend={isMobile ? TouchBackend : HTML5Backend}
-        options={isMobile ? { enableMouseEvents: true } : undefined}
-      >
-        <DnDProvider>
-          <WorkflowProvider>
-            <WorkflowConfigurationInner {...props} />
-          </WorkflowProvider>
-        </DnDProvider>
-      </ReactDndProvider>
-    </ReactFlowProvider>
+    <QueryClientProvider client={queryClient}>
+      <ReactFlowProvider>
+        <ReactDndProvider
+          backend={isMobile ? TouchBackend : HTML5Backend}
+          options={isMobile ? { enableMouseEvents: true } : undefined}
+        >
+          <DnDProvider>
+            <WorkflowProvider>
+              <WorkflowConfigurationInner {...props} />
+            </WorkflowProvider>
+          </DnDProvider>
+        </ReactDndProvider>
+      </ReactFlowProvider>
+    </QueryClientProvider>
   );
 }

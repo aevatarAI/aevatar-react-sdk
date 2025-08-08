@@ -32,7 +32,7 @@ export default defineConfig((config) => ({
   },
 
   server: {
-    host: '0.0.0.0', // Allow IP access
+    host: "0.0.0.0", // Allow IP access
     cors: true,
     allowedHosts: true,
     proxy: {
@@ -43,7 +43,8 @@ export default defineConfig((config) => ({
         // rewrite: (path) => path.replace(/^\/auth/, ''),
       },
       "/api": {
-        target: "https://station-developer-dev-staging.aevatar.ai/developer-client",
+        target:
+          "https://station-developer-dev-staging.aevatar.ai/developer-client",
         changeOrigin: true,
         secure: true,
         // rewrite: (path) => path.replace(/^\/test-client/, ''),

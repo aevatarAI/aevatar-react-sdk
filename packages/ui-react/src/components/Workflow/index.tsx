@@ -47,6 +47,8 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { getPropertiesByDefaultValues } from "../../utils/jsonSchemaParse";
+import { useFetchExecutionLogs } from "./hooks/useFetchExecutionLogs";
+import { sleep } from "@aevatar-react-sdk/utils";
 
 const getId = () => `${uuidv4()}`;
 
@@ -114,12 +116,11 @@ export const Workflow = forwardRef(
     }: IProps,
     ref
   ) => {
-    // [TODO]
-    // const { refetch } = useFetchExecutionLogs({
-    //   stateName: "WorkflowCoordinatorState",
-    //   workflowId: editWorkflow?.workflowId,
-    //   roundId: 1,
-    // });
+    const { data, refetch } = useFetchExecutionLogs({
+      stateName: "WorkflowExecutionRecordState",
+      workflowId: editWorkflow?.workflowId,
+      roundId: 1,
+    });
 
     // Add state to track used indexes for each agent type
     const [agentTypeUsedIndexes, setAgentTypeUsedIndexes] = useState<
@@ -728,6 +729,8 @@ export const Workflow = forwardRef(
               <Button
                 onClick={async () => {
                   onRunningHandler();
+                  await sleep(3000);
+                  const refetchedData = await refetch();
                 }}
                 className="sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]"
               >
