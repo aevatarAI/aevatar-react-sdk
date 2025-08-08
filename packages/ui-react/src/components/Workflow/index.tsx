@@ -116,7 +116,7 @@ export const Workflow = forwardRef(
     }: IProps,
     ref
   ) => {
-    const { data, refetch } = useFetchExecutionLogs({
+    const { refetch } = useFetchExecutionLogs({
       stateName: "WorkflowExecutionRecordState",
       workflowId: editWorkflow?.workflowId,
       roundId: 1,
