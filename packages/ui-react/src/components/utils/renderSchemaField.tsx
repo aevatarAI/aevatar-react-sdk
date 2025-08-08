@@ -48,7 +48,7 @@ export const renderSchemaField = ({
         return errors[0].error;
       }
       return true;
-    }
+    },
   });
 
   if (Array.isArray(schema.type)) {
@@ -501,6 +501,13 @@ export const renderSchemaField = ({
           // Wrap onChange to call both field.onChange and external onChange
           const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             const val = e.target.value;
+            console.log(val, "val==handleChange");
+            
+            // Only allow numeric input
+            if (val !== "" && !/^\d*$/.test(val)) {
+              return; // Prevent non-numeric input
+            }
+            
             if (schema.nullable && val === "") {
               field.onChange(null);
               onChange?.(null, { name: fieldName, schema });
@@ -514,12 +521,11 @@ export const renderSchemaField = ({
               <FormLabel>{labelWithRequired}</FormLabel>
               <FormControl>
                 <Input
-                  type="number"
+                  type="text"
                   placeholder={schema?.description ?? ""}
                   {...field}
                   onChange={handleChange}
                   className={clsx(
-                    "sdk:appearance-none sdk:[&::-webkit-outer-spin-button]:appearance-none sdk:[&::-webkit-inner-spin-button]:appearance-none sdk:[&::-ms-input-placeholder]:appearance-none",
                     (field.disabled ?? disabled) && "sdk:bg-[#303030]"
                   )}
                   disabled={field.disabled ?? disabled}
