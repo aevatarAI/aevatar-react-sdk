@@ -127,7 +127,7 @@ export default function AevatarCardInner({
             }
 
             return (
-              <div key={propName} className={clsx(isNew && "sdk:w-full")}>
+              <div key={propName} className={clsx("sdk:w-full")}>
                 <div className="sdk:text-[#6F6F6F] sdk:text-[12px] sdk:pb-[10px]">
                   {propName}
                 </div>
@@ -136,7 +136,7 @@ export default function AevatarCardInner({
                     (!isNew || value) && "sdk:flex sdk:flex-wrap sdk:gap-[10px]"
                   )}>
                   {/* Render array values if type is array, else render single value */}
-                  {valueList.map((info) => {
+                  {valueList.map((info: string | null | number) => {
                     // Prefer a unique value for key, fallback to propName+info
                     const key =
                       typeof info === "string" || typeof info === "number"
@@ -148,7 +148,7 @@ export default function AevatarCardInner({
                         className={clsx(
                           "sdk:p-[4px] sdk:bg-[var(--sdk-border-color)] sdk:text-[12px] sdk:text-white "
                         )}>
-                        {!info && (
+                        {!info && info !== 0 && (
                           <div
                             className={clsx(
                               "sdk:h-[23px] sdk:w-full sdk:bg-[#303030]",
@@ -156,7 +156,7 @@ export default function AevatarCardInner({
                             )}
                           />
                         )}
-                        {info && (
+                        {(info || info === 0) && (
                           <pre
                             style={{
                               whiteSpace: "pre-wrap",

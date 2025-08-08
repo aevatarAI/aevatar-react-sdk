@@ -58,6 +58,18 @@ export function parseJsonSchema(
     return parseJsonSchema(schema.anyOf[0], rootSchema, definitions, value);
   }
   if (schema.oneOf && Array.isArray(schema.oneOf)) {
+    // If there are exactly two options, check if one is null type
+    if (schema.oneOf.length === 2) {
+      const hasNullType = schema.oneOf.some(item => item.type === "null");
+      const hasNonNullType = schema.oneOf.some(item => item.type !== "null" || item.$ref);
+      
+      if (hasNullType && hasNonNullType) {
+        // Find the non-null option
+        const nonNullOption = schema.oneOf.find(item => item.type !== "null");
+        return parseJsonSchema(nonNullOption, rootSchema, definitions, value);
+      }
+    }
+    // Default behavior: use the first option
     return parseJsonSchema(schema.oneOf[0], rootSchema, definitions, value);
   }
   // Handle object
