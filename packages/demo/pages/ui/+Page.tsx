@@ -10,7 +10,6 @@ import {
   WorkflowList,
   FullScreenIcon,
 } from "@aevatar-react-sdk/ui-react";
-// import "@aevatar-react-sdk/ui-react/ui-react.css";
 import { useCallback, useRef, useState } from "react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { clientOnly } from "vike-react/clientOnly";
@@ -24,23 +23,12 @@ import type { IWorkflowListRef } from "../../../ui-react/dist/types/src/componen
 const LoginButton = clientOnly(
   () => import("../../components/auth/LoginButton")
 );
-
 const AuthButton = clientOnly(() => import("../../components/auth/AuthButton"));
-
-// ConfigProvider.setConfig({
-//   connectUrl: "https://auth-station-staging.aevatar.ai",
-//   requestDefaults: {
-//     // baseURL: "/aevatarURL",
-//     baseURL: "https://station-developer-staging.aevatar.ai/test-client",
-//   },
-// });
 
 ConfigProvider.setConfig({
   requestDefaults: {
     timeout: 15000,
-    // baseURL: "https://station-developer-dev-staging.aevatar.ai/proj1-client",
     baseURL:
-      // "https://station-developer-dev-staging.aevatar.ai/testproject3-client",
       "https://station-developer-dev-staging.aevatar.ai/testproject-client",
   },
 });
@@ -120,7 +108,6 @@ export default function UI() {
         workflowViewData: result.workflowViewData,
       });
       onShowWorkflow();
-      console.log(workflowAgentId, result, "onEditWorkflow=");
     },
     [onShowWorkflow]
   );
@@ -128,18 +115,9 @@ export default function UI() {
   const [showAction, setShowAction] = useState<boolean>();
 
   const getTokenByclient = useCallback(async () => {
-    // const sdkToken = await aevatarAI.getAuthTokenWithClient({
-    //   grant_type: "password",
-    //   scope: "Aevatar",
-    //   username: "leotest@teml.net", // "leotest@teml.net", // (import.meta as any).env.VITE_APP_SERVICE_USERNAME,
-    //   client_id: "AevatarAuthServer",
-    //   password: "Leo123!", //"Leo123!", //(import.meta as any).env.VITE_APP_SERVICE_PASSWORD,
-    // } as any);
-
     const TOKEN =
       "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjUwRjA2OTE5QzIzMUFFQUUxNDZEMzI0ODcyNTU3OEVCNjEyODU2NzUiLCJ4NXQiOiJVUEJwR2NJeHJxNFViVEpJY2xWNDYyRW9WblUiLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtc3RhdGlvbi1kZXYtc3RhZ2luZy5hZXZhdGFyLmFpLyIsImV4cCI6MTc1NDgwMjI5MSwiaWF0IjoxNzU0NjI5NDkyLCJhdWQiOiJBZXZhdGFyIiwic2NvcGUiOiJBZXZhdGFyIG9mZmxpbmVfYWNjZXNzIiwianRpIjoiNzNmNTJmNmMtMmY0YS00ZjllLTk3MTgtOWQ2ZGRmNzQ5YmEwIiwic3ViIjoiZjA4Mzk2NGItMmQ0OS00YzM5LWIyN2EtZGJjMmMxN2M3OTM2IiwicHJlZmVycmVkX3VzZXJuYW1lIjoiY2pocm95OThAZ21haWwuY29tQGdvb2dsZSIsImVtYWlsIjoiMjNhYTFiNTUyMmNlNDE5Y2I0ZjZiYjFmOTMwMDlkMjBAQUJQLklPIiwicm9sZSI6WyJiYXNpY1VzZXIiLCIzYTE1NGI2NC1lYjRhLWMyM2YtY2QwMy0zYTFiMWE3YWNhOWRfT3duZXIiXSwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjoiRmFsc2UiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwidW5pcXVlX25hbWUiOiJjamhyb3k5OEBnbWFpbC5jb21AZ29vZ2xlIiwic2VjdXJpdHlfc3RhbXAiOiJPRUFJWk9GRU0yQ0NURFlXVjRWR1hTSDRDWlRUMk5WUSIsIm9pX3Byc3QiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX2F1X2lkIjoiMzYwN2JjYjQtM2ZkOS01N2MxLTMxMGItM2ExYjk2ZmU4MDJlIiwiY2xpZW50X2lkIjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV90a25faWQiOiI1ZTA3YWM3NC1hN2ViLTliZmUtMjRmZS0zYTFiOWEzZTI4ZmIifQ.lsF17G_WH15WDnIKNeM_CFJjMmyEe-f-QmR_I4zJqtV2OAE0AJvqOueAicBR4ghHTDGrHfSGebY0mP57mTBYV3fp_zJ0Og16Tc-er5K5xvLnDX5PUpL7gZ7aBm9qHqzmRSnTb_BJ4OeW-YaqL611vJdCFiFhGAr27SmmKEBTuh0d8rCr08VbjUXZP3_cnX85aGosJEEfkPfhT69o8NxUQd334bjFbyCmW3gA-7-VkonJsGa1XYEoqWrdMzTey8JujzAqYLUnkwI5-sr_N2cZ57VTuBLY98QtPDGq6OBCCE0YWaxi3uqctYdUAvfNVGa4nCPTVhZY-InuFgkGNZg4AQ";
     aevatarAI.fetchRequest.setHeaders({
-      // authorization: sdkToken,
       Authorization: TOKEN,
     });
 
@@ -154,7 +132,6 @@ export default function UI() {
     const result = await aevatarAI.getWorkflowUnitRelationByAgentId(
       workflowAgentId
     );
-    console.log("getWorkflowDetail", result);
     setEditWorkflow({
       workflowAgentId,
       workflowName: result.workflowName,
@@ -164,22 +141,13 @@ export default function UI() {
 
   return (
     <div className="min-w-[375px]">
-      <AevatarProvider
-      // hiddenGAevatarType={
-      //   [
-      //     // "Aevatar.SignalR.GAgents.SignalRGAgent",
-      //     // "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
-      //   ]
-      // }
-      >
+      <AevatarProvider>
         <LoginButton />
 
         <AuthButton onFinish={onAuthFinish} />
         <div className="h-[10px]" />
 
         <Button onClick={getTokenByclient}>getTokenByclient</Button>
-        {/* {showAction && (
-          <> */}
         <Button onClick={onShowGaevatar}>show gaevatar</Button>
         <Button
           onClick={() => {
@@ -224,7 +192,6 @@ export default function UI() {
         {stage === Stage.myGAevatar && (
           <MyGAevatar
             height={600}
-            // maxGAevatarCount={1}
             onNewGAevatar={onNewGAevatar}
             onEditGaevatar={onEditGaevatar}
           />
@@ -257,7 +224,7 @@ export default function UI() {
           <FullScreen className="h-[900px]" handle={fullscreenHandle}>
             <WorkflowConfiguration
               sidebarConfig={{
-                gaevatarList, //: [],
+                gaevatarList,
                 isNewGAevatar: true,
                 gaevatarTypeList: agentTypeList,
               }}
@@ -313,3 +280,11 @@ export default function UI() {
     </div>
   );
 }
+
+// const sdkToken = await aevatarAI.getAuthTokenWithClient({
+//   grant_type: "password",
+//   scope: "Aevatar",
+//   username: "leotest@teml.net", // "leotest@teml.net", // (import.meta as any).env.VITE_APP_SERVICE_USERNAME,
+//   client_id: "AevatarAuthServer",
+//   password: "Leo123!", //"Leo123!", //(import.meta as any).env.VITE_APP_SERVICE_PASSWORD,
+// } as any);

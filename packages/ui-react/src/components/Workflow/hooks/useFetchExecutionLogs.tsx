@@ -1,6 +1,7 @@
 import { aevatarAI } from "../../../utils";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import { useState } from "react";
 
 const transformStatus = (status: number) => {
   switch (status) {
@@ -87,11 +88,19 @@ export const useFetchExecutionLogs = ({
   workflowId,
   roundId,
 }: IFetchExecutionLogsProps) => {
+  const [hasRefetched, setHasRefetched] = useState(false);
   return useQuery({
     queryKey: ["executionLogs", { stateName, workflowId, roundId }],
     queryFn: () => {
       return fetchExecutionLogs(stateName, workflowId, roundId);
     },
-    refetchInterval: 5000,
+    refetchInterval: () => {
+      // Only refetch once after 10 seconds
+      if (!hasRefetched) {
+        setHasRefetched(true);
+        return 5000;
+      }
+      return false; // Disable further refetching
+    },
   });
 };
