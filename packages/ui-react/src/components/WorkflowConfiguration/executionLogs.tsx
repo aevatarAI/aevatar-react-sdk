@@ -89,10 +89,7 @@ export const useFetchExecutionLogs = ({
             dayjs(record.startTime)
           );
 
-          const agentName =
-            inputData?.find((d: any) => d?.AgentName)?.AgentName ||
-            agentDetailsData?.[i]?.items?.[0]?.name ||
-            "-";
+          const agentName = agentDetailsData?.[i]?.items?.[0]?.name || "-";
 
           const result = {
             agentName,
@@ -342,7 +339,7 @@ const ExecutionLogBody = ({
       </div>
 
       <div className="sdk:flex sdk:flex-row sdk:gap-2 sdk:w-[100%]">
-        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%]">
+        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[#B9B9B9] sdk:font-semibold">input</span>
             <span className="sdk:flex sdk:gap-2">
@@ -363,7 +360,7 @@ const ExecutionLogBody = ({
           />
         </div>
 
-        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%]">
+        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[#B9B9B9] sdk:font-semibold">
               agent state
@@ -381,12 +378,12 @@ const ExecutionLogBody = ({
             enableClipboard={false}
             src={activeAgent?.agentState}
             className="sdk:text-[14px]"
-            collapseStringsAfterLength={24}
+            collapsed={false}
             theme="vscode"
           />
         </div>
 
-        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%]">
+        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[#B9B9B9] sdk:font-semibold">output</span>
             <span className="sdk:flex sdk:gap-2">
