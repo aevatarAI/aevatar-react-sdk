@@ -336,7 +336,7 @@ export default function WorkflowAevatarEdit({
                   form,
                   name,
                   schema,
-                  selectContentCls: "sdk:w-[192px]!",
+                  selectContentCls: "sdk:w-[var(--radix-popper-anchor-width)]!",
                   disabled,
                 })
               )}

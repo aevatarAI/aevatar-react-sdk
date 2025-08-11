@@ -77,7 +77,6 @@ export default function WorkflowListInner({
         operation: (
           <div className="sdk:flex sdk:items-center sdk:justify-end sdk:pr-[15px]">
             <Select
-              open
               value={null}
               onValueChange={(value) => {
                 console.log("value===", value);
