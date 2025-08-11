@@ -729,7 +729,9 @@ IWorkflowConfigurationProps) => {
             <div className="sdk:flex sdk:justify-center sdk:min-w-[100%] sdk:pl-[8px] sdk:pr-[8px] sdk:pb-[8px]">
               <ExecutionLogs
                 stateName="WorkflowExecutionRecordState"
-                workflowId={editWorkflow?.workflowId} //|| newWorkflowState?.workflowId
+                workflowId={
+                  newWorkflowState?.workflowId || editWorkflow?.workflowId
+                }
                 roundId={1}
               />
             </div>

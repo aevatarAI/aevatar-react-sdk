@@ -132,7 +132,7 @@ const ExecutionLogHeader = ({
               <span className="sdk:text-[14px]">{agentName}</span>
             </div>
             <span className="sdk:text-[#6F6F6F] sdk:text-[14px]">
-              {executionTime ? `${executionTime}s` : "-"}
+              {executionTime ? `${executionTime}ms` : "-"}
             </span>
             <div
               className={`sdk:flex sdk:items-center ${
