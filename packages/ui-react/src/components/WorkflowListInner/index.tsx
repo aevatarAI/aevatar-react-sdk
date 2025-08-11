@@ -1,6 +1,7 @@
 import DataTable from "../ui/DataTable";
 import { Button } from "../ui/button";
 import AddIcon from "../../assets/svg/add.svg?react";
+import Hypotenuse from "../../assets/svg/hypotenuse.svg?react";
 import NoWorkflows from "../../assets/svg/no-workflows.svg?react";
 import Setting from "../../assets/svg/setting.svg?react";
 import DownIcon from "../../assets/svg/down-icon.svg?react";
@@ -76,6 +77,7 @@ export default function WorkflowListInner({
         operation: (
           <div className="sdk:flex sdk:items-center sdk:justify-end sdk:pr-[15px]">
             <Select
+              open
               value={null}
               onValueChange={(value) => {
                 console.log("value===", value);
@@ -105,16 +107,17 @@ export default function WorkflowListInner({
               </SelectTrigger>
               <SelectContent
                 align="end"
-                className="sdk:md:w-[259px] sdk:w-[192px] sdk:left-0 sdk:-top-[4px] sdk:p-[8px_8px_20px_10px] sdk:md:p-[8px_8px_20px_10px] sdk:bg-[#141415]">
-                <SelectItem
-                  className={clsx(
-                    actionItemCls,
-                    "aevatar-workflow-action-select-open"
-                  )}
-                  value={ActionType.OpenWorkflow}>
-                  open workflow
-                </SelectItem>
-                {/* <SelectItem
+                className="sdk:md:w-[200px] sdk:w-[192px] sdk:left-0 sdk:-top-[4px] sdk:p-0 sdk:md:p-0 sdk:bg-transparent">
+                <div className="sdk:p-[8px_8px_4px_10px] sdk:md:p-[8px_8px_4px_10px] sdk:bg-[#141415]">
+                  <SelectItem
+                    className={clsx(
+                      actionItemCls,
+                      "aevatar-workflow-action-select-open"
+                    )}
+                    value={ActionType.OpenWorkflow}>
+                    open workflow
+                  </SelectItem>
+                  {/* <SelectItem
                   className={clsx(
                     actionItemCls,
                     "aevatar-workflow-action-select-view"
@@ -122,15 +125,25 @@ export default function WorkflowListInner({
                   value={ActionType.ViewExecutions}>
                   view executions
                 </SelectItem> */}
-                <SelectItem
-                  className={clsx(
-                    actionItemCls,
-                    "sdk:text-[#FF2E2E] sdk:hover:text-[#FF2E2E]",
-                    "aevatar-workflow-action-select-delete"
-                  )}
-                  value={ActionType.DeleteWorkflow}>
-                  delete
-                </SelectItem>
+                  <SelectItem
+                    className={clsx(
+                      actionItemCls,
+                      "sdk:text-[#FF2E2E] sdk:hover:text-[#FF2E2E]",
+                      "aevatar-workflow-action-select-delete"
+                    )}
+                    value={ActionType.DeleteWorkflow}>
+                    delete
+                  </SelectItem>
+                </div>
+
+                <div className="sdk:h-[14px] sdk:relative sdk:flex ">
+                  <div className={clsx(" sdk:bg-[#141415] sdk:flex-1")} />
+                  <Hypotenuse
+                    className={clsx(
+                      "sdk:w-[17px] sdk:h-[14px] sdk:text-[#141415]"
+                    )}
+                  />
+                </div>
               </SelectContent>
             </Select>
           </div>
