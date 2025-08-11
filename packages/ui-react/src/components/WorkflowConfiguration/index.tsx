@@ -46,6 +46,7 @@ import { isWorkflowDataEqual } from "../../utils/workflowDataComparison";
 import dayjs from "dayjs";
 import { handleErrorMessage } from "../../utils/error";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useFetchExecutionLogs } from "../Workflow/hooks/useFetchExecutionLogs";
 
 export interface IWorkflowConfigurationState {
   workflowAgentId: string;
@@ -174,6 +175,12 @@ IWorkflowConfigurationProps) => {
     },
     []
   );
+
+  const { refetch } = useFetchExecutionLogs({
+    stateName: "WorkflowExecutionRecordState",
+    workflowId: editWorkflow?.workflowId ?? newWorkflowState?.workflowId,
+    roundId: 1,
+  });
 
   const getWorkflowViewData = useCallback(() => {
     const workUnitRelations = workflowRef.current.getWorkUnitRelations();
@@ -541,6 +548,8 @@ IWorkflowConfigurationProps) => {
         description: "workflow executed successfully.",
         duration: 3000,
       });
+      await sleep(3000);
+      await refetch(); // [TODO]
     } catch (error) {
       console.error("run workflow error:", error);
       setSaveFailed(SaveFailedError.workflowExecutionFailed);
@@ -555,6 +564,7 @@ IWorkflowConfigurationProps) => {
     getWorkflowState,
     getWorkflowStateLoop,
     onSaveHandler,
+    refetch,
   ]);
 
   const [sidebarContainer, setSidebarContainer] = React.useState(null);

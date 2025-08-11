@@ -636,13 +636,15 @@ export const Workflow = forwardRef(
         className={clsx(
           "dndflow sdk:w-full",
           editAgentOpen && "editAgentOpen-workflow-inner"
-        )}>
+        )}
+      >
         <div
           className="reactflow-wrapper sdk:relative"
           ref={(node) => {
             reactFlowWrapper.current = node;
             dropRef(node);
-          }}>
+          }}
+        >
           <ReactFlow
             colorMode="dark"
             nodes={nodes}
@@ -667,7 +669,8 @@ export const Workflow = forwardRef(
               strokeDasharray: "10 10",
               stroke: "#B9B9B9",
               strokeWidth: 2,
-            }}>
+            }}
+          >
             <div className="sdk:absolute sdk:left-[15px] sdk:bottom-[130px] sdk:z-5">
               {extraControlBar}
             </div>
@@ -682,7 +685,8 @@ export const Workflow = forwardRef(
                       )}
                       onClick={onUndoHandler}
                       disabled={!canUndo}
-                      aria-label="undo">
+                      aria-label="undo"
+                    >
                       <Refresh />
                     </Button>
                   </TooltipTrigger>
@@ -691,7 +695,8 @@ export const Workflow = forwardRef(
                       "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
-                    side="top">
+                    side="top"
+                  >
                     undo
                   </TooltipContent>
                 </Tooltip>
@@ -707,7 +712,8 @@ export const Workflow = forwardRef(
                       )}
                       onClick={onRedoHandler}
                       disabled={!canRedo}
-                      aria-label="redo">
+                      aria-label="redo"
+                    >
                       <Refresh
                         className=""
                         style={{ transform: "scaleX(-1)" }}
@@ -719,7 +725,8 @@ export const Workflow = forwardRef(
                       "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
-                    side="top">
+                    side="top"
+                  >
                     redo
                   </TooltipContent>
                 </Tooltip>
@@ -729,9 +736,10 @@ export const Workflow = forwardRef(
                 onClick={async () => {
                   onRunningHandler();
                   await sleep(3000);
-                  const refetchedData = await refetch();
+                  await refetch();
                 }}
-                className="sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
+                className="sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]"
+              >
                 {isRunning ? (
                   <Loading
                     key={"save"}
