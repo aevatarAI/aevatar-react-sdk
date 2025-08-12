@@ -524,7 +524,7 @@ IWorkflowConfigurationProps) => {
       if (!workflowId || getIsStage()) {
         // TODO auto save and publish workflow
         const result = await onSaveHandler();
-        if (!workflowId) workflowId = result.workflowId;
+        workflowId = result.workflowId;
         await sleep(3000);
       }
       const workflowState = await getWorkflowState(workflowId);
@@ -542,11 +542,13 @@ IWorkflowConfigurationProps) => {
       const workflowStatus = await getWorkflowStateLoop(workflowId, term);
       if (workflowStatus === WorkflowStatus.failed)
         throw "workflow is failed, please check the workflow";
-      toast({
-        title: "success",
-        description: "workflow executed successfully.",
-        duration: 3000,
-      });
+      if (workflowStatus === WorkflowStatus.pending) {
+        toast({
+          title: "error",
+          description: "workflow is running, please wait for it to finish.",
+          duration: 3000,
+        });
+      }
       await sleep(3000);
       await refetch(); // [TODO]
     } catch (error) {
