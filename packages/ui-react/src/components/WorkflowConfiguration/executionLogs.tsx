@@ -350,15 +350,21 @@ interface ToggleModalProps {
 
 const ToggleModal = ({ onToggle }: ToggleModalProps) => {
   return (
-    <button
-      type="button"
-      className="sdk:absolute sdk:bottom-[22px] sdk:flex sdk:gap-[5px] sdk:items-center sdk:pt-[8px] sdk:pb-[8px] sdk:pl-[18px] sdk:pr-[18px] sdk:border sdk:border-[#303030] sdk:cursor-pointer"
-      onClick={() => {
-        onToggle((prev) => !prev);
-      }}
-    >
-      <Clock />
-      <span>execution log</span>
-    </button>
+    <div className="sdk:flex sdk:justify-center sdk:min-w-[100%] sdk:bg-[#141415]">
+      <button
+        type="button"
+        className="sdk:absolute sdk:bottom-[22px] sdk:flex sdk:gap-[5px] sdk:items-center sdk:pt-[8px] sdk:pb-[8px] sdk:pl-[18px] sdk:pr-[18px] sdk:border sdk:border-[#303030] sdk:cursor-pointer"
+        onClick={() => {
+          onToggle((prev) => !prev);
+        }}
+      >
+        <div className="sdk:flex sdk:flex-row sdk:gap-[5px] sdk:items-center">
+          <Clock width={14} height={14} />
+          <span className="sdk:font-semibold sdk:text-[12px]">
+            execution log
+          </span>
+        </div>
+      </button>
+    </div>
   );
 };
