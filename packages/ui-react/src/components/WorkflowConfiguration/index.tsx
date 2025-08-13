@@ -605,7 +605,8 @@ IWorkflowConfigurationProps) => {
             className={clsx(
               "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-outfit sdk:workflow-title sdk:flex-wrap",
               "sdk:items-center"
-            )}>
+            )}
+          >
             {onBack && (
               <BackArrow
                 role="img"
@@ -677,7 +678,8 @@ IWorkflowConfigurationProps) => {
 
         <div
           className="sdk:flex sdk:sm:h-[calc(100%-70px)] sdk:flex-1 sdk:relative sdk:sm:flex-row sdk:flex-col"
-          ref={setContainer}>
+          ref={setContainer}
+        >
           {/* Sidebar */}
           <div className="sdk:relative" ref={setSidebarContainer}>
             <SidebarSheet
@@ -719,7 +721,8 @@ IWorkflowConfigurationProps) => {
               onOpenChange={(v) => {
                 console.log(v, "editAgentOpen=onClickWorkflowItem");
                 // setEditAgentOpen(v);
-              }}>
+              }}
+            >
               <DialogPortal container={container} asChild>
                 {/* <DialogOverlay /> */}
                 <WorkflowDialog
@@ -741,6 +744,7 @@ IWorkflowConfigurationProps) => {
                   newWorkflowState?.workflowId || editWorkflow?.workflowId
                 }
                 roundId={1}
+                isAgentCardOpen={editAgentOpen}
               />
             </div>
             <WorkflowGenerationModal
@@ -779,7 +783,8 @@ export default function WorkflowConfiguration(
       <ReactFlowProvider>
         <ReactDndProvider
           backend={isMobile ? TouchBackend : HTML5Backend}
-          options={isMobile ? { enableMouseEvents: true } : undefined}>
+          options={isMobile ? { enableMouseEvents: true } : undefined}
+        >
           <DnDProvider>
             <WorkflowProvider>
               <WorkflowConfigurationInner {...props} />
