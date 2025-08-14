@@ -343,7 +343,7 @@ const Wrapper = ({
         isAgentCardOpen
           ? "sdk:max-w-[calc(100%-393px)] sdk:mr-auto"
           : "sdk:min-w-[100%]"
-      } sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#171717] sdk:p-[8px] sdk:border sdk:border-[#FFFFFF14] sdk:rounded-sm`}
+      } sdk:flex sdk:flex-col sdk:flex-1 sdk:gap-2 sdk:bg-[#171717] sdk:p-[8px] sdk:border sdk:border-[#FFFFFF14] sdk:rounded-sm`}
     >
       {children}
     </div>
