@@ -6,6 +6,7 @@ import AIStar from "../../assets/svg/aiStar.svg?react";
 import Close from "../../assets/svg/close.svg?react";
 import clsx from "clsx";
 import { usePostAIWorkflowGeneration } from "../../hooks/usePostAIWorkflowGeneration";
+import "./index.css";
 
 interface IWorkflowGenerationModalProps {
   workflowRef: any;
@@ -70,6 +71,7 @@ export const WorkflowGenerationModal = ({
               prompt
             </div>
             <Textarea
+              autoFocus
               className="sdk:text-[13px] sdk:bg-[#171717] sdk:min-w-[595px] sdk:min-h-[120px]"
               placeholder="please describe what kind of agent workflow you want to create"
               onChange={handleChange}
@@ -78,14 +80,23 @@ export const WorkflowGenerationModal = ({
           </div>
 
           <div className="sdk:flex sdk:flex-row sdk:justify-between">
-            <Button type="button" onClick={handleClose} disabled={isLoading}>
-              <div className="sdk:font-semibold sdk:text-[12px] sdk:text-white hover:!sdk:text-[#303030] cursor-pointer">
+            <Button
+              type="button"
+              onClick={handleClose}
+              disabled={isLoading}
+              className={clsx("hover-skip", "sdk:text-white")}
+            >
+              <span className="sdk:font-semibold sdk:text-[12px] sdk:cursor-pointer">
                 skip
-              </div>
+              </span>
             </Button>
             <Button
               type="button"
-              className={`sdk:min-w-[114px] ${isLoading && "sdk:bg-[#ffffff]"}`}
+              className={clsx(
+                "sdk:min-w-[114px]",
+                "sdk:text-white",
+                isLoading && "sdk:bg-[#ffffff]"
+              )}
               disabled={!inputPrompt || isLoading}
               onClick={handleClick}
             >
@@ -98,9 +109,9 @@ export const WorkflowGenerationModal = ({
               ) : (
                 <div className="sdk:flex sdk:flex-row sdk:items-center sdk:gap-[5px]">
                   <AIStar />
-                  <div className="sdk:font-semibold sdk:text-[12px] sdk:text-white !hover:sdk:text-[#303030] cursor-pointer">
+                  <span className="sdk:font-semibold sdk:text-[12px] sdk:cursor-pointer">
                     generate
-                  </div>
+                  </span>
                 </div>
               )}
             </Button>

@@ -30,12 +30,14 @@ interface IExecutionLogsProps {
   stateName: string;
   workflowId: string;
   roundId: number;
+  isAgentCardOpen: boolean;
 }
 
 export const ExecutionLogs = ({
   workflowId,
   stateName,
   roundId,
+  isAgentCardOpen,
 }: IExecutionLogsProps) => {
   const { data, isLoading } = useFetchExecutionLogs({
     stateName,
@@ -65,11 +67,13 @@ export const ExecutionLogs = ({
   }
 
   if (!isVisible) {
-    return <ToggleModal onToggle={setIsVisible} />;
+    return (
+      <ToggleModal isAgentCardOpen={isAgentCardOpen} onToggle={setIsVisible} />
+    );
   }
 
   return (
-    <Wrapper>
+    <Wrapper isAgentCardOpen={isAgentCardOpen}>
       <ExecutionLogHeader
         data={data}
         activeAgent={activeAgent}
@@ -77,6 +81,7 @@ export const ExecutionLogs = ({
       />
       {data?.length > 0 ? (
         <ExecutionLogBody
+          isAgentCardOpen={isAgentCardOpen}
           data={data}
           activeAgent={activeAgent}
           onChange={setActiveAgent}
@@ -181,12 +186,14 @@ const ExecutionLogHeader = ({
 };
 
 interface IExecutionLogsBodyProps {
+  isAgentCardOpen: boolean;
   data: any[];
   activeAgent: Agent;
   onChange: (agent: Agent) => void;
 }
 
 const ExecutionLogBody = ({
+  isAgentCardOpen,
   data,
   activeAgent,
   onChange,
@@ -248,7 +255,11 @@ const ExecutionLogBody = ({
         })}
       </div>
 
-      <div className="sdk:flex sdk:flex-row sdk:gap-2 sdk:w-[100%]">
+      <div
+        className={`sdk:flex sdk:flex-${
+          isAgentCardOpen ? "col" : "row"
+        } sdk:gap-2 sdk:w-[100%]`}
+      >
         <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[#B9B9B9] sdk:font-semibold">input</span>
@@ -319,9 +330,21 @@ const ExecutionLogBody = ({
   );
 };
 
-const Wrapper = ({ children }: { children: any }) => {
+const Wrapper = ({
+  isAgentCardOpen,
+  children,
+}: {
+  isAgentCardOpen: boolean;
+  children: any;
+}) => {
   return (
-    <div className="sdk:min-h-[240px] sdk:max-h-[201px] sdk:overflow-auto sdk:min-w-[100%] sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#171717] sdk:p-[8px] sdk:border sdk:border-[#FFFFFF14] sdk:rounded-sm">
+    <div
+      className={`sdk:max-h-[240px] sdk:overflow-auto ${
+        isAgentCardOpen
+          ? "sdk:max-w-[calc(100%-393px)] sdk:mr-auto"
+          : "sdk:min-w-[100%]"
+      } sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#171717] sdk:p-[8px] sdk:border sdk:border-[#FFFFFF14] sdk:rounded-sm`}
+    >
       {children}
     </div>
   );
@@ -345,20 +368,25 @@ const EmptyExecutionLog = () => {
 };
 
 interface ToggleModalProps {
+  isAgentCardOpen: boolean;
   onToggle: (callback: any) => void;
 }
 
-const ToggleModal = ({ onToggle }: ToggleModalProps) => {
+const ToggleModal = ({ isAgentCardOpen, onToggle }: ToggleModalProps) => {
   return (
     <button
       type="button"
-      className="sdk:absolute sdk:bottom-[22px] sdk:flex sdk:gap-[5px] sdk:items-center sdk:pt-[8px] sdk:pb-[8px] sdk:pl-[18px] sdk:pr-[18px] sdk:border sdk:border-[#303030] sdk:cursor-pointer"
+      className={`sdk:absolute sdk:bottom-[22px] ${
+        isAgentCardOpen ? "sdk:right-[60%]" : ""
+      } sdk:flex sdk:gap-[5px] sdk:items-center sdk:pt-[8px] sdk:pb-[8px] sdk:pl-[18px] sdk:pr-[18px] sdk:border sdk:border-[#303030] sdk:cursor-pointer`}
       onClick={() => {
         onToggle((prev) => !prev);
       }}
     >
-      <Clock />
-      <span>execution log</span>
+      <div className="sdk:flex sdk:flex-row sdk:gap-[5px] sdk:items-center">
+        <Clock width={14} height={14} />
+        <span className="sdk:font-semibold sdk:text-[12px]">execution log</span>
+      </div>
     </button>
   );
 };

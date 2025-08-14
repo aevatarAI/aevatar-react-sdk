@@ -46,16 +46,17 @@ export default function SidebarWithNewAgent({
         "sdk:w-full sdk:border-b-[1px] sdk:border-b-[#303030] sdk:overflow-x-auto",
         "sdk:sm:w-[152px]  sdk:sm:h-full sdk:sm:border-r-[1px] sdk:sm:border-b-[0px] sdk:border-b-[#303030] sdk:sm:border-r-[#303030]",
         "sdk:flex sdk:flex-col sdk:h-full"
-      )}>
+      )}
+    >
       <div
-        className={clsx(
-          "sdk:flex-1 sdk:overflow-y-auto sdk:flex sdk:flex-col"
-        )}>
+        className={clsx("sdk:flex-1 sdk:overflow-y-auto sdk:flex sdk:flex-col")}
+      >
         <div
           className={clsx(
             "sdk:box-border  sdk:p-0 sdk:relative sdk:w-full  sdk:hidden",
             "sdk:sm:block"
-          )}>
+          )}
+        >
           <SearchBar
             value={search}
             onChange={setSearch}
@@ -72,7 +73,8 @@ export default function SidebarWithNewAgent({
             "sdk:px-[20px] sdk:py-[16px]",
             "sdk:sm:px-[12px] sdk:sm:py-[12px]",
             "sdk:sm:gap-[12px] sdk:sm:flex-col"
-          )}>
+          )}
+        >
           {filteredGaevatarTypeList?.map((ele) => {
             if (hiddenGAevatarType?.includes(ele?.agentType)) {
               return null;
@@ -99,7 +101,8 @@ export default function SidebarWithNewAgent({
           "sdk:border-t-[1px] sdk:border-t-[#303030]",
           "sdk:sm:block sdk:hidden"
         )}
-        onClick={() => onArrowClick?.()}>
+        onClick={() => onArrowClick?.()}
+      >
         <PanelsArrow className="sdk:mx-auto" />
       </div>
     </div>

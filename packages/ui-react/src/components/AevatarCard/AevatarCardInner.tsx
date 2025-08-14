@@ -1,6 +1,6 @@
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import Setting from "../../assets/svg/setting.svg?react";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import clsx from "clsx";
 import CardLoading from "../CardLoading";
@@ -24,10 +24,8 @@ export default function AevatarCardInner({
 
   return (
     <div
-      className={clsx(
-        "sdk:w-full sdk:h-full sdk:flex sdk:flex-col",
-        className
-      )}>
+      className={clsx("sdk:w-full sdk:h-full sdk:flex sdk:flex-col", className)}
+    >
       <div className="sdk:pb-[12px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[#303030] sdk:border-solid">
         <div className="sdk:flex sdk:justify-between sdk:items-center">
           <div className="sdk:font-outfit sdk:text-white sdk:text-[15px] sdk:font-semibold  sdk:leading-[18px] sdk:whitespace-nowrap sdk:overflow-hidden sdk:text-ellipsis sdk:max-w-[calc(100%-32px)]">
@@ -94,13 +92,15 @@ export default function AevatarCardInner({
                   return (
                     <div
                       key={key}
-                      className="sdk:p-[4px] sdk:bg-[#303030] sdk:text-[12px] sdk:text-white sdk:font-outfit">
+                      className="sdk:p-[4px] sdk:bg-[#303030] sdk:text-[12px] sdk:text-white sdk:font-outfit"
+                    >
                       <pre
                         style={{
                           whiteSpace: "pre-wrap",
                           wordBreak: "break-all",
                           margin: 0,
-                        }}>
+                        }}
+                      >
                         {/* If value is object, render as JSON string */}
                         {typeof info === "object"
                           ? JSON.stringify(info, null, 2)

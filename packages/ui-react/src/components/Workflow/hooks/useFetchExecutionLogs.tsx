@@ -15,6 +15,20 @@ const transformStatus = (status: number) => {
       return "failed";
   }
 };
+
+export const useGetAgentDetails = (agentId: string) => {
+  return useQuery({
+    queryKey: ["agentDetails", { agentId }],
+    queryFn: () => {
+      return aevatarAI.services.workflow.fetchAgentDetails({
+        formattedBusinessAgentGrainId: agentId,
+        stateName: "creatorGagentstate",
+      });
+    },
+    enabled: !!agentId,
+  });
+};
+
 const fetchExecutionLogs = async (
   stateName: string,
   workflowId: string,

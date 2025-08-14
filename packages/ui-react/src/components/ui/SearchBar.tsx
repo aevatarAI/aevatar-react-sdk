@@ -46,7 +46,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
       className={clsx(
         "sdk:relative sdk:w-full sdk:border-b-[1px] sdk:border-b-[#303030] sdk:bg-transparent",
         className
-      )}>
+      )}
+    >
       <div className="sdk:flex sdk:flex-row sdk:items-center sdk:gap-1 sdk:p-[8px] sdk:w-full">
         <SearchIcon
           className={clsx(
@@ -77,7 +78,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
               onChange("");
               inputRef.current?.focus();
             }}
-            tabIndex={-1}>
+            tabIndex={-1}
+          >
             <CloseIcon className="sdk:w-full sdk:h-full" />
           </button>
         )}
