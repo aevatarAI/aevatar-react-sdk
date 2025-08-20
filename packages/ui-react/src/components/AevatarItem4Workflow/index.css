@@ -32,3 +32,10 @@
 .sdk\:cutCorner-border-selected:before {
   border-bottom: 15px solid #afc6dd !important;
 }
+
+/* Hide scrollbars for webkit browsers */
+.sdk\\:aevatar-item-background::-webkit-scrollbar {
+  display: none;
+}
+
+
