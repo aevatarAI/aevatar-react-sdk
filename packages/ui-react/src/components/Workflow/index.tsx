@@ -434,6 +434,67 @@ export const Workflow = forwardRef(
       [getWorkUnitRelations, setNodes, setEdges, onAiGenerateWorkflow]
     );
 
+    // Add function to detect cycles in the workflow graph
+    const hasCycle = useCallback(
+      (nodes: INode[], edges: Edge[], newSource: string, newTarget: string) => {
+        // Create adjacency list
+        const graph: Record<string, string[]> = {};
+        nodes.forEach(node => {
+          graph[node.id] = [];
+        });
+        
+        // Add existing edges
+        edges.forEach(edge => {
+          if (graph[edge.source]) {
+            graph[edge.source].push(edge.target);
+          }
+        });
+        
+        // Add the new edge temporarily
+        if (graph[newSource]) {
+          graph[newSource].push(newTarget);
+        }
+        
+        // DFS to detect cycle
+        const visited = new Set<string>();
+        const recStack = new Set<string>();
+        
+        const dfs = (nodeId: string): boolean => {
+          if (recStack.has(nodeId)) {
+            return true; // Found cycle
+          }
+          if (visited.has(nodeId)) {
+            return false;
+          }
+          
+          visited.add(nodeId);
+          recStack.add(nodeId);
+          
+          const neighbors = graph[nodeId] || [];
+          for (const neighbor of neighbors) {
+            if (dfs(neighbor)) {
+              return true;
+            }
+          }
+          
+          recStack.delete(nodeId);
+          return false;
+        };
+        
+        // Check all nodes for cycles
+        for (const nodeId of Object.keys(graph)) {
+          if (!visited.has(nodeId)) {
+            if (dfs(nodeId)) {
+              return true; // Cycle detected
+            }
+          }
+        }
+        
+        return false; // No cycle
+      },
+      []
+    );
+
     const onConnect = useCallback(
       (params) => {
         if (params.source === params.target) {
@@ -448,6 +509,13 @@ export const Workflow = forwardRef(
           ) {
             return eds;
           }
+          
+          // Check if adding this edge would create a cycle
+          if (hasCycle(nodes, eds, params.source, params.target)) {
+            console.warn('Cannot add edge: would create a cycle in workflow');
+            return eds;
+          }
+          
           return addEdge(
             {
               ...params,
@@ -465,7 +533,7 @@ export const Workflow = forwardRef(
           ) as any;
         });
       },
-      [setEdges]
+      [setEdges, hasCycle, nodes]
     );
 
     const onDragOver = useCallback((event) => {

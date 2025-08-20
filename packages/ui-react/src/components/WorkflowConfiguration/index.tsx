@@ -545,7 +545,7 @@ IWorkflowConfigurationProps) => {
       if (workflowStatus === WorkflowStatus.pending) {
         toast({
           title: "error",
-          description: "workflow is running, please wait for it to finish.",
+          description: "workflow executed successfully.",
           duration: 3000,
         });
       }
