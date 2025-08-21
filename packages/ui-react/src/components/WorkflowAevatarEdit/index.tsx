@@ -1,6 +1,5 @@
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import {
-  Button,
   Form,
   FormControl,
   FormField,
@@ -33,77 +32,7 @@ import {
   TooltipContent,
 } from "../ui/tooltip";
 import Question from "../../assets/svg/question.svg?react";
-import { useQuery } from "@tanstack/react-query";
-
-const useGetAIModels = () => {
-  return useQuery({
-    queryKey: ["models"],
-    queryFn: () => {
-      return Promise.resolve({
-        ChatAISystemLLMEnum: {
-          type: "integer",
-          description:
-            "0 = OpenAI\n1 = DeepSeek\n2 = AzureOpenAI\n3 = AzureOpenAIEmbeddings\n4 = OpenAIEmbeddings",
-          "x-enumNames": [
-            "OpenAI",
-            "DeepSeek",
-            "AzureOpenAI",
-            "AzureOpenAIEmbeddings",
-            "OpenAIEmbeddings",
-          ],
-          enum: [0, 1, 2, 3, 4],
-          "x-enumMetadatas": {
-            OpenAI: {
-              provider: "openai",
-              type: "general-purpose llm",
-              strengths:
-                "creative writing, general reasoning, versatile, well-balanced performance",
-              best_for:
-                "general tasks, creative writing, conversational AI, content generation",
-              speed: "fast and reliable",
-            },
-            DeepSeek: {
-              provider: "deepseek",
-              type: "reasoning-optimized llm",
-              strengths:
-                "advanced reasoning, mathematical thinking, logical analysis, deep problem-solving",
-              best_for:
-                "complex reasoning, mathematical problems, analytical tasks, research assistance",
-              speed: "moderate, optimized for accuracy over speed",
-            },
-            AzureOpenAI: {
-              provider: "azure_openai",
-              type: "enterprise llm",
-              strengths:
-                "enterprise security, compliance, scalability, data privacy, regional deployment",
-              best_for:
-                "enterprise applications, production systems, secure environments, regulated industries",
-              speed: "fast with enterprise-grade reliability",
-            },
-            AzureOpenAIEmbeddings: {
-              provider: "azure_openai",
-              type: "embedding model",
-              strengths:
-                "semantic understanding, enterprise security, high-quality embeddings, data privacy",
-              best_for:
-                "semantic search, document similarity, enterprise RAG systems, secure vector operations",
-              speed: "fast embedding generation with enterprise features",
-            },
-            OpenAIEmbeddings: {
-              provider: "openai",
-              type: "embedding model",
-              strengths:
-                "semantic understanding, high-quality embeddings, versatile text representation",
-              best_for:
-                "semantic search, similarity tasks, RAG applications, content recommendation",
-              speed: "fast embedding generation",
-            },
-          },
-        },
-      });
-    },
-  });
-};
+import { useGetAIModels } from "../../hooks/useGetAIModels";
 
 export interface IWorkflowAevatarEditProps {
   agentItem?: Partial<
@@ -134,7 +63,6 @@ export default function WorkflowAevatarEdit({
   onGaevatarChange,
   disabled,
 }: IWorkflowAevatarEditProps) {
-  const { data } = useGetAIModels();
   const form = useForm<any>({ mode: "onBlur" });
   const [btnLoading, setBtnLoading] = useState<boolean>();
   const { toast } = useToast();
@@ -336,6 +264,8 @@ export default function WorkflowAevatarEdit({
     };
   }, [form, debouncedSubmit]);
 
+  console.log({ JSONSchemaProperties });
+
   return (
     <TooltipProvider delayDuration={0}>
       <div
@@ -458,42 +388,6 @@ export default function WorkflowAevatarEdit({
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="model"
-                  render={({ field }) => (
-                    <FormItem aria-labelledby="model">
-                      <FormLabel id="model" className="sdk:flex sdk:gap-[4px]">
-                        <span>model</span>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button type="button">
-                              <Question />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent
-                            className={clsx(
-                              "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
-                              "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
-                            )}
-                            side="top"
-                          >
-                            Choose the AI model that powers your agent’s
-                            responses. Different models vary in speed, accuracy,
-                            and cost.
-                          </TooltipContent>
-                        </Tooltip>
-                      </FormLabel>
-                      <ModelSelect
-                        field={field}
-                        data={data}
-                        onAgentTypeChange={() => {}}
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
                 {/* Render schema fields recursively */}
                 {JSONSchemaProperties?.map(([name, schema]) =>
                   renderSchemaField({
@@ -530,12 +424,10 @@ export default function WorkflowAevatarEdit({
   );
 }
 
-// Extract metadata helper
 const getModelMetadata = (data, model) => {
   return data?.ChatAISystemLLMEnum?.["x-enumMetadatas"]?.[model];
 };
 
-// Tooltip content component
 const ModelTooltipContent = ({ model, metadata }) => (
   <TooltipContent
     className={clsx(
@@ -568,7 +460,6 @@ const ModelTooltipContent = ({ model, metadata }) => (
   </TooltipContent>
 );
 
-// Select item with tooltip component
 const ModelSelectItem = ({ model, data }) => {
   const metadata = getModelMetadata(data, model);
 
@@ -586,9 +477,10 @@ const ModelSelectItem = ({ model, data }) => {
   );
 };
 
-// Main component
-const ModelSelect = ({ field, data, onAgentTypeChange }) => {
-  const modelNames = data?.ChatAISystemLLMEnum?.["x-enumNames"] || [];
+export const ModelSelect = ({ field, data, onAgentTypeChange }) => {
+  const names = data?.ChatAISystemLLMEnum?.["x-enumNames"] || [];
+  const inputRef = useRef(null);
+  const [modelNames, setModelNames] = useState(names);
 
   return (
     <Select
@@ -602,7 +494,26 @@ const ModelSelect = ({ field, data, onAgentTypeChange }) => {
         </SelectTrigger>
       </FormControl>
       <SelectContent className="sdk:min-w-[100%]">
-        {modelNames.map((model) => (
+        <Input
+          ref={inputRef}
+          autoFocus
+          placeholder="search"
+          // onChange={(e) => {
+          //   const value = e.target.value;
+          //   if (!value) {
+          //     return setModelNames(names);
+          //   }
+
+          //   setModelNames((names) =>
+          //     names.filter((name) =>
+          //       name.toLowerCase().includes(value.toLowerCase())
+          //     )
+          //   );
+
+          //   inputRef.current.focus();
+          // }}
+        />
+        {modelNames?.map((model) => (
           <ModelSelectItem key={model} model={model} data={data} />
         ))}
       </SelectContent>

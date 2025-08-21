@@ -9,7 +9,7 @@ import Clipboard from "../../assets/svg/clipboard.svg?react";
 import Clock from "../../assets/svg/clock.svg?react";
 import Loading from "../../assets/svg/loading.svg?react";
 import Copy from "../Copy";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
 import "react18-json-view/src/dark.css";
@@ -46,12 +46,18 @@ export const ExecutionLogs = ({
   });
   const [activeAgent, setActiveAgent] = useState(DEFAULT);
   const [isVisible, setIsVisible] = useState(workflowId);
+  const [isMovable, setIsMovable] = useState(false);
 
   useEffect(() => {
     if (data) {
       setActiveAgent({ ...data?.[0], index: 0 });
     }
   }, [data]);
+
+  const handleClick = () => {
+    console.log("click");
+    setIsMovable((prev) => !prev);
+  };
 
   if (isLoading) {
     return (
@@ -73,11 +79,12 @@ export const ExecutionLogs = ({
   }
 
   return (
-    <Wrapper isAgentCardOpen={isAgentCardOpen}>
+    <Wrapper isAgentCardOpen={isAgentCardOpen} isMovable={isMovable}>
       <ExecutionLogHeader
         data={data}
         activeAgent={activeAgent}
         onToggle={setIsVisible}
+        onClick={handleClick}
       />
       {data?.length > 0 ? (
         <ExecutionLogBody
@@ -114,12 +121,14 @@ interface IExecutionLogsHeaderProps {
   data: any;
   activeAgent: Agent;
   onToggle: (callback: any) => void;
+  onClick: () => void;
 }
 
 const ExecutionLogHeader = ({
   data,
   activeAgent,
   onToggle,
+  onClick,
 }: IExecutionLogsHeaderProps) => {
   const { agentName, executionTime, status } = activeAgent || {};
   const { isPending, isSuccess } = getStatus(status);
@@ -160,15 +169,16 @@ const ExecutionLogHeader = ({
                 <ErrorIcon />
               )}
               <span className="sdk:w-[2px]" />
-              <span className="sdk:text-[14px]">{status}</span>
+              <span className="sdk:text-[12px] sdk:mt-[2px]">{status}</span>
             </div>
           </div>
         ) : (
           <span />
         )}
         <span className="sdk:flex">
-          <button type="button">
-            <Copy toCopy={JSON.stringify(activeAgent)} icon={<Browsers />} />
+          <button type="button" onClick={onClick}>
+            {/* <Copy toCopy={JSON.stringify(activeAgent)} icon={<Browsers />} /> */}
+            <Browsers />
           </button>
           <button
             type="button"
@@ -332,24 +342,88 @@ const ExecutionLogBody = ({
 
 const Wrapper = ({
   isAgentCardOpen,
+  isMovable,
   children,
 }: {
   isAgentCardOpen: boolean;
+  isMovable: boolean;
   children: any;
 }) => {
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const dragRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      if (!isMovable) return;
+
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX - offset.x,
+        y: e.clientY - offset.y,
+      });
+
+      // Prevent text selection during drag
+      e.preventDefault();
+    },
+    [isMovable, offset]
+  );
+
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!isDragging || !isMovable) return;
+
+      const newOffset = {
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      };
+
+      setOffset(newOffset);
+    },
+    [isDragging, isMovable, dragStart]
+  );
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+
+      return () => {
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+      };
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp]);
+
   return (
     <div
+      ref={dragRef}
+      onMouseDown={handleMouseDown}
       className={`sdk:max-h-[240px] sdk:overflow-auto ${
         isAgentCardOpen
           ? "sdk:max-w-[calc(100%-393px)] sdk:mr-auto"
           : "sdk:min-w-[100%]"
-      } sdk:flex sdk:flex-col sdk:flex-1 sdk:gap-2 sdk:bg-[#171717] sdk:p-[8px] sdk:border sdk:border-[#FFFFFF14] sdk:rounded-sm`}
+      } sdk:flex sdk:flex-col sdk:flex-1 sdk:gap-2 sdk:bg-[#171717] sdk:p-[8px] sdk:border sdk:border-[#FFFFFF14] sdk:rounded-sm ${
+        isMovable ? "sdk:cursor-move" : ""
+      } ${isDragging ? "sdk:select-none" : ""}`}
+      style={
+        isMovable
+          ? {
+              transform: `translate(${offset.x}px, ${offset.y}px)`,
+              zIndex: isDragging ? Number.POSITIVE_INFINITY : 1,
+            }
+          : {}
+      }
     >
       {children}
     </div>
   );
 };
-
 const Flex = ({ children }: { children: any }) => {
   return <div className="sdk:flex sdk:flex-row sdk:gap-4">{children}</div>;
 };

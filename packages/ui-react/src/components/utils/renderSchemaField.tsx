@@ -18,6 +18,8 @@ import clsx from "clsx";
 import { validateSchemaField } from "../../utils/jsonSchemaValidate";
 import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
 import Question from "../../assets/svg/question.svg?react";
+import { useGetAIModels } from "../../hooks/useGetAIModels";
+import { ModelSelect } from "../WorkflowAevatarEdit";
 
 export const renderSchemaField = ({
   form,
@@ -41,6 +43,8 @@ export const renderSchemaField = ({
   onChange?: (value: any, meta: { name: string; schema: any }) => void;
   disabled?: boolean;
 }) => {
+  const { data, isLoading } = useGetAIModels();
+  console.log({ data });
   // Create validation rule for this field
   const createValidationRule = () => ({
     validate: (value: any) => {
@@ -232,6 +236,7 @@ export const renderSchemaField = ({
       />
     );
   }
+
   // object type with additionalProperties (dynamic key-value)
   if (
     schema.type === "object" &&
@@ -554,7 +559,44 @@ export const renderSchemaField = ({
               onChange?.(val, { name: fieldName, schema });
             }
           };
-          return (
+          return fieldName === "systemLLM" ? (
+            <FormField
+              control={form.control}
+              name="model"
+              render={({ field }) => (
+                <FormItem aria-labelledby="model">
+                  <FormLabel id="model" className="sdk:flex sdk:gap-[4px]">
+                    <span>model</span>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button type="button">
+                          <Question />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        className={clsx(
+                          "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                          "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                        )}
+                        side="top"
+                      >
+                        Choose the AI model that powers your agent’s responses.
+                        Different models vary in speed, accuracy, and cost.
+                      </TooltipContent>
+                    </Tooltip>
+                  </FormLabel>
+                  {!isLoading && (
+                    <ModelSelect
+                      field={field}
+                      data={data}
+                      onAgentTypeChange={() => {}}
+                    />
+                  )}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : (
             <FormItem>
               <FormLabel className="sdk:flex sdk:gap-[4px]">
                 <span>{labelWithRequired}</span>
