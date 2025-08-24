@@ -55,15 +55,19 @@ export default function AevatarCardInner({
         onClick?.(agentInfo, isNew, nodeId);
       }}
     >
-      <div
-        className={clsx(
-          "sdk:aevatar-item-background sdk:w-[234px]  sdk:border sdk:border-[#141415]  sdk:group-hover:border-[#303030]",
-          selected && "sdk:border-[#AFC6DD]! ",
-          "sdk:border-b-[0px]!",
-          "sdk:max-h-[300px] sdk:overflow-y-auto",
-          className
-        )}
-      >
+              <div
+          className={clsx(
+            "sdk:aevatar-item-background sdk:w-[234px]  sdk:border sdk:border-[#141415]  sdk:group-hover:border-[#303030]",
+            selected && "sdk:border-[#AFC6DD]! ",
+            "sdk:border-b-[0px]!",
+            "sdk:max-h-[300px] sdk:overflow-y-auto",
+            className
+          )}
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+          }}
+        >
         <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
           <div className="sdk:flex sdk:justify-between sdk:items-center sdk:pb-[9px]">
             <div
