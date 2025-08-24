@@ -404,7 +404,9 @@ const Wrapper = ({
     <div
       ref={dragRef}
       onMouseDown={handleMouseDown}
-      className={`sdk:max-h-[240px] sdk:overflow-auto ${
+      className={`${
+        isMovable ? "sdk:absolute sdk:top-0" : ""
+      }sdk:max-h-[240px] sdk:overflow-auto ${
         isAgentCardOpen
           ? "sdk:max-w-[calc(100%-393px)] sdk:mr-auto"
           : "sdk:min-w-[100%]"

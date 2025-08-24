@@ -44,7 +44,6 @@ export const renderSchemaField = ({
   disabled?: boolean;
 }) => {
   const { data, isLoading } = useGetAIModels();
-  console.log({ data });
   // Create validation rule for this field
   const createValidationRule = () => ({
     validate: (value: any) => {
@@ -589,7 +588,11 @@ export const renderSchemaField = ({
                     <ModelSelect
                       field={field}
                       data={data}
-                      onAgentTypeChange={() => {}}
+                      names={data?.ChatAISystemLLMEnum?.["x-enumNames"] || []}
+                      onChange={(value) => {
+                        field?.onChange(value);
+                        form.setValue("systemLLM", value);
+                      }}
                     />
                   )}
                   <FormMessage />

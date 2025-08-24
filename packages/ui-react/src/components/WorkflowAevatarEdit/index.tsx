@@ -109,10 +109,6 @@ export default function WorkflowAevatarEdit({
   useUpdateEffect(() => {
     form.setValue("agentName", agentItem?.name ?? "");
     form.setValue("agentType", agentItem?.agentType ?? "");
-    // form.reset({
-    //   agentName: agentItem?.name ?? "",
-    //   agentType: agentItem?.agentType ?? "",
-    // });
   }, [agentItem?.name, agentItem?.agentType, nodeId]);
 
   const JSONSchemaProperties: [string, JSONSchemaType<any>][] = useMemo(() => {
@@ -264,8 +260,6 @@ export default function WorkflowAevatarEdit({
     };
   }, [form, debouncedSubmit]);
 
-  console.log({ JSONSchemaProperties });
-
   return (
     <TooltipProvider delayDuration={0}>
       <div
@@ -358,13 +352,7 @@ export default function WorkflowAevatarEdit({
                           </TooltipContent>
                         </Tooltip>
                       </FormLabel>
-                      <Select
-                        value={field?.value}
-                        disabled={field?.disabled}
-                        // onValueChange={(values) => {
-                        //   onAgentTypeChange(values, field);
-                        // }}
-                      >
+                      <Select value={field?.value} disabled={field?.disabled}>
                         <FormControl>
                           <SelectTrigger
                             aria-disabled={field?.disabled}
@@ -401,22 +389,6 @@ export default function WorkflowAevatarEdit({
                 )}
               </div>
             </div>
-            {/* <Button
-            key={"save"}
-            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[calc(100%-16px)]"
-            type="submit"
-            disabled={disabled}>
-            {btnLoading && (
-              <Loading
-                key={"save"}
-                className={clsx("aevatarai-loading-icon")}
-                style={{ width: 14, height: 14 }}
-              />
-            )}
-            <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
-              save
-            </span>
-          </Button> */}
           </form>
         </Form>
       </div>
@@ -467,9 +439,7 @@ const ModelSelectItem = ({ model, data }) => {
     <SelectItem key={model} value={model}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <button type="button" className="sdk:w-full sdk:text-center">
-            <span>{model}</span>
-          </button>
+          <span className="sdk:w-full sdk:text-center">{model}</span>
         </TooltipTrigger>
         <ModelTooltipContent model={model} metadata={metadata} />
       </Tooltip>
@@ -477,41 +447,43 @@ const ModelSelectItem = ({ model, data }) => {
   );
 };
 
-export const ModelSelect = ({ field, data, onAgentTypeChange }) => {
-  const names = data?.ChatAISystemLLMEnum?.["x-enumNames"] || [];
-  const inputRef = useRef(null);
+export const ModelSelect = ({ field, data, names, onChange }) => {
+  const [searchValue, setSearchValue] = useState("");
   const [modelNames, setModelNames] = useState(names);
+  const [selectedModel, setSelectedModel] = useState("");
 
   return (
     <Select
       value={field?.value}
       disabled={field?.disabled}
-      onValueChange={(value) => onAgentTypeChange?.(value, field)}
+      onValueChange={(value) => {
+        setSelectedModel(value);
+        onChange?.(value, field);
+      }}
     >
       <FormControl>
         <SelectTrigger>
           <SelectValue placeholder="Select a model" />
         </SelectTrigger>
       </FormControl>
-      <SelectContent className="sdk:min-w-[100%]">
+      <SelectContent className="sdk:min-w-[350px]">
         <Input
-          ref={inputRef}
           autoFocus
+          key="search-input-model"
           placeholder="search"
-          // onChange={(e) => {
-          //   const value = e.target.value;
-          //   if (!value) {
-          //     return setModelNames(names);
-          //   }
+          onKeyDown={(e) => e.stopPropagation()}
+          onKeyUp={(e) => e.stopPropagation()}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (!value) return setModelNames(names);
 
-          //   setModelNames((names) =>
-          //     names.filter((name) =>
-          //       name.toLowerCase().includes(value.toLowerCase())
-          //     )
-          //   );
-
-          //   inputRef.current.focus();
-          // }}
+            setSearchValue(value);
+            setModelNames((names) =>
+              names.filter((name) =>
+                name.toLowerCase().includes(value.toLowerCase())
+              )
+            );
+          }}
         />
         {modelNames?.map((model) => (
           <ModelSelectItem key={model} model={model} data={data} />
