@@ -1,6 +1,5 @@
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import {
-  Button,
   Form,
   FormControl,
   FormField,
@@ -26,6 +25,14 @@ import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import { validateSchemaField } from "../../utils/jsonSchemaValidate";
 import { renderSchemaField } from "../utils/renderSchemaField";
 import { useUpdateEffect } from "react-use";
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "../ui/tooltip";
+import Question from "../../assets/svg/question.svg?react";
+import { useGetAIModels } from "../../hooks/useGetAIModels";
 
 export interface IWorkflowAevatarEditProps {
   agentItem?: Partial<
@@ -102,10 +109,6 @@ export default function WorkflowAevatarEdit({
   useUpdateEffect(() => {
     form.setValue("agentName", agentItem?.name ?? "");
     form.setValue("agentType", agentItem?.agentType ?? "");
-    // form.reset({
-    //   agentName: agentItem?.name ?? "",
-    //   agentType: agentItem?.agentType ?? "",
-    // });
   }, [agentItem?.name, agentItem?.agentType, nodeId]);
 
   const JSONSchemaProperties: [string, JSONSchemaType<any>][] = useMemo(() => {
@@ -258,108 +261,234 @@ export default function WorkflowAevatarEdit({
   }, [form, debouncedSubmit]);
 
   return (
-    <div
-      className="sdk:px-[8px] sdk:sm:px-[8px] sdk:overflow-auto sdk:flex-1"
-      key={nodeId}>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className={clsx("sdk:bg-[#141415] sdk:pb-[60px]")}>
-            <div className="sdk:flex sdk:flex-col sdk:gap-y-[16px]  sdk:items-start sdk:content-start sdk:self-stretch">
-              <FormField
-                key={"agentName"}
-                control={form.control}
-                disabled={disabled}
-                defaultValue={agentItem?.name}
-                name={"agentName"}
-                rules={{
-                  validate: (value: any) => {
-                    if (!value) return "required";
-                    return true;
-                  },
-                }}
-                render={({ field }) => (
-                  <FormItem aria-labelledby="agentNameLabel">
-                    <FormLabel id="agentNameLabel">agent name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="atomic-aevatar name"
-                        {...field}
-                        value={field?.value}
-                        onChange={field?.onChange}
-                        className={clsx(field?.disabled && "sdk:bg-[#303030]")}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="agentType"
-                defaultValue={agentItem?.agentType}
-                disabled={true}
-                render={({ field }) => (
-                  <FormItem aria-labelledby="agentTypeLabel">
-                    <FormLabel id="agentTypeLabel">agent Type</FormLabel>
-                    <Select
-                      value={field?.value}
-                      disabled={field?.disabled}
-                      // onValueChange={(values) => {
-                      //   onAgentTypeChange(values, field);
-                      // }}
-                    >
+    <TooltipProvider delayDuration={0}>
+      <div
+        className="sdk:px-[8px] sdk:sm:px-[8px] sdk:overflow-auto sdk:flex-1"
+        key={nodeId}
+      >
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className={clsx("sdk:bg-[#141415] sdk:pb-[60px]")}>
+              <div className="sdk:flex sdk:flex-col sdk:gap-y-[16px]  sdk:items-start sdk:content-start sdk:self-stretch">
+                <FormField
+                  key={"agentName"}
+                  control={form.control}
+                  disabled={disabled}
+                  defaultValue={agentItem?.name}
+                  name={"agentName"}
+                  rules={{
+                    validate: (value: any) => {
+                      if (!value) return "required";
+                      return true;
+                    },
+                  }}
+                  render={({ field }) => (
+                    <FormItem aria-labelledby="agentNameLabel">
+                      <FormLabel
+                        id="agentNameLabel"
+                        className="sdk:flex sdk:gap-[4px]"
+                      >
+                        <span>agent name</span>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button type="button">
+                              <Question />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className={clsx(
+                              "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                              "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                            )}
+                            side="top"
+                          >
+                            Choose the name for your agent.
+                          </TooltipContent>
+                        </Tooltip>
+                      </FormLabel>
+
                       <FormControl>
-                        <SelectTrigger
-                          aria-disabled={field?.disabled}
+                        <Input
+                          placeholder="atomic-aevatar name"
+                          {...field}
+                          value={field?.value}
+                          onChange={field?.onChange}
                           className={clsx(
                             field?.disabled && "sdk:bg-[#303030]"
-                          )}>
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
+                          )}
+                        />
                       </FormControl>
-                      <SelectContent className="sdk:w-[192px]!">
-                        {agentTypeList.map((agentType) => (
-                          <SelectItem key={agentType} value={agentType}>
-                            {agentType}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="agentType"
+                  defaultValue={agentItem?.agentType}
+                  disabled={true}
+                  render={({ field }) => (
+                    <FormItem aria-labelledby="agentTypeLabel">
+                      <FormLabel
+                        id="agentTypeLabel"
+                        className="sdk:flex sdk:gap-[4px]"
+                      >
+                        <span>agent Type</span>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button type="button">
+                              <Question />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            className={clsx(
+                              "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                              "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                            )}
+                            side="top"
+                          >
+                            Choose the agent type that powers your responses.
+                            Different agents vary in speed, accuracy, and cost.
+                          </TooltipContent>
+                        </Tooltip>
+                      </FormLabel>
+                      <Select value={field?.value} disabled={field?.disabled}>
+                        <FormControl>
+                          <SelectTrigger
+                            aria-disabled={field?.disabled}
+                            className={clsx(
+                              field?.disabled && "sdk:bg-[#303030]"
+                            )}
+                          >
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="sdk:w-[192px]!">
+                          {agentTypeList.map((agentType) => (
+                            <SelectItem key={agentType} value={agentType}>
+                              {agentType}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              {/* Render schema fields recursively */}
-              {JSONSchemaProperties?.map(([name, schema]) =>
-                renderSchemaField({
-                  form,
-                  name,
-                  schema,
-                  selectContentCls: "sdk:w-[var(--radix-popper-anchor-width)]!",
-                  disabled,
-                })
-              )}
+                {/* Render schema fields recursively */}
+                {JSONSchemaProperties?.map(([name, schema]) =>
+                  renderSchemaField({
+                    form,
+                    name,
+                    schema,
+                    selectContentCls:
+                      "sdk:w-[var(--radix-popper-anchor-width)]!",
+                    disabled,
+                  })
+                )}
+              </div>
             </div>
-          </div>
-          {/* <Button
-            key={"save"}
-            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[calc(100%-16px)]"
-            type="submit"
-            disabled={disabled}>
-            {btnLoading && (
-              <Loading
-                key={"save"}
-                className={clsx("aevatarai-loading-icon")}
-                style={{ width: 14, height: 14 }}
-              />
-            )}
-            <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
-              save
-            </span>
-          </Button> */}
-        </form>
-      </Form>
-    </div>
+          </form>
+        </Form>
+      </div>
+    </TooltipProvider>
   );
 }
+
+const getModelMetadata = (data, model) => {
+  return data?.ChatAISystemLLMEnum?.["x-enumMetadatas"]?.[model];
+};
+
+const ModelTooltipContent = ({ model, metadata }) => (
+  <TooltipContent
+    className={clsx(
+      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+      "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+    )}
+    side="left"
+  >
+    <div className="sdk:font-semibold">{model}</div>
+    <div>
+      <span>Provider: </span>
+      <span className="sdk:font-normal">{metadata?.provider}</span>
+    </div>
+    <div>
+      <span>Type: </span>
+      <span className="sdk:font-normal">{metadata?.type}</span>
+    </div>
+    <div>
+      <span>Strengths: </span>
+      <span className="sdk:font-normal">{metadata?.strengths}</span>
+    </div>
+    <div>
+      <span>Best for: </span>
+      <span className="sdk:font-normal">{metadata?.best_for}</span>
+    </div>
+    <div>
+      <span>Speed: </span>
+      <span className="sdk:font-normal">{metadata?.speed}</span>
+    </div>
+  </TooltipContent>
+);
+
+const ModelSelectItem = ({ model, data }) => {
+  const metadata = getModelMetadata(data, model);
+
+  return (
+    <SelectItem key={model} value={model}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="sdk:w-full sdk:text-center">{model}</span>
+        </TooltipTrigger>
+        <ModelTooltipContent model={model} metadata={metadata} />
+      </Tooltip>
+    </SelectItem>
+  );
+};
+
+export const ModelSelect = ({ field, data, names, onChange }) => {
+  const [searchValue, setSearchValue] = useState("");
+  const [modelNames, setModelNames] = useState(names);
+  const [selectedModel, setSelectedModel] = useState("");
+
+  return (
+    <Select
+      value={field?.value}
+      disabled={field?.disabled}
+      onValueChange={(value) => {
+        setSelectedModel(value);
+        onChange?.(value, field);
+      }}
+    >
+      <FormControl>
+        <SelectTrigger>
+          <SelectValue placeholder="Select a model" />
+        </SelectTrigger>
+      </FormControl>
+      <SelectContent className="sdk:min-w-[350px]">
+        <Input
+          autoFocus
+          key="search-input-model"
+          placeholder="search"
+          onKeyDown={(e) => e.stopPropagation()}
+          onKeyUp={(e) => e.stopPropagation()}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (!value) return setModelNames(names);
+
+            setSearchValue(value);
+            setModelNames((names) =>
+              names.filter((name) =>
+                name.toLowerCase().includes(value.toLowerCase())
+              )
+            );
+          }}
+        />
+        {modelNames?.map((model) => (
+          <ModelSelectItem key={model} model={model} data={data} />
+        ))}
+      </SelectContent>
+    </Select>
+  );
+};

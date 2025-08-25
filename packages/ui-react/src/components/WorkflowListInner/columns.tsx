@@ -79,11 +79,12 @@ export const workflowColumns: ColumnDef<
           "sdk:text-[14px]  sdk:font-outfit sdk:font-semibold ",
           row.original.workflowStatus === WorkflowStatus.failed &&
             "sdk:text-[#FF2E2E] sdk:flex sdk:flex-row sdk:gap-[4px] sdk:items-center"
-        )}>
+        )}
+      >
         {row.original.workflowStatus === WorkflowStatus.failed && (
           <FailedIcon className="sdk:w-[14px] sdk:h-[14px]" />
         )}
-        {workflowStatusMap[row.original.workflowStatus] ?? '-'}
+        {workflowStatusMap[row.original.workflowStatus] ?? "-"}
       </div>
     ),
   },

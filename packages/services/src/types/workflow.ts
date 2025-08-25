@@ -3,7 +3,9 @@ import type { IAgentInfo, IAgentInfoDetail, IUpdateAgentInfo } from "./agent";
 export interface IGenerateWorkflowProps {
   userGoal: string;
 }
-
+export interface IGetAIModelsProps {
+  [key: string]: string;
+}
 export interface IFetchAgentDetailsProps {
   formattedBusinessAgentGrainId: string;
   stateName: string;
@@ -149,6 +151,7 @@ export interface IWorkflowService {
   getWorkflow<T = any>(
     query: IGetWorkflowQuery,
   ): Promise<IGetWorkflowResult<T>>;
+  getAIModels<T = any>(props: IGetAIModelsProps): Promise<T>;
   fetchExecutionLogs<T = any>(props: IFetchExecutionLogsProps): Promise<T>;
   fetchAgentDetails<T = any>(props: IFetchAgentDetailsProps): Promise<T>;
   generate<T = any>(props: IGenerateWorkflowProps): Promise<T>;

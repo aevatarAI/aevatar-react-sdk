@@ -2,7 +2,6 @@ import { FormControl, FormMessage } from "../ui/form";
 import { SelectContent, SelectItem } from "../ui/select";
 import { SelectValue } from "../ui/select";
 import { SelectTrigger } from "../ui/select";
-
 import { FormField, FormItem, FormLabel } from "../ui/form";
 import { Select } from "../ui/select";
 import ArrayField from "../EditGAevatarInner/ArrayField";
@@ -17,6 +16,10 @@ import type React from "react";
 import { useState } from "react";
 import clsx from "clsx";
 import { validateSchemaField } from "../../utils/jsonSchemaValidate";
+import { Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip";
+import Question from "../../assets/svg/question.svg?react";
+import { useGetAIModels } from "../../hooks/useGetAIModels";
+import { ModelSelect } from "../WorkflowAevatarEdit";
 
 export const renderSchemaField = ({
   form,
@@ -40,6 +43,7 @@ export const renderSchemaField = ({
   onChange?: (value: any, meta: { name: string; schema: any }) => void;
   disabled?: boolean;
 }) => {
+  const { data, isLoading } = useGetAIModels();
   // Create validation rule for this field
   const createValidationRule = () => ({
     validate: (value: any) => {
@@ -92,15 +96,36 @@ export const renderSchemaField = ({
           const enumNamesValue = schema["x-enumNames"]?.[valueIndex];
           return (
             <FormItem>
-              <FormLabel>{labelWithRequired}</FormLabel>
+              <FormLabel className="sdk:flex sdk:gap-[4px]">
+                <span>{labelWithRequired}</span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button type="button">
+                      <Question />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className={clsx(
+                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                      "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                    )}
+                    side="top"
+                  >
+                    Choose the AI model that powers your agent’s responses.
+                    Different models vary in speed, accuracy, and cost.
+                  </TooltipContent>
+                </Tooltip>
+              </FormLabel>
               <Select
                 value={enumNamesValue ?? field?.value}
                 disabled={field?.disabled}
-                onValueChange={handleChange}>
+                onValueChange={handleChange}
+              >
                 <FormControl>
                   <SelectTrigger
                     aria-disabled={field?.disabled}
-                    className={field?.disabled ? "sdk:bg-[#303030]" : ""}>
+                    className={field?.disabled ? "sdk:bg-[#303030]" : ""}
+                  >
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                 </FormControl>
@@ -210,6 +235,7 @@ export const renderSchemaField = ({
       />
     );
   }
+
   // object type with additionalProperties (dynamic key-value)
   if (
     schema.type === "object" &&
@@ -267,12 +293,32 @@ export const renderSchemaField = ({
             // No items
             return (
               <div className="sdk:w-full sdk:mb-2">
-                <FormLabel>{labelWithRequired}</FormLabel>
+                <FormLabel className="sdk:flex sdk:gap-[4px]">
+                  <span>{labelWithRequired}</span>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button type="button">
+                        <Question />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      className={clsx(
+                        "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                        "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                      )}
+                      side="top"
+                    >
+                      Choose the AI model that powers your agent’s responses.
+                      Different models vary in speed, accuracy, and cost.
+                    </TooltipContent>
+                  </Tooltip>
+                </FormLabel>
                 <Button
                   type="button"
                   disabled={disabled}
                   className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
-                  onClick={handleAdd}>
+                  onClick={handleAdd}
+                >
                   <AddIcon />
                   <span className="sdk:text-[12px] sdk:leading-[14px]">
                     Add item
@@ -284,14 +330,32 @@ export const renderSchemaField = ({
           // Has items
           return (
             <div className="sdk:w-full sdk:mb-2">
-              <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">
-                {labelWithRequired}
+              <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030] sdk:flex sdk:gap-[4px]">
+                <span>{labelWithRequired}</span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button type="button">
+                      <Question />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className={clsx(
+                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                      "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                    )}
+                    side="top"
+                  >
+                    Choose the AI model that powers your agent’s responses.
+                    Different models vary in speed, accuracy, and cost.
+                  </TooltipContent>
+                </Tooltip>
               </FormLabel>
               <div className="sdk:rounded sdk:mb-2">
                 {Object.entries(value).map(([k, v], idx) => (
                   <div
                     key={k}
-                    className="sdk:flex sdk:flex-row sdk:items-end sdk:gap-[10px] sdk:mb-2">
+                    className="sdk:flex sdk:flex-row sdk:items-end sdk:gap-[10px] sdk:mb-2"
+                  >
                     {/* key area: use Input (uncontrolled), onBlur triggers key change, avoids name collision with value area */}
                     <div className="sdk:mr-2 sdk:w-32">
                       <FormItem>
@@ -326,22 +390,24 @@ export const renderSchemaField = ({
                     <Button
                       type="button"
                       className="sdk:w-[40px] sdk:h-[40px] sdk:inline-block sdk:border-[#303030] sdk:p-[8px] sdk:px-[10px] sdk:hover:bg-[#303030] sdk:lowercase"
-                      onClick={() => handleDelete(k)}>
+                      onClick={() => handleDelete(k)}
+                    >
                       <DeleteIcon className="sdk:text-white" />
                     </Button>
                   </div>
                 ))}
               </div>
-              <Button
+              {/* <Button
                 type="button"
                 disabled={disabled}
                 className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
-                onClick={handleAdd}>
+                onClick={handleAdd}
+              >
                 <AddIcon />
                 <span className="sdk:text-[12px] sdk:leading-[14px]">
                   Add item
                 </span>
-              </Button>
+              </Button> */}
             </div>
           );
         }}
@@ -360,7 +426,26 @@ export const renderSchemaField = ({
         rules={createValidationRule()}
         render={({ field }) => (
           <div className="sdk:w-full sdk:mb-2">
-            <FormLabel>{labelWithRequired}</FormLabel>
+            <FormLabel className="sdk:flex sdk:gap-[4px]">
+              <span>{labelWithRequired}</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button type="button">
+                    <Question />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent
+                  className={clsx(
+                    "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                    "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                  )}
+                  side="top"
+                >
+                  Choose the AI model that powers your agent’s responses.
+                  Different models vary in speed, accuracy, and cost.
+                </TooltipContent>
+              </Tooltip>
+            </FormLabel>
             <div className="sdk:pl-4  sdk:flex sdk:flex-col sdk:gap-y-[10px] sdk:border-l-2 sdk:border-l-[#303030]">
               {schema.children.map(([childName, childSchema]: [string, any]) =>
                 renderSchemaField({
@@ -398,7 +483,26 @@ export const renderSchemaField = ({
           };
           return (
             <FormItem>
-              <FormLabel>{labelWithRequired}</FormLabel>
+              <FormLabel className="sdk:flex sdk:gap-[4px]">
+                <span>{labelWithRequired}</span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button type="button">
+                      <Question />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className={clsx(
+                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                      "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                    )}
+                    side="top"
+                  >
+                    Choose the AI model that powers your agent’s responses.
+                    Different models vary in speed, accuracy, and cost.
+                  </TooltipContent>
+                </Tooltip>
+              </FormLabel>
               <FormControl>
                 <Input
                   type="file"
@@ -454,9 +558,69 @@ export const renderSchemaField = ({
               onChange?.(val, { name: fieldName, schema });
             }
           };
-          return (
+          return fieldName === "systemLLM" ? (
+            <FormField
+              control={form.control}
+              name="model"
+              render={({ field }) => (
+                <FormItem aria-labelledby="model">
+                  <FormLabel id="model" className="sdk:flex sdk:gap-[4px]">
+                    <span>model</span>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button type="button">
+                          <Question />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        className={clsx(
+                          "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                          "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                        )}
+                        side="top"
+                      >
+                        Choose the AI model that powers your agent’s responses.
+                        Different models vary in speed, accuracy, and cost.
+                      </TooltipContent>
+                    </Tooltip>
+                  </FormLabel>
+                  {!isLoading && (
+                    <ModelSelect
+                      field={field}
+                      data={data}
+                      names={data?.ChatAISystemLLMEnum?.["x-enumNames"] || []}
+                      onChange={(value) => {
+                        field?.onChange(value);
+                        form.setValue("systemLLM", value);
+                      }}
+                    />
+                  )}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : (
             <FormItem>
-              <FormLabel>{labelWithRequired}</FormLabel>
+              <FormLabel className="sdk:flex sdk:gap-[4px]">
+                <span>{labelWithRequired}</span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button type="button">
+                      <Question />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className={clsx(
+                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                      "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                    )}
+                    side="top"
+                  >
+                    Choose the AI model that powers your agent’s responses.
+                    Different models vary in speed, accuracy, and cost.
+                  </TooltipContent>
+                </Tooltip>
+              </FormLabel>
               <FormControl>
                 {parentName ? (
                   <Input
@@ -502,12 +666,12 @@ export const renderSchemaField = ({
           const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             const val = e.target.value;
             console.log(val, "val==handleChange");
-            
+
             // Only allow numeric input
             if (val !== "" && !/^\d*$/.test(val)) {
               return; // Prevent non-numeric input
             }
-            
+
             if (schema.nullable && val === "") {
               field.onChange(null);
               onChange?.(null, { name: fieldName, schema });
@@ -518,7 +682,26 @@ export const renderSchemaField = ({
           };
           return (
             <FormItem>
-              <FormLabel>{labelWithRequired}</FormLabel>
+              <FormLabel className="sdk:flex sdk:gap-[4px]">
+                <span>{labelWithRequired}</span>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button type="button">
+                      <Question />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className={clsx(
+                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                      "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                    )}
+                    side="top"
+                  >
+                    Choose the AI model that powers your agent’s responses.
+                    Different models vary in speed, accuracy, and cost.
+                  </TooltipContent>
+                </Tooltip>
+              </FormLabel>
               <FormControl>
                 <Input
                   type="text"

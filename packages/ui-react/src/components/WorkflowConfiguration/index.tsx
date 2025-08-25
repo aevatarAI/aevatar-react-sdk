@@ -528,6 +528,7 @@ IWorkflowConfigurationProps) => {
         await sleep(3000);
       }
       const workflowState = await getWorkflowState(workflowId);
+      console.log({ workflowState });
       if (!workflowState) throw "workflow not found";
       if (workflowState.workflowStatus === WorkflowStatus.running)
         throw "workflow is running";
