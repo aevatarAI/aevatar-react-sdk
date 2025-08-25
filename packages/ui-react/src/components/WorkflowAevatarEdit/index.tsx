@@ -404,9 +404,10 @@ const ModelTooltipContent = ({ model, metadata }) => (
   <TooltipContent
     className={clsx(
       "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
-      "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+      "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left sdk:z-[999999999]"
     )}
     side="left"
+    sideOffset={10}
   >
     <div className="sdk:font-semibold">{model}</div>
     <div>
@@ -436,17 +437,16 @@ const ModelSelectItem = ({ model, data }) => {
   const metadata = getModelMetadata(data, model);
 
   return (
-    <SelectItem key={model} value={model}>
-      <Tooltip>
-        <TooltipTrigger asChild>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <SelectItem key={model} value={model}>
           <span className="sdk:w-full sdk:text-center">{model}</span>
-        </TooltipTrigger>
-        <ModelTooltipContent model={model} metadata={metadata} />
-      </Tooltip>
-    </SelectItem>
+        </SelectItem>
+      </TooltipTrigger>
+      <ModelTooltipContent model={model} metadata={metadata} />
+    </Tooltip>
   );
 };
-
 export const ModelSelect = ({ field, form, data, names, onChange }) => {
   const [searchValue, setSearchValue] = useState("");
   const [modelNames, setModelNames] = useState(names);
