@@ -47,6 +47,7 @@ import dayjs from "dayjs";
 import { handleErrorMessage } from "../../utils/error";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFetchExecutionLogs } from "../Workflow/hooks/useFetchExecutionLogs";
+import { IS_NULL_ID } from "../../constants";
 
 export interface IWorkflowConfigurationState {
   workflowAgentId: string;
@@ -520,8 +521,8 @@ IWorkflowConfigurationProps) => {
         });
         return;
       }
-      let workflowId = editWorkflow?.workflowId ?? newWorkflowState?.workflowId;
-      if (!workflowId || getIsStage()) {
+      let workflowId = newWorkflowState?.workflowId ?? editWorkflow?.workflowId;
+      if (!workflowId || workflowId === IS_NULL_ID || getIsStage()) {
         // TODO auto save and publish workflow
         const result = await onSaveHandler();
         workflowId = result.workflowId;
@@ -545,7 +546,6 @@ IWorkflowConfigurationProps) => {
         throw "workflow is failed, please check the workflow";
       if (workflowStatus === WorkflowStatus.pending) {
         toast({
-          title: "error",
           description: "workflow executed successfully.",
           duration: 3000,
         });
@@ -606,8 +606,7 @@ IWorkflowConfigurationProps) => {
             className={clsx(
               "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-outfit sdk:workflow-title sdk:flex-wrap",
               "sdk:items-center"
-            )}
-          >
+            )}>
             {onBack && (
               <BackArrow
                 role="img"
@@ -679,8 +678,7 @@ IWorkflowConfigurationProps) => {
 
         <div
           className="sdk:flex sdk:sm:h-[calc(100%-70px)] sdk:flex-1 sdk:relative sdk:sm:flex-row sdk:flex-col"
-          ref={setContainer}
-        >
+          ref={setContainer}>
           {/* Sidebar */}
           <div className="sdk:relative" ref={setSidebarContainer}>
             <SidebarSheet
@@ -722,8 +720,7 @@ IWorkflowConfigurationProps) => {
               onOpenChange={(v) => {
                 console.log(v, "editAgentOpen=onClickWorkflowItem");
                 // setEditAgentOpen(v);
-              }}
-            >
+              }}>
               <DialogPortal container={container} asChild>
                 {/* <DialogOverlay /> */}
                 <WorkflowDialog
@@ -784,8 +781,7 @@ export default function WorkflowConfiguration(
       <ReactFlowProvider>
         <ReactDndProvider
           backend={isMobile ? TouchBackend : HTML5Backend}
-          options={isMobile ? { enableMouseEvents: true } : undefined}
-        >
+          options={isMobile ? { enableMouseEvents: true } : undefined}>
           <DnDProvider>
             <WorkflowProvider>
               <WorkflowConfigurationInner {...props} />

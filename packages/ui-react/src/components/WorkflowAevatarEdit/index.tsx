@@ -447,14 +447,16 @@ const ModelSelectItem = ({ model, data }) => {
   );
 };
 
-export const ModelSelect = ({ field, data, names, onChange }) => {
+export const ModelSelect = ({ field, form, data, names, onChange }) => {
   const [searchValue, setSearchValue] = useState("");
   const [modelNames, setModelNames] = useState(names);
   const [selectedModel, setSelectedModel] = useState("");
 
   return (
     <Select
-      value={field?.value}
+      value={
+        field?.value || form?.getValues()?.systemLLM || form?.getValues()?.model
+      }
       disabled={field?.disabled}
       onValueChange={(value) => {
         setSelectedModel(value);
