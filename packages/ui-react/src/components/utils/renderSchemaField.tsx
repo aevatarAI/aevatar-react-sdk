@@ -558,6 +558,8 @@ export const renderSchemaField = ({
               onChange?.(val, { name: fieldName, schema });
             }
           };
+
+          console.log("form.getValues()", form.getValues());
           return fieldName === "systemLLM" ? (
             <FormField
               control={form.control}
@@ -587,6 +589,7 @@ export const renderSchemaField = ({
                   {!isLoading && (
                     <ModelSelect
                       field={field}
+                      form={form}
                       data={data}
                       names={data?.ChatAISystemLLMEnum?.["x-enumNames"] || []}
                       onChange={(value) => {
