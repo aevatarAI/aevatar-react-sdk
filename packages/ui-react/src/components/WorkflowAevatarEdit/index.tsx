@@ -7,6 +7,7 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  SearchBar,
   Select,
   SelectContent,
   SelectItem,
@@ -31,8 +32,6 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "../ui/tooltip";
-import Question from "../../assets/svg/question.svg?react";
-import { useGetAIModels } from "../../hooks/useGetAIModels";
 import { TooltipDescriptor } from "../TooltipDescriptor";
 
 export interface IWorkflowAevatarEditProps {
@@ -417,10 +416,11 @@ const ModelSelectItem = ({ model, data }) => {
     </Tooltip>
   );
 };
+
 export const ModelSelect = ({ field, form, data, names, onChange }) => {
   const [searchValue, setSearchValue] = useState("");
   const [modelNames, setModelNames] = useState(names);
-  const [selectedModel, setSelectedModel] = useState("");
+  const [_, setSelectedModel] = useState("");
 
   return (
     <Select
@@ -439,24 +439,28 @@ export const ModelSelect = ({ field, form, data, names, onChange }) => {
         </SelectTrigger>
       </FormControl>
       <SelectContent className="sdk:min-w-[350px]">
-        <Input
-          autoFocus
-          key="search-input-model"
-          placeholder="search"
-          onKeyDown={(e) => e.stopPropagation()}
-          onKeyUp={(e) => e.stopPropagation()}
-          onChange={(e) => {
-            const value = e.target.value;
-            if (!value) return setModelNames(names);
+        <div className="sdk:flex sdk:flex-row sdk:gap-[4px] sdk:border-b sdk:border-[#6F6F6F80] sdk:border-solid">
+          <SearchBar
+            key="search-input-model"
+            placeholder="search"
+            onKeyDown={(e) => e.stopPropagation()}
+            onKeyUp={(e) => e.stopPropagation()}
+            value={searchValue}
+            onChange={(value) => {
+              setSearchValue(value);
 
-            setSearchValue(value);
-            setModelNames((names) =>
-              names.filter((name) =>
+              if (!value) {
+                return setModelNames(names);
+              }
+
+              const filteredNames = names.filter((name) =>
                 name.toLowerCase().includes(value.toLowerCase())
-              )
-            );
-          }}
-        />
+              );
+
+              setModelNames(filteredNames);
+            }}
+          />
+        </div>
         {modelNames?.map((model) => (
           <ModelSelectItem key={model} model={model} data={data} />
         ))}

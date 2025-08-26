@@ -28,6 +28,7 @@ export function TooltipDescriptor({ type }: ITooltipDescriptor) {
     toolGAgentTypes,
     toolGAgents,
     serverConfig,
+    requestTimeout,
   } = parsedResults.properties;
 
   let desc = "";
@@ -64,6 +65,11 @@ export function TooltipDescriptor({ type }: ITooltipDescriptor) {
     case "serverConfig":
       desc =
         serverConfig?.description || "Server configuration for your workflow";
+      break;
+    case "requestTimeout":
+      desc =
+        requestTimeout?.description ||
+        "The timeout duration before the request is closed";
       break;
     default:
       shouldDisplay = false;
