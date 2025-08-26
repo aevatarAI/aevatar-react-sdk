@@ -11,6 +11,8 @@ interface SearchBarProps {
   className?: string;
   onDebounceChange?: (v: string) => void;
   debounceMs?: number;
+  onKeyDown?: any;
+  onKeyUp?: any;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
@@ -20,6 +22,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
   className,
   onDebounceChange,
   debounceMs = 300,
+  onKeyDown,
+  onKeyUp,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -60,6 +64,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onKeyDown={onKeyDown}
+          onKeyUp={onKeyUp}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
