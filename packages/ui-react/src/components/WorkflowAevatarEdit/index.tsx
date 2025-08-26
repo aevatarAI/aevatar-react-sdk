@@ -33,6 +33,7 @@ import {
 } from "../ui/tooltip";
 import Question from "../../assets/svg/question.svg?react";
 import { useGetAIModels } from "../../hooks/useGetAIModels";
+import { TooltipDescriptor } from "../TooltipDescriptor";
 
 export interface IWorkflowAevatarEditProps {
   agentItem?: Partial<
@@ -289,22 +290,7 @@ export default function WorkflowAevatarEdit({
                         className="sdk:flex sdk:gap-[4px]"
                       >
                         <span>agent name</span>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button type="button">
-                              <Question />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent
-                            className={clsx(
-                              "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
-                              "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
-                            )}
-                            side="top"
-                          >
-                            Choose the name for your agent.
-                          </TooltipContent>
-                        </Tooltip>
+                        <TooltipDescriptor type="agentName" />
                       </FormLabel>
 
                       <FormControl>
@@ -334,23 +320,7 @@ export default function WorkflowAevatarEdit({
                         className="sdk:flex sdk:gap-[4px]"
                       >
                         <span>agent Type</span>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <button type="button">
-                              <Question />
-                            </button>
-                          </TooltipTrigger>
-                          <TooltipContent
-                            className={clsx(
-                              "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
-                              "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
-                            )}
-                            side="top"
-                          >
-                            Choose the agent type that powers your responses.
-                            Different agents vary in speed, accuracy, and cost.
-                          </TooltipContent>
-                        </Tooltip>
+                        <TooltipDescriptor type="agentType" />
                       </FormLabel>
                       <Select value={field?.value} disabled={field?.disabled}>
                         <FormControl>

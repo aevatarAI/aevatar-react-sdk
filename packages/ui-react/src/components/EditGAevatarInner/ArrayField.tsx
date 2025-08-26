@@ -2,14 +2,8 @@ import { Button, FormLabel } from "../ui";
 import AddIcon from "../../assets/svg/add.svg?react";
 import DeleteIcon from "../../assets/svg/delete_agent.svg?react";
 import ArrowUp from "../../assets/svg/arrow_up.svg?react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
-import Question from "../../assets/svg/question.svg?react";
-import clsx from "clsx";
+import { TooltipProvider } from "../ui/tooltip";
+import { TooltipDescriptor } from "../TooltipDescriptor";
 interface ArrayFieldProps {
   name: string;
   schema: any;
@@ -44,23 +38,7 @@ export default function ArrayField({
         <div className="sdk:w-full sdk:mb-2">
           <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030] sdk:flex sdk:gap-[4px]">
             <span> {label ?? name}</span>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button type="button">
-                  <Question />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent
-                className={clsx(
-                  "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
-                  "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
-                )}
-                side="top"
-              >
-                Choose the AI model that powers your agent’s responses.
-                Different models vary in speed, accuracy, and cost.
-              </TooltipContent>
-            </Tooltip>
+            <TooltipDescriptor type={label ?? name} />
           </FormLabel>
           <Button
             type="button"
