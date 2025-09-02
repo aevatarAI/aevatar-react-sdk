@@ -9,6 +9,7 @@ import type { JSONSchemaType } from "../types";
 import clsx from "clsx";
 import type { TNodeDataClick } from "../Workflow/types";
 import { useGetAgentDetails } from "../Workflow/hooks/useFetchExecutionLogs";
+import HoverMenu from "./HoverMenu";
 export interface IAevatarCardInnerProps {
   className?: string;
   isNew?: boolean;
@@ -50,24 +51,26 @@ export default function AevatarCardInner({
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
       data-testid="aevatar-card"
-      className="sdk:group"
+      className="sdk:group sdk:relative"
       onClick={(e) => {
         onClick?.(agentInfo, isNew, nodeId);
-      }}
-    >
-              <div
-          className={clsx(
-            "sdk:aevatar-item-background sdk:w-[234px]  sdk:border sdk:border-[#141415]  sdk:group-hover:border-[#303030]",
-            selected && "sdk:border-[#AFC6DD]! ",
-            "sdk:border-b-[0px]!",
-            "sdk:max-h-[300px] sdk:overflow-y-auto",
-            className
-          )}
-          style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-          }}
-        >
+      }}>
+      <HoverMenu
+        triggerClassName="sdk:group-hover:block sdk:hidden sdk:absolute sdk:-top-[26px] sdk:right-[0px]"
+        onDelete={handleDeleteClick}
+      />
+      <div
+        className={clsx(
+          "sdk:aevatar-item-background sdk:w-[234px]  sdk:border sdk:border-[#141415]  sdk:group-hover:border-[#303030]",
+          selected && "sdk:border-[#AFC6DD]! ",
+          "sdk:border-b-[0px]!",
+          "sdk:max-h-[300px] sdk:overflow-y-auto",
+          className
+        )}
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}>
         <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
           <div className="sdk:flex sdk:justify-between sdk:items-center sdk:pb-[9px]">
             <div
@@ -75,7 +78,8 @@ export default function AevatarCardInner({
             >{`${agentInfo?.name || "agent name"}`}</div>
 
             {isNew ? (
-              <DeleteWorkflowGAevatar handleDeleteClick={handleDeleteClick} />
+              // <DeleteWorkflowGAevatar handleDeleteClick={handleDeleteClick} />
+              <></>
             ) : (
               <SuccessCheck />
             )}
@@ -138,8 +142,7 @@ export default function AevatarCardInner({
                 <div
                   className={clsx(
                     (!isNew || value) && "sdk:flex sdk:flex-wrap sdk:gap-[10px]"
-                  )}
-                >
+                  )}>
                   {/* Render array values if type is array, else render single value */}
                   {valueList.map((info: string | null | number) => {
                     // Prefer a unique value for key, fallback to propName+info
@@ -152,8 +155,7 @@ export default function AevatarCardInner({
                         key={key}
                         className={clsx(
                           "sdk:p-[4px] sdk:bg-[var(--sdk-border-color)] sdk:text-[12px] sdk:text-white "
-                        )}
-                      >
+                        )}>
                         {!info && info !== 0 && (
                           <div
                             className={clsx(
@@ -174,8 +176,7 @@ export default function AevatarCardInner({
                               WebkitBoxOrient: "vertical",
                               overflow: "hidden",
                               textOverflow: "ellipsis",
-                            }}
-                          >
+                            }}>
                             {info}
                           </pre>
                         )}
