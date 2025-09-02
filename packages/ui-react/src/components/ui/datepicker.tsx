@@ -26,12 +26,12 @@ export const DatePickerWithoutRange: React.FC<DatePickerWithRangeProps> = ({
   return (
     <Popover>
       <PopoverTrigger>
-        <div className="flex w-[100%] gap-0 justify-center items-center">
+        <div className="sdk:flex sdk:w-[100%] sdk:gap-0 sdk:justify-center sdk:items-center">
           <Button
             id="date"
             variant="ghost"
             className={cn(
-              "w-fit font-outfit font-light text-[14px] max-[768px]:px-[0px]",
+              "sdk:w-fit sdk:font-outfit sdk:font-light sdk:text-[14px] sdk:max-[768px]:px-[0px]",
               !date && "text-muted-foreground"
             )}
           >
@@ -40,7 +40,7 @@ export const DatePickerWithoutRange: React.FC<DatePickerWithRangeProps> = ({
           </Button>
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="sdk:w-auto sdk:p-0" align="start">
         <Calendar
           mode="single"
           defaultMonth={new Date()}
