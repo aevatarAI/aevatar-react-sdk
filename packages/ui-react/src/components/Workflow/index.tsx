@@ -439,26 +439,26 @@ export const Workflow = forwardRef(
       (nodes: INode[], edges: Edge[], newSource: string, newTarget: string) => {
         // Create adjacency list
         const graph: Record<string, string[]> = {};
-        nodes.forEach(node => {
+        nodes.forEach((node) => {
           graph[node.id] = [];
         });
-        
+
         // Add existing edges
-        edges.forEach(edge => {
+        edges.forEach((edge) => {
           if (graph[edge.source]) {
             graph[edge.source].push(edge.target);
           }
         });
-        
+
         // Add the new edge temporarily
         if (graph[newSource]) {
           graph[newSource].push(newTarget);
         }
-        
+
         // DFS to detect cycle
         const visited = new Set<string>();
         const recStack = new Set<string>();
-        
+
         const dfs = (nodeId: string): boolean => {
           if (recStack.has(nodeId)) {
             return true; // Found cycle
@@ -466,21 +466,21 @@ export const Workflow = forwardRef(
           if (visited.has(nodeId)) {
             return false;
           }
-          
+
           visited.add(nodeId);
           recStack.add(nodeId);
-          
+
           const neighbors = graph[nodeId] || [];
           for (const neighbor of neighbors) {
             if (dfs(neighbor)) {
               return true;
             }
           }
-          
+
           recStack.delete(nodeId);
           return false;
         };
-        
+
         // Check all nodes for cycles
         for (const nodeId of Object.keys(graph)) {
           if (!visited.has(nodeId)) {
@@ -489,7 +489,7 @@ export const Workflow = forwardRef(
             }
           }
         }
-        
+
         return false; // No cycle
       },
       []
@@ -509,24 +509,24 @@ export const Workflow = forwardRef(
           ) {
             return eds;
           }
-          
+
           // Check if adding this edge would create a cycle
           if (hasCycle(nodes, eds, params.source, params.target)) {
-            console.warn('Cannot add edge: would create a cycle in workflow');
+            console.warn("Cannot add edge: would create a cycle in workflow");
             return eds;
           }
-          
+
           return addEdge(
             {
               ...params,
               type: "bezier",
               // markerEnd: {
               //   type: MarkerType.ArrowClosed,
-              //   color: "#53FF8A",
+              //   color: "var(--sdk-success-color)",
               // },
               style: {
                 strokeWidth: 2,
-                stroke: "#B9B9B9",
+                stroke: "var(--sdk-muted-foreground)",
               },
             },
             eds
@@ -733,7 +733,7 @@ export const Workflow = forwardRef(
             defaultEdgeOptions={{ type: "bezier" }}
             connectionLineStyle={{
               strokeDasharray: "10 10",
-              stroke: "#B9B9B9",
+              stroke: "var(--sdk-muted-foreground)",
               strokeWidth: 2,
             }}>
             <div className="sdk:absolute sdk:left-[15px] sdk:bottom-[130px] sdk:z-5">
@@ -744,8 +744,9 @@ export const Workflow = forwardRef(
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
+                      variant="outline"
                       className={clsx(
-                        "sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:p-[7px] sdk:border-[#303030]",
+                        "sdk:cursor-pointer sdk:p-[7px]",
                         !canUndo && "sdk:opacity-50 sdk:cursor-not-allowed"
                       )}
                       onClick={onUndoHandler}
@@ -756,7 +757,7 @@ export const Workflow = forwardRef(
                   </TooltipTrigger>
                   <TooltipContent
                     className={clsx(
-                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
                     side="top">
@@ -769,8 +770,9 @@ export const Workflow = forwardRef(
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
+                      variant="outline"
                       className={clsx(
-                        "sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:p-[7px] sdk:border-[#303030]",
+                        "sdk:cursor-pointer sdk:p-[7px]",
                         !canRedo && "sdk:opacity-50 sdk:cursor-not-allowed"
                       )}
                       onClick={onRedoHandler}
@@ -784,7 +786,7 @@ export const Workflow = forwardRef(
                   </TooltipTrigger>
                   <TooltipContent
                     className={clsx(
-                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
                     side="top">
@@ -794,12 +796,13 @@ export const Workflow = forwardRef(
               </TooltipProvider>
 
               <Button
+                variant="outline"
                 onClick={async () => {
                   onRunningHandler();
                   await sleep(3000);
                   await refetch();
                 }}
-                className="sdk:cursor-pointer sdk:py-[7px]  sdk:px-[17px] sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
+                className="sdk:cursor-pointer sdk:py-[7px]  sdk:px-[17px] sdk:text-center sdk:font-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold">
                 {isRunning ? (
                   <Loading
                     key={"save"}
@@ -816,7 +819,7 @@ export const Workflow = forwardRef(
 
               {/* <Button
                 onClick={onStopHandler}
-                className="sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
+                className="sdk:cursor-pointer sdk:hover:text-[var(--sdk-color-text-secondary)] sdk:text-[var(--sdk-color-text-primary)] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[var(--sdk-bg-black-light)]">
                 {isStopping ? (
                   <Loading
                     key={"save"}
@@ -839,12 +842,16 @@ export const Workflow = forwardRef(
                 width: 100,
                 height: 64,
               }}
-              nodeColor={"#cecece"}
-              bgColor={"#000"}
-              maskColor={"#141415"}
+              nodeColor={"var(--sdk-color-gray-light)"}
+              bgColor={"var(--sdk-bg-background)"}
+              maskColor={"var(--sdk-color-bg-primary)"}
             />
-            <BackgroundFlow bgColor={"#000"} size={2} color={"#D2D6DB4D"} />
-            <div className="sdk:absolute sdk:right-[0px] sdk:bottom-[0px] sdk:text-[#B9B9B9] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[11px] sdk:font-pro aevatar-ai-watermark">
+            <BackgroundFlow
+              bgColor={"var(--sdk-bg-background)"}
+              size={2}
+              color={"var(--sdk-bg-dot"}
+            />
+            <div className="sdk:absolute sdk:right-[0px] sdk:bottom-[0px] sdk:text-[var(--sdk-muted-foreground)] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[11px] sdk:font-pro aevatar-ai-watermark">
               powered by aevatar.ai
             </div>
           </ReactFlow>

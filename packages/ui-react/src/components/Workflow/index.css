@@ -6,16 +6,16 @@
 }
 
 .dndflow aside {
-  border-right: 1px solid #eee;
+  border-right: 1px solid var(--sdk-color-border-primary);
   padding: 15px 10px;
   font-size: 12px;
-  background: #fcfcfc;
+  background: var(--sdk-color-bg-secondary);
 }
 
 .dndflow .dndnode {
   height: 20px;
   padding: 4px;
-  border: 1px solid #1a192b;
+  border: 1px solid var(--sdk-color-border-primary);
   border-radius: 2px;
   margin-bottom: 10px;
   display: flex;
@@ -25,11 +25,11 @@
 }
 
 .dndflow .dndnode.input {
-  border-color: #0041d0;
+  border-color: var(--sdk-color-input-node);
 }
 
 .dndflow .dndnode.output {
-  border-color: #ff0072;
+  border-color: var(--sdk-color-output-node);
 }
 
 .dndflow .reactflow-wrapper {
@@ -42,7 +42,7 @@
 }
 .dark.react-flow {
   background: transparent;
-  color: white;
+  color: var(--sdk-color-text-primary);
 }
 
 .react-flow__panel.react-flow__attribution.bottom.right {
@@ -50,31 +50,37 @@
 }
 
 .react-flow__panel.react-flow__minimap.bottom.right {
-  border: 1px solid #303030;
+  border: 1px solid var(--sdk-color-border-primary);
   border-radius: 6px;
   overflow: hidden;
 }
 
 .react-flow__panel.react-flow__controls {
-  border: 1px solid #303030;
+  border: 1px solid var(--sdk-color-border-primary);
 }
 
 .react-flow__panel.react-flow__controls .react-flow__controls-button {
-  background: #141415;
+  background: var(--sdk-workflow-menu-bg);
 }
-
+.react-flow__controls-button {
+  border-color: var(--sdk-color-border-primary);
+  color: var(--sdk-color-text-primary);
+}
+.react-flow__controls-button:hover {
+  color: var(--sdk-color-text-primary);
+}
 .editAgentOpen-workflow-inner .react-flow__panel.right.react-flow__minimap {
   margin-right: 400px;
 }
 /* .react-flow__edge.selectable:hover .react-flow__edge-path, */
 .react-flow__edge.selectable.selected .react-flow__edge-path {
-  stroke: #53ff8a !important;
+  stroke: var(--sdk-color-success) !important;
 }
 
 /* .react-flow__edge.selectable:hover .react-flow__edge-path, */
 .react-flow__edge.selectable.selected .react-flow__edge-path {
-  stroke: #53ff8a !important;
-  /* marker-end: url('#1__color=#53FF8A&type=arrowclosed') !important; */
+  stroke: var(--sdk-color-success) !important;
+  /* marker-end: url('#1__color=var(--sdk-success-color)&type=arrowclosed') !important; */
 }
 
 .react-flow__edge.selectable .aevatar-edge-delete-btn {

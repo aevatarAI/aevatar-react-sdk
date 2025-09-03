@@ -42,9 +42,9 @@ export default function SidebarWithNewAgent({
   return (
     <div
       className={clsx(
-        "sdk:bg-[#000000] sdk:relative ",
-        "sdk:w-full sdk:border-b-[1px] sdk:border-b-[#303030] sdk:overflow-x-auto",
-        "sdk:sm:w-[152px]  sdk:sm:h-full sdk:sm:border-r-[1px] sdk:sm:border-b-[0px] sdk:border-b-[#303030] sdk:sm:border-r-[#303030]",
+        "sdk:bg-[var(--sdk-bg-background)] sdk:relative ",
+        "sdk:w-full sdk:border-b-[1px] sdk:border-b-[var(--sdk-color-sidebar-border)] sdk:overflow-x-auto",
+        "sdk:sm:w-[152px]  sdk:sm:h-full sdk:sm:border-r-[1px] sdk:sm:border-b-[0px] sdk:border-b-[var(--sdk-color-sidebar-border)] sdk:sm:border-r-[var(--sdk-color-sidebar-border)]",
         "sdk:flex sdk:flex-col sdk:h-full"
       )}
     >
@@ -97,8 +97,8 @@ export default function SidebarWithNewAgent({
         className={clsx(
           "sdk:absolute sdk:bottom-0 sdk:right-0 ",
           "sdk:p-[6px] sdk:cursor-pointer sdk:w-full sdk:flex sdk:items-center sdk:justify-center ",
-          "sdk:bg-[#000] sdk:hover:bg-[#141415]",
-          "sdk:border-t-[1px] sdk:border-t-[#303030]",
+          "sdk:bg-[var(--sdk-bg-background)] sdk:hover:bg-[var(--sdk-color-bg-primary)]",
+          "sdk:border-t-[1px] sdk:border-t-[var(--sdk-color-border-primary)]",
           "sdk:sm:block sdk:hidden"
         )}
         onClick={() => onArrowClick?.()}

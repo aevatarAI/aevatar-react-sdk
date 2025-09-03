@@ -48,11 +48,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
   return (
     <div
       className={clsx(
-        "sdk:relative sdk:w-full sdk:border-b-[1px] sdk:border-b-[#303030] sdk:bg-transparent",
+        "sdk:relative sdk:w-full sdk:border-b-[1px] sdk:border-b-[var(--sdk-color-sidebar-border)] sdk:bg-transparent",
         className
-      )}
-    >
-      <div className="sdk:flex sdk:flex-row sdk:items-center sdk:gap-1 sdk:p-[8px] sdk:w-full">
+      )}>
+      <div className="sdk:flex sdk:flex-row sdk:items-center sdk:bg-[var(--sdk-sidebar-background)] sdk:gap-1 sdk:text-[var(--sdk-muted-foreground)] sdk:p-[8px] sdk:w-full">
         <SearchIcon
           className={clsx(
             "sdk:w-4 sdk:h-4 sdk:shrink-0",
@@ -71,8 +70,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
           placeholder={placeholder}
           className={clsx(
             "sdk:bg-transparent sdk:border-none sdk:outline-none sdk:w-full sdk:text-[12px] sdk:font-outfit sdk:lowercase",
-            showActive ? "sdk:text-white" : "sdk:text-[#606060]",
-            "sdk:placeholder:text-[#606060] sdk:placeholder:text-[12px]"
+            showActive
+              ? "sdk:text-[var(--sdk-color-text-primary)]"
+              : "sdk:text-[var(--sdk-muted-foreground)]",
+            "sdk:placeholder:text-[var(--sdk-muted-foreground)] sdk:placeholder:text-[12px]"
           )}
         />
         {value && (
@@ -84,8 +85,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
               onChange("");
               inputRef.current?.focus();
             }}
-            tabIndex={-1}
-          >
+            tabIndex={-1}>
             <CloseIcon className="sdk:w-full sdk:h-full" />
           </button>
         )}

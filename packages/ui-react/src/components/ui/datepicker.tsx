@@ -32,9 +32,8 @@ export const DatePickerWithoutRange: React.FC<DatePickerWithRangeProps> = ({
             variant="ghost"
             className={cn(
               "sdk:w-fit sdk:font-outfit sdk:font-light sdk:text-[14px] sdk:max-[768px]:px-[0px]",
-              !date && "text-muted-foreground"
-            )}
-          >
+              !date && "text-[var(--sdk-muted-foreground)]"
+            )}>
             <Clock />
             <span>{dayjs().format("YYYY-MM-DD HH:mm")}</span>
           </Button>

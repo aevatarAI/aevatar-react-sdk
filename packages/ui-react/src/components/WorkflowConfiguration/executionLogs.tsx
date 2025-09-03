@@ -15,6 +15,7 @@ import "react18-json-view/src/style.css";
 import "react18-json-view/src/dark.css";
 import clsx from "clsx";
 import { useFetchExecutionLogs } from "../Workflow/hooks/useFetchExecutionLogs";
+import { Button } from "../ui";
 
 const DEFAULT = {
   agentName: "unknown",
@@ -145,7 +146,7 @@ const ExecutionLogHeader = ({
               <AIStar />
               <span className="sdk:text-[14px]">{agentName}</span>
             </div>
-            <span className="sdk:text-[#6F6F6F] sdk:text-[14px]">
+            <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:text-[14px]">
               {executionTime ? `${executionTime}ms` : "-"}
             </span>
             <div
@@ -153,10 +154,9 @@ const ExecutionLogHeader = ({
                 isPending
                   ? ""
                   : isSuccess
-                  ? "sdk:text-[#53FF8A]"
-                  : "sdk:text-[#FF2E2E]"
-              }`}
-            >
+                  ? "sdk:text-[var(--sdk-success-color)]"
+                  : "sdk:text-[var(--sdk-warning-color)]"
+              }`}>
               {isPending ? (
                 <Loading
                   key={"save"}
@@ -185,8 +185,7 @@ const ExecutionLogHeader = ({
             className="sdk:cursor-pointer"
             onClick={() => {
               onToggle((prev: boolean) => !prev);
-            }}
-          >
+            }}>
             <Close />
           </button>
         </span>
@@ -248,11 +247,10 @@ const ExecutionLogBody = ({
             <button
               key={`${d?.agentState?.grainId}-${index}`}
               className={`sdk:cursor-pointer sdk:pt-[2px] sdk:pb-[2px] sdk:pr-[4px] sdk:pl-[4px] sdk:rounded-sm ${
-                isActive ? "sdk:bg-[#303030]" : ""
+                isActive ? "sdk:bg-[var(--sdk-color-border-primary)]" : ""
               }`}
               type="button"
-              onClick={() => onChange({ ...d, index })}
-            >
+              onClick={() => onChange({ ...d, index })}>
               <div className="sdk:flex sdk:items-center sdk:justify-between">
                 <span className="sdk:flex sdk:items-center sdk:gap-1">
                   {isActive ? <AIStarWhite /> : <AIStar />}
@@ -268,11 +266,12 @@ const ExecutionLogBody = ({
       <div
         className={`sdk:flex sdk:flex-${
           isAgentCardOpen ? "col" : "row"
-        } sdk:gap-2 sdk:w-[100%]`}
-      >
-        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
+        } sdk:gap-2 sdk:w-[100%]`}>
+        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[var(--sdk-bg-black-light)80] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
-            <span className="sdk:text-[#B9B9B9] sdk:font-semibold">input</span>
+            <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:font-semibold">
+              input
+            </span>
             <span className="sdk:flex sdk:gap-2">
               <button type="button">
                 <Copy
@@ -291,9 +290,9 @@ const ExecutionLogBody = ({
           />
         </div>
 
-        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
+        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[var(--sdk-bg-black-light)80] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
-            <span className="sdk:text-[#B9B9B9] sdk:font-semibold">
+            <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:font-semibold">
               agent state
             </span>
             <span className="sdk:flex sdk:gap-2">
@@ -314,9 +313,11 @@ const ExecutionLogBody = ({
           />
         </div>
 
-        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
+        <div className="sdk:flex sdk:gap-2 sdk:bg-[var(--sdk-bg-black-light)80] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
-            <span className="sdk:text-[#B9B9B9] sdk:font-semibold">output</span>
+            <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:font-semibold">
+              output
+            </span>
             <span className="sdk:flex sdk:gap-2">
               <button type="button">
                 <Copy
@@ -410,7 +411,7 @@ const Wrapper = ({
         isAgentCardOpen
           ? "sdk:max-w-[calc(100%-393px)] sdk:mr-auto"
           : "sdk:min-w-[100%]"
-      } sdk:flex sdk:flex-col sdk:flex-1 sdk:gap-2 sdk:bg-[#171717] sdk:p-[8px] sdk:border sdk:border-[#FFFFFF14] sdk:rounded-sm ${
+      } sdk:flex sdk:flex-col sdk:flex-1 sdk:gap-2 sdk:bg-[var(--sdk-color-dialog-dark)] sdk:p-[8px] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:rounded-sm ${
         isMovable ? "sdk:cursor-move" : ""
       } ${isDragging ? "sdk:select-none" : ""}`}
       style={
@@ -420,8 +421,7 @@ const Wrapper = ({
               zIndex: isDragging ? Number.POSITIVE_INFINITY : 1,
             }
           : {}
-      }
-    >
+      }>
       {children}
     </div>
   );
@@ -435,7 +435,7 @@ const EmptyExecutionLog = () => {
     <div className="sdk:min-w-[100%] sdk:flex sdk:items-center sdk:justify-center sdk:pt-[72.5px] sdk:pb-[72.5px]">
       <div className="sdk:flex sdk:flex-col sdk:gap-4 sdk:items-center">
         <EmptyRun />
-        <span className="sdk:text-[#6F6F6F] sdk:text-[13px]">
+        <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:text-[13px]">
           run your workflow to view execution logs here.
         </span>
       </div>
@@ -450,19 +450,19 @@ interface ToggleModalProps {
 
 const ToggleModal = ({ isAgentCardOpen, onToggle }: ToggleModalProps) => {
   return (
-    <button
+    <Button
+      variant="outline"
       type="button"
       className={`sdk:absolute sdk:bottom-[22px] ${
         isAgentCardOpen ? "sdk:right-[60%]" : ""
-      } sdk:flex sdk:gap-[5px] sdk:items-center sdk:pt-[8px] sdk:pb-[8px] sdk:pl-[18px] sdk:pr-[18px] sdk:border sdk:border-[#303030] sdk:cursor-pointer`}
+      } sdk:flex sdk:gap-[5px] sdk:items-center sdk:pt-[8px] sdk:pb-[8px] sdk:pl-[18px] sdk:pr-[18px] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:cursor-pointer`}
       onClick={() => {
         onToggle((prev) => !prev);
-      }}
-    >
+      }}>
       <div className="sdk:flex sdk:flex-row sdk:gap-[5px] sdk:items-center">
         <Clock width={14} height={14} />
         <span className="sdk:font-semibold sdk:text-[12px]">execution log</span>
       </div>
-    </button>
+    </Button>
   );
 };

@@ -1,6 +1,6 @@
 .monaco-editor .monaco-editor-background,
 .margin-view-overlays {
-  background-color: #30303050 !important;
+  background-color: var(--sdk-color-border-primary)50 !important;
 }
 
 .monaco-editor-container {
@@ -21,7 +21,7 @@
   right: 0px !important;
   left: unset !important;
 
-  background: #000000 !important;
+  background: var(--sdk-bg-background) !important;
 }
 
 .view-lines {

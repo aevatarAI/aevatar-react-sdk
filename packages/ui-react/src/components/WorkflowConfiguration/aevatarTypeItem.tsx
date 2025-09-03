@@ -110,8 +110,8 @@ export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
             <div className=" sdk:text-center sdk:px-[16px] sdk:py-[16px] sdk:relative sdk:flex sdk:flex-col ">
               <div
                 className={clsx(
-                  "sdk:text-[11px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:text-center sdk:w-full sdk:truncate",
-                  disabled && "sdk:text-[#B9B9B9] sdk:opacity-50"
+                  "sdk:text-[11px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:text-center sdk:w-full sdk:truncate",
+                                      disabled && "sdk:text-[var(--sdk-muted-foreground)] sdk:opacity-50"
                 )}>
                 {agentType?.split(".")?.pop() || ""}
               </div>
@@ -120,7 +120,7 @@ export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
         </TooltipTrigger>
         <TooltipContent
           className={clsx(
-            "sdk:z-1000 sdk:max-w-[200px] sdk:text-[10px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+            "sdk:z-1000 sdk:max-w-[200px] sdk:text-[10px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
             "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
           )}
           align="end"

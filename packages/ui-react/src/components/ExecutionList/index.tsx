@@ -55,7 +55,7 @@ export const columns = [
           className={clsx(
             "sdk:text-[14px]  sdk:font-outfit sdk:font-semibold ",
             row.original.workflowStatus === WorkflowStatus.failed &&
-              "sdk:text-[#FF2E2E] sdk:flex sdk:flex-row sdk:gap-[4px] sdk:items-center"
+              "sdk:text-[var(--sdk-warning-color)] sdk:flex sdk:flex-row sdk:gap-[4px] sdk:items-center"
           )}
         >
           {row.original.workflowStatus === WorkflowStatus.failed && (
@@ -102,7 +102,7 @@ export default function ExecutionList({
   return (
     <div
       className={clsx(
-        "sdk:flex sdk:flex-col sdk:gap-[30px] sdk:items-start sdk:w-full sdk:box-border sdk:bg-[#000] sdk:h-full sdk:overflow-y-auto w-full",
+        "sdk:flex sdk:flex-col sdk:gap-[30px] sdk:items-start sdk:w-full sdk:box-border sdk:bg-[var(--sdk-bg-background)] sdk:h-full sdk:overflow-y-auto w-full",
         className
       )}
       id={crypto.randomUUID()}
@@ -113,7 +113,7 @@ export default function ExecutionList({
           id={crypto.randomUUID()}
         >
           <div
-            className="sdk:font-outfit sdk:font-semibold sdk:text-[18px] sdk:bg-gradient-to-r sdk:from-white sdk:to-[#999] sdk:bg-clip-text sdk:text-transparent sdk:lowercase"
+            className="sdk:font-outfit sdk:font-semibold sdk:text-[18px]"
             id={crypto.randomUUID()}
             style={{ WebkitTextFillColor: "transparent" }}
           >
@@ -121,7 +121,8 @@ export default function ExecutionList({
           </div>
           <div>
             <Button
-              className="sdk:text-white sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:hover:text-black sdk:cursor-pointer"
+            variant="primary"
+              className="sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:cursor-pointer"
               onClick={onNewWorkflow}
             >
               <AddIcon style={{ width: 14, height: 14 }} />
@@ -139,7 +140,7 @@ export default function ExecutionList({
             />
           </div>
           <div>
-            <span className="text-white text-[16px]">no active executions</span>
+            <span className="text-[var(--sdk-color-text-primary)] text-[16px]">no active executions</span>
           </div>
         </div>
       </div>

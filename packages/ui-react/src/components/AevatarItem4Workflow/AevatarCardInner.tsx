@@ -61,8 +61,8 @@ export default function AevatarCardInner({
       />
       <div
         className={clsx(
-          "sdk:aevatar-item-background sdk:w-[234px]  sdk:border sdk:border-[#141415]  sdk:group-hover:border-[#303030]",
-          selected && "sdk:border-[#AFC6DD]! ",
+          "sdk:aevatar-item-background sdk:w-[234px]  sdk:border sdk:border-[var(--sdk-color-bg-primary)]  sdk:group-hover:border-[var(--sdk-border-foreground)]",
+          selected && "sdk:border-[var(--sdk-border-foreground)]! ",
           "sdk:border-b-[0px]!",
           "sdk:max-h-[300px] sdk:overflow-y-auto",
           className
@@ -74,7 +74,7 @@ export default function AevatarCardInner({
         <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
           <div className="sdk:flex sdk:justify-between sdk:items-center sdk:pb-[9px]">
             <div
-              className="sdk:font-outfit sdk:text-white sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
+              className="sdk:font-outfit sdk:text-[var(--sdk-color-text-primary)] sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
             >{`${agentInfo?.name || "agent name"}`}</div>
 
             {isNew ? (
@@ -84,7 +84,7 @@ export default function AevatarCardInner({
               <SuccessCheck width={14} height={14} />
             )}
           </div>
-          <div className="sdk:font-outfit sdk:text-[#B9B9B9] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:truncate">
+          <div className="sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:truncate">
             {agentInfo?.agentType
               ? agentInfo?.agentType?.split(".")?.pop()
               : "--"}
@@ -136,7 +136,7 @@ export default function AevatarCardInner({
 
             return (
               <div key={propName} className={clsx("sdk:w-full")}>
-                <div className="sdk:text-[#6F6F6F] sdk:text-[12px] sdk:pb-[10px]">
+                <div className="sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:pb-[10px]">
                   {propName}
                 </div>
                 <div
@@ -154,12 +154,12 @@ export default function AevatarCardInner({
                       <div
                         key={key}
                         className={clsx(
-                          "sdk:p-[4px] sdk:bg-[var(--sdk-border-color)] sdk:text-[12px] sdk:text-white "
+                          "sdk:p-[4px] sdk:bg-[var(--sdk-bg-accent)] sdk:text-[12px] sdk:text-[var(--sdk-color-text-primary)] "
                         )}>
                         {!info && info !== 0 && (
                           <div
                             className={clsx(
-                              "sdk:h-[23px] sdk:w-full sdk:bg-[#303030]",
+                              "sdk:h-[23px] sdk:w-full sdk:bg-[var(--sdk-bg-black-light)]",
                               "sdk:w-[100px]!"
                             )}
                           />
@@ -187,7 +187,7 @@ export default function AevatarCardInner({
                   {/* {isNew && valueList.length === 0 && (
                     <div
                       className={clsx(
-                        "sdk:h-[23px] sdk:w-full sdk:bg-[#303030]",
+                        "sdk:h-[23px] sdk:w-full sdk:bg-[var(--sdk-bg-black-light)]",
                         schema.type !== "string" && "sdk:w-[100px]!"
                       )}
                     />
@@ -201,15 +201,15 @@ export default function AevatarCardInner({
       <div className="sdk:h-[14px] sdk:relative sdk:flex ">
         <div
           className={clsx(
-            " sdk:bg-[#141415] sdk:flex-1 sdk:border sdk:border-[#141415] sdk:group-hover:border-[#303030]",
+            " sdk:bg-[var(--sdk-bg-accent)] sdk:flex-1 sdk:border sdk:border-[var(--sdk-color-bg-primary)] sdk:group-hover:border-[var(--sdk-border-foreground)]",
             " sdk:border-t-[0px] sdk:border-r-[0px]",
-            selected && "sdk:border-[#AFC6DD]!"
+            selected && "sdk:border-[var(--sdk-border-foreground)]!"
           )}
         />
         <Hypotenuse
           className={clsx(
-            "sdk:w-[17px] sdk:h-[14px] sdk:text-[#141415]  sdk:group-hover:text-[#303030]",
-            selected && "sdk:text-[#AFC6DD]!"
+            "sdk:w-[17px] sdk:h-[14px] sdk:text-[var(--sdk-color-bg-primary)]  sdk:group-hover:text-[var(--sdk-color-text-secondary)]",
+            selected && "sdk:text-[var(--sdk-border-foreground)]!"
           )}
         />
       </div>

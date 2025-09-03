@@ -8,12 +8,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        primary:
+          "sdk:bg-[var(--sdk-bg-primary)] sdk:text-[var(--sdk-primary-foreground)] sdk:hover:bg-[var(--sdk-hover-primary)] sdk:disabled:opacity-50",
         default:
-          "sdk:border-solid sdk:bg-transparent sdk:border-[0.75px] sdk:border-[#606060] sdk:hover:bg-white sdk:hover:text-black",
+          "sdk:border-solid sdk:bg-transparent sdk:border-[0.75px] sdk:border-[var(--sdk-color-border-primary)] sdk:hover:bg-[var(--sdk-color-bg-primary)] sdk:hover:text-[var(--sdk-color-text-primary)]",
         destructive:
           "sdk:bg-destructive sdk:text-destructive-foreground sdk:hover:bg-destructive/90",
         outline:
-          "sdk:border sdk:border-input sdk:bg-background sdk:hover:bg-accent sdk:hover:text-accent-foreground",
+          "sdk:border sdk:border-[var(--sdk-color-input)] sdk:text-[var(--sdk-primary-foreground-text)] sdk:bg-[var(--bg-background)] sdk:hover:bg-[var(--sdk-bg-accent)] sdk:hover:text-[var(--sdk-primary-foreground-text)] sdk:disabled:opacity-50 sdk:disabled:cursor-not-allowed",
         secondary:
           "sdk:bg-secondary sdk:text-secondary-foreground sdk:hover:bg-secondary/80",
         ghost: "sdk:hover:bg-accent sdk:hover:text-accent-foreground",

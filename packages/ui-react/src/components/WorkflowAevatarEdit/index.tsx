@@ -264,11 +264,13 @@ export default function WorkflowAevatarEdit({
     <TooltipProvider delayDuration={0}>
       <div
         className="sdk:px-[8px] sdk:sm:px-[8px] sdk:overflow-auto sdk:flex-1"
-        key={nodeId}
-      >
+        key={nodeId}>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className={clsx("sdk:bg-[#141415] sdk:pb-[60px]")}>
+            <div
+              className={clsx(
+                "sdk:bg-[var(--sdk-sidebar-background)] sdk:pb-[60px]"
+              )}>
               <div className="sdk:flex sdk:flex-col sdk:gap-y-[16px]  sdk:items-start sdk:content-start sdk:self-stretch">
                 <FormField
                   key={"agentName"}
@@ -286,8 +288,7 @@ export default function WorkflowAevatarEdit({
                     <FormItem aria-labelledby="agentNameLabel">
                       <FormLabel
                         id="agentNameLabel"
-                        className="sdk:flex sdk:gap-[4px]"
-                      >
+                        className="sdk:flex sdk:gap-[4px]">
                         <span>agent name</span>
                         <TooltipDescriptor type="agentName" />
                       </FormLabel>
@@ -299,7 +300,9 @@ export default function WorkflowAevatarEdit({
                           value={field?.value}
                           onChange={field?.onChange}
                           className={clsx(
-                            field?.disabled && "sdk:bg-[#303030]"
+                            "sdk:bg-[var(--sdk-bg-background)]",
+                            field?.disabled &&
+                              "sdk:bg-[var(--sdk-bg-black-light)]"
                           )}
                         />
                       </FormControl>
@@ -316,8 +319,7 @@ export default function WorkflowAevatarEdit({
                     <FormItem aria-labelledby="agentTypeLabel">
                       <FormLabel
                         id="agentTypeLabel"
-                        className="sdk:flex sdk:gap-[4px]"
-                      >
+                        className="sdk:flex sdk:gap-[4px]">
                         <span>agent Type</span>
                         <TooltipDescriptor type="agentType" />
                       </FormLabel>
@@ -326,9 +328,10 @@ export default function WorkflowAevatarEdit({
                           <SelectTrigger
                             aria-disabled={field?.disabled}
                             className={clsx(
-                              field?.disabled && "sdk:bg-[#303030]"
-                            )}
-                          >
+                              "sdk:bg-[var(--sdk-bg-background)]",
+                              field?.disabled &&
+                                "sdk:bg-[var(--sdk-bg-black-light)]"
+                            )}>
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>
                         </FormControl>
@@ -372,12 +375,11 @@ const getModelMetadata = (data, model) => {
 const ModelTooltipContent = ({ model, metadata }) => (
   <TooltipContent
     className={clsx(
-      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left sdk:z-[999999999]"
     )}
     side="left"
-    sideOffset={10}
-  >
+    sideOffset={10}>
     <div className="sdk:font-semibold">{model}</div>
     <div>
       <span>Provider: </span>
@@ -431,15 +433,14 @@ export const ModelSelect = ({ field, form, data, names, onChange }) => {
       onValueChange={(value) => {
         setSelectedModel(value);
         onChange?.(value, field);
-      }}
-    >
+      }}>
       <FormControl>
         <SelectTrigger>
           <SelectValue placeholder="Select a model" />
         </SelectTrigger>
       </FormControl>
       <SelectContent className="sdk:min-w-[350px]">
-        <div className="sdk:flex sdk:flex-row sdk:gap-[4px] sdk:border-b sdk:border-[#6F6F6F80] sdk:border-solid">
+        <div className="sdk:flex sdk:flex-row sdk:gap-[4px] sdk:border-b sdk:border-[var(--sdk-muted-foreground)80] sdk:border-solid">
           <SearchBar
             key="search-input-model"
             placeholder="search"

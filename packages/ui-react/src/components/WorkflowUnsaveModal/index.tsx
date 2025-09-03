@@ -21,14 +21,14 @@ export default function WorkflowUnsaveModal({
       <DialogContent
         onClick={(e) => e.stopPropagation()}
         aria-describedby="delete g-agent"
-        className="sdk:w-[328px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-[6px] sdk:border sdk:border-[#303030]">
+        className="sdk:w-[328px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-[6px] sdk:border sdk:border-[var(--sdk-bg-black-light)]">
         <div className="sdk:flex sdk:items-center sdk:justify-between">
           <div />
           <Close onClick={() => onOpenChange?.(false)} />
         </div>
         <div className="sdk:flex sdk:flex-col sdk:items-center sdk:gap-[16px] sdk:pt-[10px]">
           <Unsaved />
-          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:leading-normal sdk:lowercase sdk:text-white">
+          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:leading-normal sdk:lowercase sdk:text-[var(--sdk-color-text-primary)]">
             <div className="sdk:font-semibold sdk:leading-[22px] sdk:pb-[10px]">
               Unsaved Changes
             </div>
@@ -40,7 +40,8 @@ export default function WorkflowUnsaveModal({
         </div>
         <div className="sdk:flex sdk:justify-between sdk:items-start sdk:self-stretch  sdk:gap-[14px] sdk:pt-[28px] sdk:gap-[14px]">
           <Button
-            className="sdk:text-[12px]  sdk:px-[5px] sdk:py-[7px] sdk:leading-[14px] sdk:font-semibold sdk:text-[#fff] sdk:flex-1 sdk:lowercase"
+          variant="outline"
+            className="sdk:text-[12px]  sdk:px-[5px] sdk:py-[7px] sdk:leading-[14px] sdk:font-semibold sdk:flex-1 sdk:lowercase"
             onClick={() => {
               onOpenChange(false);
               onSaveHandler(false);
@@ -48,7 +49,8 @@ export default function WorkflowUnsaveModal({
             Close without saving
           </Button>
           <Button
-            className="sdk:text-[12px] sdk:bg-white sdk:text-[#303030] sdk:py-[7px] sdk:leading-[14px] sdk:font-semibold sdk:flex-1 sdk:lowercase"
+            variant="primary"
+            className="sdk:text-[12px]  sdk:py-[7px] sdk:leading-[14px] sdk:font-semibold sdk:flex-1 sdk:lowercase"
             onClick={(e) => {
               e.stopPropagation();
               onOpenChange?.(false);

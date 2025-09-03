@@ -16,13 +16,13 @@ export default function AevatarCard({
 }: IAevatarCardProps) {
   return (
     <div className="sdk:w-[234px] ">
-      <div className="sdk:bg-[#141415] sdk:h-[288px] sdk:overflow-auto">
+      <div className="sdk:bg-[var(--sdk-bg-accent)] sdk:h-[288px] sdk:overflow-auto">
         {loading && <CardLoading />}
         {!loading && (
           <AevatarCardInner {...agentInfo} onEditGaevatar={onEditGaevatar} />
         )}
       </div>
-      <div className="sdk:h-[14px] sdk:bg-[#141415] aevatarai-trapezoid-clip" />
+      <div className="sdk:h-[14px] sdk:bg-[var(--sdk-bg-accent)] aevatarai-trapezoid-clip" />
     </div>
   );
 }

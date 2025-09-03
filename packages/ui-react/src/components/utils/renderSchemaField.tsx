@@ -104,13 +104,16 @@ export const renderSchemaField = ({
               <Select
                 value={enumNamesValue ?? field?.value}
                 disabled={field?.disabled}
-                onValueChange={handleChange}
-              >
+                onValueChange={handleChange}>
                 <FormControl>
                   <SelectTrigger
                     aria-disabled={field?.disabled}
-                    className={field?.disabled ? "sdk:bg-[#303030]" : ""}
-                  >
+                    className={clsx(
+                      "sdk:bg-[var(--sdk-bg-background)]",
+                      field?.disabled
+                        ? "sdk:bg-[var(--sdk-color-border-primary)]"
+                        : ""
+                    )}>
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                 </FormControl>
@@ -283,11 +286,11 @@ export const renderSchemaField = ({
                   <TooltipDescriptor type={labelWithRequired} />
                 </FormLabel>
                 <Button
+                  variant="outline"
                   type="button"
                   disabled={disabled}
-                  className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
-                  onClick={handleAdd}
-                >
+                  className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:lowercase"
+                  onClick={handleAdd}>
                   <AddIcon />
                   <span className="sdk:text-[12px] sdk:leading-[14px]">
                     Add item
@@ -299,15 +302,14 @@ export const renderSchemaField = ({
           // Has items
           return (
             <div className="sdk:w-full sdk:mb-2">
-              <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030] sdk:flex sdk:gap-[4px]">
+              <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:flex sdk:gap-[4px]">
                 <span>{labelWithRequired}</span>
               </FormLabel>
               <div className="sdk:rounded sdk:mb-2">
                 {Object.entries(value).map(([k, v], idx) => (
                   <div
                     key={k}
-                    className="sdk:flex sdk:flex-row sdk:items-end sdk:gap-[10px] sdk:mb-2"
-                  >
+                    className="sdk:flex sdk:flex-row sdk:items-end sdk:gap-[10px] sdk:mb-2">
                     {/* key area: use Input (uncontrolled), onBlur triggers key change, avoids name collision with value area */}
                     <div className="sdk:mr-2 sdk:w-32">
                       <FormItem>
@@ -319,8 +321,9 @@ export const renderSchemaField = ({
                             onBlur={(e) => handleKeyChange(k, e.target.value)}
                             placeholder="key"
                             className={clsx(
-                              "sdk:w-full",
-                              disabled && "sdk:bg-[#303030]"
+                              "sdk:w-full sdk:bg-[var(--sdk-bg-background)]",
+                              disabled &&
+                                "sdk:bg-[var(--sdk-color-border-primary)]"
                             )}
                           />
                         </FormControl>
@@ -340,11 +343,11 @@ export const renderSchemaField = ({
                       })}
                     </div>
                     <Button
+                      variant="outline"
                       type="button"
-                      className="sdk:w-[40px] sdk:h-[40px] sdk:inline-block sdk:border-[#303030] sdk:p-[8px] sdk:px-[10px] sdk:hover:bg-[#303030] sdk:lowercase"
-                      onClick={() => handleDelete(k)}
-                    >
-                      <DeleteIcon className="sdk:text-white" />
+                      className="sdk:w-[40px] sdk:h-[40px] sdk:inline-block sdk:p-[8px] sdk:px-[10px] sdk:lowercase"
+                      onClick={() => handleDelete(k)}>
+                      <DeleteIcon />
                     </Button>
                   </div>
                 ))}
@@ -371,7 +374,7 @@ export const renderSchemaField = ({
               <span>{labelWithRequired}</span>
               <TooltipDescriptor type={labelWithRequired} />
             </FormLabel>
-            <div className="sdk:pl-4  sdk:flex sdk:flex-col sdk:gap-y-[10px] sdk:border-l-2 sdk:border-l-[#303030]">
+            <div className="sdk:pl-4  sdk:flex sdk:flex-col sdk:gap-y-[10px] sdk:border-l-2 sdk:border-l-[var(--sdk-color-border-primary)]">
               {schema.children.map(([childName, childSchema]: [string, any]) =>
                 renderSchemaField({
                   form,
@@ -420,7 +423,9 @@ export const renderSchemaField = ({
                   onChange={handleChange}
                   disabled={field.disabled ?? disabled}
                   className={clsx(
-                    (field.disabled ?? disabled) && "sdk:bg-[#303030]"
+                    "sdk:bg-[var(--sdk-bg-background)]",
+                    (field.disabled ?? disabled) &&
+                      "sdk:bg-[var(--sdk-color-border-primary)]"
                   )}
                 />
               </FormControl>
@@ -508,7 +513,9 @@ export const renderSchemaField = ({
                     onChange={handleInputChange}
                     disabled={field.disabled ?? disabled}
                     className={clsx(
-                      (field.disabled ?? disabled) && "sdk:bg-[#303030]"
+                      "sdk:bg-[var(--sdk-bg-background)]",
+                      (field.disabled ?? disabled) &&
+                        "sdk:bg-[var(--sdk-color-border-primary)]"
                     )}
                   />
                 ) : (
@@ -518,7 +525,9 @@ export const renderSchemaField = ({
                     onChange={handleTextareaChange}
                     disabled={field.disabled ?? disabled}
                     className={clsx(
-                      (field.disabled ?? disabled) && "sdk:bg-[#303030]"
+                      "sdk:bg-[var(--sdk-bg-background)]",
+                      (field.disabled ?? disabled) &&
+                        "sdk:bg-[var(--sdk-color-border-primary)]"
                     )}
                   />
                 )}
@@ -572,7 +581,9 @@ export const renderSchemaField = ({
                   {...field}
                   onChange={handleChange}
                   className={clsx(
-                    (field.disabled ?? disabled) && "sdk:bg-[#303030]"
+                    "sdk:bg-[var(--sdk-bg-background)]",
+                    (field.disabled ?? disabled) &&
+                      "sdk:bg-[var(--sdk-color-border-primary)]"
                   )}
                   disabled={field.disabled ?? disabled}
                 />

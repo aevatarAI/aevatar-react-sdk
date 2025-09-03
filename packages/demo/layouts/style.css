@@ -1,6 +1,6 @@
 .cutCorner {
   position: relative;
-  border: 1px solid #303030;
+  border: 1px solid var(--sdk-color-black-light);
   display: inline-block;
 }
 
@@ -9,20 +9,20 @@
   right: -1px;
   bottom: -1px;
   content: "";
-  border-bottom: 2rem solid #303030;
+  border-bottom: 2rem solid var(--sdk-color-black-light);
   border-left: 2rem solid transparent;
 }
 
 .cutCorner.cutCorner__white {
-  border: 1px solid #b9b9b9;
+  border: 1px solid var(--sdk-muted-foreground);
 }
 
 .cutCorner.cutCorner__white:before {
-  border-bottom: 2rem solid #b9b9b9;
+  border-bottom: 2rem solid var(--sdk-muted-foreground);
 }
 
 * {
-  scrollbar-color: #303030 transparent;
+  scrollbar-color: var(--sdk-color-black-light) transparent;
   scrollbar-width: thin;
 }
 

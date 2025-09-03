@@ -36,16 +36,16 @@ export default function ArrayField({
     return (
       <TooltipProvider delayDuration={0}>
         <div className="sdk:w-full sdk:mb-2">
-          <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030] sdk:flex sdk:gap-[4px]">
+          <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[var(--sdk-bg-black-light)] sdk:flex sdk:gap-[4px]">
             <span> {label ?? name}</span>
             <TooltipDescriptor type={label ?? name} />
           </FormLabel>
           <Button
+            variant="outline"
             type="button"
-            className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
+            className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:lowercase"
             onClick={() => onChange([undefined], "add")}
-            disabled={disabled}
-          >
+            disabled={disabled}>
             <AddIcon />
             <span className="sdk:text-[12px] sdk:leading-[14px]">Add item</span>
           </Button>
@@ -56,7 +56,7 @@ export default function ArrayField({
   if (value.length === 1) {
     return (
       <div className="sdk:w-full sdk:mb-2">
-        <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">
+        <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[var(--sdk-color-border-primary)]">
           {label ?? name}
         </FormLabel>
         <div className="sdk:rounded sdk:mb-2">
@@ -70,18 +70,22 @@ export default function ArrayField({
             )}
             <div className="sdk:flex sdk:flex-row sdk:items-start sdk:gap-[10px] sdk:absolute sdk:right-0 sdk:top-0">
               <Button
+                variant="outline"
                 type="button"
-                className="sdk:w-[24pxpx] sdk:h-[20px] sdk:inline-block sdk:border-[#303030] sdk:p-[3px] sdk:px-[5px] sdk:hover:bg-[#303030] sdk:lowercase"
-                disabled={true || disabled}
-              >
-                <ArrowUp style={{ width: "12px", height: "12px" }} />
+                className="sdk:w-[24pxpx] sdk:h-[20px] sdk:inline-block  sdk:p-[3px] sdk:px-[5px] sdk:lowercase"
+                disabled={true || disabled}>
+                <ArrowUp
+                  className="sdk:text-[var(--sdk-color-text-primary)]"
+                  style={{ width: "12px", height: "12px" }}
+                />
               </Button>
               <Button
+                variant="outline"
                 type="button"
-                className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:border-[#303030] sdk:p-[3px] sdk:px-[5px] sdk:hover:bg-[#303030] sdk:lowercase"
-                disabled={true || disabled}
-              >
+                className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block  sdk:p-[3px] sdk:px-[5px] sdk:lowercase"
+                disabled={true || disabled}>
                 <ArrowUp
+                  className="sdk:text-[var(--sdk-color-text-primary)]"
                   style={{
                     transform: "rotate(180deg)",
                     width: "12px",
@@ -90,13 +94,13 @@ export default function ArrayField({
                 />
               </Button>
               <Button
+                variant="outline"
                 type="button"
-                className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:px-[5px]  sdk:border-[#303030] sdk:p-[3px] sdk:hover:bg-[#303030] sdk:lowercase"
+                className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:px-[5px]  sdk:p-[3px] sdk:lowercase"
                 onClick={() => onChange([], "delete")}
-                disabled={disabled}
-              >
+                disabled={disabled}>
                 <DeleteIcon
-                  className="sdk:mx-auto sdk:text-white"
+                  className="sdk:mx-auto sdk:text-[var(--sdk-color-text-primary)]"
                   style={{ width: "12px", height: "12px" }}
                 />
               </Button>
@@ -105,11 +109,11 @@ export default function ArrayField({
         </div>
         <div className="sdk:flex sdk:gap-2">
           <Button
+            variant="outline"
             type="button"
-            className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
+            className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:lowercase"
             onClick={() => onChange([...value, undefined], "add")}
-            disabled={disabled}
-          >
+            disabled={disabled}>
             <AddIcon />
             <span className="sdk:text-[12px] sdk:leading-[14px]">Add item</span>
           </Button>
@@ -120,7 +124,7 @@ export default function ArrayField({
   if (value.length > 1) {
     return (
       <div className="sdk:w-full sdk:mb-2">
-        <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">
+        <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[var(--sdk-color-border-primary)]">
           {label ?? name}
         </FormLabel>
         <div className="sdk:rounded sdk:mb-2">
@@ -146,8 +150,9 @@ export default function ArrayField({
                   )}
                   <div className="sdk:flex sdk:flex-row sdk:items-start sdk:gap-[10px] sdk:absolute sdk:right-0 sdk:top-0">
                     <Button
+                      variant="outline"
                       type="button"
-                      className="sdk:w-[24pxpx] sdk:h-[20px] sdk:inline-block sdk:border-[#303030] sdk:p-[3px] sdk:px-[5px] sdk:hover:bg-[#303030] sdk:lowercase"
+                      className="sdk:w-[24pxpx] sdk:h-[20px] sdk:inline-block  sdk:p-[3px] sdk:px-[5px] sdk:lowercase"
                       disabled={idx === 0 || disabled}
                       onClick={() => {
                         if (idx === 0 || disabled) return;
@@ -159,13 +164,16 @@ export default function ArrayField({
                           newArr[idx - 1],
                         ];
                         onChange(newArr, "move");
-                      }}
-                    >
-                      <ArrowUp style={{ width: "12px", height: "12px" }} />
+                      }}>
+                      <ArrowUp
+                        className="sdk:text-[var(--sdk-color-text-primary)]"
+                        style={{ width: "12px", height: "12px" }}
+                      />
                     </Button>
                     <Button
+                      variant="outline"
                       type="button"
-                      className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:border-[#303030] sdk:p-[3px] sdk:px-[5px] sdk:hover:bg-[#303030] sdk:lowercase"
+                      className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:p-[3px] sdk:px-[5px] sdk:lowercase"
                       disabled={idx === value.length - 1 || disabled}
                       onClick={() => {
                         if (idx === value.length - 1 || disabled) return;
@@ -177,9 +185,9 @@ export default function ArrayField({
                           newArr[idx],
                         ];
                         onChange(newArr, "move");
-                      }}
-                    >
+                      }}>
                       <ArrowUp
+                        className="sdk:text-[var(--sdk-color-text-primary)]"
                         style={{
                           transform: "rotate(180deg)",
                           width: "12px",
@@ -188,18 +196,18 @@ export default function ArrayField({
                       />
                     </Button>
                     <Button
+                      variant="outline"
                       type="button"
-                      className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:px-[5px]  sdk:border-[#303030] sdk:p-[3px] sdk:hover:bg-[#303030] sdk:lowercase"
+                      className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:px-[5px]  sdk:p-[3px] sdk:lowercase"
                       onClick={() =>
                         onChange(
                           value.filter((_, i) => i !== idx),
                           "delete"
                         )
                       }
-                      disabled={disabled}
-                    >
+                      disabled={disabled}>
                       <DeleteIcon
-                        className="sdk:mx-auto sdk:text-white"
+                        className="sdk:mx-auto sdk:text-[var(--sdk-color-text-primary)]"
                         style={{ width: "12px", height: "12px" }}
                       />
                     </Button>
@@ -210,11 +218,11 @@ export default function ArrayField({
           })}
         </div>
         <Button
+          variant="outline"
           type="button"
-          className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:text-[#fff] sdk:hover:text-[#303030] sdk:lowercase"
+          className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:lowercase"
           onClick={() => onChange([...value, undefined], "add")}
-          disabled={disabled}
-        >
+          disabled={disabled}>
           <AddIcon />
           <span className="sdk:text-[12px] sdk:leading-[14px]">Add item</span>
         </Button>

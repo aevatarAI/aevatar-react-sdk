@@ -23,7 +23,7 @@ const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={cn(
-      "sdk:[&_tr]:border-b sdk:[&_tr]:border-b-[#303030] sdk:text-gray-light sdk:text-xs sdk:font-bold sdk:font-syne",
+      "sdk:[&_tr]:border-b sdk:[&_tr]:border-b-[var(--sdk-color-border-primary)] sdk:text-[var(--sdk-muted-foreground)] sdk:text-xs sdk:font-bold sdk:font-syne",
       className,
     )}
     {...props}
@@ -65,7 +65,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "sdk:transition-colors sdk:hover:bg-muted/50 sdk:border-black-light sdk:data-[state=selected]:bg-muted sdk:text-white sdk:text-sm sdk:font-medium sdk:font-pro",
+      "sdk:transition-colors sdk:hover:bg-muted/50 sdk:border-[var(--sdk-color-border-black-light)] sdk:data-[state=selected]:bg-muted sdk:text-[var(--sdk-color-text-primary)] sdk:text-sm sdk:font-medium sdk:font-pro",
       className,
     )}
     {...props}
@@ -80,7 +80,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "sdk:font-outfit sdk:text-[13px] sdk:font-semibold sdk:pb-[20px] sdk:leading-normal sdk:lowercase sdk:text-gray-deep sdk:text-left sdk:align-middle sdk:font-semibold sdk:text-muted-foreground sdk:[&:has([role=checkbox])]:pr-0",
+      "sdk:font-outfit sdk:text-[13px] sdk:font-semibold sdk:pb-[20px] sdk:leading-normal sdk:lowercase sdk:text-[var(--sdk-color-border-primary)] sdk:text-left sdk:align-middle sdk:font-semibold sdk:text-[var(--sdk-muted-foreground)] sdk:[&:has([role=checkbox])]:pr-0",
       className,
     )}
     {...props}
@@ -109,7 +109,7 @@ const TableCaption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={cn("sdk:mt-4 sdk:text-sm sdk:text-muted-foreground", className)}
+    className={cn("sdk:mt-4 sdk:text-sm sdk:text-[var(--sdk-muted-foreground)]", className)}
     {...props}
   />
 ));

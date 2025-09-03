@@ -73,7 +73,7 @@ export default function EditWorkflowNameDialog({
             "sdk:inline-flex sdk:justify-center sdk:items-center sdk:gap-2 sdk:cursor-pointer",
             className
           )}>
-          <div className="sdk:flex sdk:justify-center sdk:text-[#B9B9B9] sdk:text-[13px] sdk:font-normal sdk:font-outfit">
+          <div className="sdk:flex sdk:justify-center sdk:text-[var(--sdk-color-text-primary)] sdk:text-[13px] sdk:font-normal sdk:font-outfit">
             {defaultName}
           </div>
           <Edit />
@@ -81,9 +81,9 @@ export default function EditWorkflowNameDialog({
       </DialogTrigger>
       <DialogContent
         aria-describedby="rename workflow"
-        className="sdk:w-[328px] sdk:p-5 sdk:flex sdk:flex-col sdk:gap-[28px] sdk:rounded-[6px] sdk:border-[#272728]">
+        className="sdk:w-[328px] sdk:p-5 sdk:flex sdk:flex-col sdk:gap-[28px] sdk:rounded-[6px] sdk:border-[var(--sdk-color-bg-tertiary)]">
         <DialogHeader>
-          <DialogTitle className="sdk:text-left aevatarai-text-gradient-1 sdk:inline  sdk:text-[18px] sdk:font-semibold sdk:leading-normal sdk:lowercase">
+          <DialogTitle className="sdk:text-left sdk:text-[var(--sdk-color-text-primary)] sdk:inline  sdk:text-[18px] sdk:font-semibold sdk:leading-normal sdk:lowercase">
             rename workflow
           </DialogTitle>
         </DialogHeader>
@@ -108,7 +108,8 @@ export default function EditWorkflowNameDialog({
 
               <div className="sdk:flex sdk:justify-between sdk:items-start sdk:self-stretch sdk:pt-[12px]">
                 <Button
-                  className="sdk:text-[12px] sdk:text-white sdk:py-[7px] sdk:leading-[14px]"
+                  variant="outline"
+                  className="sdk:text-[12px] sdk:py-[7px] sdk:leading-[14px]"
                   type="reset"
                   onClick={() => {
                     setOpen(false);
@@ -116,7 +117,8 @@ export default function EditWorkflowNameDialog({
                   cancel
                 </Button>
                 <Button
-                  className="sdk:text-[12px] sdk:bg-white sdk:text-black sdk:py-[7px] sdk:leading-[14px]"
+                  variant="primary"
+                  className="sdk:text-[12px] sdk:py-[7px] sdk:leading-[14px]"
                   type="submit">
                   {btnLoading && (
                     <Loading

@@ -50,29 +50,27 @@ export const WorkflowGenerationModal = ({
       <DialogContent
         onClick={(e) => e.stopPropagation()}
         aria-describedby="ai generate workflow"
-        className="sdk:bg-[#171717] sdk:min-w-[635px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-md sdk:border sdk:border-[#303030]"
-      >
+        className="sdk:bg-[var(--sdk-color-dialog-dark)] sdk:min-w-[635px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-md sdk:border sdk:border-[var(--sdk-bg-black-light)]">
         <div className="sdk:flex sdk:flex-col sdk:gap-[28px]">
           <div className="sdk:flex sdk:justify-between">
-            <span className="sdk:font-outfit sdk:font-semibold sdk:text-[18px] sdk:bg-gradient-to-r sdk:from-white sdk:to-[#999] sdk:bg-clip-text sdk:text-transparent sdk:lowercase">
+            <span className="sdk:font-outfit sdk:font-semibold sdk:text-[18px] sdk:text-[var(--sdk-color-text-primary)]">
               generate workflow with ai
             </span>
             <button
               className="sdk:cursor-pointer"
               type="button"
-              onClick={handleClose}
-            >
+              onClick={handleClose}>
               <Close />
             </button>
           </div>
 
           <div className="sdk:flex sdk:flex-col sdk:gap-2">
-            <div className="sdk:font-outfit sdk:font-semibold sdk:text-[14px] sdk:text-[#B9B9B9]">
+            <div className="sdk:font-outfit sdk:font-semibold sdk:text-[14px] sdk:text-[var(--sdk-muted-foreground)]">
               prompt
             </div>
             <Textarea
               autoFocus
-              className="sdk:text-[13px] sdk:bg-[#171717] sdk:min-w-[595px] sdk:min-h-[120px]"
+              className="sdk:text-[13px] sdk:bg-[var(--sdk-color-dialog-dark)] sdk:min-w-[595px] sdk:min-h-[120px]"
               placeholder="please describe what kind of agent workflow you want to create"
               onChange={handleChange}
               disabled={isLoading}
@@ -81,25 +79,24 @@ export const WorkflowGenerationModal = ({
 
           <div className="sdk:flex sdk:flex-row sdk:justify-between">
             <Button
+              variant="outline"
               type="button"
               onClick={handleClose}
               disabled={isLoading}
-              className={clsx("hover-skip", "sdk:text-white")}
-            >
+              className={clsx("hover-skip")}>
               <span className="sdk:font-semibold sdk:text-[12px] sdk:cursor-pointer">
                 skip
               </span>
             </Button>
             <Button
+              variant="primary"
               type="button"
               className={clsx(
                 "sdk:min-w-[114px]",
-                "sdk:text-white",
-                isLoading && "sdk:bg-[#ffffff]"
+                isLoading && "sdk:bg-[var(--sdk-color-bg-primary)]"
               )}
               disabled={!inputPrompt || isLoading}
-              onClick={handleClick}
-            >
+              onClick={handleClick}>
               {isLoading ? (
                 <Loading
                   key="generate"

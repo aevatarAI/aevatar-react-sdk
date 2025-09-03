@@ -30,7 +30,7 @@ interface WorkflowListInnerProps {
 }
 
 const actionItemCls =
-  "sdk:font-normal sdk:text-[14px] sdk:leading-[18px] sdk:text-white sdk:font-outfit sdk:normal-case";
+  "sdk:font-normal sdk:text-[14px] sdk:leading-[18px] sdk:text-[var(--sdk-color-text-primary)] sdk:hover:text-[var(--sdk-primary-foreground-text)] sdk:font-outfit sdk:normal-case";
 
 export const emptyNode = (
   <div className="sdk:flex sdk:flex-col sdk:gap-4 sdk:items-center sdk:justify-center sdk:h-[394px] sdk:text-center sdk:w-full">
@@ -38,7 +38,7 @@ export const emptyNode = (
       <NoWorkflows />
     </div>
     <div
-      className="sdk:flex sdk:flex-col sdk:font-sourcecodepro sdk:font-normal sdk:justify-center sdk:leading-[0] sdk:lowercase sdk:min-w-full sdk:relative sdk:shrink-0 sdk:text-[#b9b9b9] sdk:text-[12px] sdk:text-center"
+      className="sdk:flex sdk:flex-col sdk:font-sourcecodepro sdk:font-normal sdk:justify-center sdk:leading-[0] sdk:lowercase sdk:min-w-full sdk:relative sdk:shrink-0 sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:text-center"
       style={{ width: "min-content" }}>
       <p className="sdk:block sdk:leading-normal">No workflows created yet</p>
     </div>
@@ -69,7 +69,7 @@ export default function WorkflowListInner({
         name: (
           // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
           <div
-            className="sdk:text-[14px] sdk:pl-[15px] sdk:font-outfit sdk:font-semibold sdk:hover:underline sdk:hover:decoration-[#fff] sdk:cursor-pointer"
+            className="sdk:text-[14px] sdk:pl-[15px] sdk:font-outfit sdk:font-semibold sdk:hover:underline sdk:hover:decoration-[var(--sdk-color-text-primary)] sdk:cursor-pointer"
             onClick={() => onEditWorkflow?.(item.id)}>
             {item?.name ?? "-"}
           </div>
@@ -90,24 +90,21 @@ export default function WorkflowListInner({
               }}>
               <SelectTrigger
                 className={clsx(
-                  "sdk:normal-case sdk:gap-[5px] sdk:w-[106px] sdk:cursor-pointer sdk:bg-white sdk:text-[#000]",
+                  "sdk:normal-case sdk:gap-[5px] sdk:w-[106px] sdk:cursor-pointer sdk:bg-[var(--sdk-bg-primary)] sdk:text-[var(--sdk-primary-foreground)] sdk:hover:bg-[var(--sdk-hover-primary)]",
                   "sdk:border-none sdk:px-[18px]",
                   "sdk:leading-[15px]",
                   "sdk:min-h-[30px]"
                 )}
                 downIcon={<DownIcon />}>
-                <span className="sdk:flex sdk:items-center sdk:gap-[5px] sdk:text-[#303030]">
-                  <Setting
-                    role="img"
-                    className="sdk:text-[#303030] sdk:w-[14px] sdk:h-[14px]"
-                  />
+                <span className="sdk:flex sdk:items-center sdk:gap-[5px] ">
+                  <Setting role="img" className=" sdk:w-[14px] sdk:h-[14px]" />
                   actions
                 </span>
               </SelectTrigger>
               <SelectContent
                 align="end"
                 className="sdk:md:w-[200px] sdk:w-[192px] sdk:left-0 sdk:-top-[4px] sdk:p-0 sdk:md:p-0 sdk:bg-transparent">
-                <div className="sdk:p-[8px_8px_4px_10px] sdk:md:p-[8px_8px_4px_10px] sdk:bg-[#141415]">
+                <div className="sdk:p-[8px_8px_4px_10px] sdk:md:p-[8px_8px_4px_10px] sdk:bg-[var(--sdk-color-bg-primary)]">
                   <SelectItem
                     className={clsx(
                       actionItemCls,
@@ -127,21 +124,12 @@ export default function WorkflowListInner({
                   <SelectItem
                     className={clsx(
                       actionItemCls,
-                      "sdk:text-[#FF2E2E] sdk:hover:text-[#FF2E2E]",
+                      "sdk:text-[var(--sdk-warning-color)] sdk:hover:text-[var(--sdk-warning-color)]",
                       "aevatar-workflow-action-select-delete"
                     )}
                     value={ActionType.DeleteWorkflow}>
                     delete
                   </SelectItem>
-                </div>
-
-                <div className="sdk:h-[14px] sdk:relative sdk:flex ">
-                  <div className={clsx(" sdk:bg-[#141415] sdk:flex-1")} />
-                  <Hypotenuse
-                    className={clsx(
-                      "sdk:w-[17px] sdk:h-[14px] sdk:text-[#141415]"
-                    )}
-                  />
                 </div>
               </SelectContent>
             </Select>
@@ -154,7 +142,7 @@ export default function WorkflowListInner({
   return (
     <div
       className={clsx(
-        "sdk:flex sdk:flex-col sdk:gap-[30px] sdk:items-start sdk:w-full sdk:box-border sdk:bg-[#000] sdk:h-full sdk:overflow-y-auto",
+        "sdk:flex sdk:flex-col sdk:gap-[30px] sdk:items-start sdk:w-full sdk:box-border sdk:bg-[var(--sdk-bg-background)] sdk:h-full sdk:overflow-y-auto",
         className
       )}
       id="node-6202_82359">
@@ -162,14 +150,15 @@ export default function WorkflowListInner({
         className="sdk:flex sdk:flex-row sdk:items-center sdk:w-full sdk:justify-between sdk:box-border"
         id="node-6202_82360">
         <div
-          className="sdk:font-outfit sdk:font-semibold sdk:text-[18px] sdk:bg-gradient-to-r sdk:from-white sdk:to-[#999] sdk:bg-clip-text sdk:text-transparent sdk:lowercase"
+          className="sdk:font-outfit sdk:font-semibold sdk:text-[18px]"
           id="node-6202_82361"
           style={{ WebkitTextFillColor: "transparent" }}>
           <p>Workflows</p>
         </div>
         <div>
           <Button
-            className="sdk:text-white sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:hover:text-black sdk:cursor-pointer"
+            variant="primary"
+            className="sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:cursor-pointer"
             onClick={onNewWorkflow}>
             <AddIcon style={{ width: 14, height: 14 }} />
             new workflow

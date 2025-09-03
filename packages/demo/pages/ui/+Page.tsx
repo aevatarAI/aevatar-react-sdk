@@ -9,8 +9,9 @@ import {
   ConfigProvider,
   WorkflowList,
   FullScreenIcon,
+  type Theme,
 } from "@aevatar-react-sdk/ui-react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { clientOnly } from "vike-react/clientOnly";
 import { sleep } from "@aevatar-react-sdk/utils";
@@ -30,7 +31,7 @@ ConfigProvider.setConfig({
     timeout: 15000,
     baseURL:
       // "https://station-developer-dev-staging.aevatar.ai/testproject-client",
-      "https://station-developer-dev-staging.aevatar.ai/testproject9-client",
+      "https://station-developer-dev-staging.aevatar.ai/defaultproject45ac9a-client",
   },
 });
 
@@ -45,6 +46,7 @@ enum Stage {
 
 export default function UI() {
   const [stage, setStage] = useState<Stage>();
+  const [theme, setTheme] = useState<Theme>();
   const [gaevatarList, setGaevatarList] = useState<IAgentInfoDetail[]>();
   const onNewGAevatar = useCallback(() => {
     setStage(Stage.newGAevatar);
@@ -117,13 +119,20 @@ export default function UI() {
 
   const getTokenByclient = useCallback(async () => {
     const TOKEN =
-      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjUwRjA2OTE5QzIzMUFFQUUxNDZEMzI0ODcyNTU3OEVCNjEyODU2NzUiLCJ4NXQiOiJVUEJwR2NJeHJxNFViVEpJY2xWNDYyRW9WblUiLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtc3RhdGlvbi1kZXYtc3RhZ2luZy5hZXZhdGFyLmFpLyIsImV4cCI6MTc1NjI0MDIxOSwiaWF0IjoxNzU2MDY3NDIwLCJhdWQiOiJBZXZhdGFyIiwic2NvcGUiOiJBZXZhdGFyIG9mZmxpbmVfYWNjZXNzIiwianRpIjoiYTQ2YTYxZjItMTE2MS00MDllLWJjMjUtZTM5YWMxODc1ZDBiIiwic3ViIjoiZjA4Mzk2NGItMmQ0OS00YzM5LWIyN2EtZGJjMmMxN2M3OTM2IiwicHJlZmVycmVkX3VzZXJuYW1lIjoiY2pocm95OThAZ21haWwuY29tQGdvb2dsZSIsImVtYWlsIjoiMjNhYTFiNTUyMmNlNDE5Y2I0ZjZiYjFmOTMwMDlkMjBAQUJQLklPIiwicm9sZSI6WyJiYXNpY1VzZXIiLCIzYTE1NGI2NC1lYjRhLWMyM2YtY2QwMy0zYTFiMWE3YWNhOWRfT3duZXIiXSwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjoiRmFsc2UiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwidW5pcXVlX25hbWUiOiJjamhyb3k5OEBnbWFpbC5jb21AZ29vZ2xlIiwic2VjdXJpdHlfc3RhbXAiOiJPRUFJWk9GRU0yQ0NURFlXVjRWR1hTSDRDWlRUMk5WUSIsImlzX25ld191c2VyIjpmYWxzZSwib2lfcHJzdCI6IkFldmF0YXJBdXRoU2VydmVyIiwib2lfYXVfaWQiOiI2ZGNiMWRjMi03MTNhLThkZGEtNjA5Zi0zYTFiZWZmMzMxYWEiLCJjbGllbnRfaWQiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX3Rrbl9pZCI6ImQyZDA0NDc3LTc5YmMtNGJjNy1jZmI3LTNhMWJlZmYzMzFiNCJ9.eBi0d9VWM6eDReCkEt6_15YehX0a2ZL7hE36-G4MlofpHN1WfEF6WlL4HaVkmetHOPrnWE7RcB-dp-k6CiyAC4Y17gi32xYfy7iXPk6TDltEwKSx-eoFm9JJMtzZzSp-rJiWNMUWv8eUbmR2dIdE52UIgPBje_JbWztXjIXPBPGEv8nIdsCMOgAuWDq6-AAI5F1D7TVrWmPx5tgV4A38KgT2fXLf1sNLr6hifiSKFWlsLtov9xytWe3mpWDMkjIqleSIeY6G3L527rD3zd4TEJDc6s3zGy__ZjqCBJOjjeXQJQKrQ1RejiXfB_AXDfTtnViUAbsKB5XmrF3eaGKNYA";
+      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjUwRjA2OTE5QzIzMUFFQUUxNDZEMzI0ODcyNTU3OEVCNjEyODU2NzUiLCJ4NXQiOiJVUEJwR2NJeHJxNFViVEpJY2xWNDYyRW9WblUiLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtc3RhdGlvbi1kZXYtc3RhZ2luZy5hZXZhdGFyLmFpLyIsImV4cCI6MTc1Njk3Mjg5NiwiaWF0IjoxNzU2ODAwMDk3LCJhdWQiOiJBZXZhdGFyIiwic2NvcGUiOiJBZXZhdGFyIG9mZmxpbmVfYWNjZXNzIiwianRpIjoiNzlhOTVmYWQtZDI1OS00Yjk1LWJmMWYtMWE2Nzg2YzA1NDFiIiwic3ViIjoiODcwNzc1ODMtMTExZC1mOWUzLWZiNTgtM2ExYzFiOWNmNzg4IiwicHJlZmVycmVkX3VzZXJuYW1lIjoidG5jdnZ2cHA3ZyIsImVtYWlsIjoidG5jdnZ2cHA3Z0ByYWdkb2xsaGl0Lm1lIiwicm9sZSI6WyJiYXNpY1VzZXIiLCI2NWMyMjQwOS1kMDA1LTkzNjItMWM0Ny0zYTFjMWI5ZDBlYzhfT3duZXIiXSwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjoiRmFsc2UiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwidW5pcXVlX25hbWUiOiJ0bmN2dnZwcDdnIiwic2VjdXJpdHlfc3RhbXAiOiJVSUpRV0lGVFVTU0pTTlVEVzZUVEFZSFpXTUNLQ0czRCIsIm9pX3Byc3QiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX2F1X2lkIjoiZTMxYWQzMDctZTJlNi1mMTYwLTk5Y2MtM2ExYzFiOWNmYTU4IiwiY2xpZW50X2lkIjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV90a25faWQiOiI4NWExYjM1Yi02NjhkLTMxMGMtNDgwYi0zYTFjMWI5ZWY1MTUifQ.XN2oyWHIB97YpQDqNAfpLN21dbf5NeHAPGsZT_lnNmNVdaOhOAzrqjMkcuyPkjhvmlA1jtge-_szsrkiLyWYmkcF0sI5vg2cyTzUmyOGO2xMP9Dam4158pKlYDz11wJBplRbyTv3uEMzDSCwJv11Amp3Qc4w7SHclFuSdy60OqekUfoabSS5ZwDriQ8KttikEg0MxRR7ZAy2kOYNc8m8wTF1hDIs6rHM5Zqr2otAurX5froxHeMc0rVHAGt1jkj3qpM0u8I6FL7Jyv3IEOxtxgA7V4u5lqDW28KeHu6UVL5HeTRV_uU7eFaGoz_yuux8rg31K_Le9StHmM_sPX0O7w";
     aevatarAI.fetchRequest.setHeaders({
       Authorization: TOKEN,
     });
 
     setShowAction(true);
+    return TOKEN;
   }, []);
+
+  useEffect(() => {
+    ConfigProvider.setConfig({
+      getAevatarAuthToken: getTokenByclient,
+    });
+  }, [getTokenByclient]);
 
   const fullscreenHandle = useFullScreenHandle();
   const workflowListRef = useRef<IWorkflowListRef>(null);
@@ -142,49 +151,47 @@ export default function UI() {
 
   return (
     <div className="min-w-[375px]">
-      <AevatarProvider>
+      <AevatarProvider theme={theme}>
         <LoginButton />
 
         <AuthButton onFinish={onAuthFinish} />
         <div className="h-[10px]" />
-
+        <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+          change {theme} to {theme === "dark" ? "light" : "dark"}
+        </Button>
         <Button onClick={getTokenByclient}>getTokenByclient</Button>
         <Button onClick={onShowGaevatar}>show gaevatar</Button>
+
         <Button
           onClick={() => {
             setEditWorkflow(undefined);
             onShowWorkflow();
-          }}
-        >
+          }}>
           show workflow
         </Button>
         <Button
           onClick={() => {
             onEditWorkflow(localStorage.getItem("workflowAgentId") ?? "");
-          }}
-        >
+          }}>
           edit workflow
         </Button>
         <div className="h-[10px]" />
         <Button
           onClick={() => {
             setStage(Stage.WorkflowList);
-          }}
-        >
+          }}>
           show workflowList
         </Button>
         <Button
           onClick={() => {
             workflowListRef.current?.refresh();
-          }}
-        >
+          }}>
           refresh workflowList
         </Button>
         <Button
           onClick={() => {
             setStage(Stage.ExecutionList);
-          }}
-        >
+          }}>
           show executions
         </Button>
 
@@ -230,18 +237,19 @@ export default function UI() {
                 gaevatarTypeList: agentTypeList,
               }}
               extraControlBar={
-                <div className="w-full h-full bg-[#141415] flex flow-row border-[1px] border-[#303030]">
+                <div className="w-full h-full bg-[var(--sdk-workflow-menu-bg)] flex flow-row border-[1px] border-[var(--sdk-border-color)]">
                   {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
                   <div
                     className={`p-[4px] w-[26px] h-[26px] flex justify-center items-center cursor-pointer ${
-                      fullscreenHandle.active ? "bg-[#AFC6DD]" : ""
+                      fullscreenHandle.active
+                        ? "bg-[var(--sdk-color-highlight-blue)]"
+                        : ""
                     }`}
                     onClick={() => {
                       fullscreenHandle.active
                         ? fullscreenHandle.exit()
                         : fullscreenHandle.enter();
-                    }}
-                  >
+                    }}>
                     <FullScreenIcon
                       style={{
                         width: 16,
@@ -249,8 +257,8 @@ export default function UI() {
                       }}
                       className={
                         fullscreenHandle.active
-                          ? "text-[#606060]"
-                          : "text-[#B9B9B9]"
+                          ? "text-[var(--sdk-color-text-primary)]"
+                          : "text-[var(--sdk-color-text-primary)]"
                       }
                     />
                   </div>

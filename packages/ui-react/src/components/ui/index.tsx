@@ -12,3 +12,5 @@ export * from "./calendar";
 export * from "./popover";
 export * from "./sheet";
 export { default as SearchBar } from "./SearchBar";
+export { default as ThemedSVG } from "./ThemedSVG";
+export { default as HypotenuseIcon } from "./HypotenuseIcon";

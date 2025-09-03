@@ -1,7 +1,7 @@
 @import "tailwindcss/theme.css" layer(theme) prefix(sdk);
 
 .sdk\:aevatar-item-background {
-  @apply sdk:bg-[var(--sdk-card-background)];
+  @apply sdk:bg-[var(--sdk-bg-accent)];
 }
 
 .sdk\:cutCorner:before {
@@ -25,12 +25,12 @@
   bottom: -1px;
   content: "";
   border-bottom: 15px solid;
-  border-color: black;
+  border-color: var(--sdk-bg-background);
   border-left: 15px solid transparent;
 }
 
 .sdk\:cutCorner-border-selected:before {
-  border-bottom: 15px solid #afc6dd !important;
+  border-bottom: 15px solid var(--sdk-border-foreground) !important;
 }
 
 /* Hide scrollbars for webkit browsers */

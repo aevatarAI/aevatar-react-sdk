@@ -599,7 +599,7 @@ IWorkflowConfigurationProps) => {
 
   return (
     <>
-      <div className="sdk:h-full sdk:workflow-common flex flex-col sdk:font-outfit">
+      <div className="sdk:h-full sdk:workflow-common flex flex-col sdk:font-outfit sdk:text-[var(--sdk-color-text-primary)]">
         {/* header */}
         <div className=" sdk:relative sdk:w-full sdk:flex sdk:justify-between sdk:items-center sdk:border-b-[1px] sdk:px-[20px] sdk:py-[12px] sdk:sm:px-[16px] sdk:sm:py-[8px] sdk:workflow-common-border">
           <div
@@ -610,6 +610,7 @@ IWorkflowConfigurationProps) => {
             {onBack && (
               <BackArrow
                 role="img"
+                color="currentColor"
                 className="cursor-pointer"
                 onClick={onUnsavedBack}
               />
@@ -643,7 +644,7 @@ IWorkflowConfigurationProps) => {
                 </DialogPortal>
               </Dialog> */}
 
-            <div className="sdk:text-[13px] sdk:text-[#6F6F6F] sdk:font-outfit sdk:font-normal sdk:leading-[16px] sdk:text-lowercase">{`auto-saved ${dayjs(
+            <div className="sdk:text-[13px] sdk:text-[var(--sdk-muted-foreground)] sdk:font-outfit sdk:font-normal sdk:leading-[16px] sdk:text-lowercase">{`auto-saved ${dayjs(
               autoSavedTime
             ).format("HH:mm:ss")}`}</div>
 

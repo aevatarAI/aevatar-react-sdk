@@ -15,7 +15,7 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("p-3 bg-black-light min-w-[560px]", className)}
+      className={cn("p-3 bg-[var(--sdk-color-border-primary)] min-w-[560px]", className)}
       classNames={{
         months:
           "flex flex-col sm:flex-row gap-4 font-outfit font-bold justify-center",
@@ -25,14 +25,14 @@ function Calendar({
         nav: "flex items-center gap-1",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
-          "size-7 bg-transparent p-0 border border-gray-deep border-solid cursor-pointer hover:bg-gray-deep"
+          "size-7 bg-transparent p-0 border border-[var(--sdk-color-border-primary)] border-solid cursor-pointer hover:bg-[var(--sdk-color-border-primary)]"
         ),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
         table: "w-full border-collapse",
         head_row: "flex",
         head_cell:
-          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] lowercase",
+          "text-[var(--sdk-muted-foreground)] rounded-md w-9 font-normal text-[0.8rem] lowercase",
         row: "flex w-full mt-2",
         cell: cn(
           "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-range-end)]:rounded-r-md min-w-[36px] px-0",
@@ -42,7 +42,7 @@ function Calendar({
         ),
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "size-9 p-0 font-normal aria-selected:opacity-100 font-outfit text-[14px] cursor-pointer w-full h-9 hover:bg-gray-deep hover:opacity-80"
+          "size-9 p-0 font-normal aria-selected:opacity-100 font-outfit text-[14px] cursor-pointer w-full h-9 hover:bg-[var(--sdk-color-border-primary)] hover:opacity-80"
         ),
         day_range_start:
           "day-range-start aria-selected:bg-primary aria-selected:text-primary-foreground",
@@ -52,10 +52,10 @@ function Calendar({
           "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
         day_today: "bg-accent text-accent-foreground",
         day_outside:
-          "day-outside text-muted-foreground aria-selected:text-muted-foreground",
-        day_disabled: "text-muted-foreground opacity-50",
+          "day-outside text-[var(--sdk-muted-foreground)] aria-selected:text-[var(--sdk-muted-foreground)]",
+        day_disabled: "text-[var(--sdk-muted-foreground)] opacity-50",
         day_range_middle:
-          "aria-selected:bg-gray-deep aria-selected:text-accent-foreground",
+          "aria-selected:bg-[var(--sdk-color-border-primary)] aria-selected:text-accent-foreground",
         day_hidden: "invisible",
         ...classNames,
       }}
@@ -63,7 +63,7 @@ function Calendar({
         // Use Chevron instead of IconLeft/IconRight
         Chevron: ({ orientation }) => {
           const Icon = orientation === "left" ? ChevronLeft : ChevronRight;
-          return <Icon className="size-4 text-[#B9B9B9]" />;
+          return <Icon className="size-4 text-[var(--sdk-muted-foreground)]" />;
         },
       }}
       {...props}

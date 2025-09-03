@@ -33,7 +33,7 @@ vi.mock("../DeleteWorkflowConfirm", () => ({
     <button 
       data-testid="delete-button" 
       onClick={handleConfirm}
-      className="sdk:cursor-pointer sdk:text-[#FF2E2E] sdk:w-[16px] sdk:h-[16px]"
+      className="sdk:cursor-pointer sdk:text-[var(--sdk-warning-color)] sdk:w-[16px] sdk:h-[16px]"
     >
       Delete
     </button>
