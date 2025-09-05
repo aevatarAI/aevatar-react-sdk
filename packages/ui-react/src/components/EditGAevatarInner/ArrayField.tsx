@@ -38,7 +38,7 @@ export default function ArrayField({
         <div className="sdk:w-full sdk:mb-2">
           <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030] sdk:flex sdk:gap-[4px]">
             <span> {label ?? name}</span>
-            <TooltipDescriptor type={label ?? name} />
+            <TooltipDescriptor type={label ?? name} description={schema?.description} />
           </FormLabel>
           <Button
             type="button"

@@ -108,6 +108,7 @@ interface Agent {
   executionTime: number;
   status: string;
   index: number;
+  failureSummary?: string;
 }
 
 const getStatus = (status: string) => {
@@ -326,6 +327,15 @@ const ExecutionLogBody = ({
               </button>
             </span>
           </div>
+          {activeAgent?.failureSummary && (
+            <div className="sdk:bg-[rgba(255,46,46,0.15)] sdk:border sdk:border-[rgba(255,46,46,0.2)] sdk:px-4 sdk:py-2 sdk:rounded-sm sdk:flex sdk:items-center sdk:gap-2.5 sdk:relative">
+              <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:relative sdk:shrink-0">
+                <p className="sdk:text-[#ff2e2e] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:whitespace-pre sdk:lowercase">
+                  {activeAgent.failureSummary}
+                </p>
+              </div>
+            </div>
+          )}
           <JsonView
             collapseStringsAfterLength={Number.POSITIVE_INFINITY}
             collapsed={false}

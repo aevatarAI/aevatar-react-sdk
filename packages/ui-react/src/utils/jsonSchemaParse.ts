@@ -156,7 +156,7 @@ export function parseJsonSchema(
 export const jsonSchemaParse = (
   jsonSchemaString?: string,
   properties?: Record<string, any>,
-  defaultValues?: Record<string, any[]>
+  defaultValues?: Record<string, any>
 ): [string, any][] => {
   const jsonSchema = JSON.parse(
     (jsonSchemaString === "" ? "{}" : jsonSchemaString) ?? "{}"
@@ -181,7 +181,7 @@ export const jsonSchemaParse = (
 
     const propWithRequired = { ...((prop as any) ?? {}), required: isRequired };
 
-    const value = properties?.[name] ?? defaultValues?.[name]?.[0];
+    const value = properties?.[name] ?? defaultValues?.[name];
 
     return [
       name,
@@ -196,11 +196,11 @@ export const jsonSchemaParse = (
 };
 
 export const getPropertiesByDefaultValues = (
-  defaultValues?: Record<string, any[]>
+  defaultValues?: Record<string, any>
 ) => {
   const properties = {};
   Object.entries(defaultValues ?? {}).forEach(([key, value]) => {
-    properties[key] = value[0];
+    properties[key] = value;
   });
   return properties;
 };

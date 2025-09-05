@@ -17,7 +17,6 @@ import type {
   IWorkflowViewDataParams,
   IFetchExecutionLogsProps,
   IFetchAgentDetailsProps,
-  IGetAIModelsProps,
 } from "../types/workflow";
 
 export class WorkflowService<T extends IBaseRequest = IBaseRequest>
@@ -37,7 +36,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   }
   updateWorkflowViewData(
     id: string,
-    params: IWorkflowViewDataParams,
+    params: IWorkflowViewDataParams
   ): Promise<IAgentInfo> {
     return this._request.send({
       method: "PUT",
@@ -94,7 +93,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   }
 
   getWorkflow<T = any>(
-    query: IGetWorkflowQuery,
+    query: IGetWorkflowQuery
   ): Promise<IGetWorkflowResult<T>> {
     const params = new URLSearchParams();
     params.append("stateName", query.stateName);
@@ -109,13 +108,6 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
     return this._request.send({
       method: "GET",
       url: `/api/query/es?${params.toString()}`,
-    });
-  }
-
-  getAIModels<T = any>(_: IGetAIModelsProps): Promise<T> {
-    return this._request.send({
-      method: "GET",
-      url: "/api/agent/agent-type-info-list",
     });
   }
 

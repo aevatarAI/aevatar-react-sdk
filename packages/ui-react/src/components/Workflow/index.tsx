@@ -47,8 +47,6 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { getPropertiesByDefaultValues } from "../../utils/jsonSchemaParse";
-import { useFetchExecutionLogs } from "./hooks/useFetchExecutionLogs";
-import { sleep } from "@aevatar-react-sdk/utils";
 
 const getId = () => `${uuidv4()}`;
 
@@ -116,12 +114,6 @@ export const Workflow = forwardRef(
     }: IProps,
     ref
   ) => {
-    const { refetch } = useFetchExecutionLogs({
-      stateName: "WorkflowExecutionRecordState",
-      workflowId: editWorkflow?.workflowId,
-      roundId: 1,
-    });
-
     // Add state to track used indexes for each agent type
     const [agentTypeUsedIndexes, setAgentTypeUsedIndexes] = useState<
       Record<string, Set<number>>
@@ -439,26 +431,26 @@ export const Workflow = forwardRef(
       (nodes: INode[], edges: Edge[], newSource: string, newTarget: string) => {
         // Create adjacency list
         const graph: Record<string, string[]> = {};
-        nodes.forEach(node => {
+        nodes.forEach((node) => {
           graph[node.id] = [];
         });
-        
+
         // Add existing edges
-        edges.forEach(edge => {
+        edges.forEach((edge) => {
           if (graph[edge.source]) {
             graph[edge.source].push(edge.target);
           }
         });
-        
+
         // Add the new edge temporarily
         if (graph[newSource]) {
           graph[newSource].push(newTarget);
         }
-        
+
         // DFS to detect cycle
         const visited = new Set<string>();
         const recStack = new Set<string>();
-        
+
         const dfs = (nodeId: string): boolean => {
           if (recStack.has(nodeId)) {
             return true; // Found cycle
@@ -466,21 +458,21 @@ export const Workflow = forwardRef(
           if (visited.has(nodeId)) {
             return false;
           }
-          
+
           visited.add(nodeId);
           recStack.add(nodeId);
-          
+
           const neighbors = graph[nodeId] || [];
           for (const neighbor of neighbors) {
             if (dfs(neighbor)) {
               return true;
             }
           }
-          
+
           recStack.delete(nodeId);
           return false;
         };
-        
+
         // Check all nodes for cycles
         for (const nodeId of Object.keys(graph)) {
           if (!visited.has(nodeId)) {
@@ -489,7 +481,7 @@ export const Workflow = forwardRef(
             }
           }
         }
-        
+
         return false; // No cycle
       },
       []
@@ -509,13 +501,13 @@ export const Workflow = forwardRef(
           ) {
             return eds;
           }
-          
+
           // Check if adding this edge would create a cycle
           if (hasCycle(nodes, eds, params.source, params.target)) {
-            console.warn('Cannot add edge: would create a cycle in workflow');
+            console.warn("Cannot add edge: would create a cycle in workflow");
             return eds;
           }
-          
+
           return addEdge(
             {
               ...params,
@@ -756,7 +748,7 @@ export const Workflow = forwardRef(
                   </TooltipTrigger>
                   <TooltipContent
                     className={clsx(
-                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                      "sdk:z-1000 sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
                     side="top">
@@ -784,7 +776,7 @@ export const Workflow = forwardRef(
                   </TooltipTrigger>
                   <TooltipContent
                     className={clsx(
-                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                      "sdk:z-1000 sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
                     side="top">
@@ -796,8 +788,6 @@ export const Workflow = forwardRef(
               <Button
                 onClick={async () => {
                   onRunningHandler();
-                  await sleep(3000);
-                  await refetch();
                 }}
                 className="sdk:cursor-pointer sdk:py-[7px]  sdk:px-[17px] sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
                 {isRunning ? (

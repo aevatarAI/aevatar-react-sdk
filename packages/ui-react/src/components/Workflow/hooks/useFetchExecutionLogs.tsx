@@ -11,6 +11,8 @@ const transformStatus = (status: number) => {
       return "running";
     case 2:
       return "success";
+    case 3:
+      return "failed";
     default:
       return "failed";
   }
@@ -70,7 +72,7 @@ const fetchExecutionLogs = async (
       const inputData = JSON.parse(record.inputData);
       const outputData = JSON.parse(record.outputData);
       const executionTime = dayjs(record.endTime).diff(dayjs(record.startTime));
-
+      const failureSummary = record?.failureSummary;
       const agentName = agentDetailsData?.[i]?.items?.[0]?.name || "-";
 
       const result = {
@@ -80,6 +82,7 @@ const fetchExecutionLogs = async (
         outputData,
         executionTime,
         agentState,
+        failureSummary,
       };
       results.push(result);
     }

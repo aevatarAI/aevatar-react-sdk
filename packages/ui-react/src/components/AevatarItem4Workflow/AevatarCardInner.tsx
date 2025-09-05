@@ -3,12 +3,10 @@ import SuccessCheck from "../../assets/svg/successCheck.svg?react";
 import Hypotenuse from "../../assets/svg/hypotenuse.svg?react";
 import "./index.css";
 import { useCallback, useMemo } from "react";
-import DeleteWorkflowGAevatar from "../DeleteWorkflowGAevatar";
 import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import type { JSONSchemaType } from "../types";
 import clsx from "clsx";
 import type { TNodeDataClick } from "../Workflow/types";
-import { useGetAgentDetails } from "../Workflow/hooks/useFetchExecutionLogs";
 import HoverMenu from "./HoverMenu";
 export interface IAevatarCardInnerProps {
   className?: string;

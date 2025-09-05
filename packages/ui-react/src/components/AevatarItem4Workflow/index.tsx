@@ -32,6 +32,7 @@ export default function AevatarItem4Workflow({
           border: "1px solid #B9B9B9",
           width: 10,
           height: 10,
+          zIndex: 1,
         }}
       />
       <AevatarCardInner
