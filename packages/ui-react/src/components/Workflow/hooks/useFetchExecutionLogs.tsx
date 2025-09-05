@@ -2,8 +2,16 @@ import { aevatarAI } from "../../../utils";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useState } from "react";
+import { IS_NULL_ID } from "../../../constants";
+import type {
+  ExecutionLogItem,
+  ExecutionLogStatus,
+  FetchExecutionLogsParams,
+  FetchExecutionLogsResponse,
+  AgentState,
+} from "@aevatar-react-sdk/types";
 
-const transformStatus = (status: number) => {
+const transformStatus = (status: number): ExecutionLogStatus => {
   switch (status) {
     case 0:
       return "pending";
@@ -35,9 +43,9 @@ const fetchExecutionLogs = async (
   stateName: string,
   workflowId: string,
   roundId: number
-) => {
-  const results = [];
-
+): Promise<FetchExecutionLogsResponse> => {
+  const results: ExecutionLogItem[] = [];
+  if (!workflowId || workflowId === IS_NULL_ID) return results;
   try {
     const response = await aevatarAI.services.workflow.fetchExecutionLogs({
       stateName,
@@ -52,7 +60,7 @@ const fetchExecutionLogs = async (
     const records = response?.items?.flatMap((d: any) =>
       JSON.parse(d?.workUnitRecords)
     );
-    const agentStates = response?.items?.flatMap((d: any) =>
+    const agentStates: AgentState[] = response?.items?.flatMap((d: any) =>
       JSON.parse(d?.workUnitInfos)
     );
 
@@ -74,8 +82,8 @@ const fetchExecutionLogs = async (
       const executionTime = dayjs(record.endTime).diff(dayjs(record.startTime));
       const failureSummary = record?.failureSummary;
       const agentName = agentDetailsData?.[i]?.items?.[0]?.name || "-";
-
-      const result = {
+      const agentId = agentDetailsData?.[i]?.items?.[0]?.id;
+      const result: ExecutionLogItem = {
         agentName,
         status: transformStatus(record.status),
         inputData,
@@ -83,6 +91,7 @@ const fetchExecutionLogs = async (
         executionTime,
         agentState,
         failureSummary,
+        id: agentId,
       };
       results.push(result);
     }
@@ -94,11 +103,7 @@ const fetchExecutionLogs = async (
   }
 };
 
-interface IFetchExecutionLogsProps {
-  stateName: string;
-  workflowId: string;
-  roundId: number;
-}
+interface IFetchExecutionLogsProps extends FetchExecutionLogsParams {}
 
 export const useFetchExecutionLogs = ({
   stateName,

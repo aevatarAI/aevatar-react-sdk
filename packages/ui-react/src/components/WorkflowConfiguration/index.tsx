@@ -97,7 +97,8 @@ IWorkflowConfigurationProps) => {
     });
   }, [sidebarConfig?.gaevatarList]);
 
-  const [{ selectedAgent: selectAgentInfo }, { dispatch }] = useWorkflow();
+  const [{ selectedAgent: selectAgentInfo, executionLogsData }, { dispatch }] =
+    useWorkflow();
 
   const [newWorkflowState, setNewWorkflowState] =
     useState<IWorkflowConfigurationProps["editWorkflow"]>();
@@ -174,11 +175,19 @@ IWorkflowConfigurationProps) => {
     []
   );
 
-  const { refetch } = useFetchExecutionLogs({
+  const { data: fetchedExecutionLogsData, refetch } = useFetchExecutionLogs({
     stateName: "WorkflowExecutionRecordState",
     workflowId: newWorkflowState?.workflowId || editWorkflow?.workflowId,
     roundId: 1,
   });
+
+  useEffect(() => {
+    if (fetchedExecutionLogsData) {
+      dispatch(
+        basicWorkflow.setExecutionLogsData.actions(fetchedExecutionLogsData)
+      );
+    }
+  }, [fetchedExecutionLogsData, dispatch]);
 
   const getWorkflowViewData = useCallback(() => {
     const workUnitRelations = workflowRef.current.getWorkUnitRelations();
@@ -748,6 +757,7 @@ IWorkflowConfigurationProps) => {
                 }
                 roundId={1}
                 isAgentCardOpen={editAgentOpen}
+                executionLogsData={executionLogsData}
               />
             </div>
             <WorkflowGenerationModal

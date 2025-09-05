@@ -31,6 +31,7 @@ interface IExecutionLogsProps {
   workflowId: string;
   roundId: number;
   isAgentCardOpen: boolean;
+  executionLogsData?: any[];
 }
 
 export const ExecutionLogs = ({
@@ -38,12 +39,15 @@ export const ExecutionLogs = ({
   stateName,
   roundId,
   isAgentCardOpen,
+  executionLogsData,
 }: IExecutionLogsProps) => {
-  const { data, isLoading } = useFetchExecutionLogs({
+  const { data: fetchedData, isLoading } = useFetchExecutionLogs({
     stateName,
     workflowId,
     roundId,
   });
+  
+  const data = executionLogsData || fetchedData;
   const [activeAgent, setActiveAgent] = useState(DEFAULT);
   const [isVisible, setIsVisible] = useState(workflowId);
   const [isMovable, setIsMovable] = useState(false);
