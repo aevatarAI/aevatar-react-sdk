@@ -18,6 +18,7 @@ import type {
   IFetchExecutionLogsProps,
   IFetchAgentDetailsProps,
   IGetAIModelsProps,
+  IFetchAutoCompleteProps,
 } from "../types/workflow";
 
 export class WorkflowService<T extends IBaseRequest = IBaseRequest>
@@ -116,6 +117,14 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
     return this._request.send({
       method: "GET",
       url: "/api/agent/agent-type-info-list",
+    });
+  }
+
+  fetchAutoComplete<T = any>(params: IFetchAutoCompleteProps): Promise<T> {
+    return this._request.send({
+      method: "POST",
+      url: "/api/workflow/text-completion/generate",
+      params,
     });
   }
 

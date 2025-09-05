@@ -143,6 +143,10 @@ export interface IWorkflowViewUpdateDataParams {
   };
 }
 
+export interface IFetchAutoCompleteProps {
+  userGoal: string;
+}
+
 export interface IWorkflowService {
   create(params: ICreateWorkflowParams): Promise<IAgentInfo>;
   simulate(params: ISimulateWorkflowParams): Promise<string>;
@@ -152,6 +156,7 @@ export interface IWorkflowService {
     query: IGetWorkflowQuery,
   ): Promise<IGetWorkflowResult<T>>;
   getAIModels<T = any>(props: IGetAIModelsProps): Promise<T>;
+  fetchAutoComplete<T = any>(props: IFetchAutoCompleteProps): Promise<T>;
   fetchExecutionLogs<T = any>(props: IFetchExecutionLogsProps): Promise<T>;
   fetchAgentDetails<T = any>(props: IFetchAgentDetailsProps): Promise<T>;
   generate<T = any>(props: IGenerateWorkflowProps): Promise<T>;

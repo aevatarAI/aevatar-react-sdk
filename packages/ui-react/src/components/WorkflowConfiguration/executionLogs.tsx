@@ -55,7 +55,6 @@ export const ExecutionLogs = ({
   }, [data]);
 
   const handleClick = () => {
-    console.log("click");
     setIsMovable((prev) => !prev);
   };
 
@@ -177,7 +176,6 @@ const ExecutionLogHeader = ({
         )}
         <span className="sdk:flex">
           <button type="button" onClick={onClick}>
-            {/* <Copy toCopy={JSON.stringify(activeAgent)} icon={<Browsers />} /> */}
             <Browsers />
           </button>
           <button
@@ -432,7 +430,7 @@ const Flex = ({ children }: { children: any }) => {
 
 const EmptyExecutionLog = () => {
   return (
-    <div className="sdk:min-w-[100%] sdk:flex sdk:items-center sdk:justify-center sdk:pt-[72.5px] sdk:pb-[72.5px]">
+    <div className="sdk:overflow-y-hidden sdk:min-w-[100%] sdk:flex sdk:items-center sdk:justify-center sdk:pt-[72.5px] sdk:pb-[72.5px]">
       <div className="sdk:flex sdk:flex-col sdk:gap-4 sdk:items-center">
         <EmptyRun />
         <span className="sdk:text-[#6F6F6F] sdk:text-[13px]">
