@@ -141,6 +141,17 @@ export interface IWorkflowViewUpdateDataParams {
   };
 }
 
+export interface IRunWorkflowParams {
+  viewAgentId: string;
+  eventProperties: any;
+}
+
+export interface IRunWorkflowResponse {
+  isSuccess: boolean;
+  message: string;
+  workflowId: string;
+}
+
 export interface IWorkflowService {
   create(params: ICreateWorkflowParams): Promise<IAgentInfo>;
   simulate(params: ISimulateWorkflowParams): Promise<string>;
@@ -153,6 +164,7 @@ export interface IWorkflowService {
   fetchAgentDetails<T = any>(props: IFetchAgentDetailsProps): Promise<T>;
   generate<T = any>(props: IGenerateWorkflowProps): Promise<T>;
   start<T = any>(params: IStartWorkflowParams): Promise<T>;
+  runWorkflow<T = IRunWorkflowResponse>(params: IRunWorkflowParams): Promise<T>;
   createWorkflowViewData(params: IWorkflowViewDataParams): Promise<IAgentInfo>;
   updateWorkflowViewData(
     id: string,

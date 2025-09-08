@@ -19,6 +19,7 @@ import type {
   IAgentInfo,
   IAgentInfoDetail,
   IAgentsConfiguration,
+  IWorkflowCoordinatorState,
   IWorkflowNode,
   IWorkflowViewDataParams,
 } from "@aevatar-react-sdk/services";
@@ -103,6 +104,13 @@ IWorkflowConfigurationProps) => {
   const [newWorkflowState, setNewWorkflowState] =
     useState<IWorkflowConfigurationProps["editWorkflow"]>();
 
+  const workflowIdRef = useRef<string>();
+
+  useEffect(() => {
+    workflowIdRef.current =
+      newWorkflowState?.workflowId || editWorkflow?.workflowId;
+  }, [newWorkflowState?.workflowId, editWorkflow?.workflowId]);
+
   const [unsavedModal, setUnsavedModal] = useState(false);
 
   const [saveFailed, setSaveFailed] = useState<boolean | SaveFailedError>(
@@ -166,18 +174,18 @@ IWorkflowConfigurationProps) => {
     setWorkflowName(editWorkflow?.workflowName ?? "untitled_workflow");
   }, [editWorkflow?.workflowName]);
 
-  const publishWorkflow = useCallback(
-    async ({ workflowAgentId }: { workflowAgentId: string }) => {
-      return aevatarAI.services.workflow.publishWorkflowViewData(
-        workflowAgentId
-      );
-    },
-    []
-  );
+  // const publishWorkflow = useCallback(
+  //   async ({ workflowAgentId }: { workflowAgentId: string }) => {
+  //     return aevatarAI.services.workflow.publishWorkflowViewData(
+  //       workflowAgentId
+  //     );
+  //   },
+  //   []
+  // );
 
   const { data: fetchedExecutionLogsData, refetch } = useFetchExecutionLogs({
     stateName: "WorkflowExecutionRecordState",
-    workflowId: newWorkflowState?.workflowId || editWorkflow?.workflowId,
+    workflowId: workflowIdRef.current,
     roundId: 1,
   });
 
@@ -223,30 +231,30 @@ IWorkflowConfigurationProps) => {
     });
   }, []);
 
-  const onPublishingWorkflow = useCallback(
-    async (workflowAgentId: string): Promise<string | undefined> => {
-      try {
-        const publishResult = await publishWorkflow({
-          workflowAgentId,
-        });
+  // const onPublishingWorkflow = useCallback(
+  //   async (workflowAgentId: string): Promise<string | undefined> => {
+  //     try {
+  //       const publishResult = await publishWorkflow({
+  //         workflowAgentId,
+  //       });
 
-        const workflowId = publishResult.properties.workflowCoordinatorGAgentId;
+  //       const workflowId = publishResult.properties.workflowCoordinatorGAgentId;
 
-        updateNodeList(publishResult?.properties?.workflowNodeList);
-        setNewWorkflowState((v) => ({
-          ...v,
-          workflowId,
-        }));
-        return workflowId;
-      } catch (error) {
-        toast({
-          description: handleErrorMessage(error, "Publish workflow failed."),
-        });
-        return undefined;
-      }
-    },
-    [publishWorkflow, updateNodeList, toast]
-  );
+  //       updateNodeList(publishResult?.properties?.workflowNodeList);
+  //       setNewWorkflowState((v) => ({
+  //         ...v,
+  //         workflowId,
+  //       }));
+  //       return workflowId;
+  //     } catch (error) {
+  //       toast({
+  //         description: handleErrorMessage(error, "Publish workflow failed."),
+  //       });
+  //       return undefined;
+  //     }
+  //   },
+  //   [publishWorkflow, updateNodeList, toast]
+  // );
 
   const onSaveHandler = useCallback(async () => {
     const workflowViewData = getWorkflowViewData();
@@ -532,17 +540,29 @@ IWorkflowConfigurationProps) => {
         return;
       }
       let workflowId = newWorkflowState?.workflowId ?? editWorkflow?.workflowId;
+      const viewAgentId =
+        newWorkflowState?.workflowAgentId ?? editWorkflow?.workflowAgentId;
       if (!workflowId || workflowId === IS_NULL_ID || getIsStage()) {
         // TODO auto save and publish workflow
         const result = await onSaveHandler();
         console.log(result, "result===onSaveHandler");
         workflowId = result.workflowId;
-        const _workflowId = await onPublishingWorkflow(result.workflowAgentId);
-        if (_workflowId) workflowId = _workflowId;
-        if (!_workflowId) return;
-        await sleep(2000);
+        // const _workflowId = await onPublishingWorkflow(result.workflowAgentId);
+        // if (_workflowId) workflowId = _workflowId;
+        // if (!_workflowId) return;
+        await sleep(1500);
       }
-      const workflowState = await getWorkflowState(workflowId);
+      let workflowState: IWorkflowCoordinatorState;
+      try {
+        if (!workflowId || workflowId === IS_NULL_ID) throw "workflowId is required";
+        workflowState = await getWorkflowState(workflowId);
+      } catch (error) {
+        workflowState = {
+          workflowStatus: WorkflowStatus.pending,
+          term: -1,
+        } as any;
+      }
+
       if (!workflowState) throw "workflow not found";
       if (workflowState.workflowStatus === WorkflowStatus.running)
         throw "workflow is running";
@@ -550,24 +570,33 @@ IWorkflowConfigurationProps) => {
         throw "workflow is failed, please check the workflow";
       const term = workflowState.term;
 
-      await aevatarAI.services.workflow.start({
-        agentId: workflowId,
+      const runWorkflowResult = await aevatarAI.services.workflow.runWorkflow({
+        viewAgentId: viewAgentId,
         eventProperties: {},
       });
+      workflowId = runWorkflowResult.workflowId;
+      setNewWorkflowState((v) => ({
+        ...v,
+        workflowId,
+      }));
       const workflowStatus = await getWorkflowStateLoop(workflowId, term);
       if (workflowStatus === WorkflowStatus.failed)
         throw "workflow is failed, please check the workflow";
       if (workflowStatus === WorkflowStatus.pending) {
         toast({
           description: "workflow executed successfully.",
-          duration: 3000,
         });
       }
       await sleep(1500);
       await refetch(); // [TODO]
     } catch (error) {
       console.error("run workflow error:", error);
-      setSaveFailed(SaveFailedError.workflowExecutionFailed);
+      toast({
+        description: handleErrorMessage(
+          error,
+          SaveFailedError.workflowExecutionFailed
+        ),
+      });
     } finally {
       setIsRunning(false);
     }
@@ -580,7 +609,6 @@ IWorkflowConfigurationProps) => {
     getWorkflowStateLoop,
     onSaveHandler,
     refetch,
-    onPublishingWorkflow,
   ]);
 
   const [sidebarContainer, setSidebarContainer] = React.useState(null);

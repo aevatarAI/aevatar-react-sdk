@@ -17,6 +17,8 @@ import type {
   IWorkflowViewDataParams,
   IFetchExecutionLogsProps,
   IFetchAgentDetailsProps,
+  IRunWorkflowParams,
+  IRunWorkflowResponse,
 } from "../types/workflow";
 
 export class WorkflowService<T extends IBaseRequest = IBaseRequest>
@@ -145,6 +147,13 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
           "Aevatar.GAgents.GroupChat.WorkflowCoordinator.GEvent.StartWorkflowCoordinatorEvent",
         ...params,
       },
+    });
+  }
+  runWorkflow<T = IRunWorkflowResponse>(params: IRunWorkflowParams): Promise<T> {
+    return this._request.send({
+      method: "POST",
+      url: "/api/workflow/run",
+      params,
     });
   }
 
