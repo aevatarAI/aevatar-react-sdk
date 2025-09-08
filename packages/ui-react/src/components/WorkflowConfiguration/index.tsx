@@ -540,13 +540,13 @@ IWorkflowConfigurationProps) => {
         return;
       }
       let workflowId = newWorkflowState?.workflowId ?? editWorkflow?.workflowId;
-      const viewAgentId =
+      let viewAgentId =
         newWorkflowState?.workflowAgentId ?? editWorkflow?.workflowAgentId;
-      if (!workflowId || workflowId === IS_NULL_ID || getIsStage()) {
+      if (getIsStage()) {
         // TODO auto save and publish workflow
         const result = await onSaveHandler();
         console.log(result, "result===onSaveHandler");
-        workflowId = result.workflowId;
+        viewAgentId = result.workflowAgentId;
         // const _workflowId = await onPublishingWorkflow(result.workflowAgentId);
         // if (_workflowId) workflowId = _workflowId;
         // if (!_workflowId) return;
@@ -554,7 +554,8 @@ IWorkflowConfigurationProps) => {
       }
       let workflowState: IWorkflowCoordinatorState;
       try {
-        if (!workflowId || workflowId === IS_NULL_ID) throw "workflowId is required";
+        if (!workflowId || workflowId === IS_NULL_ID)
+          throw "workflowId is required";
         workflowState = await getWorkflowState(workflowId);
       } catch (error) {
         workflowState = {
