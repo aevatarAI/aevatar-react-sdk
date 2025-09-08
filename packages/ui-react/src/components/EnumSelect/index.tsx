@@ -342,7 +342,7 @@ export const EnumSelect = ({
         </SelectTrigger>
       </FormControl>
       <SelectContent
-        className={clsx("sdk:p-0! sdk:pb-[8px]!", selectContentCls)}>
+        className={clsx("sdk:p-0! sdk:pb-[8px]! sdk:overflow-visible", selectContentCls)}>
         <div className="sdk:flex sdk:flex-row sdk:mb-[8px] sdk:gap-[4px] sdk:border-b sdk:border-[#6F6F6F80] sdk:border-solid">
           <SearchBar
             placeholder="search"

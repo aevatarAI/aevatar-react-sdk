@@ -59,7 +59,7 @@ export default function AevatarCardInner({
         onClick?.(agentInfo, isNew, nodeId);
       }}>
       <HoverMenu
-        triggerClassName="sdk:group-hover:block sdk:hidden sdk:absolute sdk:-top-[26px] sdk:right-[0px]"
+        triggerClassName="sdk:group-hover:block sdk:hidden sdk:absolute sdk:-top-0 sdk:right-[0px]"
         onDelete={handleDeleteClick}
       />
       <div

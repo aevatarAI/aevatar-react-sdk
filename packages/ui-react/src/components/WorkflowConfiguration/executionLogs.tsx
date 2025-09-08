@@ -46,7 +46,7 @@ export const ExecutionLogs = ({
     workflowId,
     roundId,
   });
-  
+
   const data = executionLogsData || fetchedData;
   const [activeAgent, setActiveAgent] = useState(DEFAULT);
   const [isVisible, setIsVisible] = useState(workflowId);
@@ -143,7 +143,7 @@ const ExecutionLogHeader = ({
       <span className="sdk:text-gradient sdk:font-semibold sdk:text-[16px] sdk:min-w-[200px]">
         execution log
       </span>
-      <div className="sdk:flex sdk:justify-between sdk:items-center sdk:gap-4 sdk:w-[100%]">
+      <div className="sdk:flex sdk:overflow-auto sdk:justify-between sdk:items-center sdk:gap-4 sdk:w-[100%]">
         {data?.length > 0 ? (
           <div className="sdk:flex sdk:gap-[8px]">
             <div className="sdk:flex sdk:items-center sdk:gap-1">
@@ -160,8 +160,7 @@ const ExecutionLogHeader = ({
                   : isSuccess
                   ? "sdk:text-[#53FF8A]"
                   : "sdk:text-[#FF2E2E]"
-              }`}
-            >
+              }`}>
               {isPending ? (
                 <Loading
                   key={"save"}
@@ -181,17 +180,15 @@ const ExecutionLogHeader = ({
           <span />
         )}
         <span className="sdk:flex">
-          <button type="button" onClick={onClick}>
-            {/* <Copy toCopy={JSON.stringify(activeAgent)} icon={<Browsers />} /> */}
+          {/* <button type="button" onClick={onClick}>
             <Browsers />
-          </button>
+          </button> */}
           <button
             type="button"
             className="sdk:cursor-pointer"
             onClick={() => {
               onToggle((prev: boolean) => !prev);
-            }}
-          >
+            }}>
             <Close />
           </button>
         </span>
@@ -217,7 +214,7 @@ const ExecutionLogBody = ({
 
   return (
     <Flex>
-      <div className="sdk:flex sdk:flex-col sdk:min-w-[202px] sdk:max-w-[202px] sdk:overflow-auto">
+      <div className="sdk:flex sdk:flex-1 sdk:flex-col sdk:min-w-[202px] sdk:max-w-[202px] sdk:overflow-auto">
         {data.map((d, index) => {
           const isActive = activeAgent?.index === index;
 
@@ -256,8 +253,7 @@ const ExecutionLogBody = ({
                 isActive ? "sdk:bg-[#303030]" : ""
               }`}
               type="button"
-              onClick={() => onChange({ ...d, index })}
-            >
+              onClick={() => onChange({ ...d, index })}>
               <div className="sdk:flex sdk:items-center sdk:justify-between">
                 <span className="sdk:flex sdk:items-center sdk:gap-1">
                   {isActive ? <AIStarWhite /> : <AIStar />}
@@ -273,14 +269,14 @@ const ExecutionLogBody = ({
       <div
         className={`sdk:flex sdk:flex-${
           isAgentCardOpen ? "col" : "row"
-        } sdk:gap-2 sdk:w-[100%]`}
-      >
-        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
+        } sdk:gap-2 sdk:w-[100%]`}>
+        <div className="sdk:flex sdk:flex-col sdk:h-[200px] sdk:overflow-auto sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[#B9B9B9] sdk:font-semibold">input</span>
             <span className="sdk:flex sdk:gap-2">
               <button type="button">
                 <Copy
+                  description="Execution log copied!"
                   toCopy={JSON.stringify(activeAgent?.inputData)}
                   icon={<Clipboard />}
                 />
@@ -296,7 +292,7 @@ const ExecutionLogBody = ({
           />
         </div>
 
-        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
+        <div className="sdk:flex sdk:flex-col sdk:h-[200px] sdk:overflow-auto sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[#B9B9B9] sdk:font-semibold">
               agent state
@@ -304,6 +300,7 @@ const ExecutionLogBody = ({
             <span className="sdk:flex sdk:gap-2">
               <button type="button">
                 <Copy
+                  description="Execution log copied!"
                   toCopy={JSON.stringify(activeAgent?.agentState)}
                   icon={<Clipboard />}
                 />
@@ -319,12 +316,13 @@ const ExecutionLogBody = ({
           />
         </div>
 
-        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
+        <div className="sdk:flex sdk:flex-col sdk:h-[200px] sdk:overflow-auto sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[#B9B9B9] sdk:font-semibold">output</span>
             <span className="sdk:flex sdk:gap-2">
               <button type="button">
                 <Copy
+                  description="Execution log copied!"
                   toCopy={JSON.stringify(activeAgent?.outputData)}
                   icon={<Clipboard />}
                 />
@@ -420,7 +418,7 @@ const Wrapper = ({
       onMouseDown={handleMouseDown}
       className={`${
         isMovable ? "sdk:absolute sdk:top-0" : ""
-      }sdk:max-h-[240px] sdk:overflow-auto ${
+      } ${
         isAgentCardOpen
           ? "sdk:max-w-[calc(100%-393px)] sdk:mr-auto"
           : "sdk:min-w-[100%]"
@@ -434,14 +432,17 @@ const Wrapper = ({
               zIndex: isDragging ? Number.POSITIVE_INFINITY : 1,
             }
           : {}
-      }
-    >
+      }>
       {children}
     </div>
   );
 };
 const Flex = ({ children }: { children: any }) => {
-  return <div className="sdk:flex sdk:flex-row sdk:gap-4">{children}</div>;
+  return (
+    <div className="sdk:flex sdk:flex-row sdk:gap-4 sdk:flex-1">
+      {children}
+    </div>
+  );
 };
 
 const EmptyExecutionLog = () => {
@@ -471,8 +472,7 @@ const ToggleModal = ({ isAgentCardOpen, onToggle }: ToggleModalProps) => {
       } sdk:flex sdk:gap-[5px] sdk:items-center sdk:pt-[8px] sdk:pb-[8px] sdk:pl-[18px] sdk:pr-[18px] sdk:border sdk:border-[#303030] sdk:cursor-pointer`}
       onClick={() => {
         onToggle((prev) => !prev);
-      }}
-    >
+      }}>
       <div className="sdk:flex sdk:flex-row sdk:gap-[5px] sdk:items-center">
         <Clock width={14} height={14} />
         <span className="sdk:font-semibold sdk:text-[12px]">execution log</span>
