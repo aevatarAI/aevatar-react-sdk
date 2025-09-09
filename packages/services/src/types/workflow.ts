@@ -3,9 +3,7 @@ import type { IAgentInfo, IAgentInfoDetail, IUpdateAgentInfo } from "./agent";
 export interface IGenerateWorkflowProps {
   userGoal: string;
 }
-export interface IGetAIModelsProps {
-  [key: string]: string;
-}
+
 export interface IFetchAgentDetailsProps {
   formattedBusinessAgentGrainId: string;
   stateName: string;
@@ -143,6 +141,23 @@ export interface IWorkflowViewUpdateDataParams {
   };
 }
 
+export interface IGetAIModelsProps {
+  [key: string]: string;
+}
+export interface IFetchAutoCompleteProps {
+  userGoal: string;
+}
+export interface IRunWorkflowParams {
+  viewAgentId: string;
+  eventProperties: any;
+}
+
+export interface IRunWorkflowResponse {
+  isSuccess: boolean;
+  message: string;
+  workflowId: string;
+}
+
 export interface IWorkflowService {
   create(params: ICreateWorkflowParams): Promise<IAgentInfo>;
   simulate(params: ISimulateWorkflowParams): Promise<string>;
@@ -152,10 +167,12 @@ export interface IWorkflowService {
     query: IGetWorkflowQuery,
   ): Promise<IGetWorkflowResult<T>>;
   getAIModels<T = any>(props: IGetAIModelsProps): Promise<T>;
+  fetchAutoComplete<T = any>(props: IFetchAutoCompleteProps): Promise<T>;
   fetchExecutionLogs<T = any>(props: IFetchExecutionLogsProps): Promise<T>;
   fetchAgentDetails<T = any>(props: IFetchAgentDetailsProps): Promise<T>;
   generate<T = any>(props: IGenerateWorkflowProps): Promise<T>;
   start<T = any>(params: IStartWorkflowParams): Promise<T>;
+  runWorkflow<T = IRunWorkflowResponse>(params: IRunWorkflowParams): Promise<T>;
   createWorkflowViewData(params: IWorkflowViewDataParams): Promise<IAgentInfo>;
   updateWorkflowViewData(
     id: string,

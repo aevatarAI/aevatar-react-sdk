@@ -18,6 +18,9 @@ import type {
   IFetchExecutionLogsProps,
   IFetchAgentDetailsProps,
   IGetAIModelsProps,
+  IFetchAutoCompleteProps,
+  IRunWorkflowParams,
+  IRunWorkflowResponse,
 } from "../types/workflow";
 
 export class WorkflowService<T extends IBaseRequest = IBaseRequest>
@@ -119,6 +122,14 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
     });
   }
 
+  fetchAutoComplete<T = any>(params: IFetchAutoCompleteProps): Promise<T> {
+    return this._request.send({
+      method: "POST",
+      url: "/api/workflow/text-completion/generate",
+      params,
+    });
+  }
+
   fetchAgentDetails<T = any>(query: IFetchAgentDetailsProps): Promise<T> {
     const params = new URLSearchParams({
       queryString: `formattedBusinessAgentGrainId:"${query.formattedBusinessAgentGrainId}"`,
@@ -153,6 +164,15 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
           "Aevatar.GAgents.GroupChat.WorkflowCoordinator.GEvent.StartWorkflowCoordinatorEvent",
         ...params,
       },
+    });
+  }
+  runWorkflow<T = IRunWorkflowResponse>(
+    params: IRunWorkflowParams,
+  ): Promise<T> {
+    return this._request.send({
+      method: "POST",
+      url: "/api/workflow/run",
+      params,
     });
   }
 
