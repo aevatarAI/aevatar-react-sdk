@@ -141,10 +141,12 @@ export interface IWorkflowViewUpdateDataParams {
   };
 }
 
-<<<<<<< HEAD
+export interface IGetAIModelsProps {
+  [key: string]: string;
+}
 export interface IFetchAutoCompleteProps {
   userGoal: string;
-=======
+}
 export interface IRunWorkflowParams {
   viewAgentId: string;
   eventProperties: any;
@@ -154,7 +156,6 @@ export interface IRunWorkflowResponse {
   isSuccess: boolean;
   message: string;
   workflowId: string;
->>>>>>> feature/v0.6
 }
 
 export interface IWorkflowService {
@@ -163,13 +164,10 @@ export interface IWorkflowService {
   edit(id: string, params: IUpdateAgentInfo): Promise<IAgentInfoDetail>;
   editPublishEvent(params: IEditWorkflowParams): Promise<IAgentInfo>;
   getWorkflow<T = any>(
-    query: IGetWorkflowQuery
+    query: IGetWorkflowQuery,
   ): Promise<IGetWorkflowResult<T>>;
-<<<<<<< HEAD
   getAIModels<T = any>(props: IGetAIModelsProps): Promise<T>;
   fetchAutoComplete<T = any>(props: IFetchAutoCompleteProps): Promise<T>;
-=======
->>>>>>> feature/v0.6
   fetchExecutionLogs<T = any>(props: IFetchExecutionLogsProps): Promise<T>;
   fetchAgentDetails<T = any>(props: IFetchAgentDetailsProps): Promise<T>;
   generate<T = any>(props: IGenerateWorkflowProps): Promise<T>;
@@ -178,7 +176,7 @@ export interface IWorkflowService {
   createWorkflowViewData(params: IWorkflowViewDataParams): Promise<IAgentInfo>;
   updateWorkflowViewData(
     id: string,
-    params: IWorkflowViewUpdateDataParams
+    params: IWorkflowViewUpdateDataParams,
   ): Promise<IAgentInfo>;
   publishWorkflowViewData(id: string): Promise<IAgentInfo>;
 }
