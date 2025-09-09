@@ -7,7 +7,6 @@ import {
   FormLabel,
   FormMessage,
   Input,
-  SearchBar,
   Select,
   SelectContent,
   SelectItem,
@@ -16,7 +15,6 @@ import {
 } from "../ui";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
-import Loading from "../../assets/svg/loading.svg?react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { sleep } from "@aevatar-react-sdk/utils";
 import { handleErrorMessage } from "../../utils/error";
@@ -26,12 +24,7 @@ import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import { validateSchemaField } from "../../utils/jsonSchemaValidate";
 import { renderSchemaField } from "../utils/renderSchemaField";
 import { useUpdateEffect } from "react-use";
-import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "../ui/tooltip";
+import { TooltipProvider } from "../ui/tooltip";
 import { TooltipDescriptor } from "../TooltipDescriptor";
 
 export interface IWorkflowAevatarEditProps {
@@ -210,6 +203,7 @@ export default function WorkflowAevatarEdit({
       name: currentFormValues.agentName,
       properties: params,
     };
+
     onGaevatarChangeRef.current(
       isNewRef.current,
       {
@@ -367,105 +361,3 @@ export default function WorkflowAevatarEdit({
     </TooltipProvider>
   );
 }
-
-const getModelMetadata = (data, model) => {
-  return data?.ChatAISystemLLMEnum?.["x-enumMetadatas"]?.[model];
-};
-
-const ModelTooltipContent = ({ model, metadata }) => (
-  <TooltipContent
-    className={clsx(
-      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
-      "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left sdk:z-[999999999]"
-    )}
-    side="left"
-    sideOffset={10}>
-    <div className="sdk:font-semibold">{model}</div>
-    <div>
-      <span>Provider: </span>
-      <span className="sdk:font-normal">{metadata?.provider}</span>
-    </div>
-    <div>
-      <span>Type: </span>
-      <span className="sdk:font-normal">{metadata?.type}</span>
-    </div>
-    <div>
-      <span>Strengths: </span>
-      <span className="sdk:font-normal">{metadata?.strengths}</span>
-    </div>
-    <div>
-      <span>Best for: </span>
-      <span className="sdk:font-normal">{metadata?.best_for}</span>
-    </div>
-    <div>
-      <span>Speed: </span>
-      <span className="sdk:font-normal">{metadata?.speed}</span>
-    </div>
-  </TooltipContent>
-);
-
-const ModelSelectItem = ({ model, data }) => {
-  const metadata = getModelMetadata(data, model);
-
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <SelectItem key={model} value={model}>
-          <span className="sdk:w-full sdk:text-center">{model}</span>
-        </SelectItem>
-      </TooltipTrigger>
-      <ModelTooltipContent model={model} metadata={metadata} />
-    </Tooltip>
-  );
-};
-
-export const ModelSelect = ({ field, form, data, names, onChange }) => {
-  const [searchValue, setSearchValue] = useState("");
-  const [modelNames, setModelNames] = useState(names);
-  const [_, setSelectedModel] = useState("");
-
-  return (
-    <Select
-      value={
-        field?.value || form?.getValues()?.systemLLM || form?.getValues()?.model
-      }
-      disabled={field?.disabled}
-      onValueChange={(value) => {
-        setSelectedModel(value);
-        onChange?.(value, field);
-      }}>
-      <FormControl>
-        <SelectTrigger>
-          <SelectValue placeholder="Select a model" />
-        </SelectTrigger>
-      </FormControl>
-      <SelectContent className="sdk:min-w-[350px]">
-        <div className="sdk:flex sdk:flex-row sdk:gap-[4px] sdk:border-b sdk:border-[var(--sdk-muted-foreground)80] sdk:border-solid">
-          <SearchBar
-            key="search-input-model"
-            placeholder="search"
-            onKeyDown={(e) => e.stopPropagation()}
-            onKeyUp={(e) => e.stopPropagation()}
-            value={searchValue}
-            onChange={(value) => {
-              setSearchValue(value);
-
-              if (!value) {
-                return setModelNames(names);
-              }
-
-              const filteredNames = names.filter((name) =>
-                name.toLowerCase().includes(value.toLowerCase())
-              );
-
-              setModelNames(filteredNames);
-            }}
-          />
-        </div>
-        {modelNames?.map((model) => (
-          <ModelSelectItem key={model} model={model} data={data} />
-        ))}
-      </SelectContent>
-    </Select>
-  );
-};

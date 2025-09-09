@@ -14,7 +14,7 @@ export default function HoverMenu({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="sdk:relative">
+    <div className="sdk:relative sdk:pb-[2px] sdk:pt-[26px]">
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild={true}>
           <div

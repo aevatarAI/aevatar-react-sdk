@@ -6,6 +6,7 @@ import { Toaster } from "../../ui/toaster";
 
 const INITIAL_STATE = {
   selectedAgent: undefined,
+  executionLogsData: undefined,
 };
 const WorkflowContext = createContext<any>(INITIAL_STATE);
 
@@ -23,6 +24,12 @@ function reducer(state: any, { type, payload }: any) {
       return {
         ...state,
         selectedAgent: payload.selectedAgent,
+      };
+    }
+    case basicWorkflow.setExecutionLogsData.type: {
+      return {
+        ...state,
+        executionLogsData: payload.executionLogsData,
       };
     }
     default: {

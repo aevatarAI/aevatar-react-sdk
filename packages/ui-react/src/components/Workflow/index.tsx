@@ -47,8 +47,6 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { getPropertiesByDefaultValues } from "../../utils/jsonSchemaParse";
-import { useFetchExecutionLogs } from "./hooks/useFetchExecutionLogs";
-import { sleep } from "@aevatar-react-sdk/utils";
 
 const getId = () => `${uuidv4()}`;
 
@@ -116,12 +114,6 @@ export const Workflow = forwardRef(
     }: IProps,
     ref
   ) => {
-    const { refetch } = useFetchExecutionLogs({
-      stateName: "WorkflowExecutionRecordState",
-      workflowId: editWorkflow?.workflowId,
-      roundId: 1,
-    });
-
     // Add state to track used indexes for each agent type
     const [agentTypeUsedIndexes, setAgentTypeUsedIndexes] = useState<
       Record<string, Set<number>>
@@ -757,7 +749,7 @@ export const Workflow = forwardRef(
                   </TooltipTrigger>
                   <TooltipContent
                     className={clsx(
-                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
+                      "sdk:z-1000 sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
                     side="top">
@@ -786,7 +778,7 @@ export const Workflow = forwardRef(
                   </TooltipTrigger>
                   <TooltipContent
                     className={clsx(
-                      "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
+                      "sdk:z-1000 sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
                     side="top">
@@ -799,8 +791,6 @@ export const Workflow = forwardRef(
                 variant="outline"
                 onClick={async () => {
                   onRunningHandler();
-                  await sleep(3000);
-                  await refetch();
                 }}
                 className="sdk:cursor-pointer sdk:py-[7px]  sdk:px-[17px] sdk:text-center sdk:font-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold">
                 {isRunning ? (

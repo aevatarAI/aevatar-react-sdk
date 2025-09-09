@@ -32,6 +32,7 @@ interface IExecutionLogsProps {
   workflowId: string;
   roundId: number;
   isAgentCardOpen: boolean;
+  executionLogsData?: any[];
 }
 
 export const ExecutionLogs = ({
@@ -39,12 +40,15 @@ export const ExecutionLogs = ({
   stateName,
   roundId,
   isAgentCardOpen,
+  executionLogsData,
 }: IExecutionLogsProps) => {
-  const { data, isLoading } = useFetchExecutionLogs({
+  const { data: fetchedData, isLoading } = useFetchExecutionLogs({
     stateName,
     workflowId,
     roundId,
   });
+
+  const data = executionLogsData || fetchedData;
   const [activeAgent, setActiveAgent] = useState(DEFAULT);
   const [isVisible, setIsVisible] = useState(workflowId);
   const [isMovable, setIsMovable] = useState(false);
@@ -56,7 +60,6 @@ export const ExecutionLogs = ({
   }, [data]);
 
   const handleClick = () => {
-    console.log("click");
     setIsMovable((prev) => !prev);
   };
 
@@ -80,24 +83,27 @@ export const ExecutionLogs = ({
   }
 
   return (
-    <Wrapper isAgentCardOpen={isAgentCardOpen} isMovable={isMovable}>
-      <ExecutionLogHeader
-        data={data}
-        activeAgent={activeAgent}
-        onToggle={setIsVisible}
-        onClick={handleClick}
-      />
-      {data?.length > 0 ? (
-        <ExecutionLogBody
-          isAgentCardOpen={isAgentCardOpen}
+    <Container>
+      <div className="sdk:bg-[#6F6F6F] sdk:min-w-[48px] sdk:max-w-[48px] sdk:min-h-[2px]" />
+      <Wrapper isAgentCardOpen={isAgentCardOpen} isMovable={isMovable}>
+        <ExecutionLogHeader
           data={data}
           activeAgent={activeAgent}
-          onChange={setActiveAgent}
+          onToggle={setIsVisible}
+          onClick={handleClick}
         />
-      ) : (
-        <EmptyExecutionLog />
-      )}
-    </Wrapper>
+        {data?.length > 0 ? (
+          <ExecutionLogBody
+            isAgentCardOpen={isAgentCardOpen}
+            data={data}
+            activeAgent={activeAgent}
+            onChange={setActiveAgent}
+          />
+        ) : (
+          <EmptyExecutionLog />
+        )}
+      </Wrapper>
+    </Container>
   );
 };
 
@@ -109,6 +115,7 @@ interface Agent {
   executionTime: number;
   status: string;
   index: number;
+  failureSummary?: string;
 }
 
 const getStatus = (status: string) => {
@@ -139,7 +146,7 @@ const ExecutionLogHeader = ({
       <span className="sdk:text-gradient sdk:font-semibold sdk:text-[16px] sdk:min-w-[200px]">
         execution log
       </span>
-      <div className="sdk:flex sdk:justify-between sdk:items-center sdk:gap-4 sdk:w-[100%]">
+      <div className="sdk:flex sdk:overflow-auto sdk:justify-between sdk:items-center sdk:gap-4 sdk:w-[100%]">
         {data?.length > 0 ? (
           <div className="sdk:flex sdk:gap-[8px]">
             <div className="sdk:flex sdk:items-center sdk:gap-1">
@@ -176,10 +183,9 @@ const ExecutionLogHeader = ({
           <span />
         )}
         <span className="sdk:flex">
-          <button type="button" onClick={onClick}>
-            {/* <Copy toCopy={JSON.stringify(activeAgent)} icon={<Browsers />} /> */}
+          {/* <button type="button" onClick={onClick}>
             <Browsers />
-          </button>
+          </button> */}
           <button
             type="button"
             className="sdk:cursor-pointer"
@@ -211,7 +217,7 @@ const ExecutionLogBody = ({
 
   return (
     <Flex>
-      <div className="sdk:flex sdk:flex-col sdk:min-w-[202px] sdk:max-w-[202px] sdk:overflow-auto">
+      <div className="sdk:flex sdk:flex-1 sdk:flex-col sdk:min-w-[202px] sdk:max-w-[202px] sdk:overflow-auto">
         {data.map((d, index) => {
           const isActive = activeAgent?.index === index;
 
@@ -266,8 +272,9 @@ const ExecutionLogBody = ({
       <div
         className={`sdk:flex sdk:flex-${
           isAgentCardOpen ? "col" : "row"
-        } sdk:gap-2 sdk:w-[100%]`}>
-        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[var(--sdk-bg-black-light)80] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
+        } sdk:gap-2 sdk:w-[100%]`}
+      >
+        <div className="sdk:flex sdk:flex-col sdk:h-[200px] sdk:overflow-auto sdk:gap-2 sdk:bg-[var(--sdk-bg-black-light)80] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:font-semibold">
               input
@@ -275,6 +282,7 @@ const ExecutionLogBody = ({
             <span className="sdk:flex sdk:gap-2">
               <button type="button">
                 <Copy
+                  description="Execution log copied!"
                   toCopy={JSON.stringify(activeAgent?.inputData)}
                   icon={<Clipboard />}
                 />
@@ -290,7 +298,7 @@ const ExecutionLogBody = ({
           />
         </div>
 
-        <div className="sdk:flex sdk:flex-col sdk:gap-2 sdk:bg-[var(--sdk-bg-black-light)80] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
+        <div className="sdk:flex sdk:flex-col sdk:h-[200px] sdk:overflow-auto sdk:gap-2 sdk:bg-[var(--sdk-bg-black-light)80] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:font-semibold">
               agent state
@@ -298,6 +306,7 @@ const ExecutionLogBody = ({
             <span className="sdk:flex sdk:gap-2">
               <button type="button">
                 <Copy
+                  description="Execution log copied!"
                   toCopy={JSON.stringify(activeAgent?.agentState)}
                   icon={<Clipboard />}
                 />
@@ -313,7 +322,7 @@ const ExecutionLogBody = ({
           />
         </div>
 
-        <div className="sdk:flex sdk:gap-2 sdk:bg-[var(--sdk-bg-black-light)80] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
+        <div className="sdk:flex sdk:flex-col sdk:h-[200px] sdk:overflow-auto sdk:gap-2 sdk:bg-[var(--sdk-bg-black-light)80] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:font-semibold">
               output
@@ -321,12 +330,22 @@ const ExecutionLogBody = ({
             <span className="sdk:flex sdk:gap-2">
               <button type="button">
                 <Copy
+                  description="Execution log copied!"
                   toCopy={JSON.stringify(activeAgent?.outputData)}
                   icon={<Clipboard />}
                 />
               </button>
             </span>
           </div>
+          {activeAgent?.failureSummary && (
+            <div className="sdk:bg-[rgba(255,46,46,0.15)] sdk:border sdk:border-[rgba(255,46,46,0.2)] sdk:px-4 sdk:py-2 sdk:rounded-sm sdk:flex sdk:items-center sdk:gap-2.5 sdk:relative">
+              <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:relative sdk:shrink-0">
+                <p className="sdk:text-[#ff2e2e] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:whitespace-pre sdk:lowercase">
+                  {activeAgent.failureSummary}
+                </p>
+              </div>
+            </div>
+          )}
           <JsonView
             collapseStringsAfterLength={Number.POSITIVE_INFINITY}
             collapsed={false}
@@ -338,6 +357,14 @@ const ExecutionLogBody = ({
         </div>
       </div>
     </Flex>
+  );
+};
+
+const Container = ({ children }: { children: any }) => {
+  return (
+    <div className="sdk:min-w-[100%] sdk:flex sdk:flex-col sdk:gap-[2px] sdk: sdk:items-center sdk:justify-items-center">
+      {children}
+    </div>
   );
 };
 
@@ -405,9 +432,7 @@ const Wrapper = ({
     <div
       ref={dragRef}
       onMouseDown={handleMouseDown}
-      className={`${
-        isMovable ? "sdk:absolute sdk:top-0" : ""
-      }sdk:max-h-[240px] sdk:overflow-auto ${
+      className={`${isMovable ? "sdk:absolute sdk:top-0" : ""} ${
         isAgentCardOpen
           ? "sdk:max-w-[calc(100%-393px)] sdk:mr-auto"
           : "sdk:min-w-[100%]"
@@ -427,12 +452,14 @@ const Wrapper = ({
   );
 };
 const Flex = ({ children }: { children: any }) => {
-  return <div className="sdk:flex sdk:flex-row sdk:gap-4">{children}</div>;
+  return (
+    <div className="sdk:flex sdk:flex-row sdk:gap-4 sdk:flex-1">{children}</div>
+  );
 };
 
 const EmptyExecutionLog = () => {
   return (
-    <div className="sdk:min-w-[100%] sdk:flex sdk:items-center sdk:justify-center sdk:pt-[72.5px] sdk:pb-[72.5px]">
+    <div className="sdk:overflow-y-hidden sdk:min-w-[100%] sdk:flex sdk:items-center sdk:justify-center sdk:pt-[72.5px] sdk:pb-[72.5px]">
       <div className="sdk:flex sdk:flex-col sdk:gap-4 sdk:items-center">
         <EmptyRun />
         <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:text-[13px]">

@@ -18,7 +18,7 @@ const TooltipContent = React.forwardRef<
     ref={ref}
     sideOffset={sideOffset}
     className={cn(
-      "z-50 overflow-hidden  bg-[var(--sdk-color-bg-primary)] p-[4px] text-[var(--sdk-muted-foreground)] font-outfit text-[12px] font-normal leading-normal lowercase text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      "sdk:z-50 sdk:overflow-hidden  sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px] sdk:text-[var(--sdk-muted-foreground)] sdk:font-outfit sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-popover-foreground sdk:shadow-md sdk:animate-in sdk:fade-in-0 sdk:zoom-in-95 data-[state=closed]:sdk:animate-out data-[state=closed]:sdk:fade-out-0 data-[state=closed]:sdk:zoom-out-95 data-[side=bottom]:sdk:slide-in-from-top-2 data-[side=left]:sdk:slide-in-from-right-2 data-[side=right]:sdk:slide-in-from-left-2 data-[side=top]:sdk:slide-in-from-bottom-2",
       className
     )}
     {...props}

@@ -32,6 +32,7 @@ import { validateSchemaField } from "../../utils/jsonSchemaValidate";
 import { renderSchemaField } from "../utils/renderSchemaField";
 import { AgentError } from "../../constants/error/agentError";
 import DeleteGAevatarConfirm from "../DeleteGAevatarConfirm";
+import { TooltipProvider } from "../ui/tooltip";
 
 export type TEditGaevatarSuccessType = "create" | "edit" | "delete";
 
@@ -132,8 +133,7 @@ function EditGAevatarInnerCom({
         data-testid="edit-gaevatar-inner"
         className="sdk:flex sdk:items-center sdk:gap-[8px]">
         <Button
-          variant="primary"
-          className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] "
+          className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]"
           type="submit">
           {btnLoading === "saving" && (
             <Loading
@@ -276,7 +276,7 @@ function EditGAevatarInnerCom({
   );
 
   return (
-    <>
+    <TooltipProvider delayDuration={0}>
       <Form {...form}>
         <form
           className="sdk:h-full sdk:flex sdk:flex-col sdk:font-outfit"
@@ -380,7 +380,7 @@ function EditGAevatarInnerCom({
           setDeleteOpen(false);
         }}
       />
-    </>
+    </TooltipProvider>
   );
 }
 

@@ -1,15 +1,16 @@
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import SuccessCheck from "../../assets/svg/successCheck.svg?react";
 import Hypotenuse from "../../assets/svg/hypotenuse.svg?react";
+import ErrorIcon from "../../assets/svg/errorIcon.svg?react";
 import "./index.css";
 import { useCallback, useMemo } from "react";
-import DeleteWorkflowGAevatar from "../DeleteWorkflowGAevatar";
 import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import type { JSONSchemaType } from "../types";
 import clsx from "clsx";
 import type { TNodeDataClick } from "../Workflow/types";
-import { useGetAgentDetails } from "../Workflow/hooks/useFetchExecutionLogs";
 import HoverMenu from "./HoverMenu";
+import type { ExecutionLogStatus } from "@aevatar-react-sdk/types";
+import Loading from "../../assets/svg/loading.svg?react";
 export interface IAevatarCardInnerProps {
   className?: string;
   isNew?: boolean;
@@ -18,6 +19,7 @@ export interface IAevatarCardInnerProps {
   nodeId?: string;
   agentInfo?: IAgentInfoDetail & { defaultValues?: Record<string, any[]> };
   selected?: boolean;
+  agentStatus?: ExecutionLogStatus;
 }
 
 export default function AevatarCardInner({
@@ -28,6 +30,7 @@ export default function AevatarCardInner({
   nodeId,
   agentInfo,
   selected,
+  agentStatus,
 }: IAevatarCardInnerProps) {
   const handleDeleteClick = useCallback(
     (e: any) => {
@@ -56,7 +59,7 @@ export default function AevatarCardInner({
         onClick?.(agentInfo, isNew, nodeId);
       }}>
       <HoverMenu
-        triggerClassName="sdk:group-hover:block sdk:hidden sdk:absolute sdk:-top-[26px] sdk:right-[0px]"
+        triggerClassName="sdk:group-hover:block sdk:hidden sdk:absolute sdk:-top-0 sdk:right-[0px]"
         onDelete={handleDeleteClick}
       />
       <div
@@ -77,11 +80,16 @@ export default function AevatarCardInner({
               className="sdk:font-outfit sdk:text-[var(--sdk-color-text-primary)] sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
             >{`${agentInfo?.name || "agent name"}`}</div>
 
-            {isNew ? (
-              // <DeleteWorkflowGAevatar handleDeleteClick={handleDeleteClick} />
-              <></>
-            ) : (
+            {agentStatus === "success" && (
               <SuccessCheck width={14} height={14} />
+            )}
+            {agentStatus === "failed" && <ErrorIcon />}
+            {(agentStatus === "pending" || agentStatus === "running") && (
+              <Loading
+                key={"save"}
+                className={clsx("aevatarai-loading-icon")}
+                style={{ width: 14, height: 14 }}
+              />
             )}
           </div>
           <div className="sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:truncate">
