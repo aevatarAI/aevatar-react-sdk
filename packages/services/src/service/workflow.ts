@@ -17,6 +17,8 @@ import type {
   IWorkflowViewDataParams,
   IFetchExecutionLogsProps,
   IFetchAgentDetailsProps,
+  IGetAIModelsProps,
+  IFetchAutoCompleteProps,
   IRunWorkflowParams,
   IRunWorkflowResponse,
 } from "../types/workflow";
@@ -38,7 +40,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   }
   updateWorkflowViewData(
     id: string,
-    params: IWorkflowViewDataParams
+    params: IWorkflowViewDataParams,
   ): Promise<IAgentInfo> {
     return this._request.send({
       method: "PUT",
@@ -95,7 +97,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   }
 
   getWorkflow<T = any>(
-    query: IGetWorkflowQuery
+    query: IGetWorkflowQuery,
   ): Promise<IGetWorkflowResult<T>> {
     const params = new URLSearchParams();
     params.append("stateName", query.stateName);
@@ -110,6 +112,21 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
     return this._request.send({
       method: "GET",
       url: `/api/query/es?${params.toString()}`,
+    });
+  }
+
+  getAIModels<T = any>(_: IGetAIModelsProps): Promise<T> {
+    return this._request.send({
+      method: "GET",
+      url: "/api/agent/agent-type-info-list",
+    });
+  }
+
+  fetchAutoComplete<T = any>(params: IFetchAutoCompleteProps): Promise<T> {
+    return this._request.send({
+      method: "POST",
+      url: "/api/workflow/text-completion/generate",
+      params,
     });
   }
 
@@ -149,7 +166,9 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
       },
     });
   }
-  runWorkflow<T = IRunWorkflowResponse>(params: IRunWorkflowParams): Promise<T> {
+  runWorkflow<T = IRunWorkflowResponse>(
+    params: IRunWorkflowParams,
+  ): Promise<T> {
     return this._request.send({
       method: "POST",
       url: "/api/workflow/run",

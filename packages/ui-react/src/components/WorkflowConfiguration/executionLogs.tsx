@@ -59,7 +59,6 @@ export const ExecutionLogs = ({
   }, [data]);
 
   const handleClick = () => {
-    console.log("click");
     setIsMovable((prev) => !prev);
   };
 
@@ -83,24 +82,27 @@ export const ExecutionLogs = ({
   }
 
   return (
-    <Wrapper isAgentCardOpen={isAgentCardOpen} isMovable={isMovable}>
-      <ExecutionLogHeader
-        data={data}
-        activeAgent={activeAgent}
-        onToggle={setIsVisible}
-        onClick={handleClick}
-      />
-      {data?.length > 0 ? (
-        <ExecutionLogBody
-          isAgentCardOpen={isAgentCardOpen}
+    <Container>
+      <div className="sdk:bg-[#6F6F6F] sdk:min-w-[48px] sdk:max-w-[48px] sdk:min-h-[2px]" />
+      <Wrapper isAgentCardOpen={isAgentCardOpen} isMovable={isMovable}>
+        <ExecutionLogHeader
           data={data}
           activeAgent={activeAgent}
-          onChange={setActiveAgent}
+          onToggle={setIsVisible}
+          onClick={handleClick}
         />
-      ) : (
-        <EmptyExecutionLog />
-      )}
-    </Wrapper>
+        {data?.length > 0 ? (
+          <ExecutionLogBody
+            isAgentCardOpen={isAgentCardOpen}
+            data={data}
+            activeAgent={activeAgent}
+            onChange={setActiveAgent}
+          />
+        ) : (
+          <EmptyExecutionLog />
+        )}
+      </Wrapper>
+    </Container>
   );
 };
 
@@ -160,7 +162,8 @@ const ExecutionLogHeader = ({
                   : isSuccess
                   ? "sdk:text-[#53FF8A]"
                   : "sdk:text-[#FF2E2E]"
-              }`}>
+              }`}
+            >
               {isPending ? (
                 <Loading
                   key={"save"}
@@ -188,7 +191,8 @@ const ExecutionLogHeader = ({
             className="sdk:cursor-pointer"
             onClick={() => {
               onToggle((prev: boolean) => !prev);
-            }}>
+            }}
+          >
             <Close />
           </button>
         </span>
@@ -253,7 +257,8 @@ const ExecutionLogBody = ({
                 isActive ? "sdk:bg-[#303030]" : ""
               }`}
               type="button"
-              onClick={() => onChange({ ...d, index })}>
+              onClick={() => onChange({ ...d, index })}
+            >
               <div className="sdk:flex sdk:items-center sdk:justify-between">
                 <span className="sdk:flex sdk:items-center sdk:gap-1">
                   {isActive ? <AIStarWhite /> : <AIStar />}
@@ -269,7 +274,8 @@ const ExecutionLogBody = ({
       <div
         className={`sdk:flex sdk:flex-${
           isAgentCardOpen ? "col" : "row"
-        } sdk:gap-2 sdk:w-[100%]`}>
+        } sdk:gap-2 sdk:w-[100%]`}
+      >
         <div className="sdk:flex sdk:flex-col sdk:h-[200px] sdk:overflow-auto sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[#B9B9B9] sdk:font-semibold">input</span>
@@ -352,6 +358,14 @@ const ExecutionLogBody = ({
   );
 };
 
+const Container = ({ children }: { children: any }) => {
+  return (
+    <div className="sdk:min-w-[100%] sdk:flex sdk:flex-col sdk:gap-[2px] sdk: sdk:items-center sdk:justify-items-center">
+      {children}
+    </div>
+  );
+};
+
 const Wrapper = ({
   isAgentCardOpen,
   isMovable,
@@ -416,9 +430,7 @@ const Wrapper = ({
     <div
       ref={dragRef}
       onMouseDown={handleMouseDown}
-      className={`${
-        isMovable ? "sdk:absolute sdk:top-0" : ""
-      } ${
+      className={`${isMovable ? "sdk:absolute sdk:top-0" : ""} ${
         isAgentCardOpen
           ? "sdk:max-w-[calc(100%-393px)] sdk:mr-auto"
           : "sdk:min-w-[100%]"
@@ -432,22 +444,21 @@ const Wrapper = ({
               zIndex: isDragging ? Number.POSITIVE_INFINITY : 1,
             }
           : {}
-      }>
+      }
+    >
       {children}
     </div>
   );
 };
 const Flex = ({ children }: { children: any }) => {
   return (
-    <div className="sdk:flex sdk:flex-row sdk:gap-4 sdk:flex-1">
-      {children}
-    </div>
+    <div className="sdk:flex sdk:flex-row sdk:gap-4 sdk:flex-1">{children}</div>
   );
 };
 
 const EmptyExecutionLog = () => {
   return (
-    <div className="sdk:min-w-[100%] sdk:flex sdk:items-center sdk:justify-center sdk:pt-[72.5px] sdk:pb-[72.5px]">
+    <div className="sdk:overflow-y-hidden sdk:min-w-[100%] sdk:flex sdk:items-center sdk:justify-center sdk:pt-[72.5px] sdk:pb-[72.5px]">
       <div className="sdk:flex sdk:flex-col sdk:gap-4 sdk:items-center">
         <EmptyRun />
         <span className="sdk:text-[#6F6F6F] sdk:text-[13px]">
@@ -472,7 +483,8 @@ const ToggleModal = ({ isAgentCardOpen, onToggle }: ToggleModalProps) => {
       } sdk:flex sdk:gap-[5px] sdk:items-center sdk:pt-[8px] sdk:pb-[8px] sdk:pl-[18px] sdk:pr-[18px] sdk:border sdk:border-[#303030] sdk:cursor-pointer`}
       onClick={() => {
         onToggle((prev) => !prev);
-      }}>
+      }}
+    >
       <div className="sdk:flex sdk:flex-row sdk:gap-[5px] sdk:items-center">
         <Clock width={14} height={14} />
         <span className="sdk:font-semibold sdk:text-[12px]">execution log</span>

@@ -1,13 +1,23 @@
 import { useEffect, useState } from "react";
 import { Textarea } from "../ui/textarea";
-import { Button, Dialog, DialogContent, DialogTrigger } from "../ui";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui";
 import Loading from "../../assets/svg/loading.svg?react";
 import AIStar from "../../assets/svg/aiStar.svg?react";
 import Close from "../../assets/svg/close.svg?react";
 import clsx from "clsx";
 import { usePostAIWorkflowGeneration } from "../../hooks/usePostAIWorkflowGeneration";
 import "./index.css";
-
+import { useGetAutoComplete } from "../../hooks/useGetAutoComplete";
 interface IWorkflowGenerationModalProps {
   workflowRef: any;
   defaultVisible?: boolean;
@@ -20,6 +30,8 @@ export const WorkflowGenerationModal = ({
   const { data, isLoading, refetch } = usePostAIWorkflowGeneration();
   const [isVisible, setIsVisible] = useState(defaultVisible);
   const [inputPrompt, setInputPrompt] = useState("");
+  const { data: searchData, isLoading: isLoadingAutoComplete } =
+    useGetAutoComplete(inputPrompt);
 
   useEffect(() => {
     if (data && workflowRef) {
@@ -74,10 +86,42 @@ export const WorkflowGenerationModal = ({
               autoFocus
               className="sdk:text-[13px] sdk:bg-[#171717] sdk:min-w-[595px] sdk:min-h-[120px]"
               placeholder="please describe what kind of agent workflow you want to create"
-              onChange={handleChange}
+              defaultValue={inputPrompt}
               disabled={isLoading}
+              onChange={(v) => {
+                console.log(v);
+              }}
             />
           </div>
+
+          {!isLoadingAutoComplete && (
+            <Select
+              key="select-suggestion"
+              open={searchData?.completions?.length > 0}
+              onValueChange={(value: string) => {
+                setInputPrompt(value);
+              }}
+            >
+              <SelectTrigger className="sdk:collapse sdk:absolute sdk:top-[140px] sdk:left-0 sdk:right-0">
+                <SelectValue placeholder="suggested" />
+              </SelectTrigger>
+              <SelectContent>
+                <div className="sdk:flex sdk:flex-row sdk:gap-2 sdk:items-center sdk:border-b sdk:border-[#303030] sdk:border-solid">
+                  <AIStar />
+                  <span className="sdk:text-[#6F6F6F] sdk:text-[12px]">
+                    suggested
+                  </span>
+                </div>
+                {searchData?.completions?.map((suggestion) => {
+                  return (
+                    <SelectItem key={suggestion} value={suggestion}>
+                      {suggestion}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          )}
 
           <div className="sdk:flex sdk:flex-row sdk:justify-between">
             <Button
