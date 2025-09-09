@@ -32,6 +32,7 @@ import { validateSchemaField } from "../../utils/jsonSchemaValidate";
 import { renderSchemaField } from "../utils/renderSchemaField";
 import { AgentError } from "../../constants/error/agentError";
 import DeleteGAevatarConfirm from "../DeleteGAevatarConfirm";
+import { TooltipProvider } from "../ui/tooltip";
 
 export type TEditGaevatarSuccessType = "create" | "edit" | "delete";
 
@@ -130,12 +131,10 @@ function EditGAevatarInnerCom({
     return (
       <div
         data-testid="edit-gaevatar-inner"
-        className="sdk:flex sdk:items-center sdk:gap-[8px]"
-      >
+        className="sdk:flex sdk:items-center sdk:gap-[8px]">
         <Button
           className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]"
-          type="submit"
-        >
+          type="submit">
           {btnLoading === "saving" && (
             <Loading
               key={"save"}
@@ -152,8 +151,7 @@ function EditGAevatarInnerCom({
             "sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]",
             type === "create" && "sdk:hidden"
           )}
-          onClick={() => onDelete(false)}
-        >
+          onClick={() => onDelete(false)}>
           {btnLoading === "deleting" && (
             <Loading
               key={"delete"}
@@ -278,19 +276,17 @@ function EditGAevatarInnerCom({
   );
 
   return (
-    <>
+    <TooltipProvider delayDuration={0}>
       <Form {...form}>
         <form
           className="sdk:h-full sdk:flex sdk:flex-col sdk:font-outfit"
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
+          onSubmit={form.handleSubmit(onSubmit)}>
           <CommonHeader leftEle={leftEle} rightEle={rightEle} />
           <div
             className={clsx(
               "sdk:flex-1 sdk:w-full sdk:m-auto sdk:bg-[#141415] sdk:pt-[22px] sdk:pb-[14px]",
               "sdk:md:pt-[0] sdk:md:px-[40px] sdk:font-outfit"
-            )}
-          >
+            )}>
             <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-white sdk:self-stretch">
               <div className="sdk:text-black sdk:font-outfit sdk:text-sm sdk:font-semibold sdk:leading-normal sdk:lowercase">
                 settings
@@ -315,15 +311,13 @@ function EditGAevatarInnerCom({
                       onValueChange={(values) => {
                         onAgentTypeChange(values, field);
                         form.clearErrors();
-                      }}
-                    >
+                      }}>
                       <FormControl>
                         <SelectTrigger
                           aria-disabled={field?.disabled}
                           className={clsx(
                             field?.disabled && "sdk:bg-[#303030]"
-                          )}
-                        >
+                          )}>
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                       </FormControl>
@@ -382,7 +376,7 @@ function EditGAevatarInnerCom({
           setDeleteOpen(false);
         }}
       />
-    </>
+    </TooltipProvider>
   );
 }
 
@@ -395,8 +389,7 @@ export default function EditGAevatarInner({
       className={clsx(
         "sdk:relative sdk:bg-black sdk:overflow-auto sdk:lg:pb-[40px] sdk:pb-[16px] aevatarai-edit-gaevatar-wrapper",
         className
-      )}
-    >
+      )}>
       <ErrorBoundary>
         <EditGAevatarInnerCom {...props} />
       </ErrorBoundary>

@@ -17,8 +17,13 @@ import type {
   IWorkflowViewDataParams,
   IFetchExecutionLogsProps,
   IFetchAgentDetailsProps,
+<<<<<<< HEAD
   IGetAIModelsProps,
   IFetchAutoCompleteProps,
+=======
+  IRunWorkflowParams,
+  IRunWorkflowResponse,
+>>>>>>> feature/v0.6
 } from "../types/workflow";
 
 export class WorkflowService<T extends IBaseRequest = IBaseRequest>
@@ -38,7 +43,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   }
   updateWorkflowViewData(
     id: string,
-    params: IWorkflowViewDataParams,
+    params: IWorkflowViewDataParams
   ): Promise<IAgentInfo> {
     return this._request.send({
       method: "PUT",
@@ -95,7 +100,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   }
 
   getWorkflow<T = any>(
-    query: IGetWorkflowQuery,
+    query: IGetWorkflowQuery
   ): Promise<IGetWorkflowResult<T>> {
     const params = new URLSearchParams();
     params.append("stateName", query.stateName);
@@ -113,6 +118,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
     });
   }
 
+<<<<<<< HEAD
   getAIModels<T = any>(_: IGetAIModelsProps): Promise<T> {
     return this._request.send({
       method: "GET",
@@ -128,6 +134,8 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
     });
   }
 
+=======
+>>>>>>> feature/v0.6
   fetchAgentDetails<T = any>(query: IFetchAgentDetailsProps): Promise<T> {
     const params = new URLSearchParams({
       queryString: `formattedBusinessAgentGrainId:"${query.formattedBusinessAgentGrainId}"`,
@@ -162,6 +170,13 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
           "Aevatar.GAgents.GroupChat.WorkflowCoordinator.GEvent.StartWorkflowCoordinatorEvent",
         ...params,
       },
+    });
+  }
+  runWorkflow<T = IRunWorkflowResponse>(params: IRunWorkflowParams): Promise<T> {
+    return this._request.send({
+      method: "POST",
+      url: "/api/workflow/run",
+      params,
     });
   }
 
