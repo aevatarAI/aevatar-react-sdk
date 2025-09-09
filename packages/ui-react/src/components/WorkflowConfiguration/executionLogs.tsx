@@ -78,24 +78,27 @@ export const ExecutionLogs = ({
   }
 
   return (
-    <Wrapper isAgentCardOpen={isAgentCardOpen} isMovable={isMovable}>
-      <ExecutionLogHeader
-        data={data}
-        activeAgent={activeAgent}
-        onToggle={setIsVisible}
-        onClick={handleClick}
-      />
-      {data?.length > 0 ? (
-        <ExecutionLogBody
-          isAgentCardOpen={isAgentCardOpen}
+    <Container>
+      <div className="sdk:bg-[#6F6F6F] sdk:min-w-[48px] sdk:max-w-[48px] sdk:min-h-[2px]" />
+      <Wrapper isAgentCardOpen={isAgentCardOpen} isMovable={isMovable}>
+        <ExecutionLogHeader
           data={data}
           activeAgent={activeAgent}
-          onChange={setActiveAgent}
+          onToggle={setIsVisible}
+          onClick={handleClick}
         />
-      ) : (
-        <EmptyExecutionLog />
-      )}
-    </Wrapper>
+        {data?.length > 0 ? (
+          <ExecutionLogBody
+            isAgentCardOpen={isAgentCardOpen}
+            data={data}
+            activeAgent={activeAgent}
+            onChange={setActiveAgent}
+          />
+        ) : (
+          <EmptyExecutionLog />
+        )}
+      </Wrapper>
+    </Container>
   );
 };
 
@@ -335,6 +338,14 @@ const ExecutionLogBody = ({
         </div>
       </div>
     </Flex>
+  );
+};
+
+const Container = ({ children }: { children: any }) => {
+  return (
+    <div className="sdk:min-w-[100%] sdk:flex sdk:flex-col sdk:gap-[2px] sdk: sdk:items-center sdk:justify-items-center">
+      {children}
+    </div>
   );
 };
 
