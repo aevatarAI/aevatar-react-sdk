@@ -1,7 +1,7 @@
 <svg width="17" height="14" viewBox="0 0 17 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_6537_11252)">
-<path d="M17 0H0V14L17 0Z" fill="var(--sdk-bg-accent)"/>
-<path d="M0 14L17 0" stroke="currentColor"/>
+<path class="hypotenuse-fill" d="M17 0H0V14L17 0Z" fill="var(--sdk-bg-accent)"/>
+<path class="hypotenuse-stroke" d="M0 14L17 0" stroke="currentColor"/>
 </g>
 <defs>
 <clipPath id="clip0_6537_11252">

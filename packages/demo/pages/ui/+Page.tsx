@@ -152,6 +152,9 @@ export default function UI() {
   return (
     <div className="min-w-[375px]">
       <AevatarProvider theme={theme}>
+        <div className="h-[100px] w-[100px] sdk:cursor-grab sdk:active:cursor-grabbing">
+          112
+        </div>
         <LoginButton />
 
         <AuthButton onFinish={onAuthFinish} />

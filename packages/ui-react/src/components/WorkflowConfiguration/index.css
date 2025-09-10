@@ -22,3 +22,7 @@
   user-select: none;
   -webkit-user-select: none;
 }
+
+.sidebar-item-bg-img .hypotenuse-fill {
+  fill: var(--sdk-bg-muted);
+}
