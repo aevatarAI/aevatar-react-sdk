@@ -40,7 +40,7 @@ export default function DeleteGAevatarConfirm({
         <div className="sdk:flex sdk:flex-col sdk:items-center sdk:gap-[16px] sdk:pt-[10px]">
           <DeleteTip />
 
-          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:lowercase sdk:text-[var(--sdk-color-text-primary)]">
+          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:text-[var(--sdk-color-text-primary)]">
             Are you sure you want to delete this g-agent?
           </div>
           <CheckboxWithDesc checked={checked} setChecked={setChecked} />
@@ -106,7 +106,7 @@ function CheckboxWithDesc({
           </svg>
         )}
       </button>
-      <span className="sdk:font-[Source_Code_Pro] sdk:text-[12px] sdk:text-[var(--sdk-muted-foreground)] sdk:lowercase">
+      <span className="sdk:font-[Source_Code_Pro] sdk:text-[12px] sdk:text-[var(--sdk-muted-foreground)]">
         I understand that all associated subagents will also be deleted
       </span>
     </div>

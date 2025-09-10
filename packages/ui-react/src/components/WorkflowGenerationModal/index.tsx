@@ -104,9 +104,9 @@ export const WorkflowGenerationModal = ({
                 <SelectValue placeholder="suggested" />
               </SelectTrigger>
               <SelectContent>
-                <div className="sdk:flex sdk:flex-row sdk:gap-2 sdk:items-center sdk:border-b sdk:border-[#303030] sdk:border-solid">
+                <div className="sdk:flex sdk:flex-row sdk:gap-2 sdk:items-center sdk:border-b sdk:border-[var(--sdk-color-bg-primary)] sdk:border-solid">
                   <AIStar />
-                  <span className="sdk:text-[#6F6F6F] sdk:text-[12px]">
+                  <span className="sdk:text-[var(--sdk-color-border-gray-400)] sdk:text-[12px]">
                     suggested
                   </span>
                 </div>

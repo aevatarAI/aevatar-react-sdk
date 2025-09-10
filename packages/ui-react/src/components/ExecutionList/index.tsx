@@ -56,8 +56,7 @@ export const columns = [
             "sdk:text-[14px]  sdk:font-outfit sdk:font-semibold ",
             row.original.workflowStatus === WorkflowStatus.failed &&
               "sdk:text-[var(--sdk-warning-color)] sdk:flex sdk:flex-row sdk:gap-[4px] sdk:items-center"
-          )}
-        >
+          )}>
           {row.original.workflowStatus === WorkflowStatus.failed && (
             <FailedIcon className="sdk:w-[14px] sdk:h-[14px]" />
           )}
@@ -105,26 +104,21 @@ export default function ExecutionList({
         "sdk:flex sdk:flex-col sdk:gap-[30px] sdk:items-start sdk:w-full sdk:box-border sdk:bg-[var(--sdk-bg-background)] sdk:h-full sdk:overflow-y-auto w-full",
         className
       )}
-      id={crypto.randomUUID()}
-    >
+      id={crypto.randomUUID()}>
       <div className="flex flex-col w-full">
         <div
           className="sdk:flex sdk:flex-row sdk:items-center sdk:w-full sdk:justify-between sdk:box-border"
-          id={crypto.randomUUID()}
-        >
+          id={crypto.randomUUID()}>
           <div
-            className="sdk:font-outfit sdk:font-semibold sdk:text-[18px]"
-            id={crypto.randomUUID()}
-            style={{ WebkitTextFillColor: "transparent" }}
-          >
+            className="sdk:font-outfit sdk:font-semibold sdk:text-[18px] sdk:text-[var(--sdk-color-text-primary)]"
+            id={crypto.randomUUID()}>
             <p>executions</p>
           </div>
           <div>
             <Button
-            variant="primary"
+              variant="primary"
               className="sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:cursor-pointer"
-              onClick={onNewWorkflow}
-            >
+              onClick={onNewWorkflow}>
               <AddIcon style={{ width: 14, height: 14 }} />
               new workflow
             </Button>
@@ -140,7 +134,9 @@ export default function ExecutionList({
             />
           </div>
           <div>
-            <span className="text-[var(--sdk-color-text-primary)] text-[16px]">no active executions</span>
+            <span className="text-[var(--sdk-color-text-primary)] text-[16px]">
+              no active executions
+            </span>
           </div>
         </div>
       </div>

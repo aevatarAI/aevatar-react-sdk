@@ -43,7 +43,7 @@ export default function ArrayField({
           <Button
             variant="outline"
             type="button"
-            className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:lowercase"
+            className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]!"
             onClick={() => onChange([undefined], "add")}
             disabled={disabled}>
             <AddIcon />
@@ -72,7 +72,7 @@ export default function ArrayField({
               <Button
                 variant="outline"
                 type="button"
-                className="sdk:w-[24pxpx] sdk:h-[20px] sdk:inline-block  sdk:p-[3px] sdk:px-[5px] sdk:lowercase"
+                className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block  sdk:p-[3px] sdk:px-[5px] "
                 disabled={true || disabled}>
                 <ArrowUp
                   className="sdk:text-[var(--sdk-color-text-primary)]"
@@ -82,7 +82,7 @@ export default function ArrayField({
               <Button
                 variant="outline"
                 type="button"
-                className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block  sdk:p-[3px] sdk:px-[5px] sdk:lowercase"
+                className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block  sdk:p-[3px] sdk:px-[5px] "
                 disabled={true || disabled}>
                 <ArrowUp
                   className="sdk:text-[var(--sdk-color-text-primary)]"
@@ -96,7 +96,7 @@ export default function ArrayField({
               <Button
                 variant="outline"
                 type="button"
-                className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:px-[5px]  sdk:p-[3px] sdk:lowercase"
+                className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:px-[5px]  sdk:p-[3px] "
                 onClick={() => onChange([], "delete")}
                 disabled={disabled}>
                 <DeleteIcon
@@ -111,7 +111,7 @@ export default function ArrayField({
           <Button
             variant="outline"
             type="button"
-            className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:lowercase"
+            className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! "
             onClick={() => onChange([...value, undefined], "add")}
             disabled={disabled}>
             <AddIcon />
@@ -152,7 +152,7 @@ export default function ArrayField({
                     <Button
                       variant="outline"
                       type="button"
-                      className="sdk:w-[24pxpx] sdk:h-[20px] sdk:inline-block  sdk:p-[3px] sdk:px-[5px] sdk:lowercase"
+                      className="sdk:w-[24pxpx] sdk:h-[20px] sdk:inline-block  sdk:p-[3px] sdk:px-[5px] "
                       disabled={idx === 0 || disabled}
                       onClick={() => {
                         if (idx === 0 || disabled) return;
@@ -173,7 +173,7 @@ export default function ArrayField({
                     <Button
                       variant="outline"
                       type="button"
-                      className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:p-[3px] sdk:px-[5px] sdk:lowercase"
+                      className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:p-[3px] sdk:px-[5px] "
                       disabled={idx === value.length - 1 || disabled}
                       onClick={() => {
                         if (idx === value.length - 1 || disabled) return;
@@ -198,7 +198,7 @@ export default function ArrayField({
                     <Button
                       variant="outline"
                       type="button"
-                      className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:px-[5px]  sdk:p-[3px] sdk:lowercase"
+                      className="sdk:w-[24px] sdk:h-[20px] sdk:inline-block sdk:px-[5px]  sdk:p-[3px] "
                       onClick={() =>
                         onChange(
                           value.filter((_, i) => i !== idx),
@@ -220,7 +220,7 @@ export default function ArrayField({
         <Button
           variant="outline"
           type="button"
-          className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! sdk:lowercase"
+          className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[5px]! "
           onClick={() => onChange([...value, undefined], "add")}
           disabled={disabled}>
           <AddIcon />

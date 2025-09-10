@@ -28,7 +28,7 @@ const SelectTrigger = React.forwardRef<
       ref={ref}
       className={cn(
         "sdk:flex sdk:font-outfit sdk:min-h-10 sdk:w-full sdk:items-center sdk:justify-center sdk:gap-[10px] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:bg-background sdk:px-3 sdk:py-2 sdk:text-sm sdk:ring-offset-background sdk:placeholder:text-[var(--sdk-muted-foreground)] sdk:focus:outline-none sdk:disabled:cursor-not-allowed sdk:disabled:opacity-50",
-        "sdk:text-[var(--sdk-color-text-primary)] sdk:text-center sdk:font-outfit sdk:text-xs sdk:font-semibold sdk:leading-normal sdk:lowercase",
+        "sdk:text-[var(--sdk-color-text-primary)] sdk:text-center sdk:font-outfit sdk:text-xs sdk:font-semibold sdk:leading-normal ",
         className
       )}
       {...props}>
@@ -38,7 +38,7 @@ const SelectTrigger = React.forwardRef<
       <SelectPrimitiveIcon
         asChild
         className={props["aria-disabled"] ? "hidden" : undefined}>
-        {downIcon ?? <DownIcon />}
+        {downIcon ?? <DownIcon className="sdk:text-[var(--sdk-color-bg-primary)]"/>}
       </SelectPrimitiveIcon>
     </SelectPrimitiveTrigger>
   );
@@ -104,8 +104,8 @@ const SelectContent = React.forwardRef<
       <SelectPrimitiveContent
         ref={ref}
         className={cn(
-          "sdk:relative sdk:font-outfit sdk:max-h-[248px] sdk:overflow-auto sdk:z-50  sdk:bg-[var(--sdk-color-border-primary)] sdk:text-popover-foreground sdk:shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-          "sdk:border-none sdk:w-[319px] sdk:md:w-[329px] sdk:p-[20px] sdk:md:p-[16px] sdk:md:px-[22px]",
+          "sdk:relative sdk:font-outfit sdk:max-h-[248px] sdk:overflow-auto sdk:z-50  sdk:bg-[var(--sdk-bg-popover)] sdk:text-popover-foreground sdk:shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          "sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:w-[319px] sdk:md:w-[329px] sdk:p-[20px] sdk:md:p-[16px] sdk:md:px-[22px]",
           position === "popper" &&
             "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
           className
@@ -157,7 +157,7 @@ const SelectItem = React.forwardRef<
     ref={ref}
     className={cn(
       "sdk:relative sdk:cursor-pointer sdk:select-none sdk:items-center sdk:text-sm sdk:outline-none sdk:focus:bg-accent sdk:focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-              "sdk:text-[var(--sdk-muted-foreground)] sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-bold sdk:leading-normal sdk:lowercase sdk:py-[7px]",
+      "sdk:text-[var(--sdk-muted-foreground)] sdk:text-left sdk:font-outfit sdk:text-[12px] sdk:font-bold sdk:leading-normal  sdk:py-[7px]",
       "select-item-wrapper",
       className
     )}

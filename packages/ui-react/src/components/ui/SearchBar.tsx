@@ -8,6 +8,7 @@ interface SearchBarProps {
   value: string;
   onChange?: (v: string) => void;
   placeholder?: string;
+  wrapperClassName?: string;
   className?: string;
   onDebounceChange?: (v: string) => void;
   debounceMs?: number;
@@ -20,6 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   onChange,
   placeholder = "search",
   className,
+  wrapperClassName,
   onDebounceChange,
   debounceMs = 300,
   onKeyDown,
@@ -49,9 +51,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
     <div
       className={clsx(
         "sdk:relative sdk:w-full sdk:border-b-[1px] sdk:border-b-[var(--sdk-color-sidebar-border)] sdk:bg-transparent",
-        className
+        wrapperClassName
       )}>
-      <div className="sdk:flex sdk:flex-row sdk:items-center sdk:bg-[var(--sdk-sidebar-background)] sdk:gap-1 sdk:text-[var(--sdk-muted-foreground)] sdk:p-[8px] sdk:w-full">
+      <div className={clsx("sdk:flex sdk:flex-row sdk:items-center sdk:bg-[var(--sdk-sidebar-background)] sdk:gap-1 sdk:text-[var(--sdk-muted-foreground)] sdk:p-[8px] sdk:w-full", className)}>
         <SearchIcon
           className={clsx(
             "sdk:w-4 sdk:h-4 sdk:shrink-0",
@@ -69,7 +71,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           className={clsx(
-            "sdk:bg-transparent sdk:border-none sdk:outline-none sdk:w-full sdk:text-[12px] sdk:font-outfit sdk:lowercase",
+            "sdk:bg-transparent sdk:border-none sdk:outline-none sdk:w-full sdk:text-[12px] sdk:font-outfit",
             showActive
               ? "sdk:text-[var(--sdk-color-text-primary)]"
               : "sdk:text-[var(--sdk-muted-foreground)]",

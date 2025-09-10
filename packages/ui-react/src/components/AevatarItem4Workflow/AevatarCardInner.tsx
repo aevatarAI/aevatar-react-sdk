@@ -66,7 +66,7 @@ export default function AevatarCardInner({
         className={clsx(
           "sdk:aevatar-item-background sdk:w-[234px]  sdk:border sdk:border-[var(--sdk-color-bg-primary)]  sdk:group-hover:border-[var(--sdk-border-foreground)]",
           selected && "sdk:border-[var(--sdk-border-foreground)]! ",
-          "sdk:border-b-[0px]!",
+          "sdk:border-b-[var(--sdk-bg-accent)]!",
           "sdk:max-h-[300px] sdk:overflow-y-auto",
           className
         )}
@@ -81,9 +81,15 @@ export default function AevatarCardInner({
             >{`${agentInfo?.name || "agent name"}`}</div>
 
             {agentStatus === "success" && (
-              <SuccessCheck width={14} height={14} />
+              <SuccessCheck
+                className="sdk:text-[var(--sdk-bg-background)]"
+                width={14}
+                height={14}
+              />
             )}
-            {agentStatus === "failed" && <ErrorIcon />}
+            {agentStatus === "failed" && (
+              <ErrorIcon className="sdk:text-[var(--sdk-bg-background)]" />
+            )}
             {(agentStatus === "pending" || agentStatus === "running") && (
               <Loading
                 key={"save"}
@@ -162,7 +168,7 @@ export default function AevatarCardInner({
                       <div
                         key={key}
                         className={clsx(
-                          "sdk:p-[4px] sdk:bg-[var(--sdk-bg-accent)] sdk:text-[12px] sdk:text-[var(--sdk-color-text-primary)] "
+                          "sdk:p-[4px] sdk:bg-[var(--sdk-bg-black-light)] sdk:text-[12px] sdk:text-[var(--sdk-color-text-primary)] "
                         )}>
                         {!info && info !== 0 && (
                           <div
@@ -210,7 +216,7 @@ export default function AevatarCardInner({
         <div
           className={clsx(
             " sdk:bg-[var(--sdk-bg-accent)] sdk:flex-1 sdk:border sdk:border-[var(--sdk-color-bg-primary)] sdk:group-hover:border-[var(--sdk-border-foreground)]",
-            " sdk:border-t-[0px] sdk:border-r-[0px]",
+            "sdk:border-t-[var(--sdk-bg-accent)]! sdk:border-r-[var(--sdk-bg-accent)]!",
             selected && "sdk:border-[var(--sdk-border-foreground)]!"
           )}
         />

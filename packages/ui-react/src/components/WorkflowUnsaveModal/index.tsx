@@ -28,7 +28,7 @@ export default function WorkflowUnsaveModal({
         </div>
         <div className="sdk:flex sdk:flex-col sdk:items-center sdk:gap-[16px] sdk:pt-[10px]">
           <Unsaved />
-          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:leading-normal sdk:lowercase sdk:text-[var(--sdk-color-text-primary)]">
+          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:leading-normal sdk:text-[var(--sdk-color-text-primary)]">
             <div className="sdk:font-semibold sdk:leading-[22px] sdk:pb-[10px]">
               Unsaved Changes
             </div>
@@ -41,7 +41,7 @@ export default function WorkflowUnsaveModal({
         <div className="sdk:flex sdk:justify-between sdk:items-start sdk:self-stretch  sdk:gap-[14px] sdk:pt-[28px] sdk:gap-[14px]">
           <Button
           variant="outline"
-            className="sdk:text-[12px]  sdk:px-[5px] sdk:py-[7px] sdk:leading-[14px] sdk:font-semibold sdk:flex-1 sdk:lowercase"
+            className="sdk:text-[12px]  sdk:px-[5px] sdk:py-[7px] sdk:leading-[14px] sdk:font-semibold sdk:flex-1"
             onClick={() => {
               onOpenChange(false);
               onSaveHandler(false);
@@ -50,7 +50,7 @@ export default function WorkflowUnsaveModal({
           </Button>
           <Button
             variant="primary"
-            className="sdk:text-[12px]  sdk:py-[7px] sdk:leading-[14px] sdk:font-semibold sdk:flex-1 sdk:lowercase"
+            className="sdk:text-[12px]  sdk:py-[7px] sdk:leading-[14px] sdk:font-semibold sdk:flex-1"
             onClick={(e) => {
               e.stopPropagation();
               onOpenChange?.(false);

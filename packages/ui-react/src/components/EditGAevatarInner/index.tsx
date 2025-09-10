@@ -133,7 +133,8 @@ function EditGAevatarInnerCom({
         data-testid="edit-gaevatar-inner"
         className="sdk:flex sdk:items-center sdk:gap-[8px]">
         <Button
-          className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]"
+          variant="primary"
+          className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px]"
           type="submit">
           {btnLoading === "saving" && (
             <Loading
@@ -142,11 +143,12 @@ function EditGAevatarInnerCom({
               style={{ width: 14, height: 14 }}
             />
           )}
-          <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
+          <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold  sdk:leading-[14px]">
             {text}
           </span>
         </Button>
         <Button
+          variant="outline"
           className={clsx(
             "sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px]",
             type === "create" && "sdk:hidden"
@@ -159,7 +161,7 @@ function EditGAevatarInnerCom({
               style={{ width: 14, height: 14 }}
             />
           )}
-          <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
+          <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold  sdk:leading-[14px]">
             delete
           </span>
         </Button>
@@ -288,10 +290,10 @@ function EditGAevatarInnerCom({
               "sdk:md:pt-[0] sdk:md:px-[40px] sdk:font-outfit"
             )}>
             <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-[var(--sdk-color-bg-primary)] sdk:self-stretch">
-              <div className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-outfit sdk:text-sm sdk:font-semibold sdk:leading-normal sdk:lowercase">
+              <div className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-outfit sdk:text-sm sdk:font-semibold sdk:leading-normal ">
                 settings
               </div>
-              <div className="sdk:text-[var(--sdk-color-border-primary)] sdk:font-mono sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:lowercase">
+              <div className="sdk:text-[var(--sdk-muted-foreground)] sdk:font-mono sdk:text-[12px] sdk:font-normal sdk:leading-normal ">
                 Manage your aevatar settings and preferences
               </div>
             </div>
@@ -322,7 +324,7 @@ function EditGAevatarInnerCom({
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent className="sdk:w-[var(--radix-popper-anchor-width)]!">
                         {agentTypeList.map((agentType) => (
                           <SelectItem key={agentType} value={agentType}>
                             {agentType}
@@ -351,6 +353,7 @@ function EditGAevatarInnerCom({
                         value={field?.value}
                         onChange={field?.onChange}
                         className={clsx(
+                          "sdk:w-full sdk:bg-[var(--sdk-bg-background)]",
                           field?.disabled &&
                             "sdk:bg-[var(--sdk-color-border-primary)]"
                         )}

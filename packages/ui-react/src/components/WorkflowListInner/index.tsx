@@ -38,7 +38,7 @@ export const emptyNode = (
       <NoWorkflows />
     </div>
     <div
-      className="sdk:flex sdk:flex-col sdk:font-sourcecodepro sdk:font-normal sdk:justify-center sdk:leading-[0] sdk:lowercase sdk:min-w-full sdk:relative sdk:shrink-0 sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:text-center"
+      className="sdk:flex sdk:flex-col sdk:font-sourcecodepro sdk:font-normal sdk:justify-center sdk:leading-[0]  sdk:min-w-full sdk:relative sdk:shrink-0 sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:text-center"
       style={{ width: "min-content" }}>
       <p className="sdk:block sdk:leading-normal">No workflows created yet</p>
     </div>
@@ -92,10 +92,11 @@ export default function WorkflowListInner({
                 className={clsx(
                   "sdk:normal-case sdk:gap-[5px] sdk:w-[106px] sdk:cursor-pointer sdk:bg-[var(--sdk-bg-primary)] sdk:text-[var(--sdk-primary-foreground)] sdk:hover:bg-[var(--sdk-hover-primary)]",
                   "sdk:border-none sdk:px-[18px]",
+                  "sdk:rounded-md",
                   "sdk:leading-[15px]",
                   "sdk:min-h-[30px]"
                 )}
-                downIcon={<DownIcon />}>
+                downIcon={<DownIcon className="sdk:text-[var(--sdk-color-bg-primary)]"/>}>
                 <span className="sdk:flex sdk:items-center sdk:gap-[5px] ">
                   <Setting role="img" className=" sdk:w-[14px] sdk:h-[14px]" />
                   actions
@@ -150,9 +151,8 @@ export default function WorkflowListInner({
         className="sdk:flex sdk:flex-row sdk:items-center sdk:w-full sdk:justify-between sdk:box-border"
         id="node-6202_82360">
         <div
-          className="sdk:font-outfit sdk:font-semibold sdk:text-[18px]"
-          id="node-6202_82361"
-          style={{ WebkitTextFillColor: "transparent" }}>
+          className="sdk:font-outfit sdk:font-semibold sdk:text-[18px] sdk:text-[var(--sdk-color-text-primary)]"
+          id="node-6202_82361">
           <p>Workflows</p>
         </div>
         <div>

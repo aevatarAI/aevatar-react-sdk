@@ -83,7 +83,7 @@ export default function EditWorkflowNameDialog({
         aria-describedby="rename workflow"
         className="sdk:w-[328px] sdk:p-5 sdk:flex sdk:flex-col sdk:gap-[28px] sdk:rounded-[6px] sdk:border-[var(--sdk-color-bg-tertiary)]">
         <DialogHeader>
-          <DialogTitle className="sdk:text-left sdk:text-[var(--sdk-color-text-primary)] sdk:inline  sdk:text-[18px] sdk:font-semibold sdk:leading-normal sdk:lowercase">
+          <DialogTitle className="sdk:text-left sdk:text-[var(--sdk-color-text-primary)] sdk:inline  sdk:text-[18px] sdk:font-semibold sdk:leading-normal">
             rename workflow
           </DialogTitle>
         </DialogHeader>

@@ -31,7 +31,7 @@ export default function WorkflowSaveFailedModal({
         <div className="sdk:flex sdk:flex-col sdk:items-center sdk:gap-[16px] sdk:pt-[10px]">
           <SaveFailedTip />
 
-          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:lowercase sdk:text-[var(--sdk-color-text-primary)]">
+          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:text-[var(--sdk-color-text-primary)]">
             {saveFailed === SaveFailedError.insufficientQuota && (
               <>
                 saving failed :( <br />
@@ -43,7 +43,7 @@ export default function WorkflowSaveFailedModal({
             {saveFailed === SaveFailedError.workflowExecutionFailed &&
               "Workflow execution failed"}
           </div>
-          <div className="sdk:w-[220px] sdk:text-[12px] sdk:text-[var(--sdk-muted-foreground)] sdk:text-center sdk:font-outfit sdk:font-normal sdk:leading-normal sdk:lowercase">
+          <div className="sdk:w-[220px] sdk:text-[12px] sdk:text-[var(--sdk-muted-foreground)] sdk:text-center sdk:font-outfit sdk:font-normal sdk:leading-normal">
             {saveFailed === SaveFailedError.workflowExecutionFailed &&
               "The workflow encountered an error and could not complete. Please review the configuration and logs, then try again."}
           </div>
@@ -51,7 +51,7 @@ export default function WorkflowSaveFailedModal({
         <div className="sdk:flex sdk:justify-between sdk:items-start sdk:self-stretch  sdk:gap-[14px] sdk:pt-[28px]">
           <Button
             variant="primary"
-            className="sdk:text-[12px] sdk:py-[7px] sdk:leading-[14px] sdk:font-semibold sdk:flex-1 sdk:lowercase"
+            className="sdk:text-[12px] sdk:py-[7px] sdk:leading-[14px] sdk:font-semibold sdk:flex-1"
             onClick={(e) => {
               e.stopPropagation();
               onSaveFailed?.(saveFailed);

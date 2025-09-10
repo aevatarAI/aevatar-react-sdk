@@ -41,7 +41,7 @@ export function SidebarSheet({
           )}
           onClick={() => setOpen(true)}>
           <AddIcon style={{ width: 14, height: 14 }} />
-          add agent
+          Add agent
         </Button>
       </SheetTrigger>
       <SheetContent

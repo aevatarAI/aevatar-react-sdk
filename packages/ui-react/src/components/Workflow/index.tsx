@@ -792,7 +792,7 @@ export const Workflow = forwardRef(
                 onClick={async () => {
                   onRunningHandler();
                 }}
-                className="sdk:cursor-pointer sdk:py-[7px]  sdk:px-[17px] sdk:text-center sdk:font-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold">
+                className="sdk:cursor-pointer sdk:py-[7px]  sdk:px-[17px] sdk:text-center sdk:font-normal sdk:text-[12px] sdk:font-outfit sdk:font-semibold">
                 {isRunning ? (
                   <Loading
                     key={"save"}
@@ -802,14 +802,18 @@ export const Workflow = forwardRef(
                 ) : (
                   <Play />
                 )}
-                <span className="sdk:leading-[14px]">
+                <span
+                  className={clsx(
+                    "sdk:leading-[14px]",
+                    isRunning && "sdk:text-[var(--sdk-running-text)]"
+                  )}>
                   {isRunning ? "running" : "run"}
                 </span>
               </Button>
 
               {/* <Button
                 onClick={onStopHandler}
-                className="sdk:cursor-pointer sdk:hover:text-[var(--sdk-color-text-secondary)] sdk:text-[var(--sdk-color-text-primary)] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[var(--sdk-bg-black-light)]">
+                className="sdk:cursor-pointer sdk:hover:text-[var(--sdk-color-text-secondary)] sdk:text-[var(--sdk-color-text-primary)] sdk:text-center sdk:font-normal sdk:leading-normal sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[var(--sdk-bg-black-light)]">
                 {isStopping ? (
                   <Loading
                     key={"save"}
@@ -841,7 +845,7 @@ export const Workflow = forwardRef(
               size={2}
               color={"var(--sdk-bg-dot"}
             />
-            <div className="sdk:absolute sdk:right-[0px] sdk:bottom-[0px] sdk:text-[var(--sdk-muted-foreground)] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[11px] sdk:font-pro aevatar-ai-watermark">
+            <div className="sdk:absolute sdk:right-[0px] sdk:bottom-[0px] sdk:text-[var(--sdk-muted-foreground)] sdk:text-center sdk:font-normal sdk:leading-normal sdk:text-[11px] sdk:font-pro aevatar-ai-watermark">
               powered by aevatar.ai
             </div>
           </ReactFlow>

@@ -61,7 +61,7 @@ export default function SidebarWithNewAgent({
             value={search}
             onChange={setSearch}
             placeholder="search"
-            className="sdk:w-full"
+            wrapperClassName="sdk:w-full"
             onDebounceChange={(v) => {
               setSearchValue(v);
             }}
