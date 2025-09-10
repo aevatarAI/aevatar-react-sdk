@@ -36,9 +36,25 @@ export default function ArrayField({
     return (
       <TooltipProvider delayDuration={0}>
         <div className="sdk:w-full sdk:mb-2">
-          <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030] sdk:flex sdk:gap-[4px]">
-            <span> {label ?? name}</span>
-            <TooltipDescriptor type={label ?? name} description={schema?.description} />
+          <FormLabel className="sdk:pb-[10px] sdk:flex sdk:items-center sdk:justify-between sdk:border-b sdk:border-[var(--sdk-bg-black-light)] sdk:gap-[4px]">
+            <div>
+              <span> {label ?? name}</span>
+              <TooltipDescriptor
+                type={label ?? name}
+                description={schema?.description}
+              />
+            </div>
+            <div>
+              {schema.documentationUrlValid && schema.documentationUrl && (
+                <a
+                  href={schema.documentationUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="sdk:text-[#A1A1AA] sdk:text-sm">
+                  Docs
+                </a>
+              )}
+            </div>
           </FormLabel>
           <Button
             type="button"
@@ -56,8 +72,25 @@ export default function ArrayField({
   if (value.length === 1) {
     return (
       <div className="sdk:w-full sdk:mb-2">
-        <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">
-          {label ?? name}
+        <FormLabel className="sdk:pb-[10px] sdk:flex sdk:items-center sdk:justify-between sdk:border-b sdk:border-[var(--sdk-color-border-primary)]">
+          <div>
+            <span> {label ?? name}</span>
+            <TooltipDescriptor
+              type={label ?? name}
+              description={schema?.description}
+            />
+          </div>
+          <div>
+            {schema.documentationUrlValid && schema.documentationUrl && (
+              <a
+                href={schema.documentationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="sdk:text-[#A1A1AA] sdk:text-sm">
+                Docs
+              </a>
+            )}
+          </div>
         </FormLabel>
         <div className="sdk:rounded sdk:mb-2">
           <div className="sdk:relative">
@@ -120,8 +153,25 @@ export default function ArrayField({
   if (value.length > 1) {
     return (
       <div className="sdk:w-full sdk:mb-2">
-        <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030]">
-          {label ?? name}
+        <FormLabel className="sdk:pb-[10px] sdk:flex sdk:items-center sdk:justify-between sdk:border-b sdk:border-[var(--sdk-color-border-primary)]">
+          <div>
+            <span> {label ?? name}</span>
+            <TooltipDescriptor
+              type={label ?? name}
+              description={schema?.description}
+            />
+          </div>
+          <div>
+            {schema.documentationUrlValid && schema.documentationUrl && (
+              <a
+                href={schema.documentationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="sdk:text-[#A1A1AA] sdk:text-sm">
+                Docs
+              </a>
+            )}
+          </div>
         </FormLabel>
         <div className="sdk:rounded sdk:mb-2">
           {value.map((item, idx) => {
