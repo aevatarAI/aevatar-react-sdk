@@ -92,12 +92,25 @@ export const renderSchemaField = ({
 
           return (
             <FormItem>
-              <FormLabel className="sdk:flex sdk:gap-[4px]">
-                <span>{labelWithRequired}</span>
-                <TooltipDescriptor
-                  type={labelWithRequired}
-                  description={schema?.description}
-                />
+              <FormLabel className="sdk:flex sdk:items-center sdk:justify-between sdk:gap-[4px]">
+                <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
+                  <span>{labelWithRequired}</span>
+                  <TooltipDescriptor
+                    type={labelWithRequired}
+                    description={schema?.description}
+                  />
+                </div>
+                <div>
+                  {schema.documentationUrlValid && schema.documentationUrl && (
+                    <a
+                      href={schema.documentationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="sdk:text-[#A1A1AA]">
+                      Docs
+                    </a>
+                  )}
+                </div>
               </FormLabel>
               <EnumSelect
                 field={field}
@@ -262,12 +275,26 @@ export const renderSchemaField = ({
             // No items
             return (
               <div className="sdk:w-full sdk:mb-2">
-                <FormLabel className="sdk:flex sdk:gap-[4px]">
-                  <span>{labelWithRequired}</span>
-                  <TooltipDescriptor
-                    type={labelWithRequired}
-                    description={schema?.description}
-                  />
+                <FormLabel className="sdk:flex sdk:items-center sdk:justify-between sdk:gap-[4px]">
+                  <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
+                    <span>{labelWithRequired}</span>
+                    <TooltipDescriptor
+                      type={labelWithRequired}
+                      description={schema?.description}
+                    />
+                  </div>
+                  <div>
+                    {schema.documentationUrlValid &&
+                      schema.documentationUrl && (
+                        <a
+                          href={schema.documentationUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="sdk:text-[#A1A1AA]">
+                          Docs
+                        </a>
+                      )}
+                  </div>
                 </FormLabel>
                 <Button
                   type="button"
@@ -285,12 +312,25 @@ export const renderSchemaField = ({
           // Has items
           return (
             <div className="sdk:w-full sdk:mb-2">
-              <FormLabel className="sdk:pb-[10px] sdk:border-b sdk:border-[#303030] sdk:flex sdk:gap-[4px]">
-                <span>{labelWithRequired}</span>
-                <TooltipDescriptor
-                  type={labelWithRequired}
-                  description={schema?.description}
-                />
+              <FormLabel className="sdk:pb-[10px] sdk:flex sdk:items-center sdk:justify-between sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:gap-[4px]">
+                <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
+                  <span>{labelWithRequired}</span>
+                  <TooltipDescriptor
+                    type={labelWithRequired}
+                    description={schema?.description}
+                  />
+                </div>
+                <div>
+                  {schema.documentationUrlValid && schema.documentationUrl && (
+                    <a
+                      href={schema.documentationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="sdk:text-[#A1A1AA]">
+                      Docs
+                    </a>
+                  )}
+                </div>
               </FormLabel>
               <div className="sdk:rounded sdk:mb-2">
                 {Object.entries(value).map(([k, v], idx) => (
@@ -355,12 +395,25 @@ export const renderSchemaField = ({
         rules={createValidationRule()}
         render={({ field }) => (
           <div className="sdk:w-full sdk:mb-2">
-            <FormLabel className="sdk:flex sdk:gap-[4px]">
-              <span>{labelWithRequired}</span>
-              <TooltipDescriptor
-                type={labelWithRequired}
-                description={schema?.description}
-              />
+            <FormLabel className="sdk:flex sdk:items-center sdk:justify-between sdk:gap-[4px]">
+              <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
+                <span>{labelWithRequired}</span>
+                <TooltipDescriptor
+                  type={labelWithRequired}
+                  description={schema?.description}
+                />
+              </div>
+              <div>
+                {schema.documentationUrlValid && schema.documentationUrl && (
+                  <a
+                    href={schema.documentationUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="sdk:text-[#A1A1AA]">
+                    Docs
+                  </a>
+                )}
+              </div>
             </FormLabel>
             <div className="sdk:pl-4  sdk:flex sdk:flex-col sdk:gap-y-[10px] sdk:border-l-2 sdk:border-l-[#303030]">
               {schema.children.map(([childName, childSchema]: [string, any]) =>
@@ -399,12 +452,26 @@ export const renderSchemaField = ({
           };
           return (
             <FormItem>
-              <FormLabel className="sdk:flex sdk:gap-[4px]">
-                <span>{labelWithRequired}</span>
-                <TooltipDescriptor
-                  type={labelWithRequired}
-                  description={schema?.description}
-                />
+              <FormLabel className="sdk:flex sdk:items-center sdk:justify-between sdk:gap-[4px]">
+                <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
+                  <span>{labelWithRequired}</span>
+                  <TooltipDescriptor
+                    type={labelWithRequired}
+                    description={schema?.description}
+                  />
+                </div>
+
+                <div>
+                  {schema.documentationUrlValid && schema.documentationUrl && (
+                    <a
+                      href={schema.documentationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="sdk:text-[#A1A1AA]">
+                      Docs
+                    </a>
+                  )}
+                </div>
               </FormLabel>
               <FormControl>
                 <Input
@@ -464,12 +531,25 @@ export const renderSchemaField = ({
 
           return (
             <FormItem>
-              <FormLabel className="sdk:flex sdk:gap-[4px]">
-                <span>{labelWithRequired}</span>
-                <TooltipDescriptor
-                  type={labelWithRequired}
-                  description={schema?.description}
-                />
+              <FormLabel className="sdk:flex sdk:items-center sdk:justify-between sdk:gap-[4px]">
+                <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
+                  <span>{labelWithRequired}</span>
+                  <TooltipDescriptor
+                    type={labelWithRequired}
+                    description={schema?.description}
+                  />
+                </div>
+                <div>
+                  {schema.documentationUrlValid && schema.documentationUrl && (
+                    <a
+                      href={schema.documentationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="sdk:text-[#A1A1AA]">
+                      Docs
+                    </a>
+                  )}
+                </div>
               </FormLabel>
               <FormControl>
                 {parentName ? (
@@ -532,12 +612,25 @@ export const renderSchemaField = ({
           };
           return (
             <FormItem>
-              <FormLabel className="sdk:flex sdk:gap-[4px]">
-                <span>{labelWithRequired}</span>
-                <TooltipDescriptor
-                  type={labelWithRequired}
-                  description={schema?.description}
-                />
+              <FormLabel className="sdk:flex sdk:items-center sdk:justify-between sdk:gap-[4px]">
+                <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
+                  <span>{labelWithRequired}</span>
+                  <TooltipDescriptor
+                    type={labelWithRequired}
+                    description={schema?.description}
+                  />
+                </div>
+                <div>
+                  {schema.documentationUrlValid && schema.documentationUrl && (
+                    <a
+                      href={schema.documentationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="sdk:text-[#A1A1AA]">
+                      Docs
+                    </a>
+                  )}
+                </div>
               </FormLabel>
               <FormControl>
                 <Input
