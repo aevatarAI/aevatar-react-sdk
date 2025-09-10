@@ -37,7 +37,7 @@ export default function ArrayField({
       <TooltipProvider delayDuration={0}>
         <div className="sdk:w-full sdk:mb-2">
           <FormLabel className="sdk:pb-[10px] sdk:flex sdk:items-center sdk:justify-between sdk:border-b sdk:border-[var(--sdk-bg-black-light)] sdk:gap-[4px]">
-            <div>
+            <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
               <span> {label ?? name}</span>
               <TooltipDescriptor
                 type={label ?? name}
@@ -50,7 +50,7 @@ export default function ArrayField({
                   href={schema.documentationUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="sdk:text-[#A1A1AA] sdk:text-sm">
+                  className="sdk:text-[#A1A1AA]">
                   Docs
                 </a>
               )}
@@ -73,7 +73,7 @@ export default function ArrayField({
     return (
       <div className="sdk:w-full sdk:mb-2">
         <FormLabel className="sdk:pb-[10px] sdk:flex sdk:items-center sdk:justify-between sdk:border-b sdk:border-[var(--sdk-color-border-primary)]">
-          <div>
+          <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
             <span> {label ?? name}</span>
             <TooltipDescriptor
               type={label ?? name}
@@ -86,7 +86,7 @@ export default function ArrayField({
                 href={schema.documentationUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="sdk:text-[#A1A1AA] sdk:text-sm">
+                className="sdk:text-[#A1A1AA] ">
                 Docs
               </a>
             )}
@@ -154,7 +154,7 @@ export default function ArrayField({
     return (
       <div className="sdk:w-full sdk:mb-2">
         <FormLabel className="sdk:pb-[10px] sdk:flex sdk:items-center sdk:justify-between sdk:border-b sdk:border-[var(--sdk-color-border-primary)]">
-          <div>
+          <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
             <span> {label ?? name}</span>
             <TooltipDescriptor
               type={label ?? name}
@@ -167,7 +167,7 @@ export default function ArrayField({
                 href={schema.documentationUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="sdk:text-[#A1A1AA] sdk:text-sm">
+                className="sdk:text-[#A1A1AA]">
                 Docs
               </a>
             )}

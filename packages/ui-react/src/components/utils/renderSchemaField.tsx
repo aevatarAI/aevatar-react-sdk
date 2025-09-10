@@ -93,7 +93,7 @@ export const renderSchemaField = ({
           return (
             <FormItem>
               <FormLabel className="sdk:flex sdk:items-center sdk:justify-between sdk:gap-[4px]">
-                <div>
+                <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
                   <span>{labelWithRequired}</span>
                   <TooltipDescriptor
                     type={labelWithRequired}
@@ -106,7 +106,7 @@ export const renderSchemaField = ({
                       href={schema.documentationUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="sdk:text-[#A1A1AA] sdk:text-sm">
+                      className="sdk:text-[#A1A1AA]">
                       Docs
                     </a>
                   )}
@@ -276,7 +276,7 @@ export const renderSchemaField = ({
             return (
               <div className="sdk:w-full sdk:mb-2">
                 <FormLabel className="sdk:flex sdk:items-center sdk:justify-between sdk:gap-[4px]">
-                  <div>
+                  <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
                     <span>{labelWithRequired}</span>
                     <TooltipDescriptor
                       type={labelWithRequired}
@@ -290,7 +290,7 @@ export const renderSchemaField = ({
                           href={schema.documentationUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="sdk:text-[#A1A1AA] sdk:text-sm">
+                          className="sdk:text-[#A1A1AA]">
                           Docs
                         </a>
                       )}
@@ -313,7 +313,7 @@ export const renderSchemaField = ({
           return (
             <div className="sdk:w-full sdk:mb-2">
               <FormLabel className="sdk:pb-[10px] sdk:flex sdk:items-center sdk:justify-between sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:gap-[4px]">
-                <div>
+                <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
                   <span>{labelWithRequired}</span>
                   <TooltipDescriptor
                     type={labelWithRequired}
@@ -326,7 +326,7 @@ export const renderSchemaField = ({
                       href={schema.documentationUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="sdk:text-[#A1A1AA] sdk:text-sm">
+                      className="sdk:text-[#A1A1AA]">
                       Docs
                     </a>
                   )}
@@ -396,7 +396,7 @@ export const renderSchemaField = ({
         render={({ field }) => (
           <div className="sdk:w-full sdk:mb-2">
             <FormLabel className="sdk:flex sdk:items-center sdk:justify-between sdk:gap-[4px]">
-              <div>
+              <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
                 <span>{labelWithRequired}</span>
                 <TooltipDescriptor
                   type={labelWithRequired}
@@ -409,7 +409,7 @@ export const renderSchemaField = ({
                     href={schema.documentationUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="sdk:text-[#A1A1AA] sdk:text-sm">
+                    className="sdk:text-[#A1A1AA]">
                     Docs
                   </a>
                 )}
@@ -453,7 +453,7 @@ export const renderSchemaField = ({
           return (
             <FormItem>
               <FormLabel className="sdk:flex sdk:items-center sdk:justify-between sdk:gap-[4px]">
-                <div>
+                <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
                   <span>{labelWithRequired}</span>
                   <TooltipDescriptor
                     type={labelWithRequired}
@@ -467,7 +467,7 @@ export const renderSchemaField = ({
                       href={schema.documentationUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="sdk:text-[#A1A1AA] sdk:text-sm">
+                      className="sdk:text-[#A1A1AA]">
                       Docs
                     </a>
                   )}
@@ -532,7 +532,7 @@ export const renderSchemaField = ({
           return (
             <FormItem>
               <FormLabel className="sdk:flex sdk:items-center sdk:justify-between sdk:gap-[4px]">
-                <div>
+                <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
                   <span>{labelWithRequired}</span>
                   <TooltipDescriptor
                     type={labelWithRequired}
@@ -545,7 +545,7 @@ export const renderSchemaField = ({
                       href={schema.documentationUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="sdk:text-[#A1A1AA] sdk:text-sm">
+                      className="sdk:text-[#A1A1AA]">
                       Docs
                     </a>
                   )}
@@ -613,7 +613,7 @@ export const renderSchemaField = ({
           return (
             <FormItem>
               <FormLabel className="sdk:flex sdk:items-center sdk:justify-between sdk:gap-[4px]">
-                <div>
+                <div className="sdk:flex sdk:items-center sdk:gap-[4px]">
                   <span>{labelWithRequired}</span>
                   <TooltipDescriptor
                     type={labelWithRequired}
@@ -626,7 +626,7 @@ export const renderSchemaField = ({
                       href={schema.documentationUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="sdk:text-[#A1A1AA] sdk:text-sm">
+                      className="sdk:text-[#A1A1AA]">
                       Docs
                     </a>
                   )}
