@@ -1,15 +1,9 @@
 import { useState } from "react";
-import { Button, Dialog, DialogContent, DialogTrigger } from "../ui";
+import { Button, Dialog, DialogContent, DialogTitle, DialogTrigger } from "../ui";
 import Delete from "../../assets/svg/delete.svg?react";
 import DeleteTip from "../../assets/svg/delete-tip-logo.svg?react";
 import Close from "../../assets/svg/close.svg?react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
-import clsx from "clsx";
+
 
 export interface IDeleteWorkflowConfirmProps {
   open?: boolean;
@@ -28,8 +22,9 @@ export default function DeleteWorkflowConfirm({
 
       <DialogContent
         onClick={(e) => e.stopPropagation()}
-        aria-describedby="delete g-agent"
+        aria-describedby="delete-workflow-modal"
         className="sdk:w-[328px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-[6px] sdk:border sdk:border-[var(--sdk-bg-black-light)]">
+        <DialogTitle className="sdk:sr-only sdk:hidden">Delete Workflow Confirmation</DialogTitle>
         <div className="sdk:flex sdk:items-center sdk:justify-between">
           <div />
           <Close onClick={() => onOpenChange(false)} />

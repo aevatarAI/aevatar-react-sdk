@@ -138,7 +138,7 @@ describe("SidebarSheet", () => {
     render(<SidebarSheet {...defaultProps} />);
     
     const button = screen.getByTestId("button");
-    expect(button).toHaveTextContent("add agent");
+    expect(button).toHaveTextContent("Add agent");
   });
 
   it("renders SidebarWithNewAgent component", () => {
@@ -174,7 +174,7 @@ describe("SidebarSheet", () => {
     
     render(<SidebarSheet {...defaultProps} />);
     
-    expect(mockSleep).toHaveBeenCalledWith(500);
+    expect(mockSleep).toHaveBeenCalledWith(0);
   });
 
   it("opens sheet when button is clicked", () => {

@@ -14,7 +14,7 @@ import { aevatarAI } from "../../../utils";
 import { ConfigProvider } from "../../config-provider";
 import { Toaster } from "../../ui/toaster";
 import { aevatarEvents } from "@aevatar-react-sdk/utils";
-import { Theme } from "../../types";
+import type { Theme } from "../../types";
 
 const INITIAL_STATE = {
   theme: "dark",
@@ -56,6 +56,9 @@ function reducer(state: any, { type, payload }: any) {
   switch (type) {
     case basicAevatarView.destroy.type: {
       return INITIAL_STATE;
+    }
+    case basicAevatarView.setTheme.type: {
+      return { ...state, theme: payload.theme };
     }
     default: {
       return Object.assign({}, state, payload);
@@ -113,7 +116,7 @@ export default function Provider({
   return (
     <AevatarContext.Provider
       value={useMemo(
-        () => [{ ...state, hiddenGAevatarType, theme }, { dispatch }],
+        () => [{ ...state, hiddenGAevatarType, theme: theme || state.theme }, { dispatch }],
         [state, hiddenGAevatarType, theme]
       )}>
       {children}

@@ -11,13 +11,15 @@ vi.mock("../../assets/svg/delete.svg?react", () => ({
   default: (props: any) => <svg {...props} data-testid="delete-icon" />,
 }));
 
-vi.mock("../DeleteWorkflowGAevatar", () => ({
+vi.mock("./HoverMenu", () => ({
   __esModule: true,
-  default: ({ handleDeleteClick }: any) => (
+  default: ({ onDelete }: any) => (
     // biome-ignore lint/a11y/useButtonType: <explanation>
-    <button data-testid="delete-workflow-icon" onClick={handleDeleteClick}>
-      DeleteWorkflow
-    </button>
+    <div>
+      <button data-testid="delete-workflow-icon" onClick={onDelete}>
+        DeleteWorkflow
+      </button>
+    </div>
   ),
 }));
 
@@ -91,11 +93,8 @@ describe("AevatarCardInner", () => {
       />
     );
 
-    // Ensure the delete icon renders
-    expect(screen.getByTestId("delete-icon")).toBeInTheDocument();
-    expect(
-      screen.queryByTestId("delete-workflow-icon")
-    ).not.toBeInTheDocument();
+    // Ensure the delete icon renders (HoverMenu is always present)
+    expect(screen.getByTestId("delete-workflow-icon")).toBeInTheDocument();
   });
 
   it("calls deleteNode with nodeId when delete button is clicked", () => {
@@ -108,7 +107,7 @@ describe("AevatarCardInner", () => {
     );
 
     // Click the delete button
-    fireEvent.click(screen.getByTestId("delete-icon"));
+    fireEvent.click(screen.getByTestId("delete-workflow-icon"));
 
     // Ensure deleteNode is called
     expect(mockDeleteNode).toHaveBeenCalledWith("node1");

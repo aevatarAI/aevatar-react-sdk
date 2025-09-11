@@ -6,7 +6,13 @@ import WorkflowDialog from "./dialog";
 vi.mock("../WorkflowAevatarEdit", () => ({
   __esModule: true,
   default: (props: any) => (
-    <div data-testid="edit-mock" {...props} />
+    <div 
+      data-testid="edit-mock" 
+      data-isnew={props.isNew}
+      data-agentitem={props.agentItem ? 'true' : 'false'}
+      data-nodeid={props.nodeId}
+      data-ongaevatarchange={props.onGaevatarChange ? 'true' : 'false'}
+    />
   ),
 }));
 

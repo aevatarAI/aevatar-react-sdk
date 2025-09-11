@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Dialog, DialogContent, DialogTrigger } from "../ui";
+import { Button, Dialog, DialogContent, DialogTitle, DialogTrigger } from "../ui";
 import Delete from "../../assets/svg/delete.svg?react";
 import DeleteTip from "../../assets/svg/delete-tip-logo.svg?react";
 import Close from "../../assets/svg/close.svg?react";
@@ -26,6 +26,7 @@ export default function DeleteWorkflowGAevatar({
         onClick={(e) => e.stopPropagation()}
         aria-describedby="delete g-agent"
         className="sdk:w-[328px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-[6px] sdk:border sdk:border-[var(--sdk-color-border-primary)]">
+        <DialogTitle className="sdk:sr-only sdk:hidden">Delete G-Agent Confirmation</DialogTitle>
         <div className="sdk:flex sdk:items-center sdk:justify-between">
           <div />
           <Close onClick={() => setOpen(false)} />

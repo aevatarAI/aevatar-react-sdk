@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { aevatarAI } from "../../../utils";
 import { ConfigProvider } from "../../config-provider";
 import Provider, { useAevatar } from ".";
+import { basicAevatarView } from "./actions";
 import "@testing-library/jest-dom";
 
 // Mocking dependencies
@@ -20,7 +21,7 @@ vi.mock("../../config-provider", () => ({
 }));
 
 describe("Provider", () => {
-  it("should provide initial state and dispatch function via context", () => {
+  it("should provide initial state and dispatch function via context", async () => {
     const TestComponent = () => {
       const [{ theme }, { dispatch }] = useAevatar();
 
@@ -30,12 +31,12 @@ describe("Provider", () => {
           {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
           <button
             onClick={() =>
-              dispatch({ type: "SET_THEME", payload: { theme: "light" } })
+              dispatch({ type: basicAevatarView.setTheme.type, payload: { theme: "light" } })
             }>
             Change Theme
           </button>
           {/* biome-ignore lint/a11y/useButtonType: <explanation> */}
-          <button onClick={() => dispatch({ type: "DESTROY", payload: {} })}>
+          <button onClick={() => dispatch({ type: basicAevatarView.destroy.type, payload: {} })}>
             DESTROY
           </button>
         </>
@@ -43,7 +44,7 @@ describe("Provider", () => {
     };
 
     render(
-      <Provider theme="dark">
+      <Provider>
         <TestComponent />
       </Provider>
     );
@@ -56,7 +57,7 @@ describe("Provider", () => {
       screen.getByText("Change Theme").click();
     });
     console.log(screen.getByTestId("theme").textContent, "textContent====");
-    waitFor(
+    await waitFor(
       () => {
         // Verify that the dispatch works as expected (you can mock the dispatch function behavior for further testing)
         expect(screen.getByTestId("theme").textContent).toBe("light");

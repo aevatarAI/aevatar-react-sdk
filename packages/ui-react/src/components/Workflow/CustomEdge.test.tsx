@@ -54,9 +54,9 @@ describe("CustomEdge", () => {
     const deleteButton = screen.getByRole("button");
     expect(deleteButton).toBeInTheDocument();
     expect(deleteButton).toHaveClass("sdk:bg-[var(--sdk-color-bg-primary)]");
-    expect(deleteButton).toHaveClass("sdk:text-[var(--sdk-muted-foreground)]");
+    expect(deleteButton).toHaveClass("sdk:text-[var(--sdk-color-text-secondary)]");
     expect(deleteButton).toHaveClass("sdk:border");
-    expect(deleteButton).toHaveClass("sdk:border-[var(--sdk-bg-black-light)]");
+    expect(deleteButton).toHaveClass("sdk:border-[var(--sdk-color-border-primary)]");
   });
 
   it("calls setEdges when delete button is clicked", () => {
@@ -102,11 +102,12 @@ describe("CustomEdge", () => {
   });
 
   it("renders with custom style", () => {
-          const customStyle = { stroke: "var(--sdk-warning-color)", strokeWidth: 2 };
+    const customStyle = { stroke: "var(--sdk-warning-color)", strokeWidth: 2 };
     render(<CustomEdge {...defaultProps} style={customStyle} />);
     
     const baseEdge = screen.getByTestId("base-edge");
-    expect(baseEdge).toHaveStyle(customStyle);
+    expect(baseEdge.style.stroke).toBe("var(--sdk-warning-color)");
+    expect(baseEdge.style.strokeWidth).toBe("2");
   });
 
   it("renders with marker end", () => {

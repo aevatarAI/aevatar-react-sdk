@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogContent, DialogTrigger } from "../ui";
+import { Button, Dialog, DialogContent, DialogTitle, DialogTrigger } from "../ui";
 import Close from "../../assets/svg/close.svg?react";
 import Unsaved from "../../assets/svg/unsaved.svg?react";
 export enum SaveFailedError {
@@ -20,8 +20,9 @@ export default function WorkflowUnsaveModal({
       <DialogTrigger asChild />
       <DialogContent
         onClick={(e) => e.stopPropagation()}
-        aria-describedby="delete g-agent"
+        aria-describedby="unsaved-changes-modal"
         className="sdk:w-[328px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-[6px] sdk:border sdk:border-[var(--sdk-bg-black-light)]">
+        <DialogTitle className="sdk:sr-only sdk:hidden">Unsaved Changes</DialogTitle>
         <div className="sdk:flex sdk:items-center sdk:justify-between">
           <div />
           <Close onClick={() => onOpenChange?.(false)} />

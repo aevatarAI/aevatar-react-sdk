@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogContent, DialogTrigger } from "../ui";
+import { Button, Dialog, DialogContent, DialogTitle, DialogTrigger } from "../ui";
 import Close from "../../assets/svg/close.svg?react";
 import SaveFailedTip from "../../assets/svg/save-error-tip.svg?react";
 import type { ReactNode } from "react";
@@ -22,8 +22,9 @@ export default function WorkflowSaveFailedModal({
       <DialogTrigger asChild />
       <DialogContent
         onClick={(e) => e.stopPropagation()}
-        aria-describedby="delete g-agent"
+        aria-describedby="save-failed-modal"
         className="sdk:w-[328px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-[6px] sdk:border sdk:border-[var(--sdk-color-border-primary)]">
+        <DialogTitle className="sdk:sr-only sdk:hidden">Workflow Save Failed</DialogTitle>
         <div className="sdk:flex sdk:items-center sdk:justify-between">
           <div />
           <Close onClick={() => onOpenChange?.(false)} />
