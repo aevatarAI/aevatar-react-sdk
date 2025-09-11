@@ -71,9 +71,6 @@ export default function AevatarTypeItemVisual({
           </div>
         </div>
       </div>
-      <div ref={previewRef} className="sdk:w-[100px] sdk:h-[100px] sdk:bg-transparent">
-        previewRef
-      </div>
     </div>
   );
 }

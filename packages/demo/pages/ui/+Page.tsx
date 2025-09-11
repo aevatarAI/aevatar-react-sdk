@@ -31,7 +31,7 @@ ConfigProvider.setConfig({
     timeout: 15000,
     baseURL:
       // "https://station-developer-dev-staging.aevatar.ai/testproject-client",
-      " https://station-developer-testing.aevatar.ai/defaultproject40473a-client",
+      " https://station-developer-testing.aevatar.ai/defaultprojecta75f8e-client",
   },
 });
 
@@ -46,7 +46,7 @@ enum Stage {
 
 export default function UI() {
   const [stage, setStage] = useState<Stage>();
-  const [theme, setTheme] = useState<Theme>();
+  const [theme, setTheme] = useState<Theme>('light');
   const [gaevatarList, setGaevatarList] = useState<IAgentInfoDetail[]>();
   const onNewGAevatar = useCallback(() => {
     setStage(Stage.newGAevatar);
@@ -119,7 +119,7 @@ export default function UI() {
 
   const getTokenByclient = useCallback(async () => {
     const TOKEN =
-      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkYzRDVCNTUzODVDQjVENjY4Q0M0OUI0OUM1N0E1RkIxNUEzMDA3OEUiLCJ4NXQiOiI4OVcxVTRYTFhXYU14SnRKeFhwZnNWb3dCNDQiLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODIvIiwiZXhwIjoxNzU3NTcxOTgxLCJpYXQiOjE3NTczOTkxODIsImF1ZCI6IkFldmF0YXIiLCJzY29wZSI6IkFldmF0YXIgb2ZmbGluZV9hY2Nlc3MiLCJqdGkiOiJiZTRlMWY2My02MTQ3LTRjYjQtOWE5MC01MTkzNTQ4YTczZWIiLCJzdWIiOiIyMDY5ZTM1Yy00YmI5LTE3ODUtMTgyNi0zYTFjM2U2MTgxNGEiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJydW51bHIiLCJlbWFpbCI6InJ1bnVsckBzbmFwbWFpbC5jYyIsInJvbGUiOlsiYmFzaWNVc2VyIiwiN2MwZmUxY2YtMTE1Yy1mNWVhLWU5ZmEtM2ExYzNlNjE5YWRlX093bmVyIl0sInBob25lX251bWJlcl92ZXJpZmllZCI6IkZhbHNlIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsInVuaXF1ZV9uYW1lIjoicnVudWxyIiwic2VjdXJpdHlfc3RhbXAiOiJaS1E2UjM2UVZWTDRMMkdKSlNWNzRYN0xCWVNMWEJOUCIsIm9pX3Byc3QiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX2F1X2lkIjoiZmRkYmZjZjktNGE3OS04Y2FjLTQwMDItM2ExYzNlNjE4M2JkIiwiY2xpZW50X2lkIjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV90a25faWQiOiIxZWMwZDA3MS03ZmU2LTUyMTYtZWNmNS0zYTFjM2Y1NDQ1NDQifQ.Pa88CRaC9K-i-m0GjSviGTeKZ-_YNUIW7maZZGPymciuXrsSDS25q7-Ma68oItKZ8FtsGAyAESj7k8mW2Z1ZMl6i8mV7moVisDrwg6PE7uOK9Yzw70QWKx_kUs9gRS2QahALTLYg6_gn1ndH00LWNcuqREUjdMqUleGjlgPaSp9opNgvHdYK6hgzyS_HJers3uufK1qGG6wOBcLVuEltWed3U7SDberr6E3XVPfIz8BtAUtWcq7v9Nir0fdM0R8FMRAyHVIdFd7TzGEvmaN_iCUQ7jqtbzpVufSjnNKBtGHAQMnPBEJV4d5nO5UZyzXkIL_JSPEbsBXQGFsuXUkMeQ";
+      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkQ4OTQyQjZBQjIwOTg3Rjk2OUM3NEY0RjQ3MzU3MjQ2Q0RGQzAwNDQiLCJ4NXQiOiIySlFyYXJJSmhfbHB4MDlQUnpWeVJzMzhBRVEiLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODIvIiwiZXhwIjoxNzU3NzM0MzQ2LCJpYXQiOjE3NTc1NjE1NDcsImF1ZCI6IkFldmF0YXIiLCJzY29wZSI6IkFldmF0YXIgb2ZmbGluZV9hY2Nlc3MiLCJqdGkiOiJmOTgyN2UxNi02ZDM2LTRhMjUtOTZhMS05ZGRmY2M5OWQwYTYiLCJzdWIiOiJjZDM1YjFjMy1jNzgyLTllZGQtZDA4OS0zYTFjNDUwOTAwM2UiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJydW51bHIiLCJlbWFpbCI6InJ1bnVsckBzbmFwbWFpbC5jYyIsInJvbGUiOlsiYzQ2ZWEzYTMtYjM0Yy00ZWVjLWQwM2ItM2ExYzQ1MDkxN2RhX093bmVyIiwiYmFzaWNVc2VyIl0sInBob25lX251bWJlcl92ZXJpZmllZCI6IkZhbHNlIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsInVuaXF1ZV9uYW1lIjoicnVudWxyIiwic2VjdXJpdHlfc3RhbXAiOiJXUDJMVkRERVo3RUpOVVdRTVlENEI3VjJaQ1NXM0ZTSyIsIm9pX3Byc3QiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX2F1X2lkIjoiZjAzMjdjM2ItOThjNC1mNmIzLTFmNWYtM2ExYzQ1MDkwNTUxIiwiY2xpZW50X2lkIjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV90a25faWQiOiI2ODJjNjJiZS03ZTE2LTNjNmEtMjZhZS0zYTFjNDkwMWMzYTIifQ.jO9MAOtN1X06guoxZu7OEEyjaTxjktRvnKPLZqMfZUlQIg8FkwxW1Qudr2qI7l3MSyB5zOmC6b6VumwYUsYEJ_xNRKgVuBINX-OCrlQFdH0TbgMe_xNWboryzHAUpvFs2XtB2Sh_LT8-f3w3EhwYzIM_XBI97_QV9VYEYHIKIrsrf6OmChUwxxi4Y5Z45XKo2c0AYpGv2Q2fMaYsk82X7FyPdTH9R814pxXRaPbZw7Ip9_y01jbQK2TTrCoEdsf2kPrPpamHQw3-SHeyENfSatU3hfaXYDSro2mvqZnLbli2IRPD1h1bll4spHvtTKJx2BOmm2NjffXQbuf94eVMXg";
     aevatarAI.fetchRequest.setHeaders({
       Authorization: TOKEN,
     });
@@ -152,9 +152,6 @@ export default function UI() {
   return (
     <div className="min-w-[375px]">
       <AevatarProvider theme={theme}>
-        <div className="h-[100px] w-[100px] sdk:cursor-grab sdk:active:cursor-grabbing">
-          112
-        </div>
         <LoginButton />
 
         <AuthButton onFinish={onAuthFinish} />

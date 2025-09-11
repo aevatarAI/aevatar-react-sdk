@@ -50,7 +50,7 @@ export default function ArrayField({
                   href={schema.documentationUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="sdk:text-[#A1A1AA]">
+                  className="sdk:text-[var(--sdk-muted-foreground)]">
                   Docs
                 </a>
               )}
@@ -86,7 +86,7 @@ export default function ArrayField({
                 href={schema.documentationUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="sdk:text-[#A1A1AA] ">
+                className="sdk:text-[var(--sdk-muted-foreground)] ">
                 Docs
               </a>
             )}
@@ -171,7 +171,7 @@ export default function ArrayField({
                 href={schema.documentationUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="sdk:text-[#A1A1AA]">
+                className="sdk:text-[var(--sdk-muted-foreground)]">
                 Docs
               </a>
             )}

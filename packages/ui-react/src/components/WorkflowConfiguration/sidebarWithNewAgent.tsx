@@ -42,7 +42,7 @@ export default function SidebarWithNewAgent({
   return (
     <div
       className={clsx(
-        "sdk:bg-[var(--sdk-bg-background)] sdk:relative ",
+        "sdk:bg-transparent sdk:relative ",
         "sdk:w-full sdk:border-b-[1px] sdk:border-b-[var(--sdk-color-sidebar-border)] sdk:overflow-x-auto",
         "sdk:sm:w-[152px]  sdk:sm:h-full sdk:sm:border-r-[1px] sdk:sm:border-b-[0px] sdk:border-b-[var(--sdk-color-sidebar-border)] sdk:sm:border-r-[var(--sdk-color-sidebar-border)]",
         "sdk:flex sdk:flex-col sdk:h-full"

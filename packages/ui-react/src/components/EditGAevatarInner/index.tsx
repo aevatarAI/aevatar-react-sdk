@@ -291,7 +291,7 @@ function EditGAevatarInnerCom({
             )}>
             <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-[var(--sdk-color-bg-primary)] sdk:self-stretch">
               <div className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-outfit sdk:text-sm sdk:font-semibold sdk:leading-normal ">
-                settings
+                Settings
               </div>
               <div className="sdk:text-[var(--sdk-muted-foreground)] sdk:font-mono sdk:text-[12px] sdk:font-normal sdk:leading-normal ">
                 Manage your aevatar settings and preferences
