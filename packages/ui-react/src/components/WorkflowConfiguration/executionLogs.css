@@ -1,14 +1,8 @@
-.red {
-    background: red !important;
+.aevatarai-execution-logs-wrapper .json-view--property {
+  color: var(--sdk-accent-teal);
 }
 
-.wrapper {
-    min-width: 100% !important;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    background-color: #171717 !important;
-    padding: 8px;
-    border: 1px solid #FFFFFF14;
-    border-radius: 8px;
+.aevatarai-execution-logs-wrapper .json-view--string {
+  color: var(--sdk-accent-pink);
+  word-break: break-all;
 }

@@ -261,7 +261,10 @@ export default function WorkflowAevatarEdit({
         key={nodeId}>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className={clsx("sdk:bg-[#141415] sdk:pb-[60px]")}>
+            <div
+              className={clsx(
+                "sdk:bg-[var(--sdk-sidebar-background)] sdk:pb-[60px]"
+              )}>
               <div className="sdk:flex sdk:flex-col sdk:gap-y-[16px]  sdk:items-start sdk:content-start sdk:self-stretch">
                 <FormField
                   key={"agentName"}
@@ -291,7 +294,9 @@ export default function WorkflowAevatarEdit({
                           value={field?.value}
                           onChange={field?.onChange}
                           className={clsx(
-                            field?.disabled && "sdk:bg-[#303030]"
+                            "sdk:bg-[var(--sdk-bg-background)]",
+                            field?.disabled &&
+                              "sdk:bg-[var(--sdk-bg-black-light)]"
                           )}
                         />
                       </FormControl>
@@ -317,7 +322,9 @@ export default function WorkflowAevatarEdit({
                           <SelectTrigger
                             aria-disabled={field?.disabled}
                             className={clsx(
-                              field?.disabled && "sdk:bg-[#303030]"
+                              "sdk:bg-[var(--sdk-bg-background)]",
+                              field?.disabled &&
+                                "sdk:bg-[var(--sdk-bg-black-light)]"
                             )}>
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>

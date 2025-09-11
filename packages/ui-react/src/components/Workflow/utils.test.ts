@@ -110,7 +110,7 @@ describe("generateWorkflowGraph", () => {
       type: "bezier",
       style: {
         strokeWidth: 2,
-        stroke: "#B9B9B9",
+        stroke: "var(--sdk-muted-foreground)",
       },
     });
   });

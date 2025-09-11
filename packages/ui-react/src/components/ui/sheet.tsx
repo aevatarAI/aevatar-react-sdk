@@ -23,7 +23,7 @@ const SheetOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitiveOverlay
     className={cn(
-      "sdk:absolute sdk:inset-0 sdk:z-50 sdk:bg-black/80  data-[state=open]:sdk:animate-in data-[state=closed]:sdk:animate-out data-[state=closed]:sdk:fade-out-0 data-[state=open]:sdk:fade-in-0",
+      "sdk:absolute sdk:inset-0 sdk:z-50 sdk:bg-[var(--sdk-bg-background)]/80  data-[state=open]:sdk:animate-in data-[state=closed]:sdk:animate-out data-[state=closed]:sdk:fade-out-0 data-[state=open]:sdk:fade-in-0",
       className
     )}
     {...props}
@@ -33,7 +33,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = cva(
-  "sdk:fixed sdk:z-50 sdk:gap-4 sdk:focus-visible:outline-hidden sdk:bg-background sdk:p-6 sdk:shadow-lg sdk:transition sdk:ease-in-out data-[state=open]:sdk:animate-in data-[state=closed]:sdk:animate-out data-[state=closed]:sdk:duration-300 data-[state=open]:sdk:duration-500",
+  "sdk:fixed sdk:z-50 sdk:gap-4 sdk:border-[var(--sdk-color-sidebar-border)]! sdk:focus-visible:outline-hidden sdk:bg-background sdk:p-6 sdk:shadow-lg sdk:transition sdk:ease-in-out data-[state=open]:sdk:animate-in data-[state=closed]:sdk:animate-out data-[state=closed]:sdk:duration-300 data-[state=open]:sdk:duration-500",
   {
     variants: {
       side: {
@@ -131,7 +131,7 @@ const SheetDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitiveDescription
     ref={ref}
-    className={cn("sdk:text-sm sdk:text-muted-foreground", className)}
+    className={cn("sdk:text-sm sdk:text-[var(--sdk-muted-foreground)]", className)}
     {...props}
   />
 ));

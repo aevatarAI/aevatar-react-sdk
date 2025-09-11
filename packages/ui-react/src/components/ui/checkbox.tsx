@@ -26,10 +26,10 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       <span
         className={cn(
           "sdk:relative sdk:w-[18px] sdk:h-[18px] sdk:rounded-[4px] sdk:box-border sdk:flex sdk:items-center sdk:justify-center",
-          disabled && "sdk:bg-[#303030] sdk:border sdk:border-[#606060]",
+          disabled && "sdk:bg-[var(--sdk-color-border-primary)] sdk:border sdk:border-[var(--sdk-color-border-primary)]",
           !disabled && checked
-            ? "sdk:bg-[#AFC6DD] sdk:border-[2px] sdk:border-[#606060]"
-            : !disabled && "sdk:bg-[#fff] sdk:border sdk:border-[#606060]"
+            ? "sdk:bg-[var(--sdk-border-foreground)] sdk:border-[2px] sdk:border-[var(--sdk-color-border-primary)]"
+            : !disabled && "sdk:bg-[var(--sdk-color-bg-primary)] sdk:border sdk:border-[var(--sdk-color-border-primary)]"
         )}
       >
         <input
@@ -51,7 +51,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           >
             <path
               d="M3 6.5L5.5 9L9 4.5"
-              stroke="#606060"
+              stroke="var(--sdk-color-border-primary)"
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -60,7 +60,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         )}
       </span>
       {label && (
-        <span className="sdk:text-[#B9B9B9] sdk:text-[13px] sdk:font-outfit sdk:lowercase">
+        <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:text-[13px] sdk:font-outfit">
           {label}
         </span>
       )}

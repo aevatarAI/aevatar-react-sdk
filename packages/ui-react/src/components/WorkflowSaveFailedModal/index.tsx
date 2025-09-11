@@ -23,7 +23,7 @@ export default function WorkflowSaveFailedModal({
       <DialogContent
         onClick={(e) => e.stopPropagation()}
         aria-describedby="delete g-agent"
-        className="sdk:w-[328px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-[6px] sdk:border sdk:border-[#303030]">
+        className="sdk:w-[328px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-[6px] sdk:border sdk:border-[var(--sdk-color-border-primary)]">
         <div className="sdk:flex sdk:items-center sdk:justify-between">
           <div />
           <Close onClick={() => onOpenChange?.(false)} />
@@ -31,7 +31,7 @@ export default function WorkflowSaveFailedModal({
         <div className="sdk:flex sdk:flex-col sdk:items-center sdk:gap-[16px] sdk:pt-[10px]">
           <SaveFailedTip />
 
-          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:lowercase sdk:text-white">
+          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:text-[var(--sdk-color-text-primary)]">
             {saveFailed === SaveFailedError.insufficientQuota && (
               <>
                 saving failed :( <br />
@@ -43,14 +43,15 @@ export default function WorkflowSaveFailedModal({
             {saveFailed === SaveFailedError.workflowExecutionFailed &&
               "Workflow execution failed"}
           </div>
-          <div className="sdk:w-[220px] sdk:text-[12px] sdk:text-[#B9B9B9] sdk:text-center sdk:font-outfit sdk:font-normal sdk:leading-normal sdk:lowercase">
+          <div className="sdk:w-[220px] sdk:text-[12px] sdk:text-[var(--sdk-muted-foreground)] sdk:text-center sdk:font-outfit sdk:font-normal sdk:leading-normal">
             {saveFailed === SaveFailedError.workflowExecutionFailed &&
               "The workflow encountered an error and could not complete. Please review the configuration and logs, then try again."}
           </div>
         </div>
         <div className="sdk:flex sdk:justify-between sdk:items-start sdk:self-stretch  sdk:gap-[14px] sdk:pt-[28px]">
           <Button
-            className="sdk:text-[12px] sdk:bg-white sdk:text-[#303030] sdk:py-[7px] sdk:leading-[14px] sdk:font-semibold sdk:flex-1 sdk:lowercase"
+            variant="primary"
+            className="sdk:text-[12px] sdk:py-[7px] sdk:leading-[14px] sdk:font-semibold sdk:flex-1"
             onClick={(e) => {
               e.stopPropagation();
               onSaveFailed?.(saveFailed);

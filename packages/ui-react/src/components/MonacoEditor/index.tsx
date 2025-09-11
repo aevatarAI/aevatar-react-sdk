@@ -90,8 +90,8 @@ function MonacoEditor({ data }: { data: any }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#1e1e1e",
-          color: "#cccccc",
+          backgroundColor: "var(--sdk-color-bg-primary)",
+          color: "var(--sdk-color-text-secondary)",
           fontSize: "14px",
         }}
       >

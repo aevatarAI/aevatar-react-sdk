@@ -37,7 +37,7 @@ describe("DeleteWorkflowConfirm", () => {
     // Check if delete button is rendered
     const deleteButton = screen.getByTestId("delete-icon");
     expect(deleteButton).toBeInTheDocument();
-    expect(deleteButton).toHaveClass("sdk:cursor-pointer", "sdk:text-[#606060]");
+    expect(deleteButton).toHaveClass("sdk:cursor-pointer", "sdk:text-[var(--sdk-color-gray-deep)]");
   });
 
   it("should open dialog when delete button is clicked", async () => {
@@ -184,7 +184,7 @@ describe("DeleteWorkflowConfirm", () => {
       const yesButton = screen.getByText("yes");
 
       expect(cancelButton).toHaveClass("sdk:text-[12px]", "sdk:py-[7px]");
-      expect(yesButton).toHaveClass("sdk:bg-white", "sdk:text-[#303030]");
+      expect(yesButton).toHaveClass("sdk:bg-[var(--sdk-color-bg-primary)]", "sdk:text-[var(--sdk-bg-background-light)]");
     });
   });
 

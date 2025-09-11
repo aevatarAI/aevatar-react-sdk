@@ -19,15 +19,15 @@ export default function HoverMenu({
         <PopoverTrigger asChild={true}>
           <div
             className={clsx(
-              "sdk:bg-[#141415] sdk:border sdk:border-[#303030] sdk:rounded-[4px] sdk:p-[2px]",
+              "sdk:bg-[var(--sdk-bg-accent)] sdk:border sdk:border-[var(--sdk-border-foreground)] sdk:rounded-[4px] sdk:p-[2px]",
               triggerClassName,
               isOpen && "sdk:block!"
             )}>
             {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
             <div
               className={clsx(
-                "sdk:bg-[#141415] sdk:rounded-[2px] sdk:p-[5px] sdk:flex sdk:items-center sdk:justify-center",
-                isOpen && "sdk:bg-[#303030]"
+                "sdk:bg-[var(--sdk-bg-accent)] sdk:rounded-[2px] sdk:p-[5px] sdk:flex sdk:items-center sdk:justify-center",
+                isOpen && "sdk:bg-[var(--sdk-bg-accent)]"
               )}
               onClick={(e) => {
                 e.stopPropagation();
@@ -39,7 +39,7 @@ export default function HoverMenu({
         </PopoverTrigger>
         <PopoverContent
           asChild
-          className="sdk:p-0 sdk:w-[200px] sdk:bg-[#141415] sdk:p-[9px_8px_9px_10px]!"
+          className="sdk:p-0 sdk:w-[200px] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[9px_8px_9px_10px]!"
           align="end"
           side="bottom"
           sideOffset={0}>
@@ -48,8 +48,8 @@ export default function HoverMenu({
             <div
               onClick={onDelete}
               className={clsx(
-                "sdk:cursor-pointer sdk:text-center sdk:text-[14px] sdk:font-outfit sdk:font-light sdk:text-[#fff] sdk:hover:text-[#fff] sdk:p-[10px]",
-                "sdk:hover:bg-[#727273]",
+                "sdk:cursor-pointer sdk:text-center sdk:text-[14px] sdk:font-outfit sdk:font-light sdk:text-[var(--sdk-color-text-primary)] sdk:hover:text-[var(--sdk-color-text-primary)] sdk:p-[10px]",
+                "sdk:hover:bg-[var(--sdk-bg-accent)]",
                 "select-item-wrapper"
               )}>
               delete

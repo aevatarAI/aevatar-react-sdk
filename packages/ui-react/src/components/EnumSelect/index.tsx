@@ -80,10 +80,10 @@ const EnumTooltipContent = ({
 
         return entries.map(([key, value]) => (
           <div key={safeKey(key)}>
-            <span className="sdk:font-semibold sdk:text-[12px] sdk:text-[#fff]">
+            <span className="sdk:font-semibold sdk:text-[12px] sdk:text-[var(--sdk-color-text-primary)]">
               {safeStringify(key)}:&nbsp;
             </span>
-            <span className="sdk:font-normal sdk:text-[12px] sdk:text-[#B9B9B9]">
+            <span className="sdk:font-normal sdk:text-[12px] sdk:text-[var(--sdk-color-text-secondary)]">
               {safeStringify(value)}
             </span>
           </div>
@@ -106,12 +106,9 @@ const EnumTooltipContent = ({
   return (
     <TooltipContent
       className={clsx(
-        // Base styles with fallback compatibility
-        "z-[1000] text-[12px] font-outfit text-[#B9B9B9] bg-[#141415] p-[4px]",
-        "whitespace-pre-wrap break-words text-left z-[999999999]",
         // SDK prefix styles for backward compatibility
-        "sdk:z-1000 sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
-        "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left sdk:z-[999999999]"
+        "sdk:z-1000 sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-color-text-secondary)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
+        "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left sdk:z-[99999]"
       )}
       side="left"
       sideOffset={10}>
@@ -337,14 +334,22 @@ export const EnumSelect = ({
       <FormControl>
         <SelectTrigger
           aria-disabled={field?.disabled || disabled}
-          className={clsx((field?.disabled || disabled) && "sdk:bg-[#303030]")}>
+          className={clsx(
+            "sdk:bg-[var(--sdk-bg-background)]",
+            (field?.disabled || disabled) &&
+              "sdk:bg-[var(--sdk-color-border-primary)]"
+          )}>
           <SelectValue placeholder="Select" />
         </SelectTrigger>
       </FormControl>
       <SelectContent
-        className={clsx("sdk:p-0! sdk:pb-[8px]! sdk:overflow-visible", selectContentCls)}>
-        <div className="sdk:flex sdk:flex-row sdk:mb-[8px] sdk:gap-[4px] sdk:border-b sdk:border-[#6F6F6F80] sdk:border-solid">
+        className={clsx(
+          "sdk:p-0! sdk:pb-[8px]! sdk:overflow-visible sdk:bg-[var(--sdk-bg-popover)]!",
+          selectContentCls
+        )}>
+        <div className="sdk:flex sdk:flex-row sdk:mb-[8px] sdk:gap-[4px] sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:border-solid">
           <SearchBar
+            className="sdk:bg-[var(--sdk-bg-popover)]!"
             placeholder="search"
             value={searchValue}
             onChange={setSearch}

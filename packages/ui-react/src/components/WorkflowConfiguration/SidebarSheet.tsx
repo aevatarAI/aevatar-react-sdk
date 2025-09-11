@@ -33,6 +33,7 @@ export function SidebarSheet({
       onOpenChange={() => {}}>
       <SheetTrigger asChild>
         <Button
+          variant="outline"
           className={clsx(
             "sdk:absolute sdk:top-[12px] sdk:left-[16px] sdk:z-[10] sdk:text-[12px] sdk:font-semibold",
             "sdk:gap-[5px] sdk:leading-[15px] sdk:py-[7px]",
@@ -40,7 +41,7 @@ export function SidebarSheet({
           )}
           onClick={() => setOpen(true)}>
           <AddIcon style={{ width: 14, height: 14 }} />
-          add agent
+          Add agent
         </Button>
       </SheetTrigger>
       <SheetContent

@@ -17,7 +17,7 @@ const ToastViewport = React.forwardRef<
   <ToastViewportEle
     ref={ref}
     className={cn(
-      "sdk:absolute sdk:top-[10px] sdk:left-[50vw] sdk:-translate-x-[50%] sdk:bg-[#141415] sdk:w-auto sdk:z-[9999] sdk:flex sdk:flex-col sdk:transform-gpu sdk:will-change-transform sdk:backface-visibility-hidden sdk:sm:top-auto sdk:sm:bottom-[calc(22px+env(safe-area-inset-bottom,0px))] sdk:sm:right-[30px] sdk:sm:left-auto sdk:sm:-translate-x-0 sdk:sm:max-w-[420px] sdk:max-h-screen",
+      "sdk:absolute sdk:top-[10px] sdk:left-[50vw] sdk:-translate-x-[50%] sdk:bg-[var(--sdk-color-bg-primary)] sdk:w-auto sdk:z-[9999] sdk:flex sdk:flex-col sdk:transform-gpu sdk:will-change-transform sdk:backface-visibility-hidden sdk:sm:top-auto sdk:sm:bottom-[calc(22px+env(safe-area-inset-bottom,0px))] sdk:sm:right-[30px] sdk:sm:left-auto sdk:sm:-translate-x-0 sdk:sm:max-w-[420px] sdk:max-h-screen",
       className
     )}
     {...props}
@@ -26,7 +26,7 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const toastVariants = cva(
-  "sdk:group sdk:pointer-events-auto sdk:relative sdk:flex sdk:w-full sdk:items-center sdk:justify-between sdk:space-x-4 sdk:overflow-hidden sdk:rounded-md sdk:border-[#272728] sdk:p-[20px] sdk:shadow-lg sdk:transition-all sdk:transform-gpu sdk:will-change-transform data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
+  "sdk:group sdk:pointer-events-auto sdk:relative sdk:flex sdk:w-full sdk:items-center sdk:justify-between sdk:space-x-4 sdk:overflow-hidden sdk:rounded-md sdk:border-[var(--sdk-color-bg-tertiary)] sdk:p-[20px] sdk:shadow-lg sdk:transition-all sdk:transform-gpu sdk:will-change-transform data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
   {
     variants: {
       variant: {
@@ -87,7 +87,7 @@ const ToastClose = React.forwardRef<
   <ToastActionCloseEle
     ref={ref}
     className={cn(
-      "sdk:absolute sdk:right-2 sdk:top-2 sdk:rounded-md sdk:p-1 sdk:text-foreground/50 sdk:opacity-0 sdk:transition-opacity sdk:hover:text-foreground sdk:focus:opacity-100 sdk:focus:outline-none sdk:focus:ring-2 sdk:group-hover:opacity-100 sdk:group-[.destructive]:text-red-300 sdk:group-[.destructive]:hover:text-red-50 sdk:group-[.destructive]:focus:ring-red-400 sdk:group-[.destructive]:focus:ring-offset-red-600",
+      "sdk:absolute sdk:right-2 sdk:top-2 sdk:rounded-md sdk:p-1 sdk:text-foreground/50 sdk:opacity-0 sdk:transition-opacity sdk:hover:text-foreground sdk:focus:opacity-100 sdk:focus:outline-none sdk:focus:ring-2 sdk:group-hover:opacity-100 sdk:group-[.destructive]:text-[var(--sdk-color-warning)] sdk:group-[.destructive]:hover:text-[var(--sdk-color-text-primary)] sdk:group-[.destructive]:focus:ring-[var(--sdk-color-warning)] sdk:group-[.destructive]:focus:ring-offset-[var(--sdk-color-warning)]",
       className
     )}
     toast-close=""
@@ -107,7 +107,7 @@ const ToastTitle = React.forwardRef<
   <ToastActionTitleEle
     ref={ref}
     className={cn(
-      "sdk:text-white sdk:text-[12px] sdk:font-normal sdk:lowercase sdk:font-source-code",
+      "sdk:text-[var(--sdk-color-text-primary)] sdk:text-[12px] sdk:font-normal  sdk:font-source-code",
       className
     )}
     {...props}
@@ -126,7 +126,7 @@ const ToastDescription = React.forwardRef<
   <ToastActionDescriptionEle
     ref={ref}
     className={cn(
-      "sdk:text-white sdk:text-[12px] sdk:font-normal sdk:lowercase sdk:font-source-code",
+      "sdk:text-[var(--sdk-color-text-primary)] sdk:text-[12px] sdk:font-normal  sdk:font-source-code",
       className
     )}
     {...props}

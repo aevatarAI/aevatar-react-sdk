@@ -83,7 +83,7 @@ describe("AevatarItem4Workflow", () => {
     const leftHandle = screen.getByLabelText("target handle");
     expect(leftHandle).toBeInTheDocument();
     expect(leftHandle).toHaveStyle({
-      background: "#53FF8A",
+      background: "var(--sdk-success-color)",
       width: "10px",
       height: "10px",
     });
@@ -92,7 +92,7 @@ describe("AevatarItem4Workflow", () => {
     const rightHandle = screen.getByLabelText("source handle");
     expect(rightHandle).toBeInTheDocument();
     expect(rightHandle).toHaveStyle({
-      background: "#53FF8A",
+      background: "var(--sdk-success-color)",
       width: "10px",
       height: "10px",
     });

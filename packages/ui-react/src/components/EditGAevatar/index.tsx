@@ -75,7 +75,7 @@ export default function EditGAevatar({
   return (
     <div
       className={clsx(
-        "sdk:relative sdk:bg-black sdk:overflow-auto aevatarai-edit-gaevatar-wrapper",
+        "sdk:relative sdk:bg-[var(--sdk-bg-background)] sdk:overflow-auto aevatarai-edit-gaevatar-wrapper",
         className
       )}>
       {agentType && (

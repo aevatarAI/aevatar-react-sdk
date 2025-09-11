@@ -514,11 +514,11 @@ export const Workflow = forwardRef(
               type: "bezier",
               // markerEnd: {
               //   type: MarkerType.ArrowClosed,
-              //   color: "#53FF8A",
+              //   color: "var(--sdk-success-color)",
               // },
               style: {
                 strokeWidth: 2,
-                stroke: "#B9B9B9",
+                stroke: "var(--sdk-muted-foreground)",
               },
             },
             eds
@@ -725,7 +725,7 @@ export const Workflow = forwardRef(
             defaultEdgeOptions={{ type: "bezier" }}
             connectionLineStyle={{
               strokeDasharray: "10 10",
-              stroke: "#B9B9B9",
+              stroke: "var(--sdk-muted-foreground)",
               strokeWidth: 2,
             }}>
             <div className="sdk:absolute sdk:left-[15px] sdk:bottom-[130px] sdk:z-5">
@@ -736,8 +736,9 @@ export const Workflow = forwardRef(
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
+                      variant="outline"
                       className={clsx(
-                        "sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:p-[7px] sdk:border-[#303030]",
+                        "sdk:cursor-pointer sdk:p-[7px]",
                         !canUndo && "sdk:opacity-50 sdk:cursor-not-allowed"
                       )}
                       onClick={onUndoHandler}
@@ -748,7 +749,7 @@ export const Workflow = forwardRef(
                   </TooltipTrigger>
                   <TooltipContent
                     className={clsx(
-                      "sdk:z-1000 sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                      "sdk:z-1000 sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
                     side="top">
@@ -761,8 +762,9 @@ export const Workflow = forwardRef(
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
+                      variant="outline"
                       className={clsx(
-                        "sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:p-[7px] sdk:border-[#303030]",
+                        "sdk:cursor-pointer sdk:p-[7px]",
                         !canRedo && "sdk:opacity-50 sdk:cursor-not-allowed"
                       )}
                       onClick={onRedoHandler}
@@ -776,7 +778,7 @@ export const Workflow = forwardRef(
                   </TooltipTrigger>
                   <TooltipContent
                     className={clsx(
-                      "sdk:z-1000 sdk:text-[12px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+                      "sdk:z-1000 sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
                     side="top">
@@ -786,10 +788,11 @@ export const Workflow = forwardRef(
               </TooltipProvider>
 
               <Button
+                variant="outline"
                 onClick={async () => {
                   onRunningHandler();
                 }}
-                className="sdk:cursor-pointer sdk:py-[7px]  sdk:px-[17px] sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
+                className="sdk:cursor-pointer sdk:py-[7px]  sdk:px-[17px] sdk:text-center sdk:font-normal sdk:text-[12px] sdk:font-outfit sdk:font-semibold">
                 {isRunning ? (
                   <Loading
                     key={"save"}
@@ -799,14 +802,18 @@ export const Workflow = forwardRef(
                 ) : (
                   <Play />
                 )}
-                <span className="sdk:leading-[14px]">
+                <span
+                  className={clsx(
+                    "sdk:leading-[14px]",
+                    isRunning && "sdk:text-[var(--sdk-running-text)]"
+                  )}>
                   {isRunning ? "running" : "run"}
                 </span>
               </Button>
 
               {/* <Button
                 onClick={onStopHandler}
-                className="sdk:cursor-pointer sdk:hover:text-[#000] sdk:text-white sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[#303030]">
+                className="sdk:cursor-pointer sdk:hover:text-[var(--sdk-color-text-secondary)] sdk:text-[var(--sdk-color-text-primary)] sdk:text-center sdk:font-normal sdk:leading-normal sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[var(--sdk-bg-black-light)]">
                 {isStopping ? (
                   <Loading
                     key={"save"}
@@ -829,12 +836,16 @@ export const Workflow = forwardRef(
                 width: 100,
                 height: 64,
               }}
-              nodeColor={"#cecece"}
-              bgColor={"#000"}
-              maskColor={"#141415"}
+              nodeColor={"var(--sdk-color-gray-light)"}
+              bgColor={"var(--sdk-bg-background)"}
+              maskColor={"var(--sdk-color-bg-primary)"}
             />
-            <BackgroundFlow bgColor={"#000"} size={2} color={"#D2D6DB4D"} />
-            <div className="sdk:absolute sdk:right-[0px] sdk:bottom-[0px] sdk:text-[#B9B9B9] sdk:text-center sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-[11px] sdk:font-pro aevatar-ai-watermark">
+            <BackgroundFlow
+              bgColor={"var(--sdk-bg-background)"}
+              size={2}
+              color={"var(--sdk-bg-dot"}
+            />
+            <div className="sdk:absolute sdk:right-[0px] sdk:bottom-[0px] sdk:text-[var(--sdk-muted-foreground)] sdk:text-center sdk:font-normal sdk:leading-normal sdk:text-[11px] sdk:font-pro aevatar-ai-watermark">
               powered by aevatar.ai
             </div>
           </ReactFlow>

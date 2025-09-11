@@ -44,15 +44,11 @@ export default function WorkflowDialog({
         />
       </DialogClose>
       <div className="sdk:h-[500px] sdk:sm:h-full sdk:flex sdk:flex-col sdk:gap-[8px] sdk:w-full  sdk:pt-[8px] sdk:sm:pt-[8px]">
-        <DialogTitle className="sdk:pb-[8px] sdk:text-[15px] sdk:font-outfit sdk:font-semibold sdk:border-b sdk:border-[#303030] sdk:aevatar-title">
-          <p
-            className="sdk:bg-gradient-to-r sdk:px-[8px] sdk:sm:px-[8px]  sdk:from-white sdk:to-[#999] sdk:bg-clip-text sdk:text-transparent"
-            style={{ WebkitTextFillColor: "transparent" }}>
-            agent configuration
-          </p>
+        <DialogTitle className="sdk:text-[var(--sdk-color-text-primary)] sdk:pb-[8px] sdk:text-[15px] sdk:font-outfit sdk:font-semibold sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:aevatar-title">
+          <p className="sdk:px-[8px] sdk:sm:px-[8px] ">agent configuration</p>
         </DialogTitle>
         <WorkflowAevatarEdit
-          key={nodeId || 'default'}
+          key={nodeId || "default"}
           disabled={disabled}
           isNew={isNew}
           agentItem={agentItem}

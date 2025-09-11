@@ -8,11 +8,10 @@ import {
 } from "../ui/tooltip";
 import { useCallback, useEffect, useMemo } from "react";
 import { useToast } from "../../hooks/use-toast";
-import NewAevatarItemIcon from "../../assets/svg/new-aevatarItem.svg?react";
-import NewAevatarItemHoverIcon from "../../assets/svg/new-aevatarItem-hover.svg?react";
-import AevatarItemIcon from "../../assets/svg/aevatarItem.svg?react";
 import { useDrag } from "react-dnd";
 import { useDnD, type IDragItem } from "../Workflow/DnDContext";
+import AevatarTypeItemVisual from "./AevatarTypeItemVisual";
+
 interface IAevatarTypeItemProps {
   agentType?: string;
   description?: string;
@@ -44,7 +43,7 @@ export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
     [agentType, propertyJsonSchema, defaultValues]
   );
 
-  const [{ isDragging }, dragRef] = useDrag<
+  const [{ isDragging  }, dragRef, previewRef] = useDrag<
     IDragItem,
     unknown,
     { isDragging: boolean }
@@ -77,50 +76,18 @@ export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
     <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>
-          {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-          <div
-            ref={dragRef}
-            data-testid="aevatar-type-item-root"
-            className={clsx(
-              "sdk:relative sdk:min-w-[124px] sdk:max-w-[124px] sdk:h-[45px] sdk:cursor-grab sdk:active:cursor-grabbing sdk:group sdk:no-user-select",
-              disabled && "sdk:cursor-not-allowed sdk:opacity-50",
-              isDragging && "sdk:opacity-50",
-              className
-            )}
-            onClick={onAevatarItemClick}>
-            <NewAevatarItemIcon
-              className={clsx(
-                "sdk:absolute sdk:group-hover:hidden",
-                disabled && "sdk:hidden! sdk:opacity-50"
-              )}
-            />
-            <NewAevatarItemHoverIcon
-              className={clsx(
-                "sdk:absolute sdk:group-hover:block sdk:hidden",
-                disabled && "sdk:hidden! sdk:opacity-50"
-              )}
-            />
-            <AevatarItemIcon
-              className={clsx(
-                "sdk:absolute sdk:hidden",
-                disabled && "sdk:block! sdk:opacity-50"
-              )}
-            />
-
-            <div className=" sdk:text-center sdk:px-[16px] sdk:py-[16px] sdk:relative sdk:flex sdk:flex-col ">
-              <div
-                className={clsx(
-                  "sdk:text-[11px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:text-center sdk:w-full sdk:truncate",
-                  disabled && "sdk:text-[#B9B9B9] sdk:opacity-50"
-                )}>
-                {agentType?.split(".")?.pop() || ""}
-              </div>
-            </div>
-          </div>
+          <AevatarTypeItemVisual
+            agentType={agentType}
+            disabled={disabled}
+            onClick={onAevatarItemClick}
+            dragRef={dragRef}
+            className={className}
+            previewRef={previewRef}
+          />
         </TooltipTrigger>
         <TooltipContent
           className={clsx(
-            "sdk:z-1000 sdk:text-[10px] sdk:font-outfit sdk:text-[#B9B9B9] sdk:bg-[#141415] sdk:p-[4px]",
+            "sdk:z-1000 sdk:text-[10px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
             "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
           )}
           align="end"

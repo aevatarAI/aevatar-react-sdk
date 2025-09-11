@@ -82,15 +82,13 @@ export const EditExecutionsFilterDialog = ({
         <Button
           type="button"
           className="max-w-[35px] max-h-[35px]"
-          disabled={false}
-        >
+          disabled={false}>
           {filterCount > 0 ? <FilterBtn /> : <Filter />}
         </Button>
       </DialogTrigger>
       <DialogContent
         aria-describedby="create new api key"
-        className="w-[356px] p-5 flex flex-col gap-[28px] rounded-[6px] border border-black-light [&>button]:hidden"
-      >
+        className="w-[356px] p-5 flex flex-col gap-[28px] rounded-[6px] border border-[var(--sdk-color-border-black-light)] [&>button]:hidden">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-y-[16px] items-start content-start self-stretch">
@@ -111,13 +109,11 @@ export const EditExecutionsFilterDialog = ({
                             ...filter,
                             name: value,
                           });
-                        }}
-                      >
+                        }}>
                         <FormControl>
                           <SelectTrigger
                             aria-disabled={field?.disabled}
-                            className="normal-case"
-                          >
+                            className="normal-case">
                             <SelectValue placeholder="all workflows" />
                           </SelectTrigger>
                         </FormControl>
@@ -126,8 +122,7 @@ export const EditExecutionsFilterDialog = ({
                             <SelectItem
                               className="text-[16px] normal-case"
                               key={item.id}
-                              value={item.name}
-                            >
+                              value={item.name}>
                               {item.name}
                             </SelectItem>
                           ))}
@@ -156,13 +151,11 @@ export const EditExecutionsFilterDialog = ({
                             ...filter,
                             status: value,
                           });
-                        }}
-                      >
+                        }}>
                         <FormControl>
                           <SelectTrigger
                             aria-disabled={field?.disabled}
-                            className="normal-case"
-                          >
+                            className="normal-case">
                             <SelectValue
                               placeholder="any status"
                               defaultValue="pending"
@@ -174,8 +167,7 @@ export const EditExecutionsFilterDialog = ({
                             <SelectItem
                               className="text-[16px] normal-case"
                               key={item}
-                              value={item}
-                            >
+                              value={item}>
                               {item}
                             </SelectItem>
                           ))}
@@ -196,7 +188,7 @@ export const EditExecutionsFilterDialog = ({
                     <FormItem aria-labelledby="dateLabel" className="w-full">
                       <FormLabel id="dateLabel">execution start</FormLabel>
                       <FormControl>
-                        <div className="flex items-center justify-between border border-[#303030]">
+                        <div className="flex items-center justify-between border border-[var(--sdk-bg-black-light)]">
                           <DatePickerWithoutRange
                             onDateChange={(date: any) => {
                               field.onChange(date);
@@ -245,12 +237,12 @@ export const EditExecutionsFilterDialog = ({
             </div>
 
             <Button
-              className="text-white text-[13px] py-[7px] leading-[14px] mt-[16px]"
+              variant="primary"
+              className="text-[13px] py-[7px] leading-[14px] mt-[16px]"
               type="reset"
               onClick={() => {
                 form.reset();
-              }}
-            >
+              }}>
               reset all
             </Button>
           </form>

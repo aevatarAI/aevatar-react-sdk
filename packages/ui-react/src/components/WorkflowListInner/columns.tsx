@@ -78,7 +78,7 @@ export const workflowColumns: ColumnDef<
         className={clsx(
           "sdk:text-[14px]  sdk:font-outfit sdk:font-semibold ",
           row.original.workflowStatus === WorkflowStatus.failed &&
-            "sdk:text-[#FF2E2E] sdk:flex sdk:flex-row sdk:gap-[4px] sdk:items-center"
+            "sdk:text-[var(--sdk-warning-color)] sdk:flex sdk:flex-row sdk:gap-[4px] sdk:items-center"
         )}
       >
         {row.original.workflowStatus === WorkflowStatus.failed && (

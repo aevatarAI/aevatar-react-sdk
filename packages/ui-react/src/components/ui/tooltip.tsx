@@ -18,7 +18,7 @@ const TooltipContent = React.forwardRef<
     ref={ref}
     sideOffset={sideOffset}
     className={cn(
-      "sdk:z-50 sdk:overflow-hidden sdk:max-w-[200px] sdk:max-h-[300px] sdk:overflow-y-auto sdk:bg-[#141415] sdk:p-[4px] sdk:text-[#B9B9B9] sdk:font-outfit sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:lowercase sdk:text-popover-foreground sdk:shadow-md sdk:animate-in sdk:fade-in-0 sdk:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      "sdk:max-w-[200px] sdk:max-h-[300px] sdk:overflow-y-auto sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px] sdk:text-[var(--sdk-muted-foreground)] sdk:font-outfit sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:text-popover-foreground sdk:shadow-md sdk:animate-in sdk:fade-in-0 sdk:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
       className
     )}
     {...props}

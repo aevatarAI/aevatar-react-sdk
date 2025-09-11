@@ -1,10 +1,8 @@
-import AIStar from "../../assets/svg/aiStar.svg?react";
 import AIStarWhite from "../../assets/svg/aiStarWhite.svg?react";
 import SuccessCheck from "../../assets/svg/successCheck.svg?react";
 import ErrorIcon from "../../assets/svg/errorIcon.svg?react";
 import EmptyRun from "../../assets/svg/emptyRun.svg?react";
 import Close from "../../assets/svg/close.svg?react";
-import Browsers from "../../assets/svg/browsers.svg?react";
 import Clipboard from "../../assets/svg/clipboard.svg?react";
 import Clock from "../../assets/svg/clock.svg?react";
 import Loading from "../../assets/svg/loading.svg?react";
@@ -15,6 +13,8 @@ import "react18-json-view/src/style.css";
 import "react18-json-view/src/dark.css";
 import clsx from "clsx";
 import { useFetchExecutionLogs } from "../Workflow/hooks/useFetchExecutionLogs";
+import { Button } from "../ui";
+import "./executionLogs.css";
 
 const DEFAULT = {
   agentName: "unknown",
@@ -83,7 +83,7 @@ export const ExecutionLogs = ({
 
   return (
     <Container>
-      <div className="sdk:bg-[#6F6F6F] sdk:min-w-[48px] sdk:max-w-[48px] sdk:min-h-[2px]" />
+      {/* <div className="sdk:bg-[var(--sdk-color-border-gray-400)] sdk:min-w-[48px] sdk:max-w-[48px] sdk:min-h-[2px]" /> */}
       <Wrapper isAgentCardOpen={isAgentCardOpen} isMovable={isMovable}>
         <ExecutionLogHeader
           data={data}
@@ -149,10 +149,10 @@ const ExecutionLogHeader = ({
         {data?.length > 0 ? (
           <div className="sdk:flex sdk:gap-[8px]">
             <div className="sdk:flex sdk:items-center sdk:gap-1">
-              <AIStar />
+              <AIStarWhite className="sdk:text-[var(--sdk-muted-foreground)]" />
               <span className="sdk:text-[14px]">{agentName}</span>
             </div>
-            <span className="sdk:text-[#6F6F6F] sdk:text-[14px]">
+            <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:text-[14px]">
               {executionTime ? `${executionTime}ms` : "-"}
             </span>
             <div
@@ -160,10 +160,9 @@ const ExecutionLogHeader = ({
                 isPending
                   ? ""
                   : isSuccess
-                  ? "sdk:text-[#53FF8A]"
-                  : "sdk:text-[#FF2E2E]"
-              }`}
-            >
+                  ? "sdk:text-[var(--sdk-success-color)]"
+                  : "sdk:text-[var(--sdk-warning-color)]"
+              }`}>
               {isPending ? (
                 <Loading
                   key={"save"}
@@ -171,9 +170,9 @@ const ExecutionLogHeader = ({
                   style={{ width: 14, height: 14 }}
                 />
               ) : isSuccess ? (
-                <SuccessCheck />
+                <SuccessCheck className="sdk:text-[var(--sdk-bg-background)]" />
               ) : (
-                <ErrorIcon />
+                <ErrorIcon className="sdk:text-[var(--sdk-bg-background)]" />
               )}
               <span className="sdk:w-[2px]" />
               <span className="sdk:text-[12px] sdk:mt-[2px]">{status}</span>
@@ -191,8 +190,7 @@ const ExecutionLogHeader = ({
             className="sdk:cursor-pointer"
             onClick={() => {
               onToggle((prev: boolean) => !prev);
-            }}
-          >
+            }}>
             <Close />
           </button>
         </span>
@@ -244,9 +242,9 @@ const ExecutionLogBody = ({
             }
 
             return currentStatus === "success" ? (
-              <SuccessCheck />
+              <SuccessCheck className="sdk:text-[var(--sdk-bg-background)]" />
             ) : (
-              <ErrorIcon />
+              <ErrorIcon className="sdk:text-[var(--sdk-bg-background)]" />
             );
           };
 
@@ -254,14 +252,19 @@ const ExecutionLogBody = ({
             <button
               key={`${d?.agentState?.grainId}-${index}`}
               className={`sdk:cursor-pointer sdk:pt-[2px] sdk:pb-[2px] sdk:pr-[4px] sdk:pl-[4px] sdk:rounded-sm ${
-                isActive ? "sdk:bg-[#303030]" : ""
+                isActive ? "sdk:bg-[var(--sdk-bg-accent)]" : ""
               }`}
               type="button"
-              onClick={() => onChange({ ...d, index })}
-            >
+              onClick={() => onChange({ ...d, index })}>
               <div className="sdk:flex sdk:items-center sdk:justify-between">
                 <span className="sdk:flex sdk:items-center sdk:gap-1">
-                  {isActive ? <AIStarWhite /> : <AIStar />}
+                  <AIStarWhite
+                    className={`${
+                      isActive
+                        ? "sdk:text-[var(--sdk-color-text-primary)]"
+                        : "sdk:text-[var(--sdk-muted-foreground)]"
+                    }`}
+                  />
                   <span className="sdk:text-[14px]">{d.agentName}</span>
                 </span>
                 {getStatusIcon()}
@@ -274,11 +277,16 @@ const ExecutionLogBody = ({
       <div
         className={`sdk:flex sdk:flex-${
           isAgentCardOpen ? "col" : "row"
-        } sdk:gap-2 sdk:w-[100%]`}
-      >
-        <div className="sdk:flex sdk:flex-col sdk:h-[200px] sdk:overflow-auto sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
+        } sdk:gap-2 sdk:w-[100%]`}>
+        <div
+          className={clsx(
+            "sdk:flex sdk:flex-col sdk:overflow-auto sdk:gap-2 sdk:bg-[var(--sdk-bg-logs)] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] ",
+            isAgentCardOpen ? "sdk:h-[100px]" : "sdk:h-[200px]"
+          )}>
           <div className="sdk:flex sdk:justify-between sdk:items-center">
-            <span className="sdk:text-[#B9B9B9] sdk:font-semibold">input</span>
+            <span className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-semibold">
+              input
+            </span>
             <span className="sdk:flex sdk:gap-2">
               <button type="button">
                 <Copy
@@ -298,9 +306,13 @@ const ExecutionLogBody = ({
           />
         </div>
 
-        <div className="sdk:flex sdk:flex-col sdk:h-[200px] sdk:overflow-auto sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
+        <div
+          className={clsx(
+            "sdk:flex sdk:flex-col sdk:overflow-auto sdk:gap-2 sdk:bg-[var(--sdk-bg-logs)] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%]",
+            isAgentCardOpen ? "sdk:h-[100px]" : "sdk:h-[200px]"
+          )}>
           <div className="sdk:flex sdk:justify-between sdk:items-center">
-            <span className="sdk:text-[#B9B9B9] sdk:font-semibold">
+            <span className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-semibold">
               agent state
             </span>
             <span className="sdk:flex sdk:gap-2">
@@ -322,9 +334,15 @@ const ExecutionLogBody = ({
           />
         </div>
 
-        <div className="sdk:flex sdk:flex-col sdk:h-[200px] sdk:overflow-auto sdk:gap-2 sdk:bg-[#30303080] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] sdk:overflow-x-auto">
+        <div
+          className={clsx(
+            "sdk:flex sdk:flex-col sdk:overflow-auto sdk:gap-2 sdk:bg-[var(--sdk-bg-logs)] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] ",
+            isAgentCardOpen ? "sdk:h-[100px]" : "sdk:h-[200px]"
+          )}>
           <div className="sdk:flex sdk:justify-between sdk:items-center">
-            <span className="sdk:text-[#B9B9B9] sdk:font-semibold">output</span>
+            <span className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-semibold">
+              output
+            </span>
             <span className="sdk:flex sdk:gap-2">
               <button type="button">
                 <Copy
@@ -336,9 +354,9 @@ const ExecutionLogBody = ({
             </span>
           </div>
           {activeAgent?.failureSummary && (
-            <div className="sdk:bg-[rgba(255,46,46,0.15)] sdk:border sdk:border-[rgba(255,46,46,0.2)] sdk:px-4 sdk:py-2 sdk:rounded-sm sdk:flex sdk:items-center sdk:gap-2.5 sdk:relative">
+            <div className="sdk:bg-[var(--sdk-color-error)] sdk:bg-opacity-15 sdk:border sdk:border-[var(--sdk-color-error)] sdk:border-opacity-20 sdk:px-4 sdk:py-2 sdk:rounded-sm sdk:flex sdk:items-center sdk:gap-2.5 sdk:relative">
               <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:relative sdk:shrink-0">
-                <p className="sdk:text-[#ff2e2e] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:whitespace-pre sdk:lowercase">
+                <p className="sdk:text-[var(--sdk-color-error)] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:whitespace-pre">
                   {activeAgent.failureSummary}
                 </p>
               </div>
@@ -360,7 +378,7 @@ const ExecutionLogBody = ({
 
 const Container = ({ children }: { children: any }) => {
   return (
-    <div className="sdk:min-w-[100%] sdk:flex sdk:flex-col sdk:gap-[2px] sdk: sdk:items-center sdk:justify-items-center">
+    <div className="sdk:min-w-[100%] sdk:flex sdk:flex-col sdk:gap-[2px] sdk:justify-items-center aevatarai-execution-logs-wrapper">
       {children}
     </div>
   );
@@ -432,9 +450,9 @@ const Wrapper = ({
       onMouseDown={handleMouseDown}
       className={`${isMovable ? "sdk:absolute sdk:top-0" : ""} ${
         isAgentCardOpen
-          ? "sdk:max-w-[calc(100%-393px)] sdk:mr-auto"
+          ? "sdk:max-w-[calc(100%-393px)]"
           : "sdk:min-w-[100%]"
-      } sdk:flex sdk:flex-col sdk:flex-1 sdk:gap-2 sdk:bg-[#171717] sdk:p-[8px] sdk:border sdk:border-[#FFFFFF14] sdk:rounded-sm ${
+      } sdk:flex sdk:flex-col sdk:flex-1 sdk:gap-2 sdk:bg-[var(--sdk-sidebar-background)] sdk:p-[8px] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:rounded-sm ${
         isMovable ? "sdk:cursor-move" : ""
       } ${isDragging ? "sdk:select-none" : ""}`}
       style={
@@ -444,8 +462,7 @@ const Wrapper = ({
               zIndex: isDragging ? Number.POSITIVE_INFINITY : 1,
             }
           : {}
-      }
-    >
+      }>
       {children}
     </div>
   );
@@ -461,7 +478,7 @@ const EmptyExecutionLog = () => {
     <div className="sdk:overflow-y-hidden sdk:min-w-[100%] sdk:flex sdk:items-center sdk:justify-center sdk:pt-[72.5px] sdk:pb-[72.5px]">
       <div className="sdk:flex sdk:flex-col sdk:gap-4 sdk:items-center">
         <EmptyRun />
-        <span className="sdk:text-[#6F6F6F] sdk:text-[13px]">
+        <span className="sdk:text-[var(--sdk-color-text-primary)] sdk:text-[13px]">
           run your workflow to view execution logs here.
         </span>
       </div>
@@ -476,19 +493,19 @@ interface ToggleModalProps {
 
 const ToggleModal = ({ isAgentCardOpen, onToggle }: ToggleModalProps) => {
   return (
-    <button
+    <Button
+      variant="outline"
       type="button"
       className={`sdk:absolute sdk:bottom-[22px] ${
         isAgentCardOpen ? "sdk:right-[60%]" : ""
-      } sdk:flex sdk:gap-[5px] sdk:items-center sdk:pt-[8px] sdk:pb-[8px] sdk:pl-[18px] sdk:pr-[18px] sdk:border sdk:border-[#303030] sdk:cursor-pointer`}
+      } sdk:flex sdk:gap-[5px] sdk:items-center sdk:pt-[8px] sdk:pb-[8px] sdk:pl-[18px] sdk:pr-[18px] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:cursor-pointer`}
       onClick={() => {
         onToggle((prev) => !prev);
-      }}
-    >
+      }}>
       <div className="sdk:flex sdk:flex-row sdk:gap-[5px] sdk:items-center">
-        <Clock width={14} height={14} />
+        <Clock className="sdk:text-[var(--sdk-muted-foreground)]" width={14} height={14} />
         <span className="sdk:font-semibold sdk:text-[12px]">execution log</span>
       </div>
-    </button>
+    </Button>
   );
 };
