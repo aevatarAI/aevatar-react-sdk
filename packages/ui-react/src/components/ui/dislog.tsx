@@ -40,10 +40,9 @@ const DialogContent = React.forwardRef<
         "sdk:fixed sdk:left-[50%] sdk:font-outfit sdk:top-[50%] sdk:z-50 sdk:grid sdk:w-full sdk:max-w-lg sdk:translate-x-[-50%] sdk:translate-y-[-50%] sdk:border sdk:bg-[#171717] sdk:p-6 sdk:shadow-lg sdk:duration-200 data-[state=open]:sdk:animate-in data-[state=closed]:sdk:animate-out data-[state=closed]:sdk:fade-out-0 data-[state=open]:sdk:fade-in-0 data-[state=closed]:sdk:zoom-out-95 data-[state=open]:sdk:zoom-in-95 data-[state=closed]:sdk:slide-out-to-left-1/2 data-[state=closed]:sdk:slide-out-to-top-[48%] data-[state=open]:sdk:slide-in-from-left-1/2 data-[state=open]:sdk:slide-in-from-top-[48%] sm:sdk:rounded-lg",
         className
       )}
-      {...props}
-    >
+      {...props}>
       {children}
-      <DialogPrimitiveClose className="sdk:absolute sdk:right-4 sdk:top-4 sdk:rounded-sm sdk:opacity-70 sdk:ring-offset-background sdk:transition-opacity hover:sdk:opacity-100 focus:sdk:outline-none focus:sdk:ring-2 focus:sdk:ring-ring focus:sdk:ring-offset-2 disabled:sdk:pointer-events-none data-[state=open]:sdk:bg-accent data-[state=open]:sdk:text-muted-foreground">
+      <DialogPrimitiveClose className="sdk:absolute sdk:right-4 sdk:top-4 sdk:rounded-sm sdk:opacity-70 sdk:ring-offset-background sdk:transition-opacity hover:sdk:opacity-100 disabled:sdk:pointer-events-none data-[state=open]:sdk:bg-accent data-[state=open]:sdk:text-muted-foreground">
         <span className="sdk:sr-only">Close</span>
       </DialogPrimitiveClose>
     </DialogPrimitive.Content>
