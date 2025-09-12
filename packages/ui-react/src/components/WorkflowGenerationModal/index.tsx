@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Textarea } from "../ui/textarea";
 import {
   Button,
@@ -18,6 +18,7 @@ import clsx from "clsx";
 import { usePostAIWorkflowGeneration } from "../../hooks/usePostAIWorkflowGeneration";
 import "./index.css";
 import { useGetAutoComplete } from "../../hooks/useGetAutoComplete";
+import { sleep } from "@aevatar-react-sdk/utils";
 interface IWorkflowGenerationModalProps {
   workflowRef: any;
   defaultVisible?: boolean;
@@ -30,8 +31,20 @@ export const WorkflowGenerationModal = ({
   const { data, isLoading, refetch } = usePostAIWorkflowGeneration();
   const [isVisible, setIsVisible] = useState(defaultVisible);
   const [inputPrompt, setInputPrompt] = useState("");
+  const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
   const { data: searchData, isLoading: isLoadingAutoComplete } =
-    useGetAutoComplete(inputPrompt);
+    useGetAutoComplete(inputPrompt, !isSelectingSuggestion);
+
+  const [suggestionSelectedOpen, setSuggestionSelectedOpen] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    if (searchData?.completions?.length > 0) {
+      setSuggestionSelectedOpen(true);
+    } else {
+      setSuggestionSelectedOpen(false);
+    }
+  }, [searchData]);
 
   useEffect(() => {
     if (data && workflowRef) {
@@ -39,12 +52,21 @@ export const WorkflowGenerationModal = ({
     }
   }, [data, workflowRef]);
 
+  const textRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    sleep(200).then(() => {
+      textRef.current?.focus();
+    });
+  }, []);
+
   const handleClose = () => {
     setIsVisible(false);
   };
 
   const handleChange = (e) => {
     setInputPrompt(e.target.value);
+    setIsSelectingSuggestion(false);
   };
 
   const handleClick = async () => {
@@ -76,50 +98,62 @@ export const WorkflowGenerationModal = ({
             </button>
           </div>
 
-          <div className="sdk:flex sdk:flex-col sdk:gap-2">
-            <div className="sdk:font-outfit sdk:font-semibold sdk:text-[14px] sdk:text-[var(--sdk-muted-foreground)]">
+          <div className="sdk:relative">
+            <div className="sdk:font-outfit sdk:pb-[28px] sdk:font-semibold sdk:text-[14px] sdk:text-[var(--sdk-muted-foreground)]">
               prompt
             </div>
             <Textarea
               autoFocus
+              ref={textRef}
+              id="input-prompt"
               className="sdk:text-[13px] sdk:bg-[var(--sdk-color-dialog-dark)] sdk:min-w-[595px] sdk:min-h-[120px]"
               placeholder="please describe what kind of agent workflow you want to create"
-              defaultValue={inputPrompt}
+              value={inputPrompt}
               disabled={isLoading}
-              onChange={(v) => {
-                console.log(v);
-              }}
+              onChange={handleChange}
             />
+            {!isLoadingAutoComplete && (
+              <div
+                className={clsx(
+                  "sdk:px-[12px] sdk:absolute sdk:top-[75px] sdk:left-0 sdk:right-0",
+                  !isLoadingAutoComplete && "sdk:z-[-10]",
+                  suggestionSelectedOpen && "sdk:z-[60]"
+                )}>
+                <Select
+                  key="select-suggestion"
+                  open={suggestionSelectedOpen}
+                  // open={true}
+                  onValueChange={(value: string) => {
+                    setIsSelectingSuggestion(true);
+                    setInputPrompt(value);
+                    setSuggestionSelectedOpen(false);
+                    textRef.current?.focus();
+                  }}
+                  onOpenChange={(open: boolean) => {
+                    setSuggestionSelectedOpen(open);
+                  }}>
+                  <SelectTrigger className="sdk:collapse ">
+                    <SelectValue placeholder="suggested" />
+                  </SelectTrigger>
+                  <SelectContent className="sdk:w-[var(--radix-popper-anchor-width)]! sdk:p-[8px]! sdk:gap-[4px]">
+                    <div className="sdk:flex sdk:flex-row sdk:gap-2 sdk:items-center sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:pb-[8px]">
+                      <AIStar />
+                      <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px]">
+                        suggested
+                      </span>
+                    </div>
+                    {searchData?.completions?.map((suggestion) => {
+                      return (
+                        <SelectItem key={suggestion} value={suggestion}>
+                          {suggestion}
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
-
-          {!isLoadingAutoComplete && (
-            <Select
-              key="select-suggestion"
-              open={searchData?.completions?.length > 0}
-              onValueChange={(value: string) => {
-                setInputPrompt(value);
-              }}
-            >
-              <SelectTrigger className="sdk:collapse sdk:absolute sdk:top-[140px] sdk:left-0 sdk:right-0">
-                <SelectValue placeholder="suggested" />
-              </SelectTrigger>
-              <SelectContent>
-                <div className="sdk:flex sdk:flex-row sdk:gap-2 sdk:items-center sdk:border-b sdk:border-[var(--sdk-color-bg-primary)] sdk:border-solid">
-                  <AIStar />
-                  <span className="sdk:text-[var(--sdk-color-border-gray-400)] sdk:text-[12px]">
-                    suggested
-                  </span>
-                </div>
-                {searchData?.completions?.map((suggestion) => {
-                  return (
-                    <SelectItem key={suggestion} value={suggestion}>
-                      {suggestion}
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
-          )}
 
           <div className="sdk:flex sdk:flex-row sdk:justify-between">
             <Button
