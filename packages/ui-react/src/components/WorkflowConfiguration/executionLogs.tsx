@@ -337,8 +337,8 @@ const ExecutionLogBody = ({
           </div>
           {activeAgent?.failureSummary && (
             <div className="sdk:bg-[rgba(255,46,46,0.15)] sdk:border sdk:border-[rgba(255,46,46,0.2)] sdk:px-4 sdk:py-2 sdk:rounded-sm sdk:flex sdk:items-center sdk:gap-2.5 sdk:relative">
-              <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:relative sdk:shrink-0">
-                <p className="sdk:text-[#ff2e2e] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:whitespace-pre sdk:lowercase">
+              <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:w-full sdk:relative sdk:shrink-0">
+                <p className="sdk:text-[#ff2e2e] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:w-full sdk:whitespace-pre-wrap sdk:lowercase sdk:break-all sdk:overflow-wrap-anywhere">
                   {activeAgent.failureSummary}
                 </p>
               </div>

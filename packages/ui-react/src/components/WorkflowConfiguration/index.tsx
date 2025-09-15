@@ -489,6 +489,7 @@ IWorkflowConfigurationProps) => {
       let workflowStatus = WorkflowStatus.pending;
       let currentTerm = term;
       looperWorkflowIdRef.current = workflowId;
+      let errorCount = 0;
       while (workflowStatus !== WorkflowStatus.failed) {
         try {
           if (looperWorkflowIdRef.current !== workflowId) return;
@@ -504,8 +505,9 @@ IWorkflowConfigurationProps) => {
             return workflowStateRes.workflowStatus;
 
           workflowStatus = workflowStateRes.workflowStatus;
-        } catch (error) {
-          workflowStatus = WorkflowStatus.failed;
+        } catch (_error) {
+          errorCount++;
+          if (errorCount > 3) return WorkflowStatus.failed;
         }
       }
       return workflowStatus;
