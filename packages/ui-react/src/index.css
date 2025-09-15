@@ -70,6 +70,8 @@
     --sdk-color-success: #53ff8a;
     --sdk-color-warning: #ff2e2e;
     --sdk-color-error: #ff2e2e;
+    --sdk-color-error-bg: rgba(255, 46, 46, 0.15);
+
     --sdk-color-info: #afc6dd;
     --sdk-color-input-node: #0041d0;
     --sdk-color-output-node: #ff0072;
@@ -122,6 +124,7 @@
     --sdk-color-success: #53ff8a;
     --sdk-color-warning: #ff2e2e;
     --sdk-color-error: #ff2e2e;
+    --sdk-color-error-bg: rgba(255, 46, 46, 0.15);
     --sdk-color-info: #afc6dd;
     --sdk-color-input-node: #0041d0;
     --sdk-color-output-node: #ff0072;

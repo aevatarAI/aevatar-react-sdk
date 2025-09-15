@@ -1,6 +1,6 @@
 .select-item-wrapper {
   position: relative;
-  padding-left: 10px;
+  padding-left: 8px;
   &[data-state="checked"],
   &:hover {
     background-color: var(--sdk-bg-accent);
