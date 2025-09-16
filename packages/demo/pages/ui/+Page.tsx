@@ -10,7 +10,7 @@ import {
   WorkflowList,
   FullScreenIcon,
 } from "@aevatar-react-sdk/ui-react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { clientOnly } from "vike-react/clientOnly";
 import { sleep } from "@aevatar-react-sdk/utils";
@@ -30,7 +30,7 @@ ConfigProvider.setConfig({
     timeout: 15000,
     baseURL:
       // "https://station-developer-dev-staging.aevatar.ai/testproject-client",
-      "https://station-developer-dev-staging.aevatar.ai/testproject10-client",
+      " https://station-developer-testing.aevatar.ai/pr2-client",
   },
 });
 
@@ -117,14 +117,21 @@ export default function UI() {
 
   const getTokenByclient = useCallback(async () => {
     const TOKEN =
-      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg5QzAwNzc1RTlGNDhEQUZGN0QzQzZGMjBBNkZDQTdDN0FDMzNDQjIiLCJ4NXQiOiJpY0FIZGVuMGphXzMwOGJ5Q21fS2ZIckRQTEkiLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtc3RhdGlvbi1kZXYtc3RhZ2luZy5hZXZhdGFyLmFpLyIsImV4cCI6MTc1NzIyNzYwMiwiaWF0IjoxNzU3MDU0ODAzLCJhdWQiOiJBZXZhdGFyIiwic2NvcGUiOiJBZXZhdGFyIG9mZmxpbmVfYWNjZXNzIiwianRpIjoiYWMwZWZkZTEtZjI3MC00MjQ5LThmZTItZWRmOWUxNDgzMmRmIiwic3ViIjoiZjA4Mzk2NGItMmQ0OS00YzM5LWIyN2EtZGJjMmMxN2M3OTM2IiwicHJlZmVycmVkX3VzZXJuYW1lIjoiY2pocm95OThAZ21haWwuY29tQGdvb2dsZSIsImVtYWlsIjoiMjNhYTFiNTUyMmNlNDE5Y2I0ZjZiYjFmOTMwMDlkMjBAQUJQLklPIiwicm9sZSI6WyJiYXNpY1VzZXIiLCIzYTE1NGI2NC1lYjRhLWMyM2YtY2QwMy0zYTFiMWE3YWNhOWRfT3duZXIiXSwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjoiRmFsc2UiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwidW5pcXVlX25hbWUiOiJjamhyb3k5OEBnbWFpbC5jb21AZ29vZ2xlIiwic2VjdXJpdHlfc3RhbXAiOiJPRUFJWk9GRU0yQ0NURFlXVjRWR1hTSDRDWlRUMk5WUSIsIm9pX3Byc3QiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX2F1X2lkIjoiZDY2MmM1ODEtZjA4Yy1lNTBkLTg4MTgtM2ExYzJhY2Q2MmI1IiwiY2xpZW50X2lkIjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV90a25faWQiOiJhYTU5ZjI5OS01YjE0LWMyNTMtYTY3NS0zYTFjMmFjZDc2YTgifQ.iOIPEyKkEDqS65g6nAoChxFm2rMPxGNCvQKzoGFnA1J05Mp7S_1AoIXwxwGSO2tO5mFaVpYikMwCVXESjXJRSH7V1a01QdG8O13L1sOHw6dmoyWk_O2N93Ebue6h1LzH7fYVrrrdKu9ZeVFHQS_c-UarE2gTdzOX5NTVnxhyseqNqn4kTKQqlgEJjXB4ZZB1n4Idebw721u0w_zBVbnRD4hVOVIwl024fz49_vpNwd8tTNTlXreM7WEeigWkuaeYtu3gBIuKBUDMGslVXW8hXH8Yd3SjQovmyMBYT80WocIWW-yhrzWDclPvxi3HvuqDl8au98FC9I9rvDJLcf0TwA";
+      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjJEMDI2OUU2RjBBQzg1OUU3QzVFOTA4RTFEQzk2QTg3MkMzQTUyMzkiLCJ4NXQiOiJMUUpwNXZDc2haNThYcENPSGNscWh5dzZVamsiLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODIvIiwiZXhwIjoxNzU4MTY1ODA3LCJpYXQiOjE3NTc5OTMwMDgsImF1ZCI6IkFldmF0YXIiLCJzY29wZSI6IkFldmF0YXIgb2ZmbGluZV9hY2Nlc3MiLCJqdGkiOiJmY2MzNTJjMi00Mjg0LTQzNTYtODc3Ni1mMTI5Y2YxZjAzYWIiLCJzdWIiOiI4ZDg1MzRmOC02MDFlLTBlNDktZTAwZi0zYTFjNWQ5ZDBjNTYiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZXZhdGFyd2gxIiwiZW1haWwiOiJhZXZhdGFyd2gxQHRlbWwubmV0Iiwicm9sZSI6WyJiYXNpY1VzZXIiLCJhODFlZWEwOS1lMmMyLTc5YTgtYjRhNy0zYTFjNWQ5ZDZjYWNfT3duZXIiXSwicGhvbmVfbnVtYmVyX3ZlcmlmaWVkIjoiRmFsc2UiLCJlbWFpbF92ZXJpZmllZCI6IkZhbHNlIiwidW5pcXVlX25hbWUiOiJhZXZhdGFyd2gxIiwic2VjdXJpdHlfc3RhbXAiOiJRTTQ2RVdFV0xBR0ZKWTRYT1NaTFRLTTU3U1VMTDc2TCIsIm9pX3Byc3QiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX2F1X2lkIjoiYWVmMmNmODEtYzYyMy1lMmE4LTM5NzQtM2ExYzYyYjkwNzcwIiwiY2xpZW50X2lkIjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV90a25faWQiOiI4Njk5OWU5YS04MTEwLTgzNzgtZmMxMC0zYTFjNjJiOTU2MTYifQ.X_nQwdWm8XmP6271gQePLG2dGWuJxIOt6YGOikGdnhRreGB8IYljsPFXqdjgDuYTgMbhgR8sfLoc2z78Bh5l1Cu2OECaz03Kazy_rPPlVnnccNyKHoi9URLx0ZI9WFMKasaNmS3uY9QJkwuhU2NuCSwIwvyNkscV4AxunXZjen_usTfoXpB-v2O8rAv-33lY4FzT6Atodiv7VUHMsd7d8dZMoSXEcvIE7yeB4IckiKcrhCXcAMqcF6g6vGJ9J_6Cc6e1ha-t1YwYdLo-yYPxqX31DFdvEdpJTn5Ct131yOarLsixfOwnhRpAZqTyN8hz_J481IpyDotb54QgayBAEg";
 
     aevatarAI.fetchRequest.setHeaders({
       Authorization: TOKEN,
     });
 
     setShowAction(true);
+    return TOKEN;
   }, []);
+
+  useEffect(() => {
+    ConfigProvider.setConfig({
+      getAevatarAuthToken: getTokenByclient,
+    });
+  }, [getTokenByclient]);
 
   const fullscreenHandle = useFullScreenHandle();
   const workflowListRef = useRef<IWorkflowListRef>(null);
@@ -155,37 +162,32 @@ export default function UI() {
           onClick={() => {
             setEditWorkflow(undefined);
             onShowWorkflow();
-          }}
-        >
+          }}>
           show workflow
         </Button>
         <Button
           onClick={() => {
             onEditWorkflow(localStorage.getItem("workflowAgentId") ?? "");
-          }}
-        >
+          }}>
           edit workflow
         </Button>
         <div className="h-[10px]" />
         <Button
           onClick={() => {
             setStage(Stage.WorkflowList);
-          }}
-        >
+          }}>
           show workflowList
         </Button>
         <Button
           onClick={() => {
             workflowListRef.current?.refresh();
-          }}
-        >
+          }}>
           refresh workflowList
         </Button>
         <Button
           onClick={() => {
             setStage(Stage.ExecutionList);
-          }}
-        >
+          }}>
           show executions
         </Button>
 
@@ -241,8 +243,7 @@ export default function UI() {
                       fullscreenHandle.active
                         ? fullscreenHandle.exit()
                         : fullscreenHandle.enter();
-                    }}
-                  >
+                    }}>
                     <FullScreenIcon
                       style={{
                         width: 16,

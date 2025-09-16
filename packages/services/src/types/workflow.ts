@@ -156,6 +156,7 @@ export interface IRunWorkflowResponse {
   isSuccess: boolean;
   message: string;
   workflowId: string;
+  publishedAgent: IAgentInfo;
 }
 
 export interface IWorkflowService {
@@ -164,7 +165,7 @@ export interface IWorkflowService {
   edit(id: string, params: IUpdateAgentInfo): Promise<IAgentInfoDetail>;
   editPublishEvent(params: IEditWorkflowParams): Promise<IAgentInfo>;
   getWorkflow<T = any>(
-    query: IGetWorkflowQuery,
+    query: IGetWorkflowQuery
   ): Promise<IGetWorkflowResult<T>>;
   getAIModels<T = any>(props: IGetAIModelsProps): Promise<T>;
   fetchAutoComplete<T = any>(props: IFetchAutoCompleteProps): Promise<T>;
@@ -176,7 +177,7 @@ export interface IWorkflowService {
   createWorkflowViewData(params: IWorkflowViewDataParams): Promise<IAgentInfo>;
   updateWorkflowViewData(
     id: string,
-    params: IWorkflowViewUpdateDataParams,
+    params: IWorkflowViewUpdateDataParams
   ): Promise<IAgentInfo>;
   publishWorkflowViewData(id: string): Promise<IAgentInfo>;
 }

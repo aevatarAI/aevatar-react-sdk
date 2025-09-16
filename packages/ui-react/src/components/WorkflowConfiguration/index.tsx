@@ -578,6 +578,9 @@ IWorkflowConfigurationProps) => {
         eventProperties: {},
       });
       workflowId = runWorkflowResult.workflowId;
+      const workflowNodeList =
+        runWorkflowResult.publishedAgent?.properties?.workflowNodeList;
+      workflowNodeList && updateNodeList(workflowNodeList);
       setNewWorkflowState((v) => ({
         ...v,
         workflowId,
@@ -612,6 +615,7 @@ IWorkflowConfigurationProps) => {
     getWorkflowStateLoop,
     onSaveHandler,
     refetch,
+    updateNodeList,
   ]);
 
   const [sidebarContainer, setSidebarContainer] = React.useState(null);
