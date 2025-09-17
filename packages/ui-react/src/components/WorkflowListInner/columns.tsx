@@ -31,8 +31,8 @@ export const workflowColumns: ColumnDef<
     header: "created",
     cell: ({ row }) => (
       <div className="sdk:text-[12px]  sdk:font-geist sdk:font-semibold">
-        {row.original.ctime
-          ? dayjs.utc(row.original.ctime).local().format("YYYY-MM-DD HH:mm")
+        {row.original.createTime
+          ? dayjs.utc(row.original.createTime).local().format("YYYY-MM-DD HH:mm")
           : "-"}
       </div>
     ),

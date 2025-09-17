@@ -70,6 +70,7 @@ export interface IWorkflowCoordinatorState {
   workflowStatus: WorkflowStatus; // 0: pending 1；running 2：failed
   currentWorkUnitInfos: string;
   ctime: string;
+  createTime: string;
   term: number;
   blackboardId: string;
   backupWorkUnitInfos: string;
