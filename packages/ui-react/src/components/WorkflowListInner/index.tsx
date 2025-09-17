@@ -30,7 +30,7 @@ interface WorkflowListInnerProps {
 }
 
 const actionItemCls =
-  "sdk:font-normal sdk:text-[14px] sdk:leading-[18px] sdk:text-[var(--sdk-color-text-primary)] sdk:hover:text-[var(--sdk-primary-foreground-text)] sdk:font-outfit sdk:normal-case";
+  "sdk:font-normal sdk:text-[14px] sdk:leading-[18px] sdk:text-[var(--sdk-color-text-primary)] sdk:hover:text-[var(--sdk-primary-foreground-text)] sdk:font-geist sdk:normal-case";
 
 export const emptyNode = (
   <div className="sdk:flex sdk:flex-col sdk:gap-4 sdk:items-center sdk:justify-center sdk:h-[394px] sdk:text-center sdk:w-full">
@@ -69,7 +69,7 @@ export default function WorkflowListInner({
         name: (
           // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
           <div
-            className="sdk:text-[14px] sdk:pl-[15px] sdk:font-outfit sdk:font-semibold sdk:hover:underline sdk:hover:decoration-[var(--sdk-color-text-primary)] sdk:cursor-pointer"
+            className="sdk:text-[14px] sdk:pl-[15px] sdk:font-geist sdk:font-semibold sdk:hover:underline sdk:hover:decoration-[var(--sdk-color-text-primary)] sdk:cursor-pointer"
             onClick={() => onEditWorkflow?.(item.id)}>
             {item?.name ?? "-"}
           </div>
@@ -90,7 +90,7 @@ export default function WorkflowListInner({
               }}>
               <SelectTrigger
                 className={clsx(
-                  "sdk:normal-case sdk:gap-[5px] sdk:w-[106px] sdk:cursor-pointer sdk:bg-[var(--sdk-bg-primary)] sdk:text-[var(--sdk-primary-foreground)] sdk:hover:bg-[var(--sdk-hover-primary)]",
+                  "sdk:normal-case sdk:gap-[5px] sdk:w-[110px] sdk:cursor-pointer sdk:bg-[var(--sdk-bg-primary)] sdk:text-[var(--sdk-primary-foreground)] sdk:hover:bg-[var(--sdk-hover-primary)]",
                   "sdk:border-none sdk:px-[18px]",
                   "sdk:rounded-md",
                   "sdk:leading-[15px]",
@@ -151,14 +151,14 @@ export default function WorkflowListInner({
         className="sdk:flex sdk:flex-row sdk:items-center sdk:w-full sdk:justify-between sdk:box-border"
         id="node-6202_82360">
         <div
-          className="sdk:font-outfit sdk:font-semibold sdk:text-[18px] sdk:text-[var(--sdk-color-text-primary)]"
+          className="sdk:font-geist sdk:font-semibold sdk:text-[18px] sdk:text-[var(--sdk-color-text-primary)]"
           id="node-6202_82361">
           <p>Workflows</p>
         </div>
         <div>
           <Button
             variant="primary"
-            className="sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:cursor-pointer"
+            className="sdk:text-[12px] sdk:font-geist sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:cursor-pointer"
             onClick={onNewWorkflow}>
             <AddIcon style={{ width: 14, height: 14 }} />
             new workflow

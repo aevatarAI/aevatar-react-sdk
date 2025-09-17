@@ -73,7 +73,7 @@ export default function EditWorkflowNameDialog({
             "sdk:inline-flex sdk:justify-center sdk:items-center sdk:gap-2 sdk:cursor-pointer",
             className
           )}>
-          <div className="sdk:flex sdk:justify-center sdk:text-[var(--sdk-color-text-primary)] sdk:text-[13px] sdk:font-normal sdk:font-outfit">
+          <div className="sdk:flex sdk:justify-center sdk:text-[var(--sdk-color-text-primary)] sdk:text-[13px] sdk:font-normal sdk:font-geist">
             {defaultName}
           </div>
           <Edit />

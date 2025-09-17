@@ -77,7 +77,7 @@ export default function AevatarCardInner({
         <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
           <div className="sdk:flex sdk:justify-between sdk:items-center sdk:pb-[9px]">
             <div
-              className="sdk:font-outfit sdk:text-[var(--sdk-color-text-primary)] sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
+              className="sdk:font-geist sdk:text-[var(--sdk-color-text-primary)] sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
             >{`${agentInfo?.name || "agent name"}`}</div>
 
             {agentStatus === "success" && (
@@ -98,13 +98,13 @@ export default function AevatarCardInner({
               />
             )}
           </div>
-          <div className="sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:truncate">
+          <div className="sdk:font-geist sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:truncate">
             {agentInfo?.agentType
               ? agentInfo?.agentType?.split(".")?.pop()
               : "--"}
           </div>
         </div>
-        <div className="sdk:font-outfit sdk:pb-[6px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
+        <div className="sdk:font-geist sdk:pb-[6px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
           {(propertiesInfo ?? []).map((item: [string, JSONSchemaType<any>]) => {
             // Extract property name and schema
             const [propName, schema] = item;

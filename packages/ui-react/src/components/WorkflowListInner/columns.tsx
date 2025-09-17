@@ -1,6 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
-import FailedIcon from "../../assets/svg/failed.svg?react";
 import {
   type IAgentInfoDetail,
   type IWorkflowCoordinatorState,
@@ -9,9 +8,9 @@ import {
 import dayjs from "../../utils/dayjs";
 
 export const workflowStatusMap = {
-  [WorkflowStatus.pending]: "pending",
-  [WorkflowStatus.running]: "running",
-  [WorkflowStatus.failed]: "failed",
+  [WorkflowStatus.pending]: "Pending",
+  [WorkflowStatus.running]: "Running",
+  [WorkflowStatus.failed]: "Failed",
 };
 
 export interface IWorkflowTable {
@@ -31,7 +30,7 @@ export const workflowColumns: ColumnDef<
     accessorKey: "created",
     header: "created",
     cell: ({ row }) => (
-      <div className="sdk:text-[12px]  sdk:font-outfit sdk:font-semibold">
+      <div className="sdk:text-[12px]  sdk:font-geist sdk:font-semibold">
         {row.original.ctime
           ? dayjs.utc(row.original.ctime).local().format("YYYY-MM-DD HH:mm")
           : "-"}
@@ -42,7 +41,7 @@ export const workflowColumns: ColumnDef<
   //   accessorKey: "createdBy",
   //   header: "created by",
   //   cell: ({ row }) => (
-  //     <div className="sdk:text-[14px] sdk:font-outfit sdk:font-semibold">
+  //     <div className="sdk:text-[14px] sdk:font-geist sdk:font-semibold">
   //       {row.original.createdBy}
   //     </div>
   //   ),
@@ -51,7 +50,7 @@ export const workflowColumns: ColumnDef<
   //   accessorKey: "lastUpdated",
   //   header: "last updated",
   //   cell: ({ row }) => (
-  //     <div className="sdk:text-[12px]  sdk:font-outfit">
+  //     <div className="sdk:text-[12px]  sdk:font-geist">
   //       {row.original.lastUpdated}
   //     </div>
   //   ),
@@ -60,7 +59,7 @@ export const workflowColumns: ColumnDef<
     accessorKey: "lastRun",
     header: "last run",
     cell: ({ row }) => (
-      <div className="sdk:text-[12px]  sdk:font-outfit">
+      <div className="sdk:text-[12px]  sdk:font-geist">
         {row.original.lastRunningTime
           ? dayjs
               .utc(row.original.lastRunningTime)
@@ -76,14 +75,13 @@ export const workflowColumns: ColumnDef<
     cell: ({ row }) => (
       <div
         className={clsx(
-          "sdk:text-[14px]  sdk:font-outfit sdk:font-semibold ",
+          "sdk:text-[14px]  sdk:font-geist sdk:font-semibold sdk:leading-[16px] sdk:rounded-full sdk:inline-block  sdk:py-0.5 sdk:px-2.5",
           row.original.workflowStatus === WorkflowStatus.failed &&
-            "sdk:text-[var(--sdk-warning-color)] sdk:flex sdk:flex-row sdk:gap-[4px] sdk:items-center"
-        )}
-      >
-        {row.original.workflowStatus === WorkflowStatus.failed && (
-          <FailedIcon className="sdk:w-[14px] sdk:h-[14px]" />
-        )}
+            "sdk:bg-[var(--sdk-color-warning)] sdk:text-[var(--sdk-color-destructive-foreground)]",
+          (row.original.workflowStatus === WorkflowStatus.running ||
+            row.original.workflowStatus === WorkflowStatus.pending) &&
+            "sdk:bg-[var(--sdk-color-pending-bg)] sdk:text-[var(--sdk-primary-foreground-text)]"
+        )}>
         {workflowStatusMap[row.original.workflowStatus] ?? "-"}
       </div>
     ),

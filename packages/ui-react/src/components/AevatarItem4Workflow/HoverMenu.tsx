@@ -48,7 +48,7 @@ export default function HoverMenu({
             <div
               onClick={onDelete}
               className={clsx(
-                "sdk:cursor-pointer sdk:text-center sdk:text-[14px] sdk:font-outfit sdk:font-light sdk:text-[var(--sdk-color-text-primary)] sdk:hover:text-[var(--sdk-color-text-primary)] sdk:p-[10px]",
+                "sdk:cursor-pointer sdk:text-center sdk:text-[14px] sdk:font-geist sdk:font-light sdk:text-[var(--sdk-color-text-primary)] sdk:hover:text-[var(--sdk-color-text-primary)] sdk:p-[10px]",
                 "sdk:hover:bg-[var(--sdk-bg-accent)]",
                 "select-item-wrapper"
               )}>

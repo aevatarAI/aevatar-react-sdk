@@ -62,7 +62,7 @@ export default function DropzoneItem({
               "data-testid": "dropzone-id",
             })}>
             <input {...getInputProps()} />
-            <p className="sdk:font-outfit sdk:text-[12px] sdk:text-[var(--sdk-color-text-tertiary)] sdk:flex sdk:flex-col sdk:gap-[4px] sdk:items-center">
+            <p className="sdk:font-geist sdk:text-[12px] sdk:text-[var(--sdk-color-text-tertiary)] sdk:flex sdk:flex-col sdk:gap-[4px] sdk:items-center">
               <UploadIcon />
               <div>Click to upload (PDF)</div>
             </p>
@@ -78,10 +78,10 @@ export default function DropzoneItem({
             <div>
               <div
                 data-testid="field-name-dropzoneItem"
-                className="sdk:font-outfit sdk:text-[12px] sdk:text-[var(--sdk-muted-foreground)]">
+                className="sdk:font-geist sdk:text-[12px] sdk:text-[var(--sdk-muted-foreground)]">
                 {field.name}
               </div>
-              <div className="sdk:font-outfit sdk:text-[12px] sdk:text-[var(--sdk-color-text-tertiary)]">
+              <div className="sdk:font-geist sdk:text-[12px] sdk:text-[var(--sdk-color-text-tertiary)]">
                 {field.content?.size && `${field.content?.size} bytes`}
               </div>
             </div>

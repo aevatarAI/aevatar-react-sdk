@@ -30,7 +30,7 @@ export const columns = [
     accessorKey: "createTime",
     header: "started",
     cell: ({ row }) => (
-      <div className="pr-[20px] md:pr-[30px] w-[175px] font-outfit">
+      <div className="pr-[20px] md:pr-[30px] w-[175px] font-geist">
         {dayjs.utc(row.original.createTime).local().format("MMM D, HH:mm:ss")}
       </div>
     ),
@@ -39,7 +39,7 @@ export const columns = [
     accessorKey: "runTime",
     header: "run time",
     cell: ({ row }) => (
-      <div className="pr-[20px] md:pr-[30px] w-[175px] font-outfit">
+      <div className="pr-[20px] md:pr-[30px] w-[175px] font-geist">
         {`${Math.abs(
           dayjs(row.original.lastRunningTime).diff(dayjs(row.original.ctime))
         )}ms`}
@@ -53,7 +53,7 @@ export const columns = [
       return (
         <div
           className={clsx(
-            "sdk:text-[14px]  sdk:font-outfit sdk:font-semibold ",
+            "sdk:text-[14px]  sdk:font-geist sdk:font-semibold ",
             row.original.workflowStatus === WorkflowStatus.failed &&
               "sdk:text-[var(--sdk-warning-color)] sdk:flex sdk:flex-row sdk:gap-[4px] sdk:items-center"
           )}>
@@ -110,14 +110,14 @@ export default function ExecutionList({
           className="sdk:flex sdk:flex-row sdk:items-center sdk:w-full sdk:justify-between sdk:box-border"
           id={crypto.randomUUID()}>
           <div
-            className="sdk:font-outfit sdk:font-semibold sdk:text-[18px] sdk:text-[var(--sdk-color-text-primary)]"
+            className="sdk:font-geist sdk:font-semibold sdk:text-[18px] sdk:text-[var(--sdk-color-text-primary)]"
             id={crypto.randomUUID()}>
             <p>executions</p>
           </div>
           <div>
             <Button
               variant="primary"
-              className="sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:cursor-pointer"
+              className="sdk:text-[12px] sdk:font-geist sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:cursor-pointer"
               onClick={onNewWorkflow}>
               <AddIcon style={{ width: 14, height: 14 }} />
               new workflow

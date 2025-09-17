@@ -18,7 +18,7 @@ function Calendar({
       className={cn("p-3 bg-[var(--sdk-color-border-primary)] min-w-[560px]", className)}
       classNames={{
         months:
-          "flex flex-col sm:flex-row gap-4 font-outfit font-bold justify-center",
+          "flex flex-col sm:flex-row gap-4 font-geist font-bold justify-center",
         month: "flex flex-col gap-4",
         caption: "flex justify-center pt-1 relative items-center w-full",
         caption_label: "text-sm font-semibold lowercase font-semibold",
@@ -42,7 +42,7 @@ function Calendar({
         ),
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "size-9 p-0 font-normal aria-selected:opacity-100 font-outfit text-[14px] cursor-pointer w-full h-9 hover:bg-[var(--sdk-color-border-primary)] hover:opacity-80"
+          "size-9 p-0 font-normal aria-selected:opacity-100 font-geist text-[14px] cursor-pointer w-full h-9 hover:bg-[var(--sdk-color-border-primary)] hover:opacity-80"
         ),
         day_range_start:
           "day-range-start aria-selected:bg-primary aria-selected:text-primary-foreground",

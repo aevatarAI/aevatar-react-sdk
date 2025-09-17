@@ -143,7 +143,7 @@ function EditGAevatarInnerCom({
               style={{ width: 14, height: 14 }}
             />
           )}
-          <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold  sdk:leading-[14px]">
+          <span className="sdk:text-center sdk:font-geist sdk:text-[12px] sdk:font-semibold  sdk:leading-[14px]">
             {text}
           </span>
         </Button>
@@ -161,7 +161,7 @@ function EditGAevatarInnerCom({
               style={{ width: 14, height: 14 }}
             />
           )}
-          <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold  sdk:leading-[14px]">
+          <span className="sdk:text-center sdk:font-geist sdk:text-[12px] sdk:font-semibold  sdk:leading-[14px]">
             delete
           </span>
         </Button>
@@ -281,16 +281,16 @@ function EditGAevatarInnerCom({
     <TooltipProvider delayDuration={0}>
       <Form {...form}>
         <form
-          className="sdk:h-full sdk:flex sdk:flex-col sdk:font-outfit"
+          className="sdk:h-full sdk:flex sdk:flex-col sdk:font-geist"
           onSubmit={form.handleSubmit(onSubmit)}>
           <CommonHeader leftEle={leftEle} rightEle={rightEle} />
           <div
             className={clsx(
               "sdk:flex-1 sdk:w-full sdk:m-auto sdk:bg-[var(--sdk-color-bg-primary)] sdk:pt-[22px] sdk:pb-[14px]",
-              "sdk:md:pt-[0] sdk:md:px-[40px] sdk:font-outfit"
+              "sdk:md:pt-[0] sdk:md:px-[40px] sdk:font-geist"
             )}>
             <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-[var(--sdk-color-bg-primary)] sdk:self-stretch">
-              <div className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-outfit sdk:text-sm sdk:font-semibold sdk:leading-normal ">
+              <div className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-geist sdk:text-sm sdk:font-semibold sdk:leading-normal ">
                 Settings
               </div>
               <div className="sdk:text-[var(--sdk-muted-foreground)] sdk:font-mono sdk:text-[12px] sdk:font-normal sdk:leading-normal ">

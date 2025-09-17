@@ -63,7 +63,7 @@ export default function AevatarTypeItemVisual({
         <div className=" sdk:text-center sdk:px-[16px] sdk:py-[12px] sdk:relative sdk:flex sdk:flex-col ">
           <div
             className={clsx(
-              "sdk:text-[11px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:text-center sdk:w-full sdk:truncate",
+              "sdk:text-[11px] sdk:font-geist sdk:text-[var(--sdk-color-text-foreground)] sdk:text-center sdk:w-full sdk:truncate",
               disabled &&
                 "sdk:text-[var(--sdk-muted-foreground)] sdk:opacity-50"
             )}>

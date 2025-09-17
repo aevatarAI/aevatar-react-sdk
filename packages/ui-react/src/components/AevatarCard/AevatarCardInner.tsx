@@ -30,7 +30,7 @@ export default function AevatarCardInner({
       )}>
       <div className="sdk:pb-[12px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-bg-black-light)] sdk:border-solid">
         <div className="sdk:flex sdk:justify-between sdk:items-center">
-          <div className="sdk:font-outfit sdk:text-[var(--sdk-color-text-primary)] sdk:text-[15px] sdk:font-semibold  sdk:leading-[18px] sdk:whitespace-nowrap sdk:overflow-hidden sdk:text-ellipsis sdk:max-w-[calc(100%-32px)]">
+          <div className="sdk:font-geist sdk:text-[var(--sdk-color-text-primary)] sdk:text-[15px] sdk:font-semibold  sdk:leading-[18px] sdk:whitespace-nowrap sdk:overflow-hidden sdk:text-ellipsis sdk:max-w-[calc(100%-32px)]">
             {/* Ensure name is single line with ellipsis on overflow and does not overlap setting button */}
             {`${props.name}`}
           </div>
@@ -80,7 +80,7 @@ export default function AevatarCardInner({
           }
           return (
             <div key={propName}>
-              <div className="sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:pb-[10px] sdk:font-outfit">
+              <div className="sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:pb-[10px] sdk:font-geist">
                 {propName}
               </div>
               <div className="sdk:flex sdk:flex-wrap sdk:gap-[10px]">
@@ -94,7 +94,7 @@ export default function AevatarCardInner({
                   return (
                     <div
                       key={key}
-                      className="sdk:p-[4px] sdk:bg-[var(--sdk-bg-black-light)] sdk:text-[12px] sdk:text-[var(--sdk-color-text-primary)] sdk:font-outfit">
+                      className="sdk:p-[4px] sdk:bg-[var(--sdk-bg-black-light)] sdk:text-[12px] sdk:text-[var(--sdk-color-text-primary)] sdk:font-geist">
                       <pre
                         style={{
                           whiteSpace: "pre-wrap",

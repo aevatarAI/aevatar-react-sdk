@@ -191,7 +191,7 @@ const ExecutionLogHeader = ({
             onClick={() => {
               onToggle((prev: boolean) => !prev);
             }}>
-            <Close />
+            <Close className="sdk:text-[var(--sdk-primary-foreground-text)]" />
           </button>
         </span>
       </div>
@@ -216,7 +216,11 @@ const ExecutionLogBody = ({
 
   return (
     <Flex>
-      <div className="sdk:flex sdk:flex-1 sdk:flex-col sdk:min-w-[202px] sdk:max-w-[202px] sdk:overflow-auto">
+      <div
+        className={clsx(
+          "sdk:flex sdk:flex-1 sdk:flex-col sdk:min-w-[202px] sdk:max-w-[202px] sdk:overflow-auto",
+          isAgentCardOpen ? "sdk:max-h-[300px]" : "sdk:max-h-[200px]"
+        )}>
         {data.map((d, index) => {
           const isActive = activeAgent?.index === index;
 
@@ -449,9 +453,7 @@ const Wrapper = ({
       ref={dragRef}
       onMouseDown={handleMouseDown}
       className={`${isMovable ? "sdk:absolute sdk:top-0" : ""} ${
-        isAgentCardOpen
-          ? "sdk:max-w-[calc(100%-393px)]"
-          : "sdk:min-w-[100%]"
+        isAgentCardOpen ? "sdk:max-w-[calc(100%-393px)]" : "sdk:min-w-[100%]"
       } sdk:flex sdk:flex-col sdk:flex-1 sdk:gap-2 sdk:bg-[var(--sdk-sidebar-background)] sdk:p-[8px] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:rounded-sm ${
         isMovable ? "sdk:cursor-move" : ""
       } ${isDragging ? "sdk:select-none" : ""}`}
@@ -503,7 +505,11 @@ const ToggleModal = ({ isAgentCardOpen, onToggle }: ToggleModalProps) => {
         onToggle((prev) => !prev);
       }}>
       <div className="sdk:flex sdk:flex-row sdk:gap-[5px] sdk:items-center">
-        <Clock className="sdk:text-[var(--sdk-muted-foreground)]" width={14} height={14} />
+        <Clock
+          className="sdk:text-[var(--sdk-muted-foreground)]"
+          width={14}
+          height={14}
+        />
         <span className="sdk:font-semibold sdk:text-[12px]">execution log</span>
       </div>
     </Button>

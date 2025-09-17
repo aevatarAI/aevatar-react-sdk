@@ -122,7 +122,7 @@ export default function MyGAevatar({
         className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px]"
         onClick={onNewGAevatar}>
         <AddIcon className="text-[var(--sdk-color-text-tertiary)]" style={{ width: 14, height: 14 }} />
-        <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:leading-[14px]">
+        <span className="sdk:text-center sdk:font-geist sdk:text-[12px] sdk:font-semibold sdk:leading-[14px]">
           new g-agent
         </span>
       </Button>
@@ -148,7 +148,7 @@ export default function MyGAevatar({
   return (
     <div
       className={clsx(
-        "sdk:relative sdk:bg-[var(--sdk-bg-background)] sdk:flex sdk:flex-col sdk:font-outfit aevatarai-gaevatar-list-wrapper",
+        "sdk:relative sdk:bg-[var(--sdk-bg-background)] sdk:flex sdk:flex-col sdk:font-geist aevatarai-gaevatar-list-wrapper",
         className
       )}
       style={{ height, width }}>

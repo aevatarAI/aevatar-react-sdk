@@ -71,7 +71,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           className={clsx(
-            "sdk:bg-transparent sdk:border-none sdk:outline-none sdk:w-full sdk:text-[12px] sdk:font-outfit",
+            "sdk:bg-transparent sdk:border-none sdk:outline-none sdk:w-full sdk:text-[12px] sdk:font-geist",
             showActive
               ? "sdk:text-[var(--sdk-color-text-primary)]"
               : "sdk:text-[var(--sdk-muted-foreground)]",

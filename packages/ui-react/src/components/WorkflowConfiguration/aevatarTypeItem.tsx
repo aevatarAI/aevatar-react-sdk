@@ -87,7 +87,7 @@ export default function AevatarTypeItem(props: IAevatarTypeItemProps) {
         </TooltipTrigger>
         <TooltipContent
           className={clsx(
-            "sdk:z-1000 sdk:text-[10px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
+            "sdk:z-1000 sdk:text-[10px] sdk:font-geist sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
             "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
           )}
           align="end"

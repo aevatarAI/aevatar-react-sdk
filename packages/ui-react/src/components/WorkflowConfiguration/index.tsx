@@ -648,12 +648,12 @@ IWorkflowConfigurationProps) => {
 
   return (
     <>
-      <div className="sdk:h-full sdk:workflow-common flex flex-col sdk:font-outfit sdk:text-[var(--sdk-color-text-primary)]">
+      <div className="sdk:h-full sdk:workflow-common flex flex-col sdk:font-geist sdk:text-[var(--sdk-color-text-primary)]">
         {/* header */}
         <div className=" sdk:relative sdk:w-full sdk:flex sdk:justify-between sdk:items-center sdk:border-b-[1px] sdk:px-[20px] sdk:py-[12px] sdk:sm:px-[16px] sdk:sm:py-[8px] sdk:workflow-common-border">
           <div
             className={clsx(
-              "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-outfit sdk:workflow-title sdk:flex-wrap",
+              "sdk:flex sdk:text-[18px] sdk:flex sdk:items-center sdk:gap-[16px] sdk:font-geist sdk:workflow-title sdk:flex-wrap",
               "sdk:items-center"
             )}>
             {onBack && (
@@ -693,7 +693,7 @@ IWorkflowConfigurationProps) => {
                 </DialogPortal>
               </Dialog> */}
 
-            <div className="sdk:text-[13px] sdk:text-[var(--sdk-muted-foreground)] sdk:font-outfit sdk:font-normal sdk:leading-[16px] sdk:text-lowercase">{`auto-saved ${dayjs(
+            <div className="sdk:text-[13px] sdk:text-[var(--sdk-muted-foreground)] sdk:font-geist sdk:font-normal sdk:leading-[16px] sdk:text-lowercase">{`auto-saved ${dayjs(
               autoSavedTime
             ).format("HH:mm:ss")}`}</div>
 

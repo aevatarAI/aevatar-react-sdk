@@ -107,7 +107,7 @@ const EnumTooltipContent = ({
     <TooltipContent
       className={clsx(
         // SDK prefix styles for backward compatibility
-        "sdk:z-1000 sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-color-text-secondary)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
+        "sdk:z-1000 sdk:text-[12px] sdk:font-geist sdk:text-[var(--sdk-color-text-secondary)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
         "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left sdk:z-[99999]"
       )}
       side="left"

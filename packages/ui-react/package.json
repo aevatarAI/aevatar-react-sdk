@@ -63,6 +63,7 @@
     "@aevatar-react-sdk/services": "workspace:*",
     "@aevatar-react-sdk/types": "workspace:*",
     "@aevatar-react-sdk/utils": "workspace:*",
+    "@fontsource/geist": "^5.2.7",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-checkbox": "^1.1.5",
     "@radix-ui/react-dialog": "^1.1.6",

@@ -39,7 +39,7 @@ export function TooltipDescriptor({ type, description }: ITooltipDescriptor) {
         </TooltipTrigger>
         <TooltipContent
           className={clsx(
-            "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
+            "sdk:z-1000 sdk:max-w-[200px] sdk:text-[12px] sdk:font-geist sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
             "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
           )}
           side="top">

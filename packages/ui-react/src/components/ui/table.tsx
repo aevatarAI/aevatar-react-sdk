@@ -22,7 +22,7 @@ const TableHeader = React.forwardRef<
   <thead
     ref={ref}
     className={cn(
-      "[&_tr]:sdk:border-b sdk:text-[var(--sdk-muted-foreground)] sdk:text-xs sdk:font-bold sdk:font-outfit sdk:border-b sdk:border-solid",
+      "[&_tr]:sdk:border-b sdk:text-[var(--sdk-color-text-foreground)] sdk:text-xs sdk:font-bold sdk:font-geist sdk:border-b sdk:border-solid",
       "sdk:border-[var(--sdk-color-border-primary)]",
       className
     )}
@@ -65,7 +65,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "sdk:transition-colors sdk:hover:bg-muted/50 sdk:border-b sdk:border-solid sdk:data-[state=selected]:bg-muted sdk:text-[var(--sdk-color-text-primary)] sdk:text-sm sdk:font-medium sdk:font-outfit",
+      "sdk:transition-colors sdk:hover:bg-muted/50 sdk:border-b sdk:border-solid sdk:data-[state=selected]:bg-muted sdk:text-[var(--sdk-color-text-primary)] sdk:text-sm sdk:font-medium sdk:font-geist",
       "sdk:border-[var(--sdk-color-border-primary)]",
       className
     )}
@@ -81,7 +81,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "sdk:font-outfit sdk:text-[13px] sdk:font-semibold sdk:py-3 sdk:leading-normal sdk:text-[var(--sdk-muted-foreground)] sdk:text-left sdk:align-middle sdk:font-semibold sdk:text-muted-foreground [&:has([role=checkbox])]:pr-0",
+      "sdk:font-geist sdk:text-[13px] sdk:font-semibold sdk:py-3 sdk:leading-normal sdk:text-[var(--sdk-color-text-foreground)] sdk:text-left sdk:align-middle sdk:font-semibold [&:has([role=checkbox])]:pr-0",
       "sdk:border-[var(--sdk-color-border-primary)]",
       className
     )}
@@ -97,7 +97,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      "sdk:py-[18px] sdk:text-[13px] sdk:font-outfit sdk:align-middle [&:has([role=checkbox])]:sdk:pr-0",
+      "sdk:py-[18px] sdk:text-[13px] sdk:font-geist sdk:align-middle [&:has([role=checkbox])]:sdk:pr-0",
       "sdk:border-[var(--sdk-color-border-primary)]",
       className
     )}

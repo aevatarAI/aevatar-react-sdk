@@ -20,7 +20,7 @@ export default function CommonHeader({
         "sdk:md:pl-[40px] sdk:md:pr-[40px] sdk:md:pb-[24px] sdk:md:border-none",
         className
       )}>
-      <div className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-outfit sdk:text-[18px] sdk:font-semibold aevatarai-text-gradient">
+      <div className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-geist sdk:text-[18px] sdk:font-semibold aevatarai-text-gradient">
         {leftEle}
       </div>
       {rightEle}

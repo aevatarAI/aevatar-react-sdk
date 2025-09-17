@@ -1,4 +1,10 @@
-import { Button, Dialog, DialogContent, DialogTitle, DialogTrigger } from "../ui";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui";
 import Close from "../../assets/svg/close.svg?react";
 import SaveFailedTip from "../../assets/svg/save-error-tip.svg?react";
 import type { ReactNode } from "react";
@@ -24,15 +30,20 @@ export default function WorkflowSaveFailedModal({
         onClick={(e) => e.stopPropagation()}
         aria-describedby="save-failed-modal"
         className="sdk:w-[328px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-[6px] sdk:border sdk:border-[var(--sdk-color-border-primary)]">
-        <DialogTitle className="sdk:sr-only sdk:hidden">Workflow Save Failed</DialogTitle>
+        <DialogTitle className="sdk:sr-only sdk:hidden">
+          Workflow Save Failed
+        </DialogTitle>
         <div className="sdk:flex sdk:items-center sdk:justify-between">
           <div />
-          <Close onClick={() => onOpenChange?.(false)} />
+          <Close
+            className="sdk:text-[var(--sdk-primary-foreground-text)]"
+            onClick={() => onOpenChange?.(false)}
+          />
         </div>
         <div className="sdk:flex sdk:flex-col sdk:items-center sdk:gap-[16px] sdk:pt-[10px]">
           <SaveFailedTip />
 
-          <div className="sdk:text-center sdk:font-outfit sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:text-[var(--sdk-color-text-primary)]">
+          <div className="sdk:text-center sdk:font-geist sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:text-[var(--sdk-color-text-primary)]">
             {saveFailed === SaveFailedError.insufficientQuota && (
               <>
                 saving failed :( <br />
@@ -44,7 +55,7 @@ export default function WorkflowSaveFailedModal({
             {saveFailed === SaveFailedError.workflowExecutionFailed &&
               "Workflow execution failed"}
           </div>
-          <div className="sdk:w-[220px] sdk:text-[12px] sdk:text-[var(--sdk-muted-foreground)] sdk:text-center sdk:font-outfit sdk:font-normal sdk:leading-normal">
+          <div className="sdk:w-[220px] sdk:text-[12px] sdk:text-[var(--sdk-muted-foreground)] sdk:text-center sdk:font-geist sdk:font-normal sdk:leading-normal">
             {saveFailed === SaveFailedError.workflowExecutionFailed &&
               "The workflow encountered an error and could not complete. Please review the configuration and logs, then try again."}
           </div>

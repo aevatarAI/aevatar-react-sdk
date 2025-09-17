@@ -37,7 +37,7 @@ export default function DialogStimulate({ message, data }: IProps) {
     <DialogPrimitive.Content className="sdk:z-6 sdk:absolute sdk:right-[20px] sdk:left-[19px] sdk:top-[52px] sdk:sm:right-[11px] sdk:sm:left-auto sdk:sm:top-[12px] sdk:sm:bottom-[13px] sdk:workflow-common-bg sdk:w-auto sdk:sm:w-[232px] sdk:px-[26px] sdk:sm:px-[19px] sdk:pt-[19px] sdk:sm:pt-[40px] sdk:pb-[19px] sdk:workflow-common-border sdk:border sdk:flex">
       <DialogClose>
         <CloseIcon
-          className="sdk:absolute sdk:right-[15px] sdk:sm:right-[6px] sdk:top-[17px] sdk:sm:top-[6px] sdk:cursor-pointer"
+          className="sdk:absolute sdk:right-[15px] sdk:text-[var(--sdk-primary-foreground-text)] sdk:sm:right-[6px] sdk:top-[17px] sdk:sm:top-[6px] sdk:cursor-pointer"
           width={24}
           height={24}
         />

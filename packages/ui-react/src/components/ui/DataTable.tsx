@@ -87,7 +87,7 @@ export default function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : (
-              <TableRow>
+              <TableRow className="sdk:border-b-0">
                 <TableCell
                   colSpan={columns.length}
                   className="sdk:h-[394px] sdk:text-center">

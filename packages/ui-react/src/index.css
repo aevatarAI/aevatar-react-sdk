@@ -1,4 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+@import "@fontsource/geist/400.css";
+@import "@fontsource/geist/500.css";
+@import "@fontsource/geist/600.css";
+@import "@fontsource/geist/700.css";
 
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme) prefix(sdk);
@@ -34,6 +37,7 @@
     --sdk-color-bg-primary: #141415;
     --sdk-color-bg-secondary: #191919;
     --sdk-bg-background: #09090b;
+    --sdk-bg-muted-foreground: #fafafa;
     --sdk-bg-popover: #09090b;
     --sdk-bg-primary: #fafafa;
     --sdk-bg-muted: #18181b;
@@ -43,12 +47,13 @@
     --sdk-sidebar-foreground: #f4f4f5;
     --sdk-color-bg-tertiary: #272728;
     --sdk-color-text-primary: #fafafa;
+    --sdk-color-text-foreground: #fafafa;
     --sdk-border-foreground: #fafafa;
     --sdk-color-text-secondary: #b9b9b9;
     --sdk-color-text-tertiary: var(--sdk-color-border-primary);
     --sdk-color-border-primary: #3f3f46;
     --sdk-color-input: #3f3f46;
-    --sdk-color-sidebar-border: #27272A;
+    --sdk-color-sidebar-border: #27272a;
     --sdk-color-border-secondary: #404040;
     --sdk-color-border-black-light: #3f3f46;
     --sdk-color-border-gray-deep: #404040;
@@ -59,6 +64,8 @@
     --sdk-color-gray-light: #b9b9b9;
     --sdk-color-dialog-dark: #09090b;
     --sdk-muted-foreground: #a1a1aa;
+    --sdk-muted-foreground-border: #a1a1aa;
+
     --sdk-primary-foreground: #18181b;
     --sdk-primary-foreground-text: #fafafa;
     --sdk-bg-black-light: #3f3f46;
@@ -67,11 +74,13 @@
     --sdk-workflow-menu-bg: #151517;
     /* Additional colors for hardcoded replacements */
 
-    --sdk-color-success: #53ff8a;
-    --sdk-color-warning: #ff2e2e;
+    --sdk-color-success: #22c55e;
+    --sdk-color-warning: #b91c1c;
     --sdk-color-error: #ff2e2e;
-    --sdk-color-error-bg: rgba(255, 46, 46, 0.15);
+    --sdk-color-destructive-foreground: #fafafa;
 
+    --sdk-color-error-bg: rgba(255, 46, 46, 0.15);
+    --sdk-color-pending-bg: #27272a;
     --sdk-color-info: #afc6dd;
     --sdk-color-input-node: #0041d0;
     --sdk-color-output-node: #ff0072;
@@ -87,6 +96,7 @@
     --sdk-color-bg-primary: #ffffff;
     --sdk-color-bg-secondary: #f5f5f5;
     --sdk-bg-muted: #f9f9fa;
+    --sdk-bg-muted-foreground: #09090b;
     --sdk-bg-logs: #f7f7f7;
     --sdk-sidebar-background: #fafafa;
     --sdk-sidebar-foreground: #3f3f46;
@@ -97,6 +107,8 @@
     --sdk-bg-accent: #f4f4f5;
     --sdk-color-bg-tertiary: #e5e5e5;
     --sdk-color-text-primary: #09090b;
+    --sdk-color-text-foreground: #09090b;
+
     --sdk-border-foreground: #09090b;
     --sdk-color-text-secondary: #666666;
     --sdk-color-text-tertiary: #999999;
@@ -113,6 +125,7 @@
     --sdk-color-gray-light: #b9b9b9;
     --sdk-color-dialog-dark: #ffffff;
     --sdk-muted-foreground: #71717a;
+    --sdk-muted-foreground-border: #71717a;
     --sdk-primary-foreground: #fafafa;
     --sdk-bg-black-light: #e4e4e7;
     --sdk-hover-primary: #27272a;
@@ -121,9 +134,11 @@
     --sdk-workflow-menu-bg: #fbfbfb;
     /* Additional colors for hardcoded replacements */
 
-    --sdk-color-success: #53ff8a;
-    --sdk-color-warning: #ff2e2e;
+    --sdk-color-success: #16a34a;
+    --sdk-color-warning: #dc2626;
     --sdk-color-error: #ff2e2e;
+    --sdk-color-pending-bg: #f4f4f5;
+    --sdk-color-destructive-foreground: #fafafa;
     --sdk-color-error-bg: rgba(255, 46, 46, 0.15);
     --sdk-color-info: #afc6dd;
     --sdk-color-input-node: #0041d0;
@@ -186,8 +201,8 @@
 .sdk\:workflow-sidebar-title {
   @apply sdk:text-[12px] sdk:font-semibold;
 }
-.sdk\:font-outfit {
-  font-family: "Outfit", sans-serif;
+.sdk\:font-geist {
+  font-family: "Geist", sans-serif;
 }
 .aevatarai-loading-icon {
   animation: aevatarai-rotate 1s linear infinite;

@@ -725,7 +725,7 @@ export const Workflow = forwardRef(
             defaultEdgeOptions={{ type: "bezier" }}
             connectionLineStyle={{
               strokeDasharray: "10 10",
-              stroke: "var(--sdk-muted-foreground)",
+              stroke: "var(--sdk-muted-foreground-border)",
               strokeWidth: 2,
             }}>
             <div className="sdk:absolute sdk:left-[15px] sdk:bottom-[130px] sdk:z-5">
@@ -749,7 +749,7 @@ export const Workflow = forwardRef(
                   </TooltipTrigger>
                   <TooltipContent
                     className={clsx(
-                      "sdk:z-1000 sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
+                      "sdk:z-1000 sdk:text-[12px] sdk:font-geist sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
                     side="top">
@@ -778,7 +778,7 @@ export const Workflow = forwardRef(
                   </TooltipTrigger>
                   <TooltipContent
                     className={clsx(
-                      "sdk:z-1000 sdk:text-[12px] sdk:font-outfit sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
+                      "sdk:z-1000 sdk:text-[12px] sdk:font-geist sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
                     side="top">
@@ -792,7 +792,7 @@ export const Workflow = forwardRef(
                 onClick={async () => {
                   onRunningHandler();
                 }}
-                className="sdk:cursor-pointer sdk:py-[7px]  sdk:px-[17px] sdk:text-center sdk:font-normal sdk:text-[12px] sdk:font-outfit sdk:font-semibold">
+                className="sdk:cursor-pointer sdk:py-[7px]  sdk:px-[17px] sdk:text-center sdk:font-normal sdk:text-[12px] sdk:font-geist sdk:font-semibold">
                 {isRunning ? (
                   <Loading
                     key={"save"}
@@ -813,7 +813,7 @@ export const Workflow = forwardRef(
 
               {/* <Button
                 onClick={onStopHandler}
-                className="sdk:cursor-pointer sdk:hover:text-[var(--sdk-color-text-secondary)] sdk:text-[var(--sdk-color-text-primary)] sdk:text-center sdk:font-normal sdk:leading-normal sdk:text-[12px] sdk:font-outfit sdk:font-semibold sdk:border-[1px] sdk:border-[var(--sdk-bg-black-light)]">
+                className="sdk:cursor-pointer sdk:hover:text-[var(--sdk-color-text-secondary)] sdk:text-[var(--sdk-color-text-primary)] sdk:text-center sdk:font-normal sdk:leading-normal sdk:text-[12px] sdk:font-geist sdk:font-semibold sdk:border-[1px] sdk:border-[var(--sdk-bg-black-light)]">
                 {isStopping ? (
                   <Loading
                     key={"save"}
@@ -836,7 +836,7 @@ export const Workflow = forwardRef(
                 width: 100,
                 height: 64,
               }}
-              nodeColor={"var(--sdk-color-gray-light)"}
+              nodeColor={"var(--sdk-bg-muted-foreground)"}
               bgColor={"var(--sdk-bg-background)"}
               maskColor={"var(--sdk-color-bg-primary)"}
             />

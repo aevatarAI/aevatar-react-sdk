@@ -87,19 +87,19 @@ export const WorkflowGenerationModal = ({
         className="sdk:bg-[var(--sdk-color-dialog-dark)] sdk:min-w-[635px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-md sdk:border sdk:border-[var(--sdk-bg-black-light)]">
         <div className="sdk:flex sdk:flex-col sdk:gap-[28px]">
           <div className="sdk:flex sdk:justify-between">
-            <span className="sdk:font-outfit sdk:font-semibold sdk:text-[18px] sdk:text-[var(--sdk-color-text-primary)]">
+            <span className="sdk:font-geist sdk:font-semibold sdk:text-[18px] sdk:text-[var(--sdk-color-text-primary)]">
               generate workflow with ai
             </span>
             <button
               className="sdk:cursor-pointer"
               type="button"
               onClick={handleClose}>
-              <Close />
+              <Close className="sdk:text-[var(--sdk-primary-foreground-text)]" />
             </button>
           </div>
 
           <div className="sdk:relative">
-            <div className="sdk:font-outfit sdk:pb-[28px] sdk:font-semibold sdk:text-[14px] sdk:text-[var(--sdk-muted-foreground)]">
+            <div className="sdk:font-geist sdk:pb-[28px] sdk:font-semibold sdk:text-[14px] sdk:text-[var(--sdk-muted-foreground)]">
               prompt
             </div>
             <Textarea
@@ -169,10 +169,7 @@ export const WorkflowGenerationModal = ({
             <Button
               variant="primary"
               type="button"
-              className={clsx(
-                "sdk:min-w-[114px]",
-                isLoading && "sdk:bg-[var(--sdk-color-bg-primary)]"
-              )}
+              className={clsx("sdk:min-w-[114px]")}
               disabled={!inputPrompt || isLoading}
               onClick={handleClick}>
               {isLoading ? (

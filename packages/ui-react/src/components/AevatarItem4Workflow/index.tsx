@@ -40,7 +40,7 @@ export default function AevatarItem4Workflow({
         position={Position.Left}
         style={{
           background: "var(--sdk-success-color)",
-          border: "1px solid var(--sdk-muted-foreground)",
+          border: "1px solid var(--sdk-color-border-primary)",
           width: 10,
           height: 10,
           zIndex: 1,
@@ -61,7 +61,7 @@ export default function AevatarItem4Workflow({
         id="b"
         style={{
           background: "var(--sdk-success-color)",
-          border: "1px solid var(--sdk-muted-foreground)",
+          border: "1px solid var(--sdk-color-border-primary)",
           width: 10,
           height: 10,
         }}
