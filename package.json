@@ -1,7 +1,7 @@
 {
   "name": "aevatar-react-sdk",
   "private": true,
-  "version": "0.4.37-alpha.1",
+  "version": "0.4.37-alpha.5",
   "description": "",
   "main": "index.js",
   "scripts": {
