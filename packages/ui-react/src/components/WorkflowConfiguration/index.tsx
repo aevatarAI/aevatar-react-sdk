@@ -665,7 +665,7 @@ IWorkflowConfigurationProps) => {
               />
             )}
             <div>
-              <div className="sdk:font-semibold">workflow configuration</div>
+              <div className="sdk:font-semibold">Workflow configuration</div>
               <EditWorkflowNameDialog
                 disabled={isRunning}
                 className="sdk:inline-flex sdk:sm:hidden"

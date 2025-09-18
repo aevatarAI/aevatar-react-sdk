@@ -88,7 +88,7 @@ describe("EditGAevatarInner", () => {
     expect(screen.getByText("create")).toBeInTheDocument();
 
     expect(screen.getByLabelText("*Atomic-aevatars Type")).toBeInTheDocument();
-    expect(screen.getByLabelText("*atomic-aevatar name")).toBeInTheDocument();
+    expect(screen.getByLabelText("*Atomic-aevatar name")).toBeInTheDocument();
 
     const saveButton = screen.getByText("create");
     expect(saveButton).toBeInTheDocument();
@@ -117,7 +117,7 @@ describe("EditGAevatarInner", () => {
   //   it("should handle form submission correctly", async () => {
   //     render(<EditGAevatarInner {...defaultProps} />);
 
-  //     const agentNameInput = screen.getByLabelText("*atomic-aevatar name");
+  //     const agentNameInput = screen.getByLabelText("*Atomic-aevatar name");
   //     const agentTypeSelect = screen.getByLabelText("*Atomic-aevatars Type");
 
   //     fireEvent.change(agentNameInput, { target: { value: "New Agent" } });

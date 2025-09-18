@@ -8,8 +8,8 @@ import {
 import Close from "../../assets/svg/close.svg?react";
 import Unsaved from "../../assets/svg/unsaved.svg?react";
 export enum SaveFailedError {
-  insufficientQuota = "insufficient quota",
-  maxAgents = "maximum agent",
+  insufficientQuota = "Insufficient quota",
+  maxAgents = "Maximum agent",
 }
 export interface IWorkflowSaveFailedModalProps {
   open?: boolean;

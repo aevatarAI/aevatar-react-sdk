@@ -143,7 +143,7 @@ const ExecutionLogHeader = ({
   return (
     <div className="sdk:flex sdk:flex-row sdk:justify-between sdk:items-center sdk:gap-[16px]">
       <span className="sdk:text-gradient sdk:font-semibold sdk:text-[16px] sdk:min-w-[200px]">
-        execution log
+        Execution log
       </span>
       <div className="sdk:flex sdk:overflow-auto sdk:justify-between sdk:items-center sdk:gap-4 sdk:w-[100%]">
         {data?.length > 0 ? (
@@ -289,7 +289,7 @@ const ExecutionLogBody = ({
           )}>
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-semibold">
-              input
+              Input
             </span>
             <span className="sdk:flex sdk:gap-2">
               <button type="button">
@@ -317,7 +317,7 @@ const ExecutionLogBody = ({
           )}>
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-semibold">
-              agent state
+              Agent state
             </span>
             <span className="sdk:flex sdk:gap-2">
               <button type="button">
@@ -345,7 +345,7 @@ const ExecutionLogBody = ({
           )}>
           <div className="sdk:flex sdk:justify-between sdk:items-center">
             <span className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-semibold">
-              output
+              Output
             </span>
             <span className="sdk:flex sdk:gap-2">
               <button type="button">
@@ -481,7 +481,7 @@ const EmptyExecutionLog = () => {
       <div className="sdk:flex sdk:flex-col sdk:gap-4 sdk:items-center">
         <EmptyRun />
         <span className="sdk:text-[var(--sdk-color-text-primary)] sdk:text-[13px]">
-          run your workflow to view execution logs here.
+          Run your workflow to view execution logs here.
         </span>
       </div>
     </div>
@@ -510,7 +510,7 @@ const ToggleModal = ({ isAgentCardOpen, onToggle }: ToggleModalProps) => {
           width={14}
           height={14}
         />
-        <span className="sdk:font-semibold sdk:text-[12px]">execution log</span>
+        <span className="sdk:font-semibold sdk:text-[12px]">Execution log</span>
       </div>
     </Button>
   );

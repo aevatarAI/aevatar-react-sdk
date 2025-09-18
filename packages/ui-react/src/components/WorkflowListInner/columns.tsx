@@ -23,12 +23,12 @@ export const workflowColumns: ColumnDef<
 >[] = [
   {
     accessorKey: "name",
-    header: "name",
+    header: "Name",
     cell: ({ row }) => row.original.name,
   },
   {
     accessorKey: "created",
-    header: "created",
+    header: "Created",
     cell: ({ row }) => (
       <div className="sdk:text-[12px]  sdk:font-geist sdk:font-semibold">
         {row.original.createTime
@@ -39,7 +39,7 @@ export const workflowColumns: ColumnDef<
   },
   // {
   //   accessorKey: "createdBy",
-  //   header: "created by",
+  //   header: "Created by",
   //   cell: ({ row }) => (
   //     <div className="sdk:text-[14px] sdk:font-geist sdk:font-semibold">
   //       {row.original.createdBy}
@@ -48,7 +48,7 @@ export const workflowColumns: ColumnDef<
   // },
   // {
   //   accessorKey: "lastUpdated",
-  //   header: "last updated",
+  //   header: "Last updated",
   //   cell: ({ row }) => (
   //     <div className="sdk:text-[12px]  sdk:font-geist">
   //       {row.original.lastUpdated}
@@ -57,7 +57,7 @@ export const workflowColumns: ColumnDef<
   // },
   {
     accessorKey: "lastRun",
-    header: "last run",
+    header: "Last run",
     cell: ({ row }) => (
       <div className="sdk:text-[12px]  sdk:font-geist">
         {row.original.lastRunningTime

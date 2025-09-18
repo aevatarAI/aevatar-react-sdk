@@ -98,7 +98,7 @@ export const EditExecutionsFilterDialog = ({
                 name="name"
                 render={({ field }) => (
                   <FormItem aria-labelledby="name" className="w-full">
-                    <FormLabel id="name">workflow</FormLabel>
+                    <FormLabel id="name">Workflow</FormLabel>
                     <FormControl>
                       <Select
                         value={field?.value}
@@ -114,7 +114,7 @@ export const EditExecutionsFilterDialog = ({
                           <SelectTrigger
                             aria-disabled={field?.disabled}
                             className="normal-case">
-                            <SelectValue placeholder="all workflows" />
+                            <SelectValue placeholder="All workflows" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent className="w-[286px] left-0 -top-[4px] p-[8px_8px_20px_10px] cutCorner cutCorner__white">
@@ -157,7 +157,7 @@ export const EditExecutionsFilterDialog = ({
                             aria-disabled={field?.disabled}
                             className="normal-case">
                             <SelectValue
-                              placeholder="any status"
+                              placeholder="Any status"
                               defaultValue="pending"
                             />
                           </SelectTrigger>
@@ -186,7 +186,7 @@ export const EditExecutionsFilterDialog = ({
                 render={({ field }) => {
                   return (
                     <FormItem aria-labelledby="dateLabel" className="w-full">
-                      <FormLabel id="dateLabel">execution start</FormLabel>
+                      <FormLabel id="dateLabel">Execution start</FormLabel>
                       <FormControl>
                         <div className="flex items-center justify-between border border-[var(--sdk-bg-black-light)]">
                           <DatePickerWithoutRange
@@ -214,10 +214,10 @@ export const EditExecutionsFilterDialog = ({
                 name="id"
                 render={({ field }) => (
                   <FormItem aria-labelledby="idLabel" className="w-full">
-                    <FormLabel id="idLabel">execution id</FormLabel>
+                    <FormLabel id="idLabel">Execution ID</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="id"
+                        placeholder="ID"
                         value={field.value}
                         onChange={(e) => {
                           // Do a debounce here

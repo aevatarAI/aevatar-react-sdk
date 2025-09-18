@@ -182,7 +182,7 @@ function EditGAevatarInnerCom({
         <span className="sdk:hidden sdk:sm:inline-block">
           g-agents configuration
         </span>
-        <span className="sdk:inline-block sdk:sm:hidden">configuration</span>
+        <span className="sdk:inline-block sdk:sm:hidden">Configuration</span>
       </div>
     );
   }, [onBack]);
@@ -344,11 +344,11 @@ function EditGAevatarInnerCom({
                 render={({ field }) => (
                   <FormItem aria-labelledby="agentNameLabel">
                     <FormLabel id="agentNameLabel">
-                      *atomic-aevatar name
+                      *Atomic-aevatar name
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="atomic-aevatar name"
+                        placeholder="Atomic-aevatar name"
                         {...field}
                         value={field?.value}
                         onChange={field?.onChange}

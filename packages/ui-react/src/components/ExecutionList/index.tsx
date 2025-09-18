@@ -28,7 +28,7 @@ export const columns = [
   },
   {
     accessorKey: "createTime",
-    header: "started",
+    header: "Started",
     cell: ({ row }) => (
       <div className="pr-[20px] md:pr-[30px] w-[175px] font-geist">
         {dayjs.utc(row.original.createTime).local().format("MMM D, HH:mm:ss")}
@@ -37,7 +37,7 @@ export const columns = [
   },
   {
     accessorKey: "runTime",
-    header: "run time",
+    header: "Run time",
     cell: ({ row }) => (
       <div className="pr-[20px] md:pr-[30px] w-[175px] font-geist">
         {`${Math.abs(
@@ -48,7 +48,7 @@ export const columns = [
   },
   {
     accessorKey: "workflowStatus",
-    header: "status",
+    header: "Status",
     cell: ({ row }) => {
       return (
         <div
@@ -112,7 +112,7 @@ export default function ExecutionList({
           <div
             className="sdk:font-geist sdk:font-semibold sdk:text-[18px] sdk:text-[var(--sdk-color-text-primary)]"
             id={crypto.randomUUID()}>
-            <p>executions</p>
+            <p>Executions</p>
           </div>
           <div>
             <Button

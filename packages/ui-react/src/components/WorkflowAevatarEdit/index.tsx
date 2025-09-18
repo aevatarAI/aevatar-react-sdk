@@ -283,13 +283,13 @@ export default function WorkflowAevatarEdit({
                       <FormLabel
                         id="agentNameLabel"
                         className="sdk:flex sdk:gap-[4px]">
-                        <span>agent name</span>
+                        <span>Agent name</span>
                         <TooltipDescriptor type="agentName" />
                       </FormLabel>
 
                       <FormControl>
                         <Input
-                          placeholder="atomic-aevatar name"
+                          placeholder="Atomic-aevatar name"
                           {...field}
                           value={field?.value}
                           onChange={field?.onChange}
@@ -314,7 +314,7 @@ export default function WorkflowAevatarEdit({
                       <FormLabel
                         id="agentTypeLabel"
                         className="sdk:flex sdk:gap-[4px]">
-                        <span>agent Type</span>
+                        <span>Agent Type</span>
                         <TooltipDescriptor type="agentType" />
                       </FormLabel>
                       <Select value={field?.value} disabled={field?.disabled}>

@@ -96,7 +96,7 @@ describe("SidebarWithNewAgent", () => {
     render(<SidebarWithNewAgent {...defaultProps} />);
     
     const searchInput = screen.getByTestId("search-input");
-    expect(searchInput).toHaveAttribute("placeholder", "search");
+    expect(searchInput).toHaveAttribute("placeholder", "Search");
     expect(searchInput).toHaveValue("");
   });
 

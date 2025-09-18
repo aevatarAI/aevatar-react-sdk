@@ -80,11 +80,11 @@ export default function EditWorkflowNameDialog({
         </div>
       </DialogTrigger>
       <DialogContent
-        aria-describedby="rename workflow"
+        aria-describedby="Rename workflow"
         className="sdk:w-[328px] sdk:p-5 sdk:flex sdk:flex-col sdk:gap-[28px] sdk:rounded-[6px] sdk:border-[var(--sdk-color-bg-tertiary)]">
         <DialogHeader>
           <DialogTitle className="sdk:text-left sdk:text-[var(--sdk-color-text-primary)] sdk:inline  sdk:text-[18px] sdk:font-semibold sdk:leading-normal">
-            rename workflow
+            Rename workflow
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -97,9 +97,9 @@ export default function EditWorkflowNameDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem aria-labelledby="nameLabel" className="sdk:w-full">
-                    <FormLabel id="nameLabel">workflow name</FormLabel>
+                    <FormLabel id="nameLabel">Workflow name</FormLabel>
                     <FormControl>
-                      <Input placeholder="name" {...field} />
+                      <Input placeholder="Name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -114,7 +114,7 @@ export default function EditWorkflowNameDialog({
                   onClick={() => {
                     setOpen(false);
                   }}>
-                  cancel
+                  Cancel
                 </Button>
                 <Button
                   variant="primary"
@@ -126,7 +126,7 @@ export default function EditWorkflowNameDialog({
                       style={{ width: 14, height: 14 }}
                     />
                   )}
-                  <span>{btnLoading ? "saving" : "save"}</span>
+                  <span>{btnLoading ? "Saving" : "Save"}</span>
                 </Button>
               </div>
             </div>

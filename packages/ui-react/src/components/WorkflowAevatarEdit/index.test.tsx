@@ -51,11 +51,11 @@ describe("WorkflowAevatarEdit Component", () => {
     );
 
     // Agent name input - use getAllByText since there might be multiple instances
-    const agentNameLabels = screen.getAllByText("agent name");
+    const agentNameLabels = screen.getAllByText("Agent name");
     expect(agentNameLabels.length).toBeGreaterThan(0);
 
     // Agent type select - use getAllByLabelText since there might be multiple instances
-    const agentTypeLabels = screen.getAllByLabelText("agent Type");
+    const agentTypeLabels = screen.getAllByLabelText("Agent Type");
     expect(agentTypeLabels.length).toBeGreaterThan(0);
 
     // Dynamic fields

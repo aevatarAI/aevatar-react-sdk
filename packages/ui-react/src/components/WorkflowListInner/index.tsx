@@ -15,6 +15,7 @@ import type {
 import { workflowColumns } from "./columns";
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
+import { Ellipsis } from "lucide-react";
 
 interface WorkflowListInnerProps {
   workflowsList: (IWorkflowCoordinatorState & IAgentInfoDetail)[];
@@ -78,6 +79,7 @@ export default function WorkflowListInner({
           <div className="sdk:flex sdk:items-center sdk:justify-end sdk:pr-[15px]">
             <Select
               value={null}
+              dir="rtl"
               onValueChange={(value) => {
                 console.log("value===", value);
                 if (value === ActionType.OpenWorkflow) {
@@ -90,17 +92,12 @@ export default function WorkflowListInner({
               }}>
               <SelectTrigger
                 className={clsx(
-                  "sdk:normal-case sdk:gap-[5px] sdk:w-[110px] sdk:cursor-pointer sdk:bg-[var(--sdk-bg-primary)] sdk:text-[var(--sdk-primary-foreground)] sdk:hover:bg-[var(--sdk-hover-primary)]",
-                  "sdk:border-none sdk:px-[18px]",
-                  "sdk:rounded-md",
-                  "sdk:leading-[15px]",
-                  "sdk:min-h-[30px]"
+                  "sdk:normal-case sdk:gap-[5px]  sdk:cursor-pointer",
+                  "sdk:border-none sdk:px-[18px]"
                 )}
-                downIcon={<DownIcon className="sdk:text-[var(--sdk-color-bg-primary)]"/>}>
-                <span className="sdk:flex sdk:items-center sdk:gap-[5px] ">
-                  <Setting role="img" className=" sdk:w-[14px] sdk:h-[14px]" />
-                  actions
-                </span>
+                // biome-ignore lint/complexity/noUselessFragments: <explanation>
+                downIcon={<></>}>
+                <Ellipsis className="sdk:text-[var(--sdk-color-text-primary)]" />
               </SelectTrigger>
               <SelectContent
                 align="end"

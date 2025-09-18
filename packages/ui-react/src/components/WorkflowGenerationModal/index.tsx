@@ -87,12 +87,12 @@ export const WorkflowGenerationModal = ({
       <DialogTrigger asChild />
       <DialogContent
         onClick={(e) => e.stopPropagation()}
-        aria-describedby="ai generate workflow"
+        aria-describedby="AI generate workflow"
         className="sdk:bg-[var(--sdk-color-dialog-dark)] sdk:min-w-[635px] sdk:p-[20px] sdk:flex sdk:flex-col sdk:rounded-md sdk:border sdk:border-[var(--sdk-bg-black-light)]">
         <div className="sdk:flex sdk:flex-col sdk:gap-[28px]">
           <div className="sdk:flex sdk:justify-between">
             <span className="sdk:font-geist sdk:font-semibold sdk:text-[18px] sdk:text-[var(--sdk-color-text-primary)]">
-              generate workflow with ai
+              Generate workflow with AI
             </span>
             <button
               className="sdk:cursor-pointer"
@@ -104,14 +104,14 @@ export const WorkflowGenerationModal = ({
 
           <div className="sdk:relative">
             <div className="sdk:font-geist sdk:pb-[28px] sdk:font-semibold sdk:text-[14px] sdk:text-[var(--sdk-muted-foreground)]">
-              prompt
+              Prompt
             </div>
             <Textarea
               autoFocus
               ref={textRef}
               id="input-prompt"
               className="sdk:text-[13px] sdk:bg-[var(--sdk-color-dialog-dark)] sdk:min-w-[595px] sdk:min-h-[120px]"
-              placeholder="please describe what kind of agent workflow you want to create"
+              placeholder="Please describe what kind of agent workflow you want to create"
               value={inputPrompt}
               disabled={isLoading}
               onChange={handleChange}
@@ -137,13 +137,13 @@ export const WorkflowGenerationModal = ({
                     setSuggestionSelectedOpen(open);
                   }}>
                   <SelectTrigger className="sdk:collapse ">
-                    <SelectValue placeholder="suggested" />
+                    <SelectValue placeholder="Suggested" />
                   </SelectTrigger>
                   <SelectContent className="sdk:w-[var(--radix-popper-anchor-width)]! sdk:p-[8px]! sdk:gap-[4px]">
                     <div className="sdk:flex sdk:flex-row sdk:gap-2 sdk:items-center sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:pb-[8px]">
                       <AIStar />
                       <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px]">
-                        suggested
+                        Suggested
                       </span>
                     </div>
                     {searchData?.completions?.map((suggestion) => {
@@ -167,7 +167,7 @@ export const WorkflowGenerationModal = ({
               disabled={isLoading}
               className={clsx("hover-skip")}>
               <span className="sdk:font-semibold sdk:text-[12px] sdk:cursor-pointer">
-                skip
+                Skip
               </span>
             </Button>
             <Button
@@ -186,7 +186,7 @@ export const WorkflowGenerationModal = ({
                 <div className="sdk:flex sdk:flex-row sdk:items-center sdk:gap-[5px]">
                   <AIStar />
                   <span className="sdk:font-semibold sdk:text-[12px] sdk:cursor-pointer">
-                    generate
+                    Generate
                   </span>
                 </div>
               )}

@@ -165,7 +165,7 @@ export default forwardRef(function WorkflowList(
             className={clsx("aevatarai-loading-icon")}
             style={{ width: 14, height: 14 }}
           />
-          <span>workflow deleting...</span>
+          <span>Workflow deleting...</span>
         </div>
       ),
       duration: 0,
@@ -227,7 +227,7 @@ export default forwardRef(function WorkflowList(
             className={clsx("aevatarai-loading-icon")}
             style={{ width: 14, height: 14 }}
           />
-          <span>workflow deleting all subagents...</span>
+          <span>Workflow deleting all subagents...</span>
         </div>
       ),
       duration: 0,

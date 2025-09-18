@@ -9,9 +9,9 @@ import Close from "../../assets/svg/close.svg?react";
 import SaveFailedTip from "../../assets/svg/save-error-tip.svg?react";
 import type { ReactNode } from "react";
 export enum SaveFailedError {
-  insufficientQuota = "insufficient quota",
-  maxAgents = "maximum agent",
-  workflowExecutionFailed = "workflow execution failed",
+  insufficientQuota = "Insufficient quota",
+  maxAgents = "Maximum agent",
+  workflowExecutionFailed = "Workflow execution failed",
 }
 export interface IWorkflowSaveFailedModalProps {
   saveFailed?: SaveFailedError | boolean;
@@ -46,7 +46,7 @@ export default function WorkflowSaveFailedModal({
           <div className="sdk:text-center sdk:font-geist sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:text-[var(--sdk-color-text-primary)]">
             {saveFailed === SaveFailedError.insufficientQuota && (
               <>
-                saving failed :( <br />
+                Saving failed :( <br />
                 Please purchase more quota
               </>
             )}
@@ -70,8 +70,8 @@ export default function WorkflowSaveFailedModal({
               onOpenChange?.(false);
             }}>
             {saveFailed === SaveFailedError.insufficientQuota && "Purchase now"}
-            {saveFailed === SaveFailedError.maxAgents && "ok"}
-            {saveFailed === SaveFailedError.workflowExecutionFailed && "ok"}
+            {saveFailed === SaveFailedError.maxAgents && "OK"}
+            {saveFailed === SaveFailedError.workflowExecutionFailed && "OK"}
           </Button>
         </div>
       </DialogContent>

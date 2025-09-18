@@ -350,7 +350,7 @@ export const EnumSelect = ({
         <div className="sdk:flex sdk:flex-row sdk:mb-[8px] sdk:gap-[4px] sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:border-solid">
           <SearchBar
             className="sdk:bg-[var(--sdk-bg-popover)]!"
-            placeholder="search"
+            placeholder="Search"
             value={searchValue}
             onChange={setSearch}
             onKeyDown={(e) => e.stopPropagation()}

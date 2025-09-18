@@ -45,7 +45,7 @@ export default function WorkflowDialog({
       </DialogClose>
       <div className="sdk:h-[500px] sdk:sm:h-full sdk:flex sdk:flex-col sdk:gap-[8px] sdk:w-full  sdk:pt-[8px] sdk:sm:pt-[8px]">
         <DialogTitle className="sdk:text-[var(--sdk-color-text-primary)] sdk:pb-[8px] sdk:text-[15px] sdk:font-geist sdk:font-semibold sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:aevatar-title">
-          <p className="sdk:px-[8px] sdk:sm:px-[8px] ">agent configuration</p>
+          <p className="sdk:px-[8px] sdk:sm:px-[8px] ">Agent configuration</p>
         </DialogTitle>
         <WorkflowAevatarEdit
           key={nodeId || "default"}

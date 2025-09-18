@@ -168,7 +168,7 @@ describe("WorkflowListInner", () => {
     render(<WorkflowListInner {...defaultProps} onDeleteWorkflow={onDeleteWorkflow} />);
     
     // Click on the actions dropdown and then delete option
-    const actionsButtons = screen.getAllByText("actions");
+    const actionsButtons = screen.getAllByRole("combobox");
     const actionsButton = actionsButtons[0]; // Use the first one
     fireEvent.click(actionsButton);
     

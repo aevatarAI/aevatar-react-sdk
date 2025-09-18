@@ -326,7 +326,7 @@ describe("EnumSelect Component", () => {
 
     const searchBar = screen.getByTestId("search-bar");
     expect(searchBar).toBeInTheDocument();
-    expect(searchBar).toHaveAttribute("placeholder", "search");
+    expect(searchBar).toHaveAttribute("placeholder", "Search");
   });
 
   it("should handle search filtering", () => {

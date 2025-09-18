@@ -45,7 +45,7 @@ export default function DialogStimulate({ message, data }: IProps) {
 
       <div className="sdk:overflow-auto sdk:h-full">
         <DialogTitle className="sdk:mb-[23px] sdk:text-[15px] sdk:font-bold">
-          <p>stimulate workflow</p>
+          <p>Stimulate workflow</p>
         </DialogTitle>
         <div className="sdk:flex sdk:gap-[10px] sdk:flex-col">
           <img src={AevatarLogo} alt="" width={32} height={32} />
