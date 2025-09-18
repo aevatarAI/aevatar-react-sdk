@@ -37,8 +37,10 @@ export const WorkflowGenerationModal = ({
 
   const [suggestionSelectedOpen, setSuggestionSelectedOpen] =
     useState<boolean>(false);
+  const isGenerated = useRef<boolean>(false);
 
   useEffect(() => {
+    if (isGenerated.current) return;
     if (searchData?.completions?.length > 0) {
       setSuggestionSelectedOpen(true);
     } else {
@@ -65,11 +67,13 @@ export const WorkflowGenerationModal = ({
   };
 
   const handleChange = (e) => {
+    isGenerated.current = false;
     setInputPrompt(e.target.value);
     setIsSelectingSuggestion(false);
   };
 
   const handleClick = async () => {
+    isGenerated.current = true;
     await refetch(inputPrompt);
     setIsVisible(false);
   };
