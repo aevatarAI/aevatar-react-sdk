@@ -10,6 +10,8 @@ export interface IAgentInfo {
   agentType: string;
   name: string;
   properties: Record<string, any>;
+  createTime?: string;
+  updateTime?: string;
   businessAgentGrainId: string;
 }
 

@@ -27,12 +27,15 @@ export const workflowColumns: ColumnDef<
     cell: ({ row }) => row.original.name,
   },
   {
-    accessorKey: "created",
-    header: "Created",
+    accessorKey: "last updated",
+    header: "Last updated",
     cell: ({ row }) => (
       <div className="sdk:text-[12px]  sdk:font-geist sdk:font-semibold">
-        {row.original.createTime
-          ? dayjs.utc(row.original.createTime).local().format("YYYY-MM-DD HH:mm")
+        {row.original.updateTime
+          ? dayjs
+              .utc(row.original.updateTime)
+              .local()
+              .format("YYYY-MM-DD HH:mm")
           : "-"}
       </div>
     ),

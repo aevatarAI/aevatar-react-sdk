@@ -1,10 +1,7 @@
 import DataTable from "../ui/DataTable";
 import { Button } from "../ui/button";
 import AddIcon from "../../assets/svg/add.svg?react";
-import Hypotenuse from "../../assets/svg/hypotenuse.svg?react";
 import NoWorkflows from "../../assets/svg/no-workflows.svg?react";
-import Setting from "../../assets/svg/setting.svg?react";
-import DownIcon from "../../assets/svg/down-icon.svg?react";
 import { useMemo, useState } from "react";
 import clsx from "clsx";
 import DeleteWorkflowConfirm from "../DeleteWorkflowConfirm";
