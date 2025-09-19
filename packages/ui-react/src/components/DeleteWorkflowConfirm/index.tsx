@@ -53,7 +53,7 @@ export default function DeleteWorkflowConfirm({
             onClick={() => {
               onOpenChange(false);
             }}>
-            cancel
+            Cancel
           </Button>
           <Button
             variant="primary"
@@ -63,7 +63,7 @@ export default function DeleteWorkflowConfirm({
               handleConfirm();
               onOpenChange(false);
             }}>
-            yes
+            Yes
           </Button>
         </div>
       </DialogContent>

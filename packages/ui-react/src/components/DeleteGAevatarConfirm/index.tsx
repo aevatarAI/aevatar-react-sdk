@@ -44,7 +44,7 @@ export default function DeleteGAevatarConfirm({
           <DeleteTip />
 
           <div className="sdk:text-center sdk:font-geist sdk:text-[18px] sdk:w-[274px] sdk:font-semibold sdk:leading-normal sdk:text-[var(--sdk-color-text-primary)]">
-            Are you sure you want to delete this g-agent?
+            Are you sure you want to delete this G-Agent?
           </div>
           <CheckboxWithDesc checked={checked} setChecked={setChecked} />
         </div>
@@ -55,7 +55,7 @@ export default function DeleteGAevatarConfirm({
             onClick={(e) => {
               handleCancel();
             }}>
-            cancel
+            Cancel
           </Button>
           <Button
             variant="primary"
@@ -65,7 +65,7 @@ export default function DeleteGAevatarConfirm({
               handleConfirm();
             }}
             disabled={!checked}>
-            delete
+            Delete
           </Button>
         </div>
       </DialogContent>

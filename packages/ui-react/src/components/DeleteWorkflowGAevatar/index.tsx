@@ -56,7 +56,7 @@ export default function DeleteWorkflowGAevatar({
             onClick={() => {
               setOpen(false);
             }}>
-            cancel
+            Cancel
           </Button>
           <Button
             variant="primary"
@@ -65,7 +65,7 @@ export default function DeleteWorkflowGAevatar({
               e.stopPropagation();
               handleDeleteClick(e);
             }}>
-            yes
+            Yes
           </Button>
         </div>
       </DialogContent>

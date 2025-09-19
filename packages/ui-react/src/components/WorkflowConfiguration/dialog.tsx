@@ -29,7 +29,7 @@ export default function WorkflowDialog({
     <DialogPrimitive.Content
       className={clsx(
         "sdk:z-6 sdk:left-[19px] sdk:sm:left-auto  sdk:workflow-common-bg sdk:w-auto sdk:sm:w-[380px]  sdk:workflow-common-border sdk:border sdk:flex",
-        "sdk:absolute sdk:right-[20px]  sdk:top-[58px] sdk:sm:right-[11px] sdk:sm:top-[58px] sdk:sm:bottom-[13px]"
+        "sdk:absolute sdk:right-[20px]  sdk:top-[58px] sdk:sm:right-[11px] sdk:sm:top-[58px] sdk:sm:bottom-[8px]"
       )}>
       <DialogClose
         className="sdk:border-none"

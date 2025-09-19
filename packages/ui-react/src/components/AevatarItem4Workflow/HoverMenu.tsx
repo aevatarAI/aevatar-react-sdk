@@ -52,7 +52,7 @@ export default function HoverMenu({
                 "sdk:hover:bg-[var(--sdk-bg-accent)]",
                 "select-item-wrapper"
               )}>
-              delete
+              Delete
             </div>
           </div>
         </PopoverContent>

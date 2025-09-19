@@ -693,7 +693,7 @@ IWorkflowConfigurationProps) => {
                 </DialogPortal>
               </Dialog> */}
 
-            <div className="sdk:text-[13px] sdk:text-[var(--sdk-muted-foreground)] sdk:font-geist sdk:font-normal sdk:leading-[16px] sdk:text-lowercase">{`auto-saved ${dayjs(
+            <div className="sdk:text-[13px] sdk:text-[var(--sdk-muted-foreground)] sdk:font-geist sdk:font-normal sdk:leading-[16px] sdk:text-lowercase">{`Auto-saved ${dayjs(
               autoSavedTime
             ).format("HH:mm:ss")}`}</div>
 
@@ -720,7 +720,7 @@ IWorkflowConfigurationProps) => {
                   style={{ width: 14, height: 14 }}
                 />
               )}
-              save
+              Save
             </Button> */}
           </div>
         </div>

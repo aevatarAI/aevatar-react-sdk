@@ -753,7 +753,7 @@ export const Workflow = forwardRef(
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
                     side="top">
-                    undo
+                    Undo
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -782,7 +782,7 @@ export const Workflow = forwardRef(
                       "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
                     )}
                     side="top">
-                    redo
+                    Redo
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -807,7 +807,7 @@ export const Workflow = forwardRef(
                     "sdk:leading-[14px]",
                     isRunning && "sdk:text-[var(--sdk-running-text)]"
                   )}>
-                  {isRunning ? "running" : "run"}
+                  {isRunning ? "Running" : "Run"}
                 </span>
               </Button>
 
@@ -846,7 +846,7 @@ export const Workflow = forwardRef(
               color={"var(--sdk-bg-dot"}
             />
             <div className="sdk:absolute sdk:right-[0px] sdk:bottom-[0px] sdk:text-[var(--sdk-muted-foreground)] sdk:text-center sdk:font-normal sdk:leading-normal sdk:text-[11px] sdk:font-pro aevatar-ai-watermark">
-              powered by aevatar.ai
+              Powered by aevatar.ai
             </div>
           </ReactFlow>
         </div>
