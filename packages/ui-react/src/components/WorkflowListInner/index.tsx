@@ -109,7 +109,7 @@ export default function WorkflowListInner({
                       "aevatar-workflow-action-select-open"
                     )}
                     value={ActionType.OpenWorkflow}>
-                    open workflow
+                    Open Workflow
                   </SelectItem>
                   {/* <SelectItem
                   className={clsx(
@@ -126,7 +126,7 @@ export default function WorkflowListInner({
                       "aevatar-workflow-action-select-delete"
                     )}
                     value={ActionType.DeleteWorkflow}>
-                    delete
+                    Delete
                   </SelectItem>
                 </div>
               </SelectContent>
@@ -158,7 +158,7 @@ export default function WorkflowListInner({
             className="sdk:text-[12px] sdk:font-geist sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:cursor-pointer"
             onClick={onNewWorkflow}>
             <AddIcon style={{ width: 14, height: 14 }} />
-            new workflow
+            New Workflow
           </Button>
         </div>
       </div>

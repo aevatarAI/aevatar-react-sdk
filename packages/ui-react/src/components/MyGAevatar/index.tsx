@@ -123,7 +123,7 @@ export default function MyGAevatar({
         onClick={onNewGAevatar}>
         <AddIcon className="text-[var(--sdk-color-text-tertiary)]" style={{ width: 14, height: 14 }} />
         <span className="sdk:text-center sdk:font-geist sdk:text-[12px] sdk:font-semibold sdk:leading-[14px]">
-          new g-agent
+          New G-Agent
         </span>
       </Button>
     ),
@@ -153,7 +153,7 @@ export default function MyGAevatar({
       )}
       style={{ height, width }}>
       <CommonHeader
-        leftEle={"my g-agents"}
+        leftEle={"my G-Agents"}
         rightEle={
           aevatarList &&
           (maxGAevatarCount ? maxGAevatarCount > aevatarList.length : true) &&

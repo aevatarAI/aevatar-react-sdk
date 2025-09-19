@@ -22,6 +22,12 @@ export const useGetAutoComplete = (query: string, enabled = true) => {
     };
   }, [query]);
 
+  const queryEnabled =
+    enabled &&
+    !!debouncedQuery &&
+    debouncedQuery.length >= 15 &&
+    debouncedQuery.length < 250;
+
   return useQuery({
     queryKey: ["autocomplete", { query: debouncedQuery }],
     queryFn: () => {
@@ -29,10 +35,6 @@ export const useGetAutoComplete = (query: string, enabled = true) => {
         userGoal: debouncedQuery,
       });
     },
-    enabled:
-      enabled &&
-      !!debouncedQuery &&
-      debouncedQuery.length >= 15 &&
-      debouncedQuery.length < 250,
+    enabled: queryEnabled,
   });
 };

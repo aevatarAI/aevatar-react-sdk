@@ -19,6 +19,7 @@ import { usePostAIWorkflowGeneration } from "../../hooks/usePostAIWorkflowGenera
 import "./index.css";
 import { useGetAutoComplete } from "../../hooks/useGetAutoComplete";
 import { sleep } from "@aevatar-react-sdk/utils";
+import GenerationTextInput from "./GenerationTextInput";
 interface IWorkflowGenerationModalProps {
   workflowRef: any;
   defaultVisible?: boolean;
@@ -35,18 +36,7 @@ export const WorkflowGenerationModal = ({
   const { data: searchData, isLoading: isLoadingAutoComplete } =
     useGetAutoComplete(inputPrompt, !isSelectingSuggestion);
 
-  const [suggestionSelectedOpen, setSuggestionSelectedOpen] =
-    useState<boolean>(false);
-  const isGenerated = useRef<boolean>(false);
-
-  useEffect(() => {
-    if (isGenerated.current) return;
-    if (searchData?.completions?.length > 0) {
-      setSuggestionSelectedOpen(true);
-    } else {
-      setSuggestionSelectedOpen(false);
-    }
-  }, [searchData]);
+  const [isGenerated, setIsGenerated] = useState<boolean>(false);
 
   useEffect(() => {
     if (data && workflowRef) {
@@ -67,13 +57,15 @@ export const WorkflowGenerationModal = ({
   };
 
   const handleChange = (e) => {
-    isGenerated.current = false;
-    setInputPrompt(e.target.value);
+    const newValue = e.target.value;
+
+    setIsGenerated(false);
+    setInputPrompt(newValue);
     setIsSelectingSuggestion(false);
   };
 
   const handleClick = async () => {
-    isGenerated.current = true;
+    setIsGenerated(true);
     await refetch(inputPrompt);
     setIsVisible(false);
   };
@@ -106,57 +98,30 @@ export const WorkflowGenerationModal = ({
             <div className="sdk:font-geist sdk:pb-[28px] sdk:font-semibold sdk:text-[14px] sdk:text-[var(--sdk-muted-foreground)]">
               Prompt
             </div>
-            <Textarea
-              autoFocus
-              ref={textRef}
-              id="input-prompt"
-              className="sdk:text-[13px] sdk:bg-[var(--sdk-color-dialog-dark)] sdk:min-w-[595px] sdk:min-h-[120px]"
-              placeholder="Please describe what kind of agent workflow you want to create"
-              value={inputPrompt}
-              disabled={isLoading}
-              onChange={handleChange}
+            <GenerationTextInput
+              inputPrompt={inputPrompt}
+              isLoading={isLoading}
+              isGenerated={isGenerated}
+              handleChange={handleChange}
+              searchData={searchData}
+              isLoadingAutoComplete={isLoadingAutoComplete}
+              onSuggestionSelect={(value: string) => {
+                console.log("onSuggestionSelect called with:", value);
+                setIsSelectingSuggestion(true);
+                setInputPrompt(value);
+                // Set cursor to end after React re-renders
+                requestAnimationFrame(() => {
+                  setTimeout(() => {
+                    if (textRef.current) {
+                      textRef.current.focus();
+                      const textLength = textRef.current.value.length;
+
+                      textRef.current.setSelectionRange(textLength, textLength);
+                    }
+                  }, 50);
+                });
+              }}
             />
-            {!isLoadingAutoComplete && (
-              <div
-                className={clsx(
-                  "sdk:px-[12px] sdk:absolute sdk:top-[75px] sdk:left-0 sdk:right-0",
-                  !isLoadingAutoComplete && "sdk:z-[-10]",
-                  suggestionSelectedOpen && "sdk:z-[60]"
-                )}>
-                <Select
-                  key="select-suggestion"
-                  open={suggestionSelectedOpen}
-                  // open={true}
-                  onValueChange={(value: string) => {
-                    setIsSelectingSuggestion(true);
-                    setInputPrompt(value);
-                    setSuggestionSelectedOpen(false);
-                    textRef.current?.focus();
-                  }}
-                  onOpenChange={(open: boolean) => {
-                    setSuggestionSelectedOpen(open);
-                  }}>
-                  <SelectTrigger className="sdk:collapse ">
-                    <SelectValue placeholder="Suggested" />
-                  </SelectTrigger>
-                  <SelectContent className="sdk:w-[var(--radix-popper-anchor-width)]! sdk:p-[8px]! sdk:gap-[4px]">
-                    <div className="sdk:flex sdk:flex-row sdk:gap-2 sdk:items-center sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:pb-[8px]">
-                      <AIStar />
-                      <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px]">
-                        Suggested
-                      </span>
-                    </div>
-                    {searchData?.completions?.map((suggestion) => {
-                      return (
-                        <SelectItem key={suggestion} value={suggestion}>
-                          {suggestion}
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
           </div>
 
           <div className="sdk:flex sdk:flex-row sdk:justify-between">

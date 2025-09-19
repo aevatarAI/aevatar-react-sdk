@@ -124,9 +124,9 @@ function EditGAevatarInnerCom({
   const rightEle = useMemo(() => {
     let text = "create";
     if (type === "create") {
-      text = btnLoading === "saving" ? "creating" : "create";
+      text = btnLoading === "saving" ? "Creating" : "Create";
     } else {
-      text = btnLoading === "saving" ? "saving" : "save";
+      text = btnLoading === "saving" ? "Saving" : "Save";
     }
     return (
       <div
@@ -162,7 +162,7 @@ function EditGAevatarInnerCom({
             />
           )}
           <span className="sdk:text-center sdk:font-geist sdk:text-[12px] sdk:font-semibold  sdk:leading-[14px]">
-            delete
+            Delete
           </span>
         </Button>
       </div>
@@ -180,7 +180,7 @@ function EditGAevatarInnerCom({
           />
         )}
         <span className="sdk:hidden sdk:sm:inline-block">
-          g-agents configuration
+          G-Agents Configuration
         </span>
         <span className="sdk:inline-block sdk:sm:hidden">Configuration</span>
       </div>

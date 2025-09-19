@@ -120,7 +120,7 @@ export default function ExecutionList({
               className="sdk:text-[12px] sdk:font-geist sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:cursor-pointer"
               onClick={onNewWorkflow}>
               <AddIcon style={{ width: 14, height: 14 }} />
-              new workflow
+              New Workflow
             </Button>
           </div>
         </div>
