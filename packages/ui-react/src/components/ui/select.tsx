@@ -1,6 +1,5 @@
 "use client";
 
-import DownIcon from "../../assets/svg/down.svg?react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import React from "react";
@@ -27,7 +26,7 @@ const SelectTrigger = React.forwardRef<
     <SelectPrimitiveTrigger
       ref={ref}
       className={cn(
-        "sdk:flex sdk:font-geist sdk:min-h-10 sdk:w-full sdk:items-center sdk:justify-center sdk:gap-[10px] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:bg-background sdk:px-3 sdk:py-2 sdk:text-sm sdk:ring-offset-background sdk:placeholder:text-[var(--sdk-muted-foreground)] sdk:focus:outline-none sdk:disabled:cursor-not-allowed sdk:disabled:opacity-50",
+        "sdk:flex sdk:rounded-md sdk:font-geist sdk:min-h-10 sdk:w-full sdk:items-center sdk:justify-center sdk:gap-[10px] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:bg-background sdk:px-3 sdk:py-2 sdk:text-sm sdk:ring-offset-background sdk:placeholder:text-[var(--sdk-muted-foreground)] sdk:focus:outline-none sdk:disabled:cursor-not-allowed sdk:disabled:opacity-50",
         "sdk:text-[var(--sdk-color-text-primary)] sdk:text-center sdk:font-geist sdk:text-xs sdk:font-semibold sdk:leading-normal ",
         className
       )}
@@ -38,7 +37,9 @@ const SelectTrigger = React.forwardRef<
       <SelectPrimitiveIcon
         asChild
         className={props["aria-disabled"] ? "hidden" : undefined}>
-        {downIcon ?? <DownIcon className="sdk:text-[var(--sdk-color-bg-primary)]"/>}
+        {downIcon ?? (
+          <ChevronDown className="sdk:text-[var(--sdk-color-text-foreground)]" />
+        )}
       </SelectPrimitiveIcon>
     </SelectPrimitiveTrigger>
   );
@@ -104,10 +105,10 @@ const SelectContent = React.forwardRef<
       <SelectPrimitiveContent
         ref={ref}
         className={cn(
-          "sdk:relative sdk:font-geist sdk:max-h-[248px] sdk:overflow-auto sdk:z-50  sdk:bg-[var(--sdk-bg-popover)] sdk:text-popover-foreground sdk:shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+          "sdk:relative sdk:rounded-md sdk:font-geist sdk:max-h-[248px] sdk:overflow-auto sdk:z-50  sdk:bg-[var(--sdk-bg-popover)] sdk:text-popover-foreground sdk:shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sdk:data-[side=bottom]:slide-in-from-top-2 sdk:data-[side=left]:slide-in-from-right-2 sdk:data-[side=right]:slide-in-from-left-2 sdk:data-[side=top]:slide-in-from-bottom-2",
           "sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:w-[319px] sdk:md:w-[329px] sdk:p-[20px] sdk:md:p-[16px] sdk:md:px-[22px]",
           position === "popper" &&
-            "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+            "sdk:data-[side=bottom]:translate-y-1 sdk:data-[side=left]:-translate-x-1 sdk:data-[side=right]:translate-x-1 sdk:data-[side=top]:-translate-y-1",
           className
         )}
         position={position}

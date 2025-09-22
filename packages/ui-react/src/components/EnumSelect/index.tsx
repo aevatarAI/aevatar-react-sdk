@@ -347,7 +347,7 @@ export const EnumSelect = ({
           "sdk:p-0! sdk:pb-[8px]! sdk:overflow-visible sdk:bg-[var(--sdk-bg-popover)]!",
           selectContentCls
         )}>
-        <div className="sdk:flex sdk:flex-row sdk:mb-[8px] sdk:gap-[4px] sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:border-solid">
+        <div className="sdk:flex sdk:flex-row sdk:mb-[8px] sdk:rounded-[6px_6px_0_0] sdk:overflow-hidden sdk:gap-[4px] sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:border-solid">
           <SearchBar
             className="sdk:bg-[var(--sdk-bg-popover)]!"
             placeholder="Search"
