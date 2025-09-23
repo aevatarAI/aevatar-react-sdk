@@ -20,6 +20,7 @@ export interface IAevatarCardInnerProps {
   agentInfo?: IAgentInfoDetail & { defaultValues?: Record<string, any[]> };
   selected?: boolean;
   agentStatus?: ExecutionLogStatus;
+  disabled?: boolean;
 }
 
 export default function AevatarCardInner({
@@ -31,6 +32,7 @@ export default function AevatarCardInner({
   agentInfo,
   selected,
   agentStatus,
+  disabled,
 }: IAevatarCardInnerProps) {
   const handleDeleteClick = useCallback(
     (e: any) => {
@@ -60,6 +62,7 @@ export default function AevatarCardInner({
       }}>
       <HoverMenu
         triggerClassName="sdk:group-hover:block sdk:hidden sdk:absolute sdk:-top-0 sdk:right-[0px]"
+        disabled={disabled}
         onDelete={handleDeleteClick}
       />
       <div

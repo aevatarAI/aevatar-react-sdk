@@ -18,21 +18,15 @@ interface IAevatarItem4WorkflowProps {
 
 export default function AevatarItem4Workflow({
   id: nodeId,
-  selected,
   data,
 }: IAevatarItem4WorkflowProps) {
   const { isNew, onClick, deleteNode, agentInfo } = data;
-  const [{ selectedAgent, executionLogsData }] = useWorkflow();
+  const [{ selectedAgent, executionLogsData, isRunning }] = useWorkflow();
   const currentAgentStatus = useMemo(() => {
     return executionLogsData?.find((agent) => agent?.id === data?.agentInfo?.id)
       ?.status;
   }, [executionLogsData, data?.agentInfo?.id]);
-  console.log(
-    currentAgentStatus,
-    executionLogsData,
-    data,
-    "currentAgentStatus"
-  );
+
   return (
     <>
       <Handle
@@ -51,6 +45,7 @@ export default function AevatarItem4Workflow({
         selected={selectedAgent?.nodeId === nodeId}
         agentStatus={currentAgentStatus}
         isNew={isNew}
+        disabled={isRunning}
         onClick={onClick}
         deleteNode={deleteNode}
         nodeId={nodeId}

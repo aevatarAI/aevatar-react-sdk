@@ -7,12 +7,15 @@ import { useState } from "react";
 export default function HoverMenu({
   triggerClassName,
   onDelete,
+  disabled,
 }: {
   triggerClassName?: string;
   className?: string;
   onDelete: (e: React.MouseEvent<HTMLDivElement>) => void;
+  disabled?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="sdk:relative sdk:pb-[2px] sdk:pt-[26px]">
       <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -46,11 +49,17 @@ export default function HoverMenu({
           <div>
             {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
             <div
-              onClick={onDelete}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (disabled) return;
+                onDelete(e);
+              }}
               className={clsx(
                 "sdk:cursor-pointer sdk:text-center sdk:text-[14px] sdk:font-geist sdk:font-light sdk:text-[var(--sdk-color-text-primary)] sdk:hover:text-[var(--sdk-color-text-primary)] sdk:p-[10px]",
                 "sdk:hover:bg-[var(--sdk-bg-accent)]",
-                "select-item-wrapper"
+                "select-item-wrapper",
+                disabled &&
+                  "sdk:cursor-not-allowed! sdk:text-[var(--sdk-muted-foreground)]!"
               )}>
               Delete
             </div>

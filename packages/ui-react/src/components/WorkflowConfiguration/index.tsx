@@ -98,7 +98,7 @@ IWorkflowConfigurationProps) => {
     });
   }, [sidebarConfig?.gaevatarList]);
 
-  const [{ selectedAgent: selectAgentInfo, executionLogsData }, { dispatch }] =
+  const [{ selectedAgent: selectAgentInfo, executionLogsData, isRunning }, { dispatch }] =
     useWorkflow();
 
   const [newWorkflowState, setNewWorkflowState] =
@@ -298,7 +298,6 @@ IWorkflowConfigurationProps) => {
   const autoSaveTimerRef = useRef<NodeJS.Timeout>();
   const onSaveRef = useRef(onSaveHandler);
 
-  const [isRunning, setIsRunning] = useState(false);
   const [isStopping, setIsStopping] = useState(false);
   const isRunningRef = useRef(isRunning);
   useEffect(() => {
@@ -520,18 +519,18 @@ IWorkflowConfigurationProps) => {
       try {
         getWorkflowState(editWorkflow.workflowId).then((res) => {
           if (res?.workflowStatus === WorkflowStatus.running) {
-            setIsRunning(true);
+            dispatch(basicWorkflow.setIsRunning.actions(true));
           }
         });
       } catch (error) {
         console.error("getWorkflowState error:", error);
       }
     }
-  }, [editWorkflow?.workflowId, getWorkflowState]);
+  }, [editWorkflow?.workflowId, getWorkflowState, dispatch]);
 
   const onRunWorkflow = useCallback(async () => {
     try {
-      setIsRunning(true);
+      dispatch(basicWorkflow.setIsRunning.actions(true));
       const workUnitRelations = workflowRef.current.getWorkUnitRelations();
       if (!workUnitRelations.length) {
         toast({
@@ -604,7 +603,7 @@ IWorkflowConfigurationProps) => {
         ),
       });
     } finally {
-      setIsRunning(false);
+      dispatch(basicWorkflow.setIsRunning.actions(false));
     }
   }, [
     editWorkflow,
@@ -616,6 +615,7 @@ IWorkflowConfigurationProps) => {
     onSaveHandler,
     refetch,
     updateNodeList,
+    dispatch,
   ]);
 
   const [sidebarContainer, setSidebarContainer] = React.useState(null);

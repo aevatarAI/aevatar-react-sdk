@@ -5,6 +5,7 @@ import type { ExecutionLogItem } from "@aevatar-react-sdk/types";
 export const WorkflowActions = {
   setSelectedAgent: "SET_SELECTED_AGENT",
   setExecutionLogsData: "SET_EXECUTION_LOGS_DATA",
+  setIsRunning: "SET_IS_RUNNING",
   destroy: "DESTROY",
 };
 
@@ -15,6 +16,7 @@ export type WorkflowState = {
     nodeId: string;
   };
   executionLogsData?: ExecutionLogItem[];
+  isRunning: boolean;
 };
 
 export const basicWorkflow = {
@@ -34,6 +36,13 @@ export const basicWorkflow = {
     actions: (executionLogsData?: any[]) =>
       basicActions(WorkflowActions.setExecutionLogsData, {
         executionLogsData,
+      }),
+  },
+  setIsRunning: {
+    type: WorkflowActions.setIsRunning,
+    actions: (isRunning: boolean) =>
+      basicActions(WorkflowActions.setIsRunning, {
+        isRunning,
       }),
   },
   destroy: {

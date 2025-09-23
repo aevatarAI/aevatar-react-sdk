@@ -739,10 +739,11 @@ export const Workflow = forwardRef(
                       variant="outline"
                       className={clsx(
                         "sdk:cursor-pointer sdk:p-[7px]",
-                        !canUndo && "sdk:opacity-50 sdk:cursor-not-allowed"
+                        (!canUndo || isRunning) &&
+                          "sdk:opacity-50 sdk:cursor-not-allowed"
                       )}
                       onClick={onUndoHandler}
-                      disabled={!canUndo}
+                      disabled={!canUndo || isRunning}
                       aria-label="undo">
                       <Refresh />
                     </Button>
@@ -765,10 +766,11 @@ export const Workflow = forwardRef(
                       variant="outline"
                       className={clsx(
                         "sdk:cursor-pointer sdk:p-[7px]",
-                        !canRedo && "sdk:opacity-50 sdk:cursor-not-allowed"
+                        (!canRedo || isRunning) &&
+                          "sdk:opacity-50 sdk:cursor-not-allowed"
                       )}
                       onClick={onRedoHandler}
-                      disabled={!canRedo}
+                      disabled={!canRedo || isRunning}
                       aria-label="redo">
                       <Refresh
                         className=""
