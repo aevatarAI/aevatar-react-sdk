@@ -84,20 +84,20 @@ describe("EditGAevatarInner", () => {
   it("should render the form and initial elements correctly", () => {
     render(<EditGAevatarInner {...defaultProps} />);
 
-    expect(screen.getByText("g-agents configuration")).toBeInTheDocument();
-    expect(screen.getByText("create")).toBeInTheDocument();
+    expect(screen.getByText("G-Agents Configuration")).toBeInTheDocument();
+    expect(screen.getByText("Create")).toBeInTheDocument();
 
     expect(screen.getByLabelText("*Atomic-aevatars Type")).toBeInTheDocument();
     expect(screen.getByLabelText("*Atomic-aevatar name")).toBeInTheDocument();
 
-    const saveButton = screen.getByText("create");
+    const saveButton = screen.getByText("Create");
     expect(saveButton).toBeInTheDocument();
   });
 
   // it("should change the text of the button when saving", async () => {
   //   render(<EditGAevatarInner {...defaultProps} />);
 
-  //   const saveButton = screen.getByText("create");
+  //   const saveButton = screen.getByText("Create");
   //   fireEvent.click(saveButton);
 
   // //   await waitFor(() => {
@@ -123,7 +123,7 @@ describe("EditGAevatarInner", () => {
   //     fireEvent.change(agentNameInput, { target: { value: "New Agent" } });
   //     fireEvent.change(agentTypeSelect, { target: { value: "Telegram" } });
 
-  //     const saveButton = screen.getByText("create");
+  //     const saveButton = screen.getByText("Create");
   //     fireEvent.click(saveButton);
 
   //     await waitFor(() => {
@@ -145,10 +145,10 @@ describe("EditGAevatarInner", () => {
   it("should handle deletion correctly", async () => {
     render(<EditGAevatarInner {...defaultProps} type="edit" />);
 
-    const deleteButton = screen.getByText("delete");
-    expect(deleteButton).toBeInTheDocument();
+    const DeleteButton = screen.getByText("Delete");
+    expect(DeleteButton).toBeInTheDocument();
 
-    fireEvent.click(deleteButton);
+    fireEvent.click(DeleteButton);
     vi.mocked(aevatarAI.services.agent.deleteAgent).mockResolvedValue();
 
     //   await waitFor(() => {
@@ -164,14 +164,14 @@ describe("EditGAevatarInner", () => {
   it("should handle deletion error", async () => {
     render(<EditGAevatarInner {...defaultProps} type="edit" />);
 
-    const deleteButton = screen.getByText("delete");
-    expect(deleteButton).toBeInTheDocument();
+    const DeleteButton = screen.getByText("Delete");
+    expect(DeleteButton).toBeInTheDocument();
 
     vi.mocked(aevatarAI.services.agent.deleteAgent).mockRejectedValue(
-      new Error("delete error")
+      new Error("Delete error")
     );
 
-    fireEvent.click(deleteButton);
+    fireEvent.click(DeleteButton);
 
     await waitFor(() => {
       expect(aevatarAI.services.agent.deleteAgent).toHaveBeenCalled();
@@ -179,7 +179,7 @@ describe("EditGAevatarInner", () => {
 
     expect(mockToast).toHaveBeenCalledWith({
       title: "error",
-      description: "delete error",
+      description: "Delete error",
       duration: 3000,
     });
   });

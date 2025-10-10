@@ -8,6 +8,7 @@ const INITIAL_STATE = {
   selectedAgent: undefined,
   executionLogsData: undefined,
   isRunning: false,
+  selectedAgentLogs: undefined,
 };
 const WorkflowContext = createContext<any>(INITIAL_STATE);
 
@@ -20,6 +21,12 @@ function reducer(state: any, { type, payload }: any) {
   switch (type) {
     case basicWorkflow.destroy.type: {
       return INITIAL_STATE;
+    }
+    case basicWorkflow.setSelectedAgentLogs.type: {
+      return {
+        ...state,
+        selectedAgentLogs: payload.selectedAgentLogs,
+      };
     }
     case basicWorkflow.setSelectedAgent.type: {
       return {

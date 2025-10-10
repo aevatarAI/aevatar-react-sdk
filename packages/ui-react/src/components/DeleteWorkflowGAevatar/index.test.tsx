@@ -67,7 +67,7 @@ describe("DeleteWorkflowGAevatar Component", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("closes the dialog when the cancel button is clicked", () => {
+  it("closes the dialog when the Cancel button is clicked", () => {
     renderComponent();
 
     // Open the dialog
@@ -78,8 +78,8 @@ describe("DeleteWorkflowGAevatar Component", () => {
       screen.getByText("Are you sure you want to delete this g-agent?")
     ).toBeInTheDocument();
 
-    // Click the cancel button
-    fireEvent.click(screen.getByText("cancel"));
+    // Click the Cancel button
+    fireEvent.click(screen.getByText("Cancel"));
 
     // Ensure the dialog content is no longer visible
     expect(
@@ -93,8 +93,8 @@ describe("DeleteWorkflowGAevatar Component", () => {
     // Open the dialog
     fireEvent.click(screen.getByTestId("delete-icon"));
 
-    // Click the "yes" button
-    fireEvent.click(screen.getByText("yes"));
+    // Click the "Yes" button
+    fireEvent.click(screen.getByText("Yes"));
 
     // Ensure the callback function is called
     expect(mockHandleDeleteClick).toHaveBeenCalledTimes(1);
@@ -106,8 +106,8 @@ describe("DeleteWorkflowGAevatar Component", () => {
 //     // Open the dialog
 //     fireEvent.click(screen.getByTestId("delete-icon"));
 
-//     // Click the "yes" button
-//     fireEvent.click(screen.getByText("yes"));
+//     // Click the "Yes" button
+//     fireEvent.click(screen.getByText("Yes"));
 //     screen.debug();
 //     // Ensure the dialog content is no longer visible
 //     expect(

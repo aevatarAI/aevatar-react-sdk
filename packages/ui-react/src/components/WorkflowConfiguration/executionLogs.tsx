@@ -1,79 +1,40 @@
-import AIStarWhite from "../../assets/svg/aiStarWhite.svg?react";
-import SuccessCheck from "../../assets/svg/successCheck.svg?react";
-import ErrorIcon from "../../assets/svg/errorIcon.svg?react";
 import EmptyRun from "../../assets/svg/emptyRun.svg?react";
 import Close from "../../assets/svg/close.svg?react";
-import Clipboard from "../../assets/svg/clipboard.svg?react";
 import Clock from "../../assets/svg/clock.svg?react";
-import Loading from "../../assets/svg/loading.svg?react";
-import Copy from "../Copy";
-import { useCallback, useEffect, useRef, useState } from "react";
-import JsonView from "react18-json-view";
-import "react18-json-view/src/style.css";
-import "react18-json-view/src/dark.css";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
-import { useFetchExecutionLogs } from "../Workflow/hooks/useFetchExecutionLogs";
-import { Button } from "../ui";
+import {
+  Button,
+  SearchBar,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui";
 import "./executionLogs.css";
-
-const DEFAULT = {
-  agentName: "unknown",
-  inputData: {},
-  outputData: {},
-  agentState: {},
-  executionTime: 783,
-  status: "success",
-  index: 0,
-};
+import {
+  IGetWorkflowLogsLevel,
+  type IFetchExecutionLogsResponse,
+} from "@aevatar-react-sdk/services";
+import { aevatarAI } from "../../utils";
+import dayjs from "../../utils/dayjs";
+import { Filter, Loader } from "lucide-react";
+import { useGetWorkflowLogs } from "../../hooks/useGetWorkflowLogs";
+import { EnumExecutionRecordStatus } from "../../hooks/useWorkflowState";
 
 interface IExecutionLogsProps {
-  stateName: string;
   workflowId: string;
-  roundId: number;
   isAgentCardOpen: boolean;
-  executionLogsData?: any[];
+  timeLogs: IFetchExecutionLogsResponse[];
 }
 
 export const ExecutionLogs = ({
   workflowId,
-  stateName,
-  roundId,
   isAgentCardOpen,
-  executionLogsData,
+  timeLogs,
 }: IExecutionLogsProps) => {
-  const { data: fetchedData, isLoading } = useFetchExecutionLogs({
-    stateName,
-    workflowId,
-    roundId,
-  });
-
-  const data = executionLogsData || fetchedData;
-  const [activeAgent, setActiveAgent] = useState(DEFAULT);
   const [isVisible, setIsVisible] = useState(workflowId);
-  const [isMovable, setIsMovable] = useState(false);
-
-  useEffect(() => {
-    if (data) {
-      setActiveAgent({ ...data?.[0], index: 0 });
-    }
-  }, [data]);
-
-  const handleClick = () => {
-    setIsMovable((prev) => !prev);
-  };
-
-  if (isLoading) {
-    return (
-      <Loading
-        key={"save"}
-        className={clsx(
-          "aevatarai-loading-icon",
-          "sdk:absolute",
-          "sdk:bottom-[22px]"
-        )}
-      />
-    );
-  }
 
   if (!isVisible) {
     return (
@@ -84,299 +45,355 @@ export const ExecutionLogs = ({
   return (
     <Container>
       {/* <div className="sdk:bg-[var(--sdk-color-border-gray-400)] sdk:min-w-[48px] sdk:max-w-[48px] sdk:min-h-[2px]" /> */}
-      <Wrapper isAgentCardOpen={isAgentCardOpen} isMovable={isMovable}>
-        <ExecutionLogHeader
-          data={data}
-          activeAgent={activeAgent}
-          onToggle={setIsVisible}
-          onClick={handleClick}
+      <Wrapper isAgentCardOpen={isAgentCardOpen}>
+        <ExecutionLogBody
+          timeLogs={timeLogs}
+          isAgentCardOpen={isAgentCardOpen}
+          workflowId={workflowId}
+          onClose={() => setIsVisible("")}
         />
-        {data?.length > 0 ? (
-          <ExecutionLogBody
-            isAgentCardOpen={isAgentCardOpen}
-            data={data}
-            activeAgent={activeAgent}
-            onChange={setActiveAgent}
-          />
-        ) : (
-          <EmptyExecutionLog />
-        )}
       </Wrapper>
     </Container>
   );
 };
 
-interface Agent {
-  agentName: string;
-  inputData: any;
-  outputData: any;
-  agentState: any;
-  executionTime: number;
-  status: string;
-  index: number;
-  failureSummary?: string;
-}
-
-const getStatus = (status: string) => {
-  const isSuccess = ["success"].includes(status);
-  const isPending = ["running", "pending"].includes(status);
-
-  return { isPending, isSuccess };
-};
-
-interface IExecutionLogsHeaderProps {
-  data: any;
-  activeAgent: Agent;
-  onToggle: (callback: any) => void;
-  onClick: () => void;
-}
-
-const ExecutionLogHeader = ({
-  data,
-  activeAgent,
-  onToggle,
-  onClick,
-}: IExecutionLogsHeaderProps) => {
-  const { agentName, executionTime, status } = activeAgent || {};
-  const { isPending, isSuccess } = getStatus(status);
-
-  return (
-    <div className="sdk:flex sdk:flex-row sdk:justify-between sdk:items-center sdk:gap-[16px]">
-      <span className="sdk:text-gradient sdk:font-semibold sdk:text-[16px] sdk:min-w-[200px]">
-        Execution log
-      </span>
-      <div className="sdk:flex sdk:overflow-auto sdk:justify-between sdk:items-center sdk:gap-4 sdk:w-[100%]">
-        {data?.length > 0 ? (
-          <div className="sdk:flex sdk:gap-[8px]">
-            <div className="sdk:flex sdk:items-center sdk:gap-1">
-              <AIStarWhite className="sdk:text-[var(--sdk-muted-foreground)]" />
-              <span className="sdk:text-[14px]">{agentName}</span>
-            </div>
-            <span className="sdk:text-[var(--sdk-muted-foreground)] sdk:text-[14px]">
-              {executionTime ? `${executionTime}ms` : "-"}
-            </span>
-            <div
-              className={`sdk:flex sdk:items-center ${
-                isPending
-                  ? ""
-                  : isSuccess
-                  ? "sdk:text-[var(--sdk-success-color)]"
-                  : "sdk:text-[var(--sdk-warning-color)]"
-              }`}>
-              {isPending ? (
-                <Loading
-                  key={"save"}
-                  className={clsx("aevatarai-loading-icon")}
-                  style={{ width: 14, height: 14 }}
-                />
-              ) : isSuccess ? (
-                <SuccessCheck className="sdk:text-[var(--sdk-bg-background)]" />
-              ) : (
-                <ErrorIcon className="sdk:text-[var(--sdk-bg-background)]" />
-              )}
-              <span className="sdk:w-[2px]" />
-              <span className="sdk:text-[12px] sdk:mt-[2px]">{status}</span>
-            </div>
-          </div>
-        ) : (
-          <span />
-        )}
-        <span className="sdk:flex">
-          {/* <button type="button" onClick={onClick}>
-            <Browsers />
-          </button> */}
-          <button
-            type="button"
-            className="sdk:cursor-pointer"
-            onClick={() => {
-              onToggle((prev: boolean) => !prev);
-            }}>
-            <Close className="sdk:text-[var(--sdk-primary-foreground-text)]" />
-          </button>
-        </span>
-      </div>
-    </div>
-  );
-};
+const logLevelList = [
+  {
+    label: "All",
+    value: "all",
+  },
+  {
+    label: "Information",
+    value: IGetWorkflowLogsLevel.Information,
+  },
+  {
+    label: "Warning",
+    value: IGetWorkflowLogsLevel.Warning,
+  },
+  {
+    label: "Error",
+    value: IGetWorkflowLogsLevel.Error,
+  },
+  {
+    label: "Debug",
+    value: IGetWorkflowLogsLevel.Debug,
+  },
+];
 
 interface IExecutionLogsBodyProps {
+  timeLogs?: IFetchExecutionLogsResponse[];
   isAgentCardOpen: boolean;
-  data: any[];
-  activeAgent: Agent;
-  onChange: (agent: Agent) => void;
+  workflowId: string;
+  onClose: () => void;
 }
 
 const ExecutionLogBody = ({
-  isAgentCardOpen,
-  data,
-  activeAgent,
-  onChange,
+  timeLogs = [],
+  workflowId,
+  onClose,
 }: IExecutionLogsBodyProps) => {
-  const { isPending, isSuccess } = getStatus(activeAgent?.status);
+  const [search, setSearch] = useState<string>("");
+  const [searchValue, setSearchValue] = useState("");
+  const [searchAgentName, setSearchAgentName] = useState("");
+  const [selectedLogLevel, setSelectedLogLevel] = useState<string>("all");
+
+  const [selectedRoundId, setSelectedRoundId] = useState<string>("");
+  const [selectedAgentGrainId, setSelectedAgentGrainId] =
+    useState<string>("all");
+
+  const [workflowState, setWorkflowState] = useState<EnumExecutionRecordStatus>(
+    EnumExecutionRecordStatus.Pending
+  );
+
+  const {
+    data: logsData,
+    isLoading,
+    stop,
+  } = useGetWorkflowLogs({
+    workflowId,
+    searchValue,
+    selectedLogLevel,
+    selectedRoundId,
+    workflowState,
+    selectedAgentGrainId,
+  });
+
+  const dateMap = useMemo(() => {
+    const map = new Map();
+    timeLogs.forEach((date) => {
+      map.set(date.roundId.toString(), date);
+    });
+    if (timeLogs.length > 0) {
+      const roundId = timeLogs[0].roundId.toString();
+      setSelectedRoundId(roundId);
+      const status = map.get(roundId)?.status;
+      setWorkflowState(status as EnumExecutionRecordStatus);
+    }
+    return map;
+  }, [timeLogs]);
+
+  const agentMap: Map<string, { agentName: string; grainId: string }> =
+    useMemo(() => {
+      const curWorkUnitLog = dateMap.get(selectedRoundId);
+      const workUnitRecords = JSON.parse(
+        curWorkUnitLog?.workUnitRecords ?? "[]"
+      );
+
+      const agentMap = new Map<
+        string,
+        { agentName: string; grainId: string }
+      >();
+
+      workUnitRecords.forEach((item) => {
+        agentMap.set(item.workUnitGrainId, {
+          agentName: item.agentName,
+          grainId: item.workUnitGrainId,
+        });
+      });
+
+      return agentMap;
+    }, [dateMap, selectedRoundId]);
+
+  const agentList = useMemo(() => {
+    return Array.from(agentMap.values());
+  }, [agentMap]);
+
+  // Check if an enum item should be visible based on search with safe conversion
+  const isItemVisible = useCallback(
+    (name?: string) => {
+      if (!name) return false;
+      if (!searchAgentName) return true;
+      return name
+        ?.toLocaleLowerCase()
+        .includes(searchAgentName.toLocaleLowerCase());
+    },
+    [searchAgentName]
+  );
 
   return (
-    <Flex>
-      <div
-        className={clsx(
-          "sdk:flex sdk:flex-1 sdk:flex-col sdk:min-w-[202px] sdk:max-w-[202px] sdk:overflow-auto",
-          isAgentCardOpen ? "sdk:max-h-[300px]" : "sdk:max-h-[200px]"
-        )}>
-        {data.map((d, index) => {
-          const isActive = activeAgent?.index === index;
+    <div className="sdk:relative sdk:rounded-[4px] sdk:size-full">
+      {/* Header */}
+      <div className="sdk:flex sdk:items-center sdk:justify-between sdk:p-[8px]">
+        <div className="sdk:flex sdk:gap-[4px] sdk:items-center">
+          <div>
+            <Select
+              value={selectedRoundId}
+              disabled={!timeLogs?.length}
+              onValueChange={(value) => {
+                stop();
 
-          const getStatusIcon = () => {
-            const currentStatus = isActive
-              ? isPending
-                ? "pending"
-                : isSuccess
-                ? "success"
-                : "error"
-              : d.status;
-
-            const iconProps = { style: { width: 14, height: 14 } };
-
-            if (["pending", "running"].includes(currentStatus)) {
-              return (
-                <Loading
-                  key="save"
-                  className={clsx("aevatarai-loading-icon")}
-                  {...iconProps}
-                />
-              );
-            }
-
-            return currentStatus === "success" ? (
-              <SuccessCheck className="sdk:text-[var(--sdk-bg-background)]" />
-            ) : (
-              <ErrorIcon className="sdk:text-[var(--sdk-bg-background)]" />
-            );
-          };
-
-          return (
-            <button
-              key={`${d?.agentState?.grainId}-${index}`}
-              className={`sdk:cursor-pointer sdk:pt-[2px] sdk:pb-[2px] sdk:pr-[4px] sdk:pl-[4px] sdk:rounded-sm ${
-                isActive ? "sdk:bg-[var(--sdk-bg-accent)]" : ""
-              }`}
-              type="button"
-              onClick={() => onChange({ ...d, index })}>
-              <div className="sdk:flex sdk:items-center sdk:justify-between">
-                <span className="sdk:flex sdk:items-center sdk:gap-1">
-                  <AIStarWhite
-                    className={`${
-                      isActive
-                        ? "sdk:text-[var(--sdk-color-text-primary)]"
-                        : "sdk:text-[var(--sdk-muted-foreground)]"
-                    }`}
+                setSelectedRoundId(value);
+                setSelectedAgentGrainId("all");
+                setSearch("");
+                setSelectedLogLevel("all");
+                const status = dateMap.get(value)?.status;
+                setWorkflowState(status as EnumExecutionRecordStatus);
+              }}>
+              <SelectTrigger
+                className={clsx(
+                  "sdk:normal-case sdk:w-[165px]  sdk:bg-[var(--sdk-bg-background)] sdk:min-h-[24px] sdk:gap-[6px]  sdk:cursor-pointer",
+                  "sdk:border sdk:font-normal sdk:leading-4 sdk:border-[var(--sdk-color-border-primary)] sdk:px-[6px] sdk:py-[4px]",
+                  "sdk:text-left"
+                )}>
+                {dateMap.get(selectedRoundId)?.startTime
+                  ? dayjs(dateMap.get(selectedRoundId)?.startTime).format(
+                      "YYYY-MM-DD HH:mm:ss"
+                    )
+                  : "--"}
+              </SelectTrigger>
+              <SelectContent
+                align="start"
+                className="sdk:w-[245px]! sdk:p-1! sdk:left-0 sdk:-top-[4px] sdk:bg-[var(--sdk-bg-popover)]">
+                {timeLogs?.map((date) => (
+                  <SelectItem
+                    key={date.roundId}
+                    value={date.roundId.toString()}
+                    className="sdk:py-1.5 sdk:px-2 sdk:font-normal sdk:text-[var(--sdk-color-text-primary)] sdk:text-sm sdk:leanding-5"
+                    selectItemType="checkedChevron">
+                    {dayjs(date.startTime).format("YYYY-MM-DD HH:mm:ss")}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Select
+              value={selectedAgentGrainId}
+              disabled={!agentMap?.size}
+              onValueChange={(value) => {
+                setSelectedAgentGrainId(value);
+              }}>
+              <SelectTrigger
+                className={clsx(
+                  "sdk:normal-case sdk:min-w-[120px] sdk:max-w-[300px] sdk:bg-[var(--sdk-bg-background)] sdk:min-h-[24px] sdk:gap-[6px]  sdk:cursor-pointer",
+                  "sdk:border sdk:font-normal sdk:leading-4 sdk:border-[var(--sdk-color-border-primary)] sdk:px-[6px] sdk:py-[4px]",
+                  "sdk:text-left"
+                )}>
+                {agentMap.get(selectedAgentGrainId)?.agentName ?? "All agents"}
+              </SelectTrigger>
+              <SelectContent
+                align="start"
+                className="sdk:min-w-[245px]! sdk:min-h-[200px] sdk:py-1! sdk:px-0! sdk:left-0 sdk:-top-[4px] sdk:bg-[var(--sdk-bg-popover)]">
+                <div className="sdk:flex sdk:flex-row sdk:px-1 sdk:mb-[8px] sdk:rounded-[6px_6px_0_0] sdk:overflow-hidden sdk:gap-[4px] sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:border-solid">
+                  <SearchBar
+                    className="sdk:bg-[var(--sdk-bg-popover)]!"
+                    placeholder="Search"
+                    value={searchAgentName}
+                    onChange={setSearchAgentName}
+                    onKeyDown={(e) => e.stopPropagation()}
                   />
-                  <span className="sdk:text-[14px]">{d.agentName}</span>
-                </span>
-                {getStatusIcon()}
-              </div>
-            </button>
-          );
-        })}
+                </div>
+                <div className="sdk:px-1">
+                  <SelectItem
+                    key={"all"}
+                    value={"all"}
+                    className={clsx(
+                      "sdk:py-1.5 sdk:px-2 sdk:font-normal sdk:text-[var(--sdk-color-text-primary)] sdk:text-sm sdk:leanding-5",
+                      searchAgentName && "sdk:hidden"
+                    )}
+                    selectItemType="checkedChevron">
+                    All agents
+                  </SelectItem>
+                  {agentList?.map((node) => {
+                    const isVisible = isItemVisible(node?.agentName);
+                    return (
+                      <SelectItem
+                        key={node?.grainId}
+                        value={node?.grainId}
+                        className={clsx(
+                          "sdk:py-1.5 sdk:px-2 sdk:font-normal sdk:text-[var(--sdk-color-text-primary)] sdk:text-sm sdk:leanding-5",
+                          !isVisible && "sdk:hidden"
+                        )}
+                        selectItemType="checkedChevron">
+                        {node?.agentName}
+                      </SelectItem>
+                    );
+                  })}
+                </div>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="sdk:flex sdk:items-center sdk:gap-[8px]">
+          <SearchBar
+            value={search}
+            wrapperClassName="sdk:w-[160px]! sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:rounded-md"
+            className=" sdk:bg-[var(--sdk-bg-popover)]! sdk:text-xs  sdk:rounded-md"
+            onChange={setSearch}
+            placeholder="Search"
+            onDebounceChange={(v) => {
+              setSearchValue(v);
+            }}
+          />
+          <Close
+            className="sdk:text-[var(--sdk-primary-foreground-text)] sdk:cursor-pointer"
+            onClick={onClose}
+          />
+        </div>
       </div>
-
-      <div
-        className={`sdk:flex sdk:flex-${
-          isAgentCardOpen ? "col" : "row"
-        } sdk:gap-2 sdk:w-[100%]`}>
+      {/* Inner */}
+      <div>
         <div
           className={clsx(
-            "sdk:flex sdk:flex-col sdk:overflow-auto sdk:gap-2 sdk:bg-[var(--sdk-bg-logs)] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] ",
-            isAgentCardOpen ? "sdk:h-[100px]" : "sdk:h-[200px]"
+            "sdk:flex sdk:items-center sdk:gap-[4px]  sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:text-[var(--sdk-muted-foreground)] sdk:text-xs sdk:leanding-4 sdk:font-semibold",
+            "sdk:pb-[4px] sdk:mx-[8px]"
           )}>
-          <div className="sdk:flex sdk:justify-between sdk:items-center">
-            <span className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-semibold">
-              Input
-            </span>
-            <span className="sdk:flex sdk:gap-2">
-              <button type="button">
-                <Copy
-                  description="Execution log copied!"
-                  toCopy={JSON.stringify(activeAgent?.inputData)}
-                  icon={<Clipboard />}
-                />
-              </button>
-            </span>
+          <div className="sdk:w-[160px]">Time</div>
+          <div>
+            <Select
+              value={selectedLogLevel}
+              onValueChange={(value) => {
+                setSelectedLogLevel(value);
+              }}>
+              <SelectTrigger
+                className={clsx(
+                  "sdk:normal-case sdk:w-[85px] sdk:min-h-[16px] sdk:text-left sdk:justify-start sdk:gap-[4px] sdk:cursor-pointer",
+                  "sdk:border-none sdk:font-normal sdk:leading-4  sdk:p-0",
+                  "sdk:text-[var(--sdk-muted-foreground)] sdk:text-xs sdk:leanding-4 sdk:font-semibold"
+                )}
+                childClassName="sdk:w-auto!"
+                downIcon={
+                  <Filter
+                    className="sdk:text-[var(--sdk-muted-foreground)]"
+                    size={14}
+                  />
+                }>
+                Type
+              </SelectTrigger>
+              <SelectContent
+                align="start"
+                className="sdk:w-[159px]! sdk:p-1! sdk:left-0 sdk:-top-[4px] sdk:bg-[var(--sdk-bg-popover)]">
+                {logLevelList?.map((date) => (
+                  <SelectItem
+                    key={date.value}
+                    value={date.value}
+                    className="sdk:py-1.5 sdk:px-2 sdk:font-normal sdk:text-[var(--sdk-color-text-primary)] sdk:text-sm sdk:leanding-5"
+                    selectItemType="checkedChevron">
+                    {date.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <JsonView
-            collapsed={false}
-            enableClipboard={false}
-            src={activeAgent?.inputData}
-            className="sdk:text-[14px]"
-            theme="vscode"
-          />
+          <div className="sdk:flex-1">Message</div>
         </div>
-
-        <div
-          className={clsx(
-            "sdk:flex sdk:flex-col sdk:overflow-auto sdk:gap-2 sdk:bg-[var(--sdk-bg-logs)] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%]",
-            isAgentCardOpen ? "sdk:h-[100px]" : "sdk:h-[200px]"
-          )}>
-          <div className="sdk:flex sdk:justify-between sdk:items-center">
-            <span className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-semibold">
-              Agent state
-            </span>
-            <span className="sdk:flex sdk:gap-2">
-              <button type="button">
-                <Copy
-                  description="Execution log copied!"
-                  toCopy={JSON.stringify(activeAgent?.agentState)}
-                  icon={<Clipboard />}
-                />
-              </button>
-            </span>
-          </div>
-          <JsonView
-            enableClipboard={false}
-            src={activeAgent?.agentState}
-            className="sdk:text-[14px]"
-            collapsed={false}
-            theme="vscode"
-          />
-        </div>
-
-        <div
-          className={clsx(
-            "sdk:flex sdk:flex-col sdk:overflow-auto sdk:gap-2 sdk:bg-[var(--sdk-bg-logs)] sdk:pl-[8px] sdk:pr-[8px] sdk:pt-[4px] sdk:w-[100%] ",
-            isAgentCardOpen ? "sdk:h-[100px]" : "sdk:h-[200px]"
-          )}>
-          <div className="sdk:flex sdk:justify-between sdk:items-center">
-            <span className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-semibold">
-              Output
-            </span>
-            <span className="sdk:flex sdk:gap-2">
-              <button type="button">
-                <Copy
-                  description="Execution log copied!"
-                  toCopy={JSON.stringify(activeAgent?.outputData)}
-                  icon={<Clipboard />}
-                />
-              </button>
-            </span>
-          </div>
-          {activeAgent?.failureSummary && (
-            <div className="sdk:bg-[var(--sdk-color-error-bg)] sdk:bg-opacity-15 sdk:border sdk:border-[var(--sdk-color-error)] sdk:border-opacity-20 sdk:px-4 sdk:py-2 sdk:rounded-sm sdk:flex sdk:items-center sdk:gap-2.5 sdk:relative">
-              <div className="sdk:flex sdk:w-full sdk:flex-col sdk:justify-center sdk:relative sdk:shrink-0">
-                <p className="sdk:text-[var(--sdk-color-error)] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:whitespace-pre sdk:w-full sdk:whitespace-pre-wrap sdk:lowercase sdk:break-all sdk:overflow-wrap-anywhere">
-                  {activeAgent.failureSummary}
-                </p>
+        <div className="sdk:pt-[6px] sdk:h-[176px] sdk:overflow-y-auto sdk:px-[8px] sdk:pb-[8px]">
+          {logsData?.map((item, index) => (
+            <div
+              key={`${item.timestamp}-${index}`}
+              className={clsx(
+                "sdk:flex sdk:items-start sdk:gap-[4px] sdk:text-xs sdk:leanding-4 sdk:font-normal",
+                "sdk:py-[4px]"
+              )}>
+              <div className="sdk:w-[160px] sdk:text-[var(--sdk-muted-foreground)]">
+                {dayjs(item.timestamp).format("YYYY-MM-DD HH:mm:ss")}
+              </div>
+              <div
+                className={clsx(
+                  "sdk:w-[85px]",
+                  (item.appLog.level === IGetWorkflowLogsLevel.Information ||
+                    !item.appLog.level) &&
+                    "sdk:text-[var(--sdk-color-text-primary)]",
+                  item.appLog.level === IGetWorkflowLogsLevel.Debug &&
+                    "sdk:text-[var(--sdk-color-text-primary)]",
+                  item.appLog.level === IGetWorkflowLogsLevel.Warning &&
+                    "sdk:text-[var(--sdk-color-warning-yellow)]",
+                  item.appLog.level === IGetWorkflowLogsLevel.Error &&
+                    "sdk:text-[var(--sdk-color-destructive)]"
+                )}>
+                {item.appLog.level}
+              </div>
+              <div
+                className={clsx(
+                  "sdk:flex-1 sdk:whitespace-pre-wrap sdk:break-all",
+                  (item.appLog.level === IGetWorkflowLogsLevel.Information ||
+                    !item.appLog.level) &&
+                    "sdk:text-[var(--sdk-color-text-primary)]",
+                  item.appLog.level === IGetWorkflowLogsLevel.Debug &&
+                    "sdk:text-[var(--sdk-color-text-primary)]",
+                  item.appLog.level === IGetWorkflowLogsLevel.Error &&
+                    "sdk:text-[var(--sdk-color-destructive)]",
+                  item.appLog.level === IGetWorkflowLogsLevel.Warning &&
+                    "sdk:text-[var(--sdk-color-warning-yellow)]"
+                )}>
+                {item.appLog.message}
               </div>
             </div>
+          ))}
+          {!logsData?.length && !isLoading && <EmptyExecutionLog />}
+          {isLoading && (
+            <div className="sdk:flex sdk:justify-center sdk:items-center sdk:h-full">
+              <Loader
+                key="logsLoading"
+                size={24}
+                className="sdk:animate-spin"
+                style={{ animationDuration: "2s" }}
+              />
+            </div>
           )}
-          <JsonView
-            collapseStringsAfterLength={Number.POSITIVE_INFINITY}
-            collapsed={false}
-            enableClipboard={false}
-            src={activeAgent?.outputData}
-            className="sdk:text-[14px]"
-            theme="vscode"
-          />
         </div>
       </div>
-    </Flex>
+    </div>
   );
 };
 
@@ -390,94 +407,27 @@ const Container = ({ children }: { children: any }) => {
 
 const Wrapper = ({
   isAgentCardOpen,
-  isMovable,
   children,
 }: {
   isAgentCardOpen: boolean;
-  isMovable: boolean;
   children: any;
 }) => {
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
-  const dragRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      if (!isMovable) return;
-
-      setIsDragging(true);
-      setDragStart({
-        x: e.clientX - offset.x,
-        y: e.clientY - offset.y,
-      });
-
-      // Prevent text selection during drag
-      e.preventDefault();
-    },
-    [isMovable, offset]
-  );
-
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!isDragging || !isMovable) return;
-
-      const newOffset = {
-        x: e.clientX - dragStart.x,
-        y: e.clientY - dragStart.y,
-      };
-
-      setOffset(newOffset);
-    },
-    [isDragging, isMovable, dragStart]
-  );
-
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-  }, []);
-
-  useEffect(() => {
-    if (isDragging) {
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
-
-      return () => {
-        document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUp);
-      };
-    }
-  }, [isDragging, handleMouseMove, handleMouseUp]);
-
   return (
     <div
-      ref={dragRef}
-      onMouseDown={handleMouseDown}
-      className={`${isMovable ? "sdk:absolute sdk:top-0" : ""} ${
-        isAgentCardOpen ? "sdk:max-w-[calc(100%-393px)]" : "sdk:min-w-[100%]"
-      } sdk:flex sdk:flex-col sdk:flex-1 sdk:gap-2 sdk:bg-[var(--sdk-sidebar-background)] sdk:p-[8px] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:rounded-sm ${
-        isMovable ? "sdk:cursor-move" : ""
-      } ${isDragging ? "sdk:select-none" : ""}`}
-      style={
-        isMovable
-          ? {
-              transform: `translate(${offset.x}px, ${offset.y}px)`,
-              zIndex: isDragging ? Number.POSITIVE_INFINITY : 1,
-            }
-          : {}
-      }>
+      className={clsx(
+        "sdk:flex sdk:flex-col sdk:flex-1 sdk:gap-2 sdk:bg-[var(--sdk-sidebar-background)] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:rounded-sm ",
+        `${
+          isAgentCardOpen ? "sdk:max-w-[calc(100%-393px)]" : "sdk:min-w-[100%]"
+        } `
+      )}>
       {children}
     </div>
-  );
-};
-const Flex = ({ children }: { children: any }) => {
-  return (
-    <div className="sdk:flex sdk:flex-row sdk:gap-4 sdk:flex-1">{children}</div>
   );
 };
 
 const EmptyExecutionLog = () => {
   return (
-    <div className="sdk:overflow-y-hidden sdk:min-w-[100%] sdk:flex sdk:items-center sdk:justify-center sdk:pt-[72.5px] sdk:pb-[72.5px]">
+    <div className="sdk:overflow-y-hidden sdk:min-w-[100%] sdk:flex sdk:items-center sdk:justify-center sdk:pt-[50px]">
       <div className="sdk:flex sdk:flex-col sdk:gap-4 sdk:items-center">
         <EmptyRun />
         <span className="sdk:text-[var(--sdk-color-text-primary)] sdk:text-[13px]">

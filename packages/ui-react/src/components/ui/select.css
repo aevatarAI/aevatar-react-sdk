@@ -16,3 +16,16 @@
     }
   }
 }
+
+.select-item-wrapper-checked-chevron {
+  position: relative;
+  &[data-state="checked"],
+  &:hover {
+    background-color: var(--sdk-bg-accent);
+    color: var(--sdk-primary-foreground-text);
+  }
+}
+.select-item-wrapper-checked-chevron[data-state="checked"]
+  .aevatarai-select-item-checked-chevron {
+  display: block;
+}

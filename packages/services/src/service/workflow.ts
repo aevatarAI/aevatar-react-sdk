@@ -15,12 +15,16 @@ import type {
   IGetWorkflowResult,
   IGenerateWorkflowProps,
   IWorkflowViewDataParams,
-  IFetchExecutionLogsProps,
+  IFetchLatestExecutionLogsProps,
   IFetchAgentDetailsProps,
   IGetAIModelsProps,
   IFetchAutoCompleteProps,
   IRunWorkflowParams,
   IRunWorkflowResponse,
+  IGetWorkflowLogsProps,
+  IFetchExecutionLogsProps,
+  IFetchExecutionLogsResponse,
+  IGetWorkflowLogsItem,
 } from "../types/workflow";
 
 export class WorkflowService<T extends IBaseRequest = IBaseRequest>
@@ -40,7 +44,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   }
   updateWorkflowViewData(
     id: string,
-    params: IWorkflowViewDataParams,
+    params: IWorkflowViewDataParams
   ): Promise<IAgentInfo> {
     return this._request.send({
       method: "PUT",
@@ -97,7 +101,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   }
 
   getWorkflow<T = any>(
-    query: IGetWorkflowQuery,
+    query: IGetWorkflowQuery
   ): Promise<IGetWorkflowResult<T>> {
     const params = new URLSearchParams();
     params.append("stateName", query.stateName);
@@ -142,13 +146,33 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
     });
   }
 
-  fetchExecutionLogs<T = any>(query: IFetchExecutionLogsProps): Promise<T> {
+  fetchLatestExecutionLogs<T = any>(
+    query: IFetchLatestExecutionLogsProps
+  ): Promise<T> {
     const params = new URLSearchParams({
       queryString: `workflowId:${query.workflowId}`,
       stateName: query.stateName,
-      roundId: String(query.roundId),
+      pageIndex: "0",
+      pageSize: "1",
+      sortFields: "roundId:Desc",
     });
 
+    return this._request.send({
+      method: "GET",
+      url: `/api/query/es?${params.toString()}`,
+    });
+  }
+
+  fetchExecutionLogs<T = IFetchExecutionLogsResponse>(
+    query: IFetchExecutionLogsProps
+  ): Promise<T> {
+    const params = new URLSearchParams({
+      queryString: query.queryString,
+      stateName: query.stateName,
+      pageIndex: query.pageIndex.toString(),
+      pageSize: query.pageSize.toString(),
+      sortFields: query.sortFields,
+    });
     return this._request.send({
       method: "GET",
       url: `/api/query/es?${params.toString()}`,
@@ -167,7 +191,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
     });
   }
   runWorkflow<T = IRunWorkflowResponse>(
-    params: IRunWorkflowParams,
+    params: IRunWorkflowParams
   ): Promise<T> {
     return this._request.send({
       method: "POST",
@@ -181,6 +205,15 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
       method: "POST",
       url: "/api/workflow/generate",
       params,
+    });
+  }
+  getWorkflowLogs(
+    props: IGetWorkflowLogsProps
+  ): Promise<IGetWorkflowLogsItem[]> {
+    return this._request.send({
+      method: "GET",
+      url: "/api/host/workflow-log",
+      params: props,
     });
   }
 }
