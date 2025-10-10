@@ -19,11 +19,10 @@ import type {
   IAgentInfo,
   IAgentInfoDetail,
   IAgentsConfiguration,
-  IWorkflowCoordinatorState,
+  IFetchExecutionLogsResponse,
   IWorkflowNode,
   IWorkflowViewDataParams,
 } from "@aevatar-react-sdk/services";
-import { WorkflowStatus } from "@aevatar-react-sdk/services";
 import type { IWorkflowAevatarEditProps } from "../WorkflowAevatarEdit";
 import { sleep } from "@aevatar-react-sdk/utils";
 import { aevatarAI } from "../../utils";
@@ -33,7 +32,10 @@ import clsx from "clsx";
 import { useUpdateEffect } from "react-use";
 import EditWorkflowNameDialog from "../EditWorkflowNameDialog";
 import { useAevatar } from "../context/AevatarProvider";
-import { useWorkflowState } from "../../hooks/useWorkflowState";
+import {
+  EnumExecutionRecordStatus,
+  useWorkflowState,
+} from "../../hooks/useWorkflowState";
 import { ExecutionLogs } from "./executionLogs";
 import WorkflowProvider, { useWorkflow } from "../context/WorkflowProvider";
 import { basicWorkflow } from "../context/WorkflowProvider/actions";
@@ -47,8 +49,10 @@ import { isWorkflowDataEqual } from "../../utils/workflowDataComparison";
 import dayjs from "dayjs";
 import { handleErrorMessage } from "../../utils/error";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useFetchExecutionLogs } from "../Workflow/hooks/useFetchExecutionLogs";
+import { useLatestExecutionLogs } from "../Workflow/hooks/useFetchExecutionLogs";
 import { IS_NULL_ID } from "../../constants";
+import { useFetchExecutionLogsWithTime } from "../Workflow/hooks/useFetchExecutionLogsWithTime";
+import WorkflowAgentLogsDialog from "../WorkflowAgentLogs";
 
 export interface IWorkflowConfigurationState {
   workflowAgentId: string;
@@ -77,7 +81,9 @@ const WorkflowConfigurationInner = ({
 IWorkflowConfigurationProps) => {
   const [container, setContainer] = React.useState(null);
   const { toast } = useToast();
-  const [editAgentOpen, setEditAgentOpen] = useState(false);
+  const [editAgentOpen, setEditAgentOpen] = useState<
+    "agentEdit" | "agentLogs"
+  >();
   const [{ hiddenGAevatarType }] = useAevatar();
 
   const [gaevatarList, setGaevatarList] = useState<IAgentInfoDetail[]>(
@@ -98,8 +104,10 @@ IWorkflowConfigurationProps) => {
     });
   }, [sidebarConfig?.gaevatarList]);
 
-  const [{ selectedAgent: selectAgentInfo, executionLogsData, isRunning }, { dispatch }] =
-    useWorkflow();
+  const [
+    { selectedAgent: selectAgentInfo, isRunning, selectedAgentLogs },
+    { dispatch },
+  ] = useWorkflow();
 
   const [newWorkflowState, setNewWorkflowState] =
     useState<IWorkflowConfigurationProps["editWorkflow"]>();
@@ -131,14 +139,22 @@ IWorkflowConfigurationProps) => {
       dispatch(
         basicWorkflow.setSelectedAgent.actions({ agent: data, isNew, nodeId })
       );
-      setEditAgentOpen(true);
+      setEditAgentOpen("agentEdit");
     },
     [dispatch]
   );
 
   useUpdateEffect(() => {
-    !editAgentOpen &&
+    if (selectedAgentLogs) {
+      setEditAgentOpen("agentLogs");
+    }
+  }, [selectedAgentLogs]);
+
+  useUpdateEffect(() => {
+    editAgentOpen !== "agentEdit" &&
       dispatch(basicWorkflow.setSelectedAgent.actions(undefined));
+    editAgentOpen !== "agentLogs" &&
+      dispatch(basicWorkflow.setSelectedAgentLogs.actions(undefined));
   }, [editAgentOpen]);
 
   const selectAgentInfoRef = useRef<{
@@ -155,7 +171,7 @@ IWorkflowConfigurationProps) => {
     (nodeId: string) => {
       if (selectAgentInfoRef.current?.nodeId === nodeId) {
         dispatch(basicWorkflow.setSelectedAgent.actions(undefined));
-        setEditAgentOpen(false);
+        setEditAgentOpen(undefined);
       }
     },
     [dispatch]
@@ -183,11 +199,27 @@ IWorkflowConfigurationProps) => {
   //   []
   // );
 
-  const { data: fetchedExecutionLogsData, refetch } = useFetchExecutionLogs({
+  const {
+    data: fetchedExecutionLogsData,
+    refetch: refetchLatestExecutionLogs,
+  } = useLatestExecutionLogs({
     stateName: "WorkflowExecutionRecordState",
     workflowId: workflowIdRef.current,
-    roundId: 1,
   });
+
+  const {
+    data: fetchedExecutionLogsDataWithTime,
+    refetch: refetchLogsWithTime,
+  } = useFetchExecutionLogsWithTime({
+    workflowId: workflowIdRef.current,
+    pageIndex: 0,
+    pageSize: 1000,
+  });
+
+  const updateLogsData = useCallback(() => {
+    refetchLatestExecutionLogs();
+    refetchLogsWithTime();
+  }, [refetchLatestExecutionLogs, refetchLogsWithTime]);
 
   useEffect(() => {
     if (fetchedExecutionLogsData) {
@@ -309,22 +341,37 @@ IWorkflowConfigurationProps) => {
     onSaveRef.current = onSaveHandler;
   }, [onSaveHandler]);
 
+  const getIsStage = useCallback(() => {
+    const viewData = getWorkflowViewData();
+    const preViewData =
+      workflowViewDataRef.current ?? editWorkflow?.workflowViewData;
+    return !isWorkflowDataEqual(viewData, preViewData);
+  }, [getWorkflowViewData, editWorkflow?.workflowViewData]);
+
   const workflowViewDataRef = useRef<IWorkflowViewDataParams>();
 
-  const debouncedAutoSave = useCallback(() => {
+  const getIsStageRef = useRef(getIsStage);
+  useEffect(() => {
+    getIsStageRef.current = getIsStage;
+  }, [getIsStage]);
+
+  const debouncedAutoSave = useCallback((_testTag: string) => {
     if (isRunningRef.current) return;
+
     if (autoSaveTimerRef.current) {
       clearTimeout(autoSaveTimerRef.current);
     }
     autoSaveTimerRef.current = setTimeout(async () => {
       try {
+        if (!getIsStageRef.current()) return;
+
         await onSaveRef.current();
         setAutoSavedTime(Date.now());
       } catch (error) {
         console.error("Auto save failed:", error);
       }
     }, 5000); // 7 seconds delay
-  }, []); // No dependencies to prevent recreation
+  }, []);
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -334,11 +381,6 @@ IWorkflowConfigurationProps) => {
       }
     };
   }, []);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    debouncedAutoSave();
-  }, [debouncedAutoSave, workflowName]);
 
   const onConfirmSaveHandler = useCallback(
     async (saved?: boolean) => {
@@ -426,13 +468,6 @@ IWorkflowConfigurationProps) => {
       [onGaevatarChange]
     );
 
-  const getIsStage = useCallback(() => {
-    const viewData = getWorkflowViewData();
-    const preViewData =
-      workflowViewDataRef.current ?? editWorkflow?.workflowViewData;
-    return !isWorkflowDataEqual(viewData, preViewData);
-  }, [getWorkflowViewData, editWorkflow?.workflowViewData]);
-
   const onUnsavedBack = useCallback(() => {
     if (isRunningRef.current) {
       onBack?.();
@@ -462,10 +497,10 @@ IWorkflowConfigurationProps) => {
       });
       if (!isHasNode) {
         dispatch(basicWorkflow.setSelectedAgent.actions(undefined));
-        setEditAgentOpen(false);
+        setEditAgentOpen(undefined);
       }
       // Trigger auto save with debounce
-      debouncedAutoSave();
+      debouncedAutoSave("onNodesChanged");
     },
     [debouncedAutoSave, selectAgentInfo?.nodeId, dispatch]
   );
@@ -484,29 +519,29 @@ IWorkflowConfigurationProps) => {
   }, []);
 
   const getWorkflowStateLoop = useCallback(
-    async (workflowId: string, term: number) => {
-      let workflowStatus = WorkflowStatus.pending;
-      let currentTerm = term;
+    async (workflowId: string, roundId: number) => {
+      let workflowStatus = EnumExecutionRecordStatus.Pending;
+      let currentRoundId = roundId;
       looperWorkflowIdRef.current = workflowId;
       let errorCount = 0;
-      while (workflowStatus !== WorkflowStatus.failed) {
+      while (workflowStatus !== EnumExecutionRecordStatus.Failed) {
         try {
           if (looperWorkflowIdRef.current !== workflowId) return;
           await sleep(1500);
           const workflowStateRes = await getWorkflowState(workflowId);
           if (!workflowStateRes) throw "workflow not found";
-          currentTerm = workflowStateRes.term;
+          currentRoundId = workflowStateRes.roundId;
 
           if (
-            currentTerm > term &&
-            workflowStateRes.workflowStatus === WorkflowStatus.pending
+            currentRoundId > roundId &&
+            workflowStateRes.status === EnumExecutionRecordStatus.Success
           )
-            return workflowStateRes.workflowStatus;
+            return workflowStateRes.status;
 
-          workflowStatus = workflowStateRes.workflowStatus;
+          workflowStatus = workflowStateRes.status as EnumExecutionRecordStatus;
         } catch (_error) {
           errorCount++;
-          if (errorCount > 3) return WorkflowStatus.failed;
+          if (errorCount > 3) return EnumExecutionRecordStatus.Failed;
         }
       }
       return workflowStatus;
@@ -518,7 +553,10 @@ IWorkflowConfigurationProps) => {
     if (editWorkflow?.workflowId) {
       try {
         getWorkflowState(editWorkflow.workflowId).then((res) => {
-          if (res?.workflowStatus === WorkflowStatus.running) {
+          if (
+            res?.status === EnumExecutionRecordStatus.Running ||
+            res?.status === EnumExecutionRecordStatus.Pending
+          ) {
             dispatch(basicWorkflow.setIsRunning.actions(true));
           }
         });
@@ -553,24 +591,28 @@ IWorkflowConfigurationProps) => {
         // if (!_workflowId) return;
         await sleep(1500);
       }
-      let workflowState: IWorkflowCoordinatorState;
+      let workflowState: IFetchExecutionLogsResponse | null;
       try {
         if (!workflowId || workflowId === IS_NULL_ID)
           throw "workflowId is required";
+        workflowIdRef.current = workflowId;
         workflowState = await getWorkflowState(workflowId);
       } catch (error) {
         workflowState = {
-          workflowStatus: WorkflowStatus.pending,
-          term: -1,
+          workflowStatus: EnumExecutionRecordStatus.Pending,
+          roundId: -1,
         } as any;
       }
 
       if (!workflowState) throw "workflow not found";
-      if (workflowState.workflowStatus === WorkflowStatus.running)
+      if (
+        workflowState.status === EnumExecutionRecordStatus.Running ||
+        workflowState.status === EnumExecutionRecordStatus.Pending
+      )
         throw "workflow is running";
-      if (workflowState.workflowStatus === WorkflowStatus.failed)
-        throw "workflow is failed, please check the workflow";
-      const term = workflowState.term;
+      // if (workflowState.workflowStatus === WorkflowStatus.failed)
+      //   throw "workflow is failed, please check the workflow";
+      const roundId = workflowState.roundId;
 
       const runWorkflowResult = await aevatarAI.services.workflow.runWorkflow({
         viewAgentId: viewAgentId,
@@ -579,21 +621,29 @@ IWorkflowConfigurationProps) => {
       workflowId = runWorkflowResult.workflowId;
       const workflowNodeList =
         runWorkflowResult.publishedAgent?.properties?.workflowNodeList;
+      const workflowNodeUnitList =
+        runWorkflowResult.publishedAgent?.properties?.workflowNodeUnitList;
       workflowNodeList && updateNodeList(workflowNodeList);
       setNewWorkflowState((v) => ({
         ...v,
+        workflowViewData: {
+          name: runWorkflowResult.publishedAgent?.name,
+          properties: {
+            workflowNodeList,
+            workflowNodeUnitList,
+          },
+        },
         workflowId,
       }));
-      const workflowStatus = await getWorkflowStateLoop(workflowId, term);
-      if (workflowStatus === WorkflowStatus.failed)
+      const workflowStatus = await getWorkflowStateLoop(workflowId, roundId);
+      await updateLogsData(); // [TODO]
+      if (workflowStatus === EnumExecutionRecordStatus.Failed)
         throw "workflow is failed, please check the workflow";
-      if (workflowStatus === WorkflowStatus.pending) {
+      if (workflowStatus === EnumExecutionRecordStatus.Success) {
         toast({
           description: "workflow executed successfully.",
         });
       }
-      await sleep(1500);
-      await refetch(); // [TODO]
     } catch (error) {
       console.error("run workflow error:", error);
       toast({
@@ -613,7 +663,7 @@ IWorkflowConfigurationProps) => {
     getWorkflowState,
     getWorkflowStateLoop,
     onSaveHandler,
-    refetch,
+    updateLogsData,
     updateNodeList,
     dispatch,
   ]);
@@ -641,7 +691,15 @@ IWorkflowConfigurationProps) => {
 
   const onEdgesChanged = useCallback(
     (_edges: Edge[]) => {
-      debouncedAutoSave();
+      debouncedAutoSave("onEdgesChanged");
+    },
+    [debouncedAutoSave]
+  );
+
+  const setWorkflowNameHandler = useCallback(
+    (name: string) => {
+      setWorkflowName(name);
+      debouncedAutoSave("workflowName");
     },
     [debouncedAutoSave]
   );
@@ -670,29 +728,11 @@ IWorkflowConfigurationProps) => {
                 disabled={isRunning}
                 className="sdk:inline-flex sdk:sm:hidden"
                 defaultName={workflowName}
-                onSave={setWorkflowName}
+                onSave={setWorkflowNameHandler}
               />
             </div>
           </div>
           <div className="sdk:flex sdk:gap-[24px] sdk:items-center">
-            {/* <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    onClick={onStimulate}
-                    variant="outline"
-                    className="sdk:workflow-common-border-stimulate sdk:cursor-pointer sdk:h-[30px]">
-                    stimulate
-                  </Button>
-                </DialogTrigger>
-                <DialogPortal container={container} asChild>
-                  <DialogOverlay />
-                  <DialogStimulate
-                    data={stimulateResult?.data}
-                    message={stimulateResult?.message}
-                  />
-                </DialogPortal>
-              </Dialog> */}
-
             <div className="sdk:text-[13px] sdk:text-[var(--sdk-muted-foreground)] sdk:font-geist sdk:font-normal sdk:leading-[16px] sdk:text-lowercase">{`Auto-saved ${dayjs(
               autoSavedTime
             ).format("HH:mm:ss")}`}</div>
@@ -701,27 +741,8 @@ IWorkflowConfigurationProps) => {
               className="sdk:hidden! sdk:sm:inline-flex!"
               disabled={isRunning}
               defaultName={workflowName}
-              onSave={setWorkflowName}
+              onSave={setWorkflowNameHandler}
             />
-            {/* <Button
-              variant="default"
-              onClick={onSave}
-              disabled={editAgentOpen || isRunning}
-              className={clsx(
-                "sdk:workflow-title-button-save sdk:cursor-pointer sdk:h-[30px]",
-                (editAgentOpen || isRunning) &&
-                  "sdk:workflow-title-button-save-disabled"
-              )}
-            >
-              {btnLoading && (
-                <Loading
-                  key={"save"}
-                  className={clsx("aevatarai-loading-icon")}
-                  style={{ width: 14, height: 14 }}
-                />
-              )}
-              Save
-            </Button> */}
           </div>
         </div>
         {/* content */}
@@ -744,7 +765,7 @@ IWorkflowConfigurationProps) => {
             <Workflow
               extraControlBar={extraControlBar}
               editWorkflow={editWorkflow}
-              editAgentOpen={editAgentOpen}
+              sideDialogOpen={Boolean(editAgentOpen)}
               gaevatarList={gaevatarList}
               gaevatarTypeList={sidebarConfig?.gaevatarTypeList}
               ref={workflowRef}
@@ -758,42 +779,66 @@ IWorkflowConfigurationProps) => {
               isRunning={isRunning}
               isStopping={isStopping}
               onUndoAction={() => {
-                setEditAgentOpen(false);
+                setEditAgentOpen(undefined);
               }}
               onRedoAction={() => {
-                setEditAgentOpen(false);
+                setEditAgentOpen(undefined);
               }}
             />
             <Dialog
-              open={editAgentOpen}
+              open={Boolean(editAgentOpen)}
               modal={false}
               onOpenChange={(v) => {
-                console.log(v, "editAgentOpen=onClickWorkflowItem");
+                console.log(
+                  v,
+                  editAgentOpen,
+                  "editAgentOpen=onClickWorkflowItem"
+                );
                 // setEditAgentOpen(v);
               }}>
               <DialogPortal container={container} asChild>
                 {/* <DialogOverlay /> */}
-                <WorkflowDialog
-                  disabled={isRunning}
-                  agentItem={selectAgent}
-                  isNew={selectAgentInfo?.isNew}
-                  nodeId={selectAgentInfo?.nodeId}
-                  onClose={() => {
-                    setEditAgentOpen(false);
-                  }}
-                  onGaevatarChange={onDefaultGaevatarChange}
-                />
+                {editAgentOpen === "agentEdit" && selectAgent && (
+                  <WorkflowDialog
+                    disabled={isRunning}
+                    agentItem={selectAgent}
+                    isNew={selectAgentInfo?.isNew}
+                    nodeId={selectAgentInfo?.nodeId}
+                    onClose={() => {
+                      setEditAgentOpen(undefined);
+                    }}
+                    onGaevatarChange={onDefaultGaevatarChange}
+                  />
+                )}
+
+                {editAgentOpen === "agentLogs" && selectedAgentLogs && (
+                  <WorkflowAgentLogsDialog
+                    agentLogs={selectedAgentLogs}
+                    onClose={() => {
+                      setEditAgentOpen(undefined);
+                    }}
+                  />
+                )}
               </DialogPortal>
             </Dialog>
+            {/* <WorkflowAgentLogsDialog
+              open={Boolean(selectedAgentLogs)}
+              container={container}
+              agentLogs={selectedAgentLogs}
+              onOpenChange={(v) => {
+                !v &&
+                  dispatch(
+                    basicWorkflow.setSelectedAgentLogs.actions(undefined)
+                  );
+              }}
+            /> */}
             <div className="sdk:flex sdk:justify-center sdk:min-w-[100%] sdk:pl-[8px] sdk:pr-[8px] sdk:pb-[8px]">
               <ExecutionLogs
-                stateName="WorkflowExecutionRecordState"
                 workflowId={
                   newWorkflowState?.workflowId || editWorkflow?.workflowId
                 }
-                roundId={1}
-                isAgentCardOpen={editAgentOpen}
-                executionLogsData={executionLogsData}
+                timeLogs={fetchedExecutionLogsDataWithTime}
+                isAgentCardOpen={Boolean(editAgentOpen)}
               />
             </div>
             <WorkflowGenerationModal

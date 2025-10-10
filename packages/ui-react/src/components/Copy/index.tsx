@@ -24,19 +24,23 @@ export default function Copy({
   const [, setCopied] = useCopyToClipboard();
   const [clicked, setClicked] = useState(false);
 
-  const onClick = useCallback(() => {
-    setClicked(true);
+  const onClick = useCallback(
+    (e) => {
+      e.stopPropagation();
+      setClicked(true);
 
-    toast({ description });
+      toast({ description });
 
-    const timeoutId = setTimeout(() => {
-      setClicked(false);
-    }, 2000);
+      const timeoutId = setTimeout(() => {
+        setClicked(false);
+      }, 2000);
 
-    setCopied(toCopy);
+      setCopied(toCopy);
 
-    return () => clearTimeout(timeoutId);
-  }, [setCopied, toCopy, description, toast]);
+      return () => clearTimeout(timeoutId);
+    },
+    [setCopied, toCopy, description, toast]
+  );
 
   return (
     <span
@@ -44,11 +48,10 @@ export default function Copy({
       onClick={onClick}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
-          onClick();
+          onClick(event);
         }
       }}
-      className={clsx("flex-row-center cursor-pointer", className)}
-    >
+      className={clsx("flex-row-center cursor-pointer", className)}>
       {clicked ? (
         <>
           <TickIcon />

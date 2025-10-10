@@ -1,0 +1,11 @@
+.aevatar-json-tree-root ul li {
+  margin-left: 6px !important;
+}
+
+.aevatar-json-tree-root > ul > li {
+  margin-left: 0 !important;
+}
+
+.aevatar-json-tree-root > ul {
+  margin-left: 0 !important;
+}

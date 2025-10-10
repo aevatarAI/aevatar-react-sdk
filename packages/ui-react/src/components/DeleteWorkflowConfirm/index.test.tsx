@@ -37,8 +37,8 @@ describe("DeleteWorkflowConfirm", () => {
     expect(screen.getByText("Are you sure you want to delete this workflow?")).toBeInTheDocument();
     expect(screen.getByTestId("delete-tip-logo")).toBeInTheDocument();
     expect(screen.getByTestId("close-icon")).toBeInTheDocument();
-    expect(screen.getByText("cancel")).toBeInTheDocument();
-    expect(screen.getByText("yes")).toBeInTheDocument();
+    expect(screen.getByText("Cancel")).toBeInTheDocument();
+    expect(screen.getByText("Yes")).toBeInTheDocument();
   });
 
   it("should not render dialog when open is false", () => {
@@ -69,7 +69,7 @@ describe("DeleteWorkflowConfirm", () => {
     expect(mockOnOpenChange).toHaveBeenCalledWith(false);
   });
 
-  it("should close dialog when cancel button is clicked", () => {
+  it("should close dialog when Cancel button is clicked", () => {
     render(
       <DeleteWorkflowConfirm 
         open={true} 
@@ -78,14 +78,14 @@ describe("DeleteWorkflowConfirm", () => {
       />
     );
 
-    const cancelButton = screen.getByText("cancel");
-    fireEvent.click(cancelButton);
+    const CancelButton = screen.getByText("Cancel");
+    fireEvent.click(CancelButton);
 
     expect(mockOnOpenChange).toHaveBeenCalledWith(false);
     expect(mockHandleConfirm).not.toHaveBeenCalled();
   });
 
-  it("should call handleConfirm and close dialog when yes button is clicked", () => {
+  it("should call handleConfirm and close dialog when Yes button is clicked", () => {
     render(
       <DeleteWorkflowConfirm 
         open={true} 
@@ -94,8 +94,8 @@ describe("DeleteWorkflowConfirm", () => {
       />
     );
 
-    const yesButton = screen.getByText("yes");
-    fireEvent.click(yesButton);
+    const YesButton = screen.getByText("Yes");
+    fireEvent.click(YesButton);
 
     expect(mockHandleConfirm).toHaveBeenCalledTimes(1);
     expect(mockOnOpenChange).toHaveBeenCalledWith(false);
@@ -110,11 +110,11 @@ describe("DeleteWorkflowConfirm", () => {
       />
     );
 
-    const cancelButton = screen.getByText("cancel");
-    const yesButton = screen.getByText("yes");
+    const CancelButton = screen.getByText("Cancel");
+    const YesButton = screen.getByText("Yes");
 
-    expect(cancelButton).toHaveClass("sdk:text-[12px]", "sdk:py-[7px]");
-    expect(yesButton).toHaveClass("sdk:text-[12px]", "sdk:py-[7px]");
+    expect(CancelButton).toHaveClass("sdk:text-[12px]", "sdk:py-[7px]");
+    expect(YesButton).toHaveClass("sdk:text-[12px]", "sdk:py-[7px]");
   });
 
   it("should render dialog content with correct styling", () => {

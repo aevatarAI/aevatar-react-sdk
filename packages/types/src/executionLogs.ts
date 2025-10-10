@@ -22,14 +22,20 @@ export interface AgentState {
  * Represents a single execution record with all related data
  */
 export interface ExecutionLogItem {
-  /** Agent name from agent details */
-  agentName: string;
   /** Execution status after transformation */
   status: ExecutionLogStatus;
+  /** Execution start time */
+  startTime: string;
+  /** Execution end time */
+  endTime: string;
+  /** Execution duration in milliseconds */
+  duration: number;
   /** Parsed input data for the execution */
   inputData: any;
   /** Parsed output data from the execution */
   outputData: any;
+  /** Parsed current state snapshot from the execution */
+  currentStateSnapshot: any;
   /** Execution time in milliseconds */
   executionTime: number;
   /** Agent state information */
@@ -37,7 +43,7 @@ export interface ExecutionLogItem {
   /** Failure summary if execution failed */
   failureSummary?: any;
   /** Unique identifier for the execution record */
-  id: any;
+  grainId: string;
 }
 
 /**
@@ -48,8 +54,6 @@ export interface FetchExecutionLogsParams {
   stateName: string;
   /** Workflow identifier */
   workflowId: string;
-  /** Round identifier for the execution */
-  roundId: number;
 }
 
 /**

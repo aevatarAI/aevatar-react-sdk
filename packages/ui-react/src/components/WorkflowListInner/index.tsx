@@ -90,7 +90,8 @@ export default function WorkflowListInner({
               <SelectTrigger
                 className={clsx(
                   "sdk:normal-case sdk:gap-[5px]  sdk:cursor-pointer",
-                  "sdk:border-none sdk:px-[18px]"
+                  "sdk:border-none sdk:px-[18px]",
+                  "sdk:md:max-w-[200px] sdk:max-w-[192px]"
                 )}
                 // biome-ignore lint/complexity/noUselessFragments: <explanation>
                 downIcon={<></>}>
@@ -98,7 +99,7 @@ export default function WorkflowListInner({
               </SelectTrigger>
               <SelectContent
                 align="end"
-                className="sdk:md:w-[200px] sdk:w-[192px] sdk:left-0 sdk:-top-[4px] sdk:p-0 sdk:md:p-0 sdk:bg-transparent">
+                className="sdk:md:w-[200px] sdk:w-[192px] sdk:right-0 sdk:-top-[4px] sdk:p-0 sdk:md:p-0 sdk:bg-transparent">
                 <div className="sdk:p-[8px_8px_4px_10px] sdk:md:p-[8px_8px_4px_10px] sdk:bg-[var(--sdk-color-bg-primary)]">
                   <SelectItem
                     className={clsx(
