@@ -174,7 +174,10 @@ export default function AccordionLogs({
                 {agentLogs.status.charAt(0).toUpperCase() +
                   agentLogs.status.slice(1)}
               </span>
-              {/* <span className="sdk:text-xs sdk:leading-4 sdk:text-[var(--sdk-muted-foreground)]">{`${agentLogs.duration}s`}</span> */}
+              {(agentLogs.status === "success" ||
+                agentLogs.status === "failed") && (
+                <span className="sdk:text-xs sdk:leading-4 sdk:text-[var(--sdk-muted-foreground)]">{`${agentLogs.duration}s`}</span>
+              )}
             </div>
           </AccordionTrigger>
           <AccordionContent className="sdk:pb-[0]" onClick={onShowLogsDialog}>
