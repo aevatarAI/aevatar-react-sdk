@@ -62,6 +62,7 @@ interface IProps {
   isRunning?: boolean;
   isStopping?: boolean;
   gaevatarTypeList?: IAgentsConfiguration[];
+  disabledRun?: boolean;
   onCardClick: (
     data: Partial<IAgentInfoDetail>,
     isNew: boolean,
@@ -100,6 +101,7 @@ export const Workflow = forwardRef(
       sideDialogOpen,
       isRunning,
       isStopping,
+      disabledRun,
       onCardClick,
       onNodesChanged,
       onRunWorkflow,
@@ -745,6 +747,7 @@ export const Workflow = forwardRef(
 
               <Button
                 variant="outline"
+                disabled={disabledRun}
                 onClick={async () => {
                   onRunningHandler();
                 }}

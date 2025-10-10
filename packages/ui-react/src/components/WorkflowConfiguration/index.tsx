@@ -68,6 +68,7 @@ export interface IWorkflowConfigurationProps {
   };
   editWorkflow?: IWorkflowConfigurationState;
   extraControlBar?: React.ReactNode;
+  useAevatarGenerateWorkflow?: boolean;
   onBack?: () => void;
 }
 
@@ -75,6 +76,7 @@ const WorkflowConfigurationInner = ({
   sidebarConfig,
   editWorkflow,
   extraControlBar,
+  useAevatarGenerateWorkflow = false,
   onBack,
 }: // onSave: onSaveHandler,
 // onGaevatarChange,
@@ -288,6 +290,8 @@ IWorkflowConfigurationProps) => {
   //   [publishWorkflow, updateNodeList, toast]
   // );
 
+  const [isAutoSaving, setIsAutoSaving] = useState(false);
+
   const onSaveHandler = useCallback(async () => {
     const workflowViewData = getWorkflowViewData();
     let result: IAgentInfo;
@@ -364,10 +368,12 @@ IWorkflowConfigurationProps) => {
     autoSaveTimerRef.current = setTimeout(async () => {
       try {
         if (!getIsStageRef.current()) return;
-
+        setIsAutoSaving(true);
         await onSaveRef.current();
+        setIsAutoSaving(false);
         setAutoSavedTime(Date.now());
       } catch (error) {
+        setIsAutoSaving(false);
         console.error("Auto save failed:", error);
       }
     }, 5000); // 7 seconds delay
@@ -583,6 +589,7 @@ IWorkflowConfigurationProps) => {
         newWorkflowState?.workflowAgentId ?? editWorkflow?.workflowAgentId;
       if (getIsStage()) {
         // TODO auto save and publish workflow
+        debouncedAutoSave("onRunWorkflow");
         const result = await onSaveHandler();
         console.log(result, "result===onSaveHandler");
         viewAgentId = result.workflowAgentId;
@@ -666,6 +673,7 @@ IWorkflowConfigurationProps) => {
     updateLogsData,
     updateNodeList,
     dispatch,
+    debouncedAutoSave,
   ]);
 
   const [sidebarContainer, setSidebarContainer] = React.useState(null);
@@ -777,6 +785,7 @@ IWorkflowConfigurationProps) => {
               onRemoveNode={onRemoveNode}
               onNewNode={onNewNode}
               isRunning={isRunning}
+              disabledRun={isAutoSaving}
               isStopping={isStopping}
               onUndoAction={() => {
                 setEditAgentOpen(undefined);
@@ -841,10 +850,12 @@ IWorkflowConfigurationProps) => {
                 isAgentCardOpen={Boolean(editAgentOpen)}
               />
             </div>
-            <WorkflowGenerationModal
-              defaultVisible={!editWorkflow?.workflowAgentId}
-              workflowRef={workflowRef}
-            />
+            {useAevatarGenerateWorkflow && (
+              <WorkflowGenerationModal
+                defaultVisible={!editWorkflow?.workflowAgentId}
+                workflowRef={workflowRef}
+              />
+            )}
           </main>
         </div>
       </div>

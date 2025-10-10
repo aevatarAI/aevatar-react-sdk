@@ -21,7 +21,6 @@ import { aevatarAI } from "../../utils";
 import dayjs from "../../utils/dayjs";
 import { Filter, Loader } from "lucide-react";
 import { useGetWorkflowLogs } from "../../hooks/useGetWorkflowLogs";
-import { EnumExecutionRecordStatus } from "../../hooks/useWorkflowState";
 
 interface IExecutionLogsProps {
   workflowId: string;
@@ -101,10 +100,6 @@ const ExecutionLogBody = ({
   const [selectedAgentGrainId, setSelectedAgentGrainId] =
     useState<string>("all");
 
-  const [workflowState, setWorkflowState] = useState<EnumExecutionRecordStatus>(
-    EnumExecutionRecordStatus.Pending
-  );
-
   const {
     data: logsData,
     isLoading,
@@ -114,7 +109,6 @@ const ExecutionLogBody = ({
     searchValue,
     selectedLogLevel,
     selectedRoundId,
-    workflowState,
     selectedAgentGrainId,
   });
 
@@ -126,8 +120,6 @@ const ExecutionLogBody = ({
     if (timeLogs.length > 0) {
       const roundId = timeLogs[0].roundId.toString();
       setSelectedRoundId(roundId);
-      const status = map.get(roundId)?.status;
-      setWorkflowState(status as EnumExecutionRecordStatus);
     }
     return map;
   }, [timeLogs]);
@@ -186,8 +178,6 @@ const ExecutionLogBody = ({
                 setSelectedAgentGrainId("all");
                 setSearch("");
                 setSelectedLogLevel("all");
-                const status = dateMap.get(value)?.status;
-                setWorkflowState(status as EnumExecutionRecordStatus);
               }}>
               <SelectTrigger
                 className={clsx(
