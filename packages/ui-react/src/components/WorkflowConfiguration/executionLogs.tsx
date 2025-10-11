@@ -19,7 +19,7 @@ import {
 } from "@aevatar-react-sdk/services";
 import { aevatarAI } from "../../utils";
 import dayjs from "../../utils/dayjs";
-import { Filter, Loader } from "lucide-react";
+import { Filter, Loader, RefreshCcw } from "lucide-react";
 import { useGetWorkflowLogs } from "../../hooks/useGetWorkflowLogs";
 
 interface IExecutionLogsProps {
@@ -104,6 +104,7 @@ const ExecutionLogBody = ({
     data: logsData,
     isLoading,
     stop,
+    refresh,
   } = useGetWorkflowLogs({
     workflowId,
     searchValue,
@@ -119,7 +120,10 @@ const ExecutionLogBody = ({
     });
     if (timeLogs.length > 0) {
       const roundId = timeLogs[0].roundId.toString();
-      setSelectedRoundId(roundId);
+      setSelectedRoundId((v) => {
+        if (v) return v;
+        return roundId;
+      });
     }
     return map;
   }, [timeLogs]);
@@ -274,6 +278,10 @@ const ExecutionLogBody = ({
             onDebounceChange={(v) => {
               setSearchValue(v);
             }}
+          />
+          <RefreshCcw
+            className="sdk:text-[var(--sdk-primary-foreground-text)] sdk:w-[16px] sdk:h-[16px] sdk:cursor-pointer"
+            onClick={refresh}
           />
           <Close
             className="sdk:text-[var(--sdk-primary-foreground-text)] sdk:cursor-pointer"

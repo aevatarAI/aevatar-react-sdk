@@ -14,7 +14,11 @@ const CustomEdge = memo(
     style = {},
     markerEnd,
     setEdges,
-  }: EdgeProps & { setEdges: (fn: (edges: any[]) => any[]) => void }) => {
+    isRunning,
+  }: EdgeProps & {
+    setEdges: (fn: (edges: any[]) => any[]) => void;
+    isRunning: boolean;
+  }) => {
     const [edgePath, labelX, labelY] = getBezierPath({
       sourceX,
       sourceY,
@@ -28,7 +32,7 @@ const CustomEdge = memo(
       e.stopPropagation();
       setEdges((edges) => edges.filter((edge) => edge.id !== id));
     };
-
+    console.log(isRunning, "isRunning===");
     return (
       <>
         <BaseEdge path={edgePath} style={style} markerEnd={markerEnd} />
@@ -39,12 +43,15 @@ const CustomEdge = memo(
           height={24}
           style={{ overflow: "visible" }}
           className="aevatar-edge-delete-btn">
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="sdk:bg-[var(--sdk-color-bg-primary)] sdk:relative sdk:text-[var(--sdk-color-text-secondary)] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:rounded-[4px] sdk:p-1 sdk:w-6 sdk:h-6 sdk:flex sdk:items-center sdk:justify-center sdk:cursor-pointer">
-            <DeleteIcon width={16} height={16} />
-          </button>
+          {!isRunning && (
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={isRunning}
+              className="sdk:bg-[var(--sdk-color-bg-primary)] sdk:relative sdk:text-[var(--sdk-color-text-secondary)] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:rounded-[4px] sdk:p-1 sdk:w-6 sdk:h-6 sdk:flex sdk:items-center sdk:justify-center sdk:cursor-pointer">
+              <DeleteIcon width={16} height={16} />
+            </button>
+          )}
         </foreignObject>
       </>
     );

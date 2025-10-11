@@ -607,10 +607,10 @@ export const Workflow = forwardRef(
     const edgeTypes = useMemo(
       () => ({
         bezier: (edgeProps) => (
-          <CustomEdge {...edgeProps} setEdges={setEdges} />
+          <CustomEdge {...edgeProps} isRunning={isRunning} setEdges={setEdges} />
         ),
       }),
-      [setEdges]
+      [setEdges, isRunning]
     );
 
     const isRunningRef = useRef(isRunning);
