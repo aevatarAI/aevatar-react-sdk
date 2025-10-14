@@ -82,7 +82,7 @@ export default function AevatarCardInner({
           <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
             <div className="sdk:flex sdk:justify-between sdk:items-center sdk:pb-[9px]">
               <div
-                className="sdk:font-geist sdk:text-[var(--sdk-color-text-primary)] sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
+                className="sdk:font-geist sdk:text-[var(--sdk-color-text-primary)] sdk:text-base sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
               >{`${agentInfo?.name || "agent name"}`}</div>
             </div>
             <div className="sdk:font-geist sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:truncate">

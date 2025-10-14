@@ -482,7 +482,8 @@ export const renderSchemaField = ({
                   className={clsx(
                     "sdk:bg-[var(--sdk-bg-background)]",
                     (field.disabled ?? disabled) &&
-                      "sdk:bg-[var(--sdk-color-border-primary)]"
+                      "sdk:bg-[var(--sdk-color-border-primary)]",
+                    "sdk:text-sm"
                   )}
                 />
               </FormControl>
@@ -562,7 +563,8 @@ export const renderSchemaField = ({
                     className={clsx(
                       "sdk:bg-[var(--sdk-bg-background)]",
                       (field.disabled ?? disabled) &&
-                        "sdk:bg-[var(--sdk-color-border-primary)]"
+                        "sdk:bg-[var(--sdk-color-border-primary)]",
+                      "sdk:text-sm"
                     )}
                   />
                 ) : (
@@ -574,7 +576,8 @@ export const renderSchemaField = ({
                     className={clsx(
                       "sdk:bg-[var(--sdk-bg-background)]",
                       (field.disabled ?? disabled) &&
-                        "sdk:bg-[var(--sdk-color-border-primary)]"
+                        "sdk:bg-[var(--sdk-color-border-primary)]",
+                      "sdk:text-sm"
                     )}
                   />
                 )}
@@ -646,7 +649,8 @@ export const renderSchemaField = ({
                   className={clsx(
                     "sdk:bg-[var(--sdk-bg-background)]",
                     (field.disabled ?? disabled) &&
-                      "sdk:bg-[var(--sdk-color-border-primary)]"
+                      "sdk:bg-[var(--sdk-color-border-primary)]",
+                    "sdk:text-sm"
                   )}
                   disabled={field.disabled ?? disabled}
                 />
