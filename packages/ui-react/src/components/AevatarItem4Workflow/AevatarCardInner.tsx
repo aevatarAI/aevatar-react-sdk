@@ -2,7 +2,7 @@ import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 
 import Hypotenuse from "../../assets/svg/hypotenuse.svg?react";
 import "./index.css";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import type { JSONSchemaType } from "../types";
 import clsx from "clsx";
@@ -10,6 +10,7 @@ import type { TNodeDataClick } from "../Workflow/types";
 import HoverMenu from "./HoverMenu";
 import type { ExecutionLogItem } from "@aevatar-react-sdk/types";
 import AccordionLogs from "./AccordionLogs";
+import { ChevronDown } from "lucide-react";
 export interface IAevatarCardInnerProps {
   className?: string;
   isNew?: boolean;
@@ -53,6 +54,8 @@ export default function AevatarCardInner({
     [agentInfo, isNew]
   );
 
+  const [showMore, setShowMore] = useState(false);
+
   return (
     <div className="sdk:w-[234px]">
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
@@ -71,7 +74,8 @@ export default function AevatarCardInner({
           className={clsx(
             "sdk:aevatar-item-background sdk:border sdk:border-[var(--sdk-color-bg-primary)]  sdk:group-hover:border-[var(--sdk-border-foreground)]",
             selected && "sdk:border-[var(--sdk-border-foreground)]! ",
-            "sdk:border-b-[var(--sdk-bg-accent)]!",
+            // "sdk:border-b-[var(--sdk-bg-accent)]!",
+            'sdk:pb-[6px]',
             "sdk:max-h-[300px] sdk:overflow-y-auto",
             className
           )}
@@ -79,11 +83,28 @@ export default function AevatarCardInner({
             scrollbarWidth: "none",
             msOverflowStyle: "none",
           }}>
-          <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
-            <div className="sdk:flex sdk:justify-between sdk:items-center sdk:pb-[9px]">
+          <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px]">
+            <div className="sdk:pb-[9px]">
               <div
-                className="sdk:font-geist sdk:text-[var(--sdk-color-text-primary)] sdk:text-base sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
-              >{`${agentInfo?.name || "agent name"}`}</div>
+                className={clsx(
+                  "sdk:font-geist sdk:text-[var(--sdk-color-text-primary)] sdk:text-base sdk:font-semibold sdk:leading-normal ",
+                  "sdk:flex sdk:w-full sdk:items-center sdk:justify-between sdk:gap-[4px]"
+                )}>
+                {/* Single line, overflow ellipsis */}
+                <span className="sdk:flex-1 sdk:truncate sdk:max-w-[calc(100%-32px)]">{`${
+                  agentInfo?.name || "agent name"
+                }`}</span>
+                <ChevronDown
+                  className={clsx(
+                    "sdk:w-[16px] sdk:h-[16px] sdk:cursor-pointer sdk:transition-all sdk:duration-200 sdk:ease-in-out",
+                    showMore && "sdk:rotate-180"
+                  )}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowMore((v) => !v);
+                  }}
+                />
+              </div>
             </div>
             <div className="sdk:font-geist sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:truncate">
               {agentInfo?.agentType
@@ -91,7 +112,13 @@ export default function AevatarCardInner({
                 : "--"}
             </div>
           </div>
-          <div className="sdk:font-geist sdk:pb-[6px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
+          <div
+            className={clsx(
+              "sdk:font-geist sdk:pb-[6px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch",
+              " sdk:border-t sdk:border-[var(--sdk-border-color)] ",
+              "sdk:hidden",
+              showMore && "sdk:flex!"
+            )}>
             {(propertiesInfo ?? []).map(
               (item: [string, JSONSchemaType<any>]) => {
                 // Extract property name and schema
@@ -202,7 +229,7 @@ export default function AevatarCardInner({
             )}
           </div>
         </div>
-        <div className="sdk:h-[14px] sdk:relative sdk:flex ">
+        {/* <div className="sdk:h-[14px] sdk:relative sdk:flex ">
           <div
             className={clsx(
               " sdk:bg-[var(--sdk-bg-accent)] sdk:flex-1 sdk:border sdk:border-[var(--sdk-color-bg-primary)] sdk:group-hover:border-[var(--sdk-border-foreground)]",
@@ -216,7 +243,7 @@ export default function AevatarCardInner({
               selected && "sdk:text-[var(--sdk-border-foreground)]!"
             )}
           />
-        </div>
+        </div> */}
       </div>
       <div className="sdk:relative ">
         {agentLogs && (
