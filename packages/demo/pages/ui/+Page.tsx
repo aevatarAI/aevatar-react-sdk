@@ -268,6 +268,12 @@ export default function UI() {
                 setStage(undefined);
               }}
               editWorkflow={editWorkflow}
+              onDuplicateWorkflow={async (workflow) => {
+                setStage(undefined);
+                await sleep(1000);
+                setEditWorkflow(workflow);
+                onShowWorkflow();
+              }}
             />
           </FullScreen>
         )}
@@ -278,8 +284,8 @@ export default function UI() {
               onEditWorkflow={(workflowAgentId) => {
                 onEditWorkflow(workflowAgentId);
               }}
-              onNewWorkflow={() => {
-                setEditWorkflow(undefined);
+              onNewWorkflow={(workflow) => {
+                setEditWorkflow(workflow);
                 onShowWorkflow();
               }}
             />

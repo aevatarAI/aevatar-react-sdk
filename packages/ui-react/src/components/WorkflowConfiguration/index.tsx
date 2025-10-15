@@ -53,9 +53,10 @@ import { useLatestExecutionLogs } from "../Workflow/hooks/useFetchExecutionLogs"
 import { IS_NULL_ID } from "../../constants";
 import { useFetchExecutionLogsWithTime } from "../Workflow/hooks/useFetchExecutionLogsWithTime";
 import WorkflowAgentLogsDialog from "../WorkflowAgentLogs";
+import WorkflowMenu from "./workflowMenu";
 
 export interface IWorkflowConfigurationState {
-  workflowAgentId: string;
+  workflowAgentId?: string;
   workflowId?: string;
   workflowName: string;
   workflowViewData: IWorkflowViewDataParams;
@@ -70,6 +71,7 @@ export interface IWorkflowConfigurationProps {
   extraControlBar?: React.ReactNode;
   useAevatarGenerateWorkflow?: boolean;
   onBack?: () => void;
+  onDuplicateWorkflow?: (workflow: IWorkflowConfigurationState) => void;
 }
 
 const WorkflowConfigurationInner = ({
@@ -78,6 +80,7 @@ const WorkflowConfigurationInner = ({
   extraControlBar,
   useAevatarGenerateWorkflow = false,
   onBack,
+  onDuplicateWorkflow,
 }: // onSave: onSaveHandler,
 // onGaevatarChange,
 IWorkflowConfigurationProps) => {
@@ -479,13 +482,12 @@ IWorkflowConfigurationProps) => {
       onBack?.();
       return;
     }
-
-    if (!getIsStage()) {
+    if (!getIsStage() && editWorkflow?.workflowAgentId) {
       onBack?.();
     } else {
       setUnsavedModal(true);
     }
-  }, [onBack, getIsStage]);
+  }, [onBack, getIsStage, editWorkflow?.workflowAgentId]);
 
   const onNodesChanged = useCallback(
     (nodes: INode[]) => {
@@ -587,7 +589,7 @@ IWorkflowConfigurationProps) => {
       let workflowId = newWorkflowState?.workflowId ?? editWorkflow?.workflowId;
       let viewAgentId =
         newWorkflowState?.workflowAgentId ?? editWorkflow?.workflowAgentId;
-      if (getIsStage()) {
+      if (getIsStage() || !viewAgentId) {
         // TODO auto save and publish workflow
         debouncedAutoSave("onRunWorkflow");
         const result = await onSaveHandler();
@@ -712,6 +714,31 @@ IWorkflowConfigurationProps) => {
     [debouncedAutoSave]
   );
 
+  const onDuplicateHandler = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation();
+      const data = getWorkflowViewData();
+      data.properties.workflowNodeList = data.properties.workflowNodeList.map(
+        (item) => {
+          return {
+            ...item,
+            agentId: IS_NULL_ID,
+          };
+        }
+      );
+      const workflowName = `${data.name}_1`;
+      data.name = workflowName;
+      data.properties.name = workflowName;
+      const newState = {
+        workflowName,
+        workflowViewData: data,
+      };
+      setNewWorkflowState(newState);
+      onDuplicateWorkflow?.(newState);
+    },
+    [getWorkflowViewData, onDuplicateWorkflow]
+  );
+
   return (
     <>
       <div className="sdk:h-full sdk:workflow-common flex flex-col sdk:font-geist sdk:text-[var(--sdk-color-text-primary)]">
@@ -744,13 +771,15 @@ IWorkflowConfigurationProps) => {
             <div className="sdk:text-[13px] sdk:text-[var(--sdk-muted-foreground)] sdk:font-geist sdk:font-normal sdk:leading-[16px] sdk:text-lowercase">{`Auto-saved ${dayjs(
               autoSavedTime
             ).format("HH:mm:ss")}`}</div>
-
-            <EditWorkflowNameDialog
-              className="sdk:hidden! sdk:sm:inline-flex!"
-              disabled={isRunning}
-              defaultName={workflowName}
-              onSave={setWorkflowNameHandler}
-            />
+            <div className="sdk:flex sdk:gap-[8px] sdk:items-center">
+              <EditWorkflowNameDialog
+                className="sdk:hidden! sdk:sm:inline-flex!"
+                disabled={isRunning}
+                defaultName={workflowName}
+                onSave={setWorkflowNameHandler}
+              />
+              <WorkflowMenu onDuplicate={onDuplicateHandler} />
+            </div>
           </div>
         </div>
         {/* content */}
@@ -877,12 +906,15 @@ IWorkflowConfigurationProps) => {
 const queryClient = new QueryClient();
 
 export default function WorkflowConfiguration(
-  props: IWorkflowConfigurationProps
+  props: Omit<IWorkflowConfigurationProps, "onDuplicateWorkflow">
 ) {
   // Determine if it is a mobile device
   const isMobile =
     typeof window !== "undefined" &&
     ("ontouchstart" in window || navigator.maxTouchPoints > 0);
+  const [key, setKey] = useState(0);
+  const [editWorkflow, setEditWorkflow] =
+    useState<IWorkflowConfigurationState>();
   return (
     <QueryClientProvider client={queryClient}>
       <ReactFlowProvider>
@@ -891,7 +923,15 @@ export default function WorkflowConfiguration(
           options={isMobile ? { enableMouseEvents: true } : undefined}>
           <DnDProvider>
             <WorkflowProvider>
-              <WorkflowConfigurationInner {...props} />
+              <WorkflowConfigurationInner
+                {...props}
+                editWorkflow={editWorkflow || props.editWorkflow}
+                key={key}
+                onDuplicateWorkflow={(editWorkflow) => {
+                  setEditWorkflow(editWorkflow);
+                  setKey((v) => v + 1);
+                }}
+              />
             </WorkflowProvider>
           </DnDProvider>
         </ReactDndProvider>

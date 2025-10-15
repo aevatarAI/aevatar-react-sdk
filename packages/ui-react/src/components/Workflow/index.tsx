@@ -53,7 +53,7 @@ const getId = () => `${uuidv4()}`;
 interface IProps {
   gaevatarList?: IAgentInfoDetail[];
   editWorkflow?: {
-    workflowAgentId: string;
+    workflowAgentId?: string;
     workflowId?: string;
     workflowName: string;
     workflowViewData: IWorkflowViewDataParams;
