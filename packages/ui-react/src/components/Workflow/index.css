@@ -69,7 +69,7 @@
 .react-flow__controls-button:hover {
   color: var(--sdk-color-text-primary);
 }
-.editAgentOpen-workflow-inner .react-flow__panel.right.react-flow__minimap {
+.aevatar-sideDialogOpen-workflow-inner .react-flow__panel.right.react-flow__minimap {
   margin-right: 400px;
 }
 /* .react-flow__edge.selectable:hover .react-flow__edge-path, */

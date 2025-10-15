@@ -32,10 +32,14 @@ Adopt the AiWorkFlow workflow. All Git/release commands must be non-interactive 
    - Enter alpha pre-release: `pnpm changeset pre enter alpha`
    - Publish alpha packages: `pnpm publish:alpha`
    - Exit alpha pre-release: `pnpm changeset pre exit`
-3. If any step fails, stop immediately and output the error message
-4. After each step, output a structural reasoning chain (sequential thinking)
-5. Output the result of each step
-6. When finished, output "Release complete"
+3. Create and push git tag after successful publish:
+   - Get current version from root package.json: `node -p "require('./package.json').version"`
+   - Create git tag: `git tag -a v{VERSION} -m "Release v{VERSION}"`
+   - Push tag to remote: `git push origin v{VERSION}`
+4. If any step fails, stop immediately and output the error message
+5. After each step, output a structural reasoning chain (sequential thinking)
+6. Output the result of each step
+7. When finished, output "Release complete"
 
 ## Language and Comment Conventions
 - All workflow instructions and outputs must be in English

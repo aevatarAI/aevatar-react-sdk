@@ -3,7 +3,8 @@ import AevatarCardInner from "./AevatarCardInner";
 import { Handle, Position } from "@xyflow/react";
 import type { TNodeDataClick } from "../Workflow/types";
 import { useWorkflow } from "../context/WorkflowProvider";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
+import { basicWorkflow } from "../context/WorkflowProvider/actions";
 
 interface IAevatarItem4WorkflowProps {
   id: string;
@@ -21,11 +22,26 @@ export default function AevatarItem4Workflow({
   data,
 }: IAevatarItem4WorkflowProps) {
   const { isNew, onClick, deleteNode, agentInfo } = data;
-  const [{ selectedAgent, executionLogsData, isRunning }] = useWorkflow();
-  const currentAgentStatus = useMemo(() => {
-    return executionLogsData?.find((agent) => agent?.id === data?.agentInfo?.id)
-      ?.status;
-  }, [executionLogsData, data?.agentInfo?.id]);
+  const [{ selectedAgent, executionLogsData, isRunning }, { dispatch }] =
+    useWorkflow();
+  const currentAgentLogs = useMemo(() => {
+    return executionLogsData?.find(
+      (agent) =>
+        agent?.grainId ===
+        `${data?.agentInfo?.agentType}/${(data?.agentInfo?.id ?? "")?.replace(
+          /-/g,
+          ""
+        )}`
+    );
+  }, [executionLogsData, data?.agentInfo?.id, data?.agentInfo?.agentType]);
+
+  const onShowLogsDialog = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation();
+      dispatch(basicWorkflow.setSelectedAgentLogs.actions(currentAgentLogs));
+    },
+    [dispatch, currentAgentLogs]
+  );
 
   return (
     <>
@@ -43,12 +59,13 @@ export default function AevatarItem4Workflow({
       <AevatarCardInner
         agentInfo={agentInfo}
         selected={selectedAgent?.nodeId === nodeId}
-        agentStatus={currentAgentStatus}
+        agentLogs={currentAgentLogs}
         isNew={isNew}
         disabled={isRunning}
         onClick={onClick}
         deleteNode={deleteNode}
         nodeId={nodeId}
+        onShowLogsDialog={onShowLogsDialog}
       />
       <Handle
         type="source"

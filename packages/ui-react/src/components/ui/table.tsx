@@ -81,7 +81,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "sdk:font-geist sdk:text-[13px] sdk:font-semibold sdk:py-3 sdk:leading-normal sdk:text-[var(--sdk-color-text-foreground)] sdk:text-left sdk:align-middle sdk:font-semibold [&:has([role=checkbox])]:pr-0",
+      "sdk:font-geist sdk:text-sm sdk:font-semibold sdk:py-3 sdk:leading-normal sdk:text-[var(--sdk-color-text-foreground)] sdk:text-left sdk:align-middle sdk:font-semibold [&:has([role=checkbox])]:pr-0",
       "sdk:border-[var(--sdk-color-border-primary)]",
       className
     )}
@@ -97,7 +97,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      "sdk:py-[18px] sdk:text-[13px] sdk:font-geist sdk:align-middle [&:has([role=checkbox])]:sdk:pr-0",
+      "sdk:py-[18px] sdk:text-sm sdk:font-geist sdk:align-middle [&:has([role=checkbox])]:sdk:pr-0",
       "sdk:border-[var(--sdk-color-border-primary)]",
       className
     )}

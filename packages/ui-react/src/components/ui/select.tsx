@@ -5,6 +5,7 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import React from "react";
 import { cn } from "../../lib/utils";
 import "./select.css";
+import clsx from "clsx";
 
 const Select = SelectPrimitive.Root;
 
@@ -20,8 +21,9 @@ const SelectTrigger = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
     React.HTMLAttributes<HTMLDivElement> & {
       downIcon?: React.ReactNode;
+      childClassName?: string;
     }
->(({ className, children, downIcon, ...props }, ref) => {
+>(({ className, childClassName, children, downIcon, ...props }, ref) => {
   return (
     <SelectPrimitiveTrigger
       ref={ref}
@@ -31,14 +33,21 @@ const SelectTrigger = React.forwardRef<
         className
       )}
       {...props}>
-      <span className="sdk:block sdk:w-full sdk:whitespace-normal sdk:break-all sdk:[overflow-wrap:anywhere]">
+      <span
+        className={clsx(
+          "sdk:block sdk:w-full sdk:whitespace-normal sdk:break-all sdk:[overflow-wrap:anywhere]",
+          childClassName
+        )}>
         {children}
       </span>
       <SelectPrimitiveIcon
         asChild
         className={props["aria-disabled"] ? "hidden" : undefined}>
         {downIcon ?? (
-          <ChevronDown className="sdk:text-[var(--sdk-color-text-foreground)]" />
+          <ChevronDown
+            className="sdk:text-[var(--sdk-color-text-foreground)]"
+            size={16}
+          />
         )}
       </SelectPrimitiveIcon>
     </SelectPrimitiveTrigger>
@@ -152,18 +161,28 @@ const SelectPrimitiveItem: React.ElementType = SelectPrimitive.Item;
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> &
-    React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => (
+    React.HTMLAttributes<HTMLDivElement> & {
+      selectItemType?: "default" | "checkedChevron";
+    }
+>(({ className, children, selectItemType = "default", ...props }, ref) => (
   <SelectPrimitiveItem
     ref={ref}
     className={cn(
       "sdk:relative sdk:cursor-pointer sdk:select-none sdk:items-center sdk:text-sm sdk:outline-none sdk:focus:bg-accent sdk:focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       "sdk:text-[var(--sdk-muted-foreground)] sdk:text-left sdk:font-geist sdk:text-[12px] sdk:font-bold sdk:leading-normal  sdk:py-[7px]",
-      "select-item-wrapper",
+      selectItemType === "default" && "select-item-wrapper",
+      selectItemType === "checkedChevron" &&
+        "select-item-wrapper-checked-chevron sdk:flex sdk:items-center sdk:justify-between",
       className
     )}
     {...props}>
     <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+    {selectItemType === "checkedChevron" && (
+      <Check
+        className="sdk:hidden sdk:text-[var(--sdk-color-text-foreground)] aevatarai-select-item-checked-chevron"
+        size={16}
+      />
+    )}
   </SelectPrimitiveItem>
 ));
 SelectItem.displayName = SelectPrimitive.Item.displayName;

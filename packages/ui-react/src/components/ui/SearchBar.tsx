@@ -2,7 +2,7 @@ import type React from "react";
 import { useState, useRef, useEffect } from "react";
 import clsx from "clsx";
 import SearchIcon from "../../assets/svg/search.svg?react";
-import CloseIcon from "../../assets/svg/close1.svg?react";
+import CloseIcon from "../../assets/svg/close.svg?react";
 
 interface SearchBarProps {
   value: string;
@@ -88,7 +88,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
               inputRef.current?.focus();
             }}
             tabIndex={-1}>
-            <CloseIcon className="sdk:w-full sdk:h-full" />
+            <CloseIcon className="sdk:w-full sdk:h-full sdk:text-[var(--sdk-primary-foreground-text)]" />
           </button>
         )}
       </div>

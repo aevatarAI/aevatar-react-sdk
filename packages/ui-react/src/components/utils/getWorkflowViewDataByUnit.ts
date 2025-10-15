@@ -13,12 +13,12 @@ export const getWorkflowViewDataByUnit = (
   nodeList: INode[]
 ) => {
   const gaevatarListMap = new Map<string, IAgentInfoDetail>();
-  gaevatarList.forEach((item) => {
+  gaevatarList?.forEach((item) => {
     gaevatarListMap.set(item.id, item);
   });
   const workflowNodeMap = new Map<string, IWorkflowNode>();
   const workflowNodeUnitList: IWorkflowNodeUnit[] = [];
-  workUnitRelations.forEach((item) => {
+  workUnitRelations?.forEach((item) => {
     const nodeId = item.grainId;
     let _workflowNode: Partial<IWorkflowNode> = {
       nodeId,
@@ -27,7 +27,7 @@ export const getWorkflowViewDataByUnit = (
     let defaultValues = agentInfo?.properties;
     if (!agentInfo || agentInfo.id === nodeId) {
       // defaultValues = (agentInfo as any)?.defaultValues ?? {};
-      agentInfo = nodeList.find((item) => item.id === nodeId)?.data?.agentInfo;
+      agentInfo = nodeList?.find((item) => item.id === nodeId)?.data?.agentInfo;
       defaultValues = agentInfo?.properties ?? {};
       if (Object.keys(defaultValues).length === 0) {
         defaultValues = getPropertiesByDefaultValues(

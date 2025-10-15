@@ -7,7 +7,7 @@ vi.mock("../../assets/svg/search.svg?react", () => ({
   default: () => <div data-testid="search-icon">🔍</div>,
 }));
 
-vi.mock("../../assets/svg/close1.svg?react", () => ({
+vi.mock("../../assets/svg/close.svg?react", () => ({
   default: () => <div data-testid="close-icon">✕</div>,
 }));
 

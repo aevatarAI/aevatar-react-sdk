@@ -58,10 +58,11 @@ interface IProps {
     workflowName: string;
     workflowViewData: IWorkflowViewDataParams;
   };
-  editAgentOpen?: boolean;
+  sideDialogOpen?: boolean;
   isRunning?: boolean;
   isStopping?: boolean;
   gaevatarTypeList?: IAgentsConfiguration[];
+  disabledRun?: boolean;
   onCardClick: (
     data: Partial<IAgentInfoDetail>,
     isNew: boolean,
@@ -97,9 +98,10 @@ export const Workflow = forwardRef(
     {
       gaevatarList,
       editWorkflow,
-      editAgentOpen,
+      sideDialogOpen,
       isRunning,
       isStopping,
+      disabledRun,
       onCardClick,
       onNodesChanged,
       onRunWorkflow,
@@ -244,53 +246,7 @@ export const Workflow = forwardRef(
       // Clear history when loading new workflow
       clearHistory();
       isInitialized.current = false;
-      // // Initialize agent type counts for existing new nodes
-      // const newNodesIndexes: Record<string, Set<number>> = {};
-      // nodes.forEach((node) => {
-      //   if (node.data.isNew && node.data.agentInfo?.agentType) {
-      //     const agentType = node.data.agentInfo.agentType;
-      //     const name = node.data.agentInfo.name;
-
-      //     // Extract index from name (e.g., "AgentType 1" -> 1)
-      //     const match = name?.match(new RegExp(`^${agentType} (\\d+)$`));
-      //     if (match) {
-      //       const index = Number.parseInt(match[1], 10);
-      //       if (!newNodesIndexes[agentType]) {
-      //         newNodesIndexes[agentType] = new Set();
-      //       }
-      //       newNodesIndexes[agentType].add(index);
-      //     }
-      //   }
-      // });
-
-      // if (Object.keys(newNodesIndexes).length > 0) {
-      //   setAgentTypeUsedIndexes(newNodesIndexes);
-      //   // Also update ref
-      //   usedIndexesRef.current = newNodesIndexes;
-      // }
-
-      // setNodes((prevNodes) => {
-      //   const merged = [...nodes, ...prevNodes];
-      //   const map = new Map();
-      //   merged.forEach((node) => map.set(node?.data?.agentInfo?.id, node));
-      //   return Array.from(map.values());
-      // });
-
-      // setEdges(edges);
-      // setEdges((preEdges) => {
-      //   const merged = [...edges, ...preEdges];
-      //   const map = new Map();
-      //   merged.forEach((edge) => map.set(edge.id, edge));
-      //   return Array.from(map.values());
-      // });
-    }, [
-      editWorkflow,
-      // deleteNode,
-      onCardClick,
-      clearHistory,
-      // setNodes,
-      // setEdges,
-    ]);
+    }, [editWorkflow, onCardClick, clearHistory]);
 
     const onAiGenerateWorkflow = useCallback(
       async (aiGenerateWorkflowViewData: IWorkflowViewDataParams) => {
@@ -651,10 +607,10 @@ export const Workflow = forwardRef(
     const edgeTypes = useMemo(
       () => ({
         bezier: (edgeProps) => (
-          <CustomEdge {...edgeProps} setEdges={setEdges} />
+          <CustomEdge {...edgeProps} isRunning={isRunning} setEdges={setEdges} />
         ),
       }),
-      [setEdges]
+      [setEdges, isRunning]
     );
 
     const isRunningRef = useRef(isRunning);
@@ -695,7 +651,7 @@ export const Workflow = forwardRef(
       <div
         className={clsx(
           "dndflow sdk:w-full",
-          editAgentOpen && "editAgentOpen-workflow-inner"
+          sideDialogOpen && "aevatar-sideDialogOpen-workflow-inner"
         )}>
         <div
           className="reactflow-wrapper sdk:relative"
@@ -791,6 +747,7 @@ export const Workflow = forwardRef(
 
               <Button
                 variant="outline"
+                disabled={disabledRun}
                 onClick={async () => {
                   onRunningHandler();
                 }}

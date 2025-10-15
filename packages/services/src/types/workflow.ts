@@ -8,10 +8,30 @@ export interface IFetchAgentDetailsProps {
   formattedBusinessAgentGrainId: string;
   stateName: string;
 }
-export interface IFetchExecutionLogsProps {
+export interface IFetchLatestExecutionLogsProps {
   stateName: string;
   workflowId: string;
+}
+
+export interface IFetchExecutionLogsProps {
+  stateName: string;
+  queryString: string;
+  pageIndex: number;
+  pageSize: number;
+  sortFields: string;
+}
+
+export interface IFetchExecutionLogsResponse {
+  workUnitRecords: string;
+  children: string;
+  ctime: string;
+  startTime: string;
+  workUnitInfos: string;
+  endTime: string;
   roundId: number;
+  version: number;
+  workflowId: string;
+  status: string;
 }
 export interface IWorkUnitRelationsItem {
   grainId: string;
@@ -159,6 +179,46 @@ export interface IRunWorkflowResponse {
   workflowId: string;
   publishedAgent: IAgentInfo;
 }
+export enum IGetWorkflowLogsLevel {
+  Information = "Information",
+  Warning = "Warning",
+  Error = "Error",
+  Debug = "Debug",
+}
+export interface IGetWorkflowLogsProps {
+  workflowId: string;
+  roundId?: number;
+  grainId?: string;
+  level?: IGetWorkflowLogsLevel;
+  messagePattern?: string;
+  pageIndex?: number;
+  pageSize?: number;
+}
+
+export interface IGetWorkflowLogsResult {
+  data: IGetWorkflowLogsItem[];
+}
+
+export interface IGetWorkflowLogsItem {
+  timestamp: string;
+  appLog: {
+    message?: string;
+    logId: string;
+    time: string;
+    level?: IGetWorkflowLogsLevel | null;
+    exception: string | null;
+    traceId: string;
+    spanId: string;
+    logCategory: string;
+    workflowId: string;
+    roundId?: number | null;
+    grainId: string;
+    sourceContext: string;
+    application: string;
+    environment: string;
+    methodName: string;
+  };
+}
 
 export interface IWorkflowService {
   create(params: ICreateWorkflowParams): Promise<IAgentInfo>;
@@ -170,7 +230,12 @@ export interface IWorkflowService {
   ): Promise<IGetWorkflowResult<T>>;
   getAIModels<T = any>(props: IGetAIModelsProps): Promise<T>;
   fetchAutoComplete<T = any>(props: IFetchAutoCompleteProps): Promise<T>;
-  fetchExecutionLogs<T = any>(props: IFetchExecutionLogsProps): Promise<T>;
+  fetchLatestExecutionLogs<T = IFetchExecutionLogsResponse>(
+    props: IFetchLatestExecutionLogsProps
+  ): Promise<{ items: T[]; totalCount: number }>;
+  fetchExecutionLogs<T = IFetchExecutionLogsResponse>(
+    props: IFetchExecutionLogsProps
+  ): Promise<{ items: T[]; totalCount: number }>;
   fetchAgentDetails<T = any>(props: IFetchAgentDetailsProps): Promise<T>;
   generate<T = any>(props: IGenerateWorkflowProps): Promise<T>;
   start<T = any>(params: IStartWorkflowParams): Promise<T>;
@@ -181,4 +246,7 @@ export interface IWorkflowService {
     params: IWorkflowViewUpdateDataParams
   ): Promise<IAgentInfo>;
   publishWorkflowViewData(id: string): Promise<IAgentInfo>;
+  getWorkflowLogs(
+    props: IGetWorkflowLogsProps
+  ): Promise<IGetWorkflowLogsItem[]>;
 }

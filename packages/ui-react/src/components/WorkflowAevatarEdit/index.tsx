@@ -295,6 +295,7 @@ export default function WorkflowAevatarEdit({
                           onChange={field?.onChange}
                           className={clsx(
                             "sdk:bg-[var(--sdk-bg-background)]",
+                            "sdk:text-sm",
                             field?.disabled &&
                               "sdk:bg-[var(--sdk-bg-black-light)]"
                           )}
@@ -324,7 +325,8 @@ export default function WorkflowAevatarEdit({
                             className={clsx(
                               "sdk:bg-[var(--sdk-bg-background)]",
                               field?.disabled &&
-                                "sdk:bg-[var(--sdk-bg-black-light)]"
+                                "sdk:bg-[var(--sdk-bg-black-light)]",
+                              "sdk:text-sm"
                             )}>
                             <SelectValue placeholder="Select" />
                           </SelectTrigger>
