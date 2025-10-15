@@ -25,6 +25,7 @@ interface WorkflowListInnerProps {
   ) => void;
   onViewExecutions?: (workflowId: string) => void;
   onNewWorkflow: () => void;
+  onDuplicateWorkflow: (workflow: IWorkflowCoordinatorState & IAgentInfoDetail) => void;
 }
 
 const actionItemCls =
@@ -46,6 +47,7 @@ export const emptyNode = (
 enum ActionType {
   OpenWorkflow = "openWorkflow",
   ViewExecutions = "ViewExecutions",
+  DuplicateWorkflow = "DuplicateWorkflow",
   DeleteWorkflow = "deleteWorkflow",
 }
 
@@ -58,6 +60,7 @@ export default function WorkflowListInner({
   onDeleteWorkflow,
   onViewExecutions,
   onNewWorkflow,
+  onDuplicateWorkflow,
 }: WorkflowListInnerProps) {
   const [deleteItemId, setDeleteItemId] = useState<string | null>(null);
   const tableData = useMemo(
@@ -81,6 +84,8 @@ export default function WorkflowListInner({
                 console.log("value===", value);
                 if (value === ActionType.OpenWorkflow) {
                   onEditWorkflow?.(item.id);
+                } else if (value === ActionType.DuplicateWorkflow) {
+                  onDuplicateWorkflow?.(item);
                 } else if (value === ActionType.ViewExecutions) {
                   onViewExecutions?.(item.id);
                 } else if (value === ActionType.DeleteWorkflow) {
@@ -120,6 +125,14 @@ export default function WorkflowListInner({
                   <SelectItem
                     className={clsx(
                       actionItemCls,
+                      "aevatar-workflow-action-select-view"
+                    )}
+                    value={ActionType.DuplicateWorkflow}>
+                    Duplicate
+                  </SelectItem>
+                  <SelectItem
+                    className={clsx(
+                      actionItemCls,
                       "sdk:text-[var(--sdk-warning-color)] sdk:hover:text-[var(--sdk-warning-color)]",
                       "aevatar-workflow-action-select-delete"
                     )}
@@ -132,7 +145,7 @@ export default function WorkflowListInner({
           </div>
         ),
       })),
-    [workflowsList, onEditWorkflow, onViewExecutions]
+    [workflowsList, onEditWorkflow, onViewExecutions, onDuplicateWorkflow]
   );
 
   return (

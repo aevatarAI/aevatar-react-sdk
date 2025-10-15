@@ -11,6 +11,7 @@ import { aevatarAI } from "../../utils";
 import type {
   IAgentInfoDetail,
   IWorkflowCoordinatorState,
+  IWorkflowViewDataParams,
 } from "@aevatar-react-sdk/services";
 import { handleErrorMessage } from "../../utils/error";
 import { useToast } from "../../hooks/use-toast";
@@ -20,11 +21,12 @@ import DeleteGAevatarConfirm from "../DeleteGAevatarConfirm";
 import clsx from "clsx";
 import Loading from "../../assets/svg/loading.svg?react";
 import { IS_NULL_ID } from "../../constants";
+import type { IWorkflowConfigurationState } from "../WorkflowConfiguration";
 
 export interface IWorkflowListProps {
   className?: string;
   onEditWorkflow?: (workflowId: string) => void;
-  onNewWorkflow?: () => void;
+  onNewWorkflow?: (workflow?: IWorkflowConfigurationState) => void;
 }
 
 export interface IWorkflowListRef {
@@ -254,6 +256,33 @@ export default forwardRef(function WorkflowList(
     }
   }, [onDelete, toast]);
 
+  const onDuplicateWorkflow = useCallback(
+    async (workflow: IWorkflowCoordinatorState & IAgentInfoDetail) => {
+      console.log("workflowId===", workflow);
+      const workflowName = `${workflow.name}_1`;
+      const workflowNodeList = workflow.properties?.workflowNodeList?.map(
+        (item) => {
+          return {
+            ...item,
+            agentId: IS_NULL_ID,
+          };
+        }
+      );
+      const data: IWorkflowViewDataParams = {
+        name: workflowName,
+        properties: {
+          workflowNodeList: workflowNodeList,
+          workflowNodeUnitList: workflow.properties?.workflowNodeUnitList,
+        },
+      };
+      onNewWorkflow?.({
+        workflowViewData: data,
+        workflowName,
+      });
+    },
+    [onNewWorkflow]
+  );
+
   return (
     <>
       <WorkflowListInner
@@ -263,6 +292,7 @@ export default forwardRef(function WorkflowList(
         onNewWorkflow={onNewWorkflow}
         onEditWorkflow={onEditWorkflow}
         onDeleteWorkflow={onDeleteWorkflow}
+        onDuplicateWorkflow={onDuplicateWorkflow}
       />
       <DeleteGAevatarConfirm
         open={deleteOpen}
