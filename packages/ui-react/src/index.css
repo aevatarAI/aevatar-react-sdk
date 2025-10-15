@@ -1,4 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+@import "@fontsource/geist/400.css";
+@import "@fontsource/geist/500.css";
+@import "@fontsource/geist/600.css";
+@import "@fontsource/geist/700.css";
 
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme) prefix(sdk);
@@ -6,14 +9,18 @@
 
 @layer theme {
   :root {
-    --sdk-text-workflow-title: linear-gradient(to right, #ffffff, #999999);
-    --sdk-border-color: #303030;
-    --sdk-gray-color: #b9b9b9;
-    --sdk-workflow-background: #000000;
-    --sdk-card-background: #141415;
-    --sdk-gray-text: #606060;
-    --sdk-success-color: #53ff8a;
-    --sdk-warning-color: #ff2e2e;
+    --sdk-text-workflow-title: linear-gradient(
+      to right,
+      var(--sdk-color-text-primary),
+      var(--sdk-color-text-tertiary)
+    );
+    --sdk-border-color: var(--sdk-color-border-black-light);
+    --sdk-gray-color: var(--sdk-color-gray-light);
+    --sdk-workflow-background: var(--sdk-bg-background);
+    --sdk-card-background: var(--sdk-sidebar-background);
+    --sdk-gray-text: var(--sdk-color-border-primary);
+    --sdk-success-color: var(--sdk-color-success);
+    --sdk-warning-color: var(--sdk-color-warning);
     /* https://tailwindcss.com/docs/responsive-design#using-custom-breakpoints */
     --sdk-breakpoint-sm: 640px;
     --sdk-breakpoint-md: 768px;
@@ -24,15 +31,145 @@
     --sdk-breakpoint-3xl: 1920px;
     --sdk-breakpoint-4xl: 2560px;
   }
+
+  /* Dark theme */
+  :root[data-theme="dark"] {
+    --sdk-color-bg-primary: #141415;
+    --sdk-color-bg-secondary: #191919;
+    --sdk-bg-background: #09090b;
+    --sdk-bg-muted-foreground: #fafafa;
+    --sdk-bg-popover: #09090b;
+    --sdk-bg-primary: #fafafa;
+    --sdk-bg-muted: #18181b;
+    --sdk-bg-logs: #202023;
+    --sdk-bg-accent: #27272a;
+    --sdk-sidebar-background: #18181b;
+    --sdk-sidebar-foreground: #f4f4f5;
+    --sdk-color-bg-tertiary: #272728;
+    --sdk-color-text-primary: #fafafa;
+    --sdk-color-text-foreground: #fafafa;
+    --sdk-border-foreground: #fafafa;
+    --sdk-color-text-secondary: #b9b9b9;
+    --sdk-color-text-tertiary: var(--sdk-color-border-primary);
+    --sdk-color-border-primary: #3f3f46;
+    --sdk-color-input: #3f3f46;
+    --sdk-color-sidebar-border: #27272a;
+    --sdk-color-border-secondary: #404040;
+    --sdk-color-border-black-light: #3f3f46;
+    --sdk-color-border-gray-deep: #404040;
+    --sdk-color-border-gray-300: #4b5563;
+    --sdk-color-border-gray-400: #6b7280;
+    --sdk-color-border-gray-500: #9ca3af;
+    --sdk-color-border-gray-600: #d1d5db;
+    --sdk-color-gray-light: #b9b9b9;
+    --sdk-color-dialog-dark: #09090b;
+    --sdk-muted-foreground: #a1a1aa;
+    --sdk-muted-foreground-border: #a1a1aa;
+
+    --sdk-primary-foreground: #18181b;
+    --sdk-primary-foreground-text: #fafafa;
+    --sdk-bg-black-light: #3f3f46;
+    --sdk-hover-primary: #f4f4f5;
+    --sdk-bg-dot: #37373b;
+    --sdk-workflow-menu-bg: #151517;
+    /* Additional colors for hardcoded replacements */
+
+    --sdk-color-success: #22c55e;
+    --sdk-color-warning: #b91c1c;
+    --sdk-color-error: #ff2e2e;
+    --sdk-color-destructive-foreground: #fafafa;
+
+    --sdk-color-error-bg: rgba(255, 46, 46, 0.15);
+    --sdk-color-pending-bg: #27272a;
+    --sdk-color-info: #afc6dd;
+    --sdk-color-input-node: #0041d0;
+    --sdk-color-output-node: #ff0072;
+    --sdk-color-selection-bg: #007acc;
+    --sdk-color-selection-text: #fafafa;
+    --sdk-accent-teal: #2dd4bf;
+    --sdk-accent-pink: #f472b6;
+    --sdk-running-text: #8b8b8d;
+  }
+
+  /* Light theme (default) */
+  :root[data-theme="light"] {
+    --sdk-color-bg-primary: #ffffff;
+    --sdk-color-bg-secondary: #f5f5f5;
+    --sdk-bg-muted: #f9f9fa;
+    --sdk-bg-muted-foreground: #09090b;
+    --sdk-bg-logs: #f7f7f7;
+    --sdk-sidebar-background: #fafafa;
+    --sdk-sidebar-foreground: #3f3f46;
+    --sdk-bg-background: #ffffff;
+    --sdk-bg-popover: #ffffff;
+
+    --sdk-bg-primary: #18181b;
+    --sdk-bg-accent: #f4f4f5;
+    --sdk-color-bg-tertiary: #e5e5e5;
+    --sdk-color-text-primary: #09090b;
+    --sdk-color-text-foreground: #09090b;
+
+    --sdk-border-foreground: #09090b;
+    --sdk-color-text-secondary: #666666;
+    --sdk-color-text-tertiary: #999999;
+    --sdk-color-border-primary: #e4e4e7;
+    --sdk-color-sidebar-border: #e4e4e7;
+    --sdk-color-input: #e4e4e7;
+    --sdk-color-border-secondary: #cccccc;
+    --sdk-color-border-black-light: #e4e4e7;
+    --sdk-color-border-gray-deep: var(--sdk-color-border-primary);
+    --sdk-color-border-gray-300: #d1d5db;
+    --sdk-color-border-gray-400: #9ca3af;
+    --sdk-color-border-gray-500: #6b7280;
+    --sdk-color-border-gray-600: #4b5563;
+    --sdk-color-gray-light: #b9b9b9;
+    --sdk-color-dialog-dark: #ffffff;
+    --sdk-muted-foreground: #71717a;
+    --sdk-muted-foreground-border: #71717a;
+    --sdk-primary-foreground: #fafafa;
+    --sdk-bg-black-light: #e4e4e7;
+    --sdk-hover-primary: #27272a;
+    --sdk-primary-foreground-text: #18181b;
+    --sdk-bg-dot: #d4d4d7;
+    --sdk-workflow-menu-bg: #fbfbfb;
+    /* Additional colors for hardcoded replacements */
+
+    --sdk-color-success: #16a34a;
+    --sdk-color-warning: #dc2626;
+    --sdk-color-error: #ff2e2e;
+    --sdk-color-pending-bg: #f4f4f5;
+    --sdk-color-destructive-foreground: #fafafa;
+    --sdk-color-error-bg: rgba(255, 46, 46, 0.15);
+    --sdk-color-info: #afc6dd;
+    --sdk-color-input-node: #0041d0;
+    --sdk-color-output-node: #ff0072;
+    --sdk-color-selection-bg: #0066cc;
+    --sdk-color-selection-text: #ffffff;
+    --sdk-accent-teal: #0f766e;
+    --sdk-accent-pink: #be185d;
+    --sdk-running-text: #818182;
+  }
 }
+
+/* Text selection styles */
+::selection {
+  background-color: var(--sdk-color-selection-bg);
+  color: var(--sdk-color-selection-text);
+}
+
+::-moz-selection {
+  background-color: var(--sdk-color-selection-bg);
+  color: var(--sdk-color-selection-text);
+}
+
 .sdk\:workflow-common {
-  @apply sdk:bg-black sdk:text-white;
+  @apply sdk:bg-[var(--sdk-bg-background)] sdk:text-[var(--sdk-color-text-primary)];
 }
 .sdk\:workflow-common-border {
   border-color: var(--sdk-border-color);
 }
 .sdk\:workflow-common-bg {
-  @apply sdk:bg-[var(--sdk-card-background)];
+  @apply sdk:bg-[var(--sdk-sidebar-background)];
 }
 .sdk\:workflow-common-desc-bg {
   @apply sdk:bg-[var(--sdk-border-color)];
@@ -48,27 +185,24 @@
   @apply sdk:text-[var(--sdk-warning-color)];
 }
 .sdk\:workflow-title {
-  background: var(--sdk-text-workflow-title);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--sdk-color-text-primary);
 }
 .sdk\:workflow-common-border-stimulate {
-  @apply sdk:text-white sdk:border-[var(--sdk-border-color)] sdk:text-[12px];
+  @apply sdk:text-[var(--sdk-color-text-primary)] sdk:border-[var(--sdk-border-color)] sdk:text-[12px];
 }
 .sdk\:workflow-title-button-save {
-  @apply sdk:bg-white sdk:text-black sdk:text-[12px];
+  @apply sdk:bg-[var(--sdk-color-bg-primary)] sdk:text-[var(--sdk-color-text-primary)] sdk:text-[12px];
 }
 
 .sdk\:workflow-title-button-save-disabled {
-  @apply sdk:cursor-not-allowed sdk:bg-[#606060] sdk:text-[#B9B9B9];
+  @apply sdk:cursor-not-allowed sdk:bg-[var(--sdk-color-text-tertiary)] sdk:text-[var(--sdk-muted-foreground)];
 }
 
 .sdk\:workflow-sidebar-title {
   @apply sdk:text-[12px] sdk:font-semibold;
 }
-.sdk\:font-outfit {
-  font-family: 'Outfit', sans-serif;
+.sdk\:font-geist {
+  font-family: "Geist", sans-serif;
 }
 .aevatarai-loading-icon {
   animation: aevatarai-rotate 1s linear infinite;
@@ -81,4 +215,41 @@
   100% {
     transform: rotate(0deg);
   }
+}
+
+/* SVG color overrides for theme support */
+.sdk-svg-theme {
+  fill: var(--sdk-color-text-primary);
+}
+
+.sdk-svg-theme-secondary {
+  fill: var(--sdk-color-text-secondary);
+}
+
+.sdk-svg-theme-tertiary {
+  fill: var(--sdk-color-text-tertiary);
+}
+
+.sdk-svg-theme-success {
+  fill: var(--sdk-color-success);
+}
+
+.sdk-svg-theme-warning {
+  fill: var(--sdk-color-warning);
+}
+
+.sdk-svg-theme-error {
+  fill: var(--sdk-color-error);
+}
+
+.sdk-svg-theme-info {
+  fill: var(--sdk-color-info);
+}
+
+.sdk-svg-theme-border {
+  fill: var(--sdk-color-border-primary);
+}
+
+.sdk-svg-theme-bg {
+  fill: var(--sdk-color-bg-primary);
 }

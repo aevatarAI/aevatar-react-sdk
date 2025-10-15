@@ -14,6 +14,10 @@ vi.mock("@aevatar-react-sdk/services", () => ({
   Services: vi.fn().mockImplementation(() => ({
     agent: {
       createAgent: vi.fn(),
+      getAgentInfo: vi.fn(),
+    },
+    workflow: {
+      getWorkflow: vi.fn(),
     },
   })),
   Connect: vi.fn().mockImplementation(() => ({
@@ -239,5 +243,220 @@ describe("AevatarAI", () => {
     const result = await aevatarAI.getAuthTokenFromStorage(params);
     expect(result).toBeUndefined();
     // expect(getAevatarJWT).toHaveBeenCalled(); // Comment out this assertion, the main file may not call it
+  });
+
+  it("should get workflow unit relation by agent id with currentWorkUnitInfos", async () => {
+    const agentId = "test-agent-id";
+    const mockAgentInfo = {
+      id: agentId,
+      name: "Test Agent",
+      properties: {
+        workflowUnitList: [
+          {
+            grainId: "unit-1",
+            nextGrainId: "unit-2",
+            extendedData: { xPosition: "100", yPosition: "200" },
+          },
+        ],
+      },
+    };
+    const mockWorkflowResult = {
+      items: [
+        {
+          currentWorkUnitInfos: JSON.stringify([
+            {
+              grainId: "unit-3",
+              nextGrainId: "unit-4",
+              extendedData: { xPosition: "300", yPosition: "400" },
+            },
+          ]),
+        },
+      ],
+    };
+
+    vi.mocked(aevatarAI.services.agent.getAgentInfo).mockResolvedValue(mockAgentInfo);
+    vi.mocked(aevatarAI.services.workflow.getWorkflow).mockResolvedValue(mockWorkflowResult);
+
+    const result = await aevatarAI.getWorkflowUnitRelationByAgentId(agentId);
+
+    expect(aevatarAI.services.agent.getAgentInfo).toHaveBeenCalledWith(agentId);
+    expect(aevatarAI.services.workflow.getWorkflow).toHaveBeenCalledWith({
+      stateName: "WorkflowCoordinatorState",
+      queryString: `_id:${agentId}`,
+    });
+    expect(result).toEqual({
+      workflowName: "Test Agent",
+      workUnitRelations: [
+        {
+          grainId: "unit-3",
+          nextGrainId: "unit-4",
+          extendedData: { xPosition: "300", yPosition: "400" },
+        },
+      ],
+    });
+  });
+
+  it("should get workflow unit relation by agent id with fallback to properties", async () => {
+    const agentId = "test-agent-id";
+    const mockAgentInfo = {
+      id: agentId,
+      name: "Test Agent",
+      properties: {
+        workflowUnitList: [
+          {
+            grainId: "unit-1",
+            nextGrainId: "unit-2",
+            extendedData: { xPosition: "100", yPosition: "200" },
+          },
+        ],
+      },
+    };
+    const mockWorkflowResult = {
+      items: [{}], // Empty currentWorkUnitInfos
+    };
+
+    vi.mocked(aevatarAI.services.agent.getAgentInfo).mockResolvedValue(mockAgentInfo);
+    vi.mocked(aevatarAI.services.workflow.getWorkflow).mockResolvedValue(mockWorkflowResult);
+
+    const result = await aevatarAI.getWorkflowUnitRelationByAgentId(agentId);
+
+    expect(result).toEqual({
+      workflowName: "Test Agent",
+      workUnitRelations: [
+        {
+          grainId: "unit-1",
+          nextGrainId: "unit-2",
+          extendedData: { xPosition: "100", yPosition: "200" },
+        },
+      ],
+    });
+  });
+
+  it("should get workflow unit relation by agent id with empty results", async () => {
+    const agentId = "test-agent-id";
+    const mockAgentInfo = {
+      id: agentId,
+      name: "Test Agent",
+      properties: {},
+    };
+    const mockWorkflowResult = {
+      items: [],
+    };
+
+    vi.mocked(aevatarAI.services.agent.getAgentInfo).mockResolvedValue(mockAgentInfo);
+    vi.mocked(aevatarAI.services.workflow.getWorkflow).mockResolvedValue(mockWorkflowResult);
+
+    const result = await aevatarAI.getWorkflowUnitRelationByAgentId(agentId);
+
+    expect(result).toEqual({
+      workflowName: "Test Agent",
+      workUnitRelations: [],
+    });
+  });
+
+  it("should get workflow view data by agent id", async () => {
+    const agentId = "test-agent-id";
+    const mockAgentInfo = {
+      id: agentId,
+      name: "Test Workflow View",
+      properties: {
+        workflowCoordinatorGAgentId: "coordinator-id",
+        workflowNodeList: [
+          {
+            nodeId: "node-1",
+            name: "Node 1",
+            agentType: "test-type",
+            jsonProperties: "{}",
+            extendedData: { xPosition: "100", yPosition: "200" },
+          },
+        ],
+        workflowNodeUnitList: [
+          {
+            nodeId: "node-1",
+            nextNodeId: "node-2",
+          },
+        ],
+      },
+    };
+
+    vi.mocked(aevatarAI.services.agent.getAgentInfo).mockResolvedValue(mockAgentInfo);
+
+    const result = await aevatarAI.getWorkflowViewDataByAgentId(agentId);
+
+    expect(aevatarAI.services.agent.getAgentInfo).toHaveBeenCalledWith(agentId);
+    expect(result).toEqual({
+      workflowName: "Test Workflow View",
+      workflowId: "coordinator-id",
+      workflowViewData: {
+        name: "Test Workflow View",
+        properties: {
+          workflowNodeList: [
+            {
+              nodeId: "node-1",
+              name: "Node 1",
+              agentType: "test-type",
+              jsonProperties: "{}",
+              extendedData: { xPosition: "100", yPosition: "200" },
+            },
+          ],
+          workflowNodeUnitList: [
+            {
+              nodeId: "node-1",
+              nextNodeId: "node-2",
+            },
+          ],
+        },
+      },
+    });
+  });
+
+  it("should get workflow view data by agent id with minimal data", async () => {
+    const agentId = "test-agent-id";
+    const mockAgentInfo = {
+      id: agentId,
+      name: "Test Workflow View",
+      properties: {},
+    };
+
+    vi.mocked(aevatarAI.services.agent.getAgentInfo).mockResolvedValue(mockAgentInfo);
+
+    const result = await aevatarAI.getWorkflowViewDataByAgentId(agentId);
+
+    expect(result).toEqual({
+      workflowName: "Test Workflow View",
+      workflowId: undefined,
+      workflowViewData: {
+        name: "Test Workflow View",
+        properties: {
+          workflowNodeList: undefined,
+          workflowNodeUnitList: undefined,
+        },
+      },
+    });
+  });
+
+  it("should call getAuthToken and return token from API", async () => {
+    const mockToken = "Bearer mockAccessToken";
+    vi.mocked(getAevatarJWT).mockResolvedValueOnce(undefined);
+    vi.mocked(aevatarAI.connectServices.getConnectToken).mockResolvedValueOnce({
+      token_type: "Bearer",
+      access_token: "mockAccessToken",
+    });
+
+    const result = await aevatarAI.getAuthToken(mockParams);
+
+    expect(result).toBe(mockToken);
+  });
+
+  it("should call getAuthToken and return token from storage", async () => {
+    const mockToken = "Bearer token";
+    vi.mocked(getAevatarJWT).mockResolvedValueOnce({
+      token_type: "Bearer",
+      access_token: "token",
+    });
+
+    const result = await aevatarAI.getAuthToken(mockParams);
+
+    expect(result).toBe(mockToken);
   });
 });

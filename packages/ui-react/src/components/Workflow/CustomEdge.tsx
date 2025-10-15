@@ -42,7 +42,7 @@ const CustomEdge = memo(
           <button
             type="button"
             onClick={handleDelete}
-            className="sdk:bg-[#141415] sdk:text-[#6F6F6F] sdk:border sdk:border-[#303030] sdk:rounded-[4px] sdk:p-1 sdk:w-6 sdk:h-6 sdk:flex sdk:items-center sdk:justify-center sdk:cursor-pointer">
+            className="sdk:bg-[var(--sdk-color-bg-primary)] sdk:relative sdk:text-[var(--sdk-color-text-secondary)] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:rounded-[4px] sdk:p-1 sdk:w-6 sdk:h-6 sdk:flex sdk:items-center sdk:justify-center sdk:cursor-pointer">
             <DeleteIcon width={16} height={16} />
           </button>
         </foreignObject>

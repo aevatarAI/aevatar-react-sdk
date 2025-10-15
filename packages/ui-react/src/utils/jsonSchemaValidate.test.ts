@@ -116,9 +116,9 @@ describe("validateSchemaField", () => {
   });
 
   it("returns value for fallback", () => {
-    const schema = { type: "unknown" };
-    const { errors, param } = validateSchemaField("foo", schema, 123);
+    const schema = { type: "string" };
+    const { errors, param } = validateSchemaField("foo", schema, "123");
     expect(errors.length).toBe(0);
-    expect(param).toBe(123);
+    expect(param).toBe("123");
   });
 }); 

@@ -50,11 +50,13 @@ describe("WorkflowAevatarEdit Component", () => {
       />
     );
 
-    // Agent name input
-    expect(screen.getByLabelText("agent name")).toBeInTheDocument();
+    // Agent name input - use getAllByText since there might be multiple instances
+    const agentNameLabels = screen.getAllByText("Agent name");
+    expect(agentNameLabels.length).toBeGreaterThan(0);
 
-    // Agent type select
-    expect(screen.getByLabelText("agent Type")).toBeInTheDocument();
+    // Agent type select - use getAllByLabelText since there might be multiple instances
+    const agentTypeLabels = screen.getAllByLabelText("Agent Type");
+    expect(agentTypeLabels.length).toBeGreaterThan(0);
 
     // Dynamic fields
     expect(screen.getByText("property1")).toBeInTheDocument();

@@ -1,13 +1,13 @@
 .aevatarai-text-gradient {
-  background: linear-gradient(91deg, #fff 15%, #999 98.97%);
+  /* background: linear-gradient(91deg, #fff 15%, #999 98.97%);
   background-clip: text;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent; */
 }
 
 .aevatarai-text-gradient-1 {
-  background: linear-gradient(91deg, #fff 6%, #999 37.97%);
+  /* background: linear-gradient(91deg, #fff 6%, #999 37.97%);
   background-clip: text;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent; */
 }

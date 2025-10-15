@@ -8,6 +8,7 @@ import { clientOnly } from "vike-react/clientOnly";
 const ProviderComponent = clientOnly(
   () => import("../components/providers/webProvider")
 );
+
 export default function LayoutDefault({
   children,
 }: {

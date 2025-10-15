@@ -5,6 +5,7 @@ import type {
   RefreshTokenConfig,
   IClientAuthTokenParams,
   IWorkflowUnitListItem,
+  IWorkflowViewDataParams,
 } from "@aevatar-react-sdk/services";
 
 // biome-ignore lint/suspicious/noEmptyInterface: <explanation>
@@ -17,6 +18,10 @@ export interface IAevatarAIMethods {
   getWorkflowUnitRelationByAgentId(agentId: string): Promise<{
     workflowName: string;
     workUnitRelations: IWorkflowUnitListItem[];
+  }>;
+  getWorkflowViewDataByAgentId(agentId: string): Promise<{
+    workflowName: string;
+    workflowViewData: IWorkflowViewDataParams;
   }>;
 }
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { reducer, useToast, toast } from "./use-toast";
 import * as React from "react";
-import { render } from "@testing-library/react";
+import { render, act } from "@testing-library/react";
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -86,8 +86,10 @@ describe("useToast hook", () => {
   it("provides toasts and dismiss", async () => {
     vi.useFakeTimers();
     render(<TestComponent />);
-    vi.advanceTimersByTime(20);
-    await Promise.resolve();
+    await act(async () => {
+      vi.advanceTimersByTime(20);
+      await Promise.resolve();
+    });
     expect(document.body.textContent).toContain("A");
     vi.useRealTimers();
   });

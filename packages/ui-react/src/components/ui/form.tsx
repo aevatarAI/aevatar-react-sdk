@@ -104,8 +104,8 @@ const FormLabel = React.forwardRef<
       htmlFor={formItemId}
       {...props}
       className={clsx(
-        "sdk:text-[#B9B9B9] sdk:text-[12px] sdk:font-semibold sdk:self-stretch sdk:font-syne",
-        error && "sdk:text-[#FF2E2E]",
+        "sdk:text-[var(--sdk-color-text-primary)] sdk:text-[12px] sdk:font-semibold sdk:self-stretch sdk:font-syne",
+        error && "sdk:text-[var(--sdk-warning-color)]",
         className
       )}>
       {children}
@@ -132,7 +132,7 @@ const FormControl = React.forwardRef<
       }
       aria-invalid={!!error}
       {...props}>
-      <div className={clsx(error && "sdk:border sdk:border-[#FF2E2E]")}>
+      <div className={clsx(error && "sdk:border sdk:border-[var(--sdk-warning-color)]")}>
         {children}
       </div>
     </Slot>
@@ -150,7 +150,7 @@ const FormDescription = React.forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn("sdk:text-sm sdk:text-muted-foreground", className)}
+      className={cn("sdk:text-sm sdk:text-[var(--sdk-muted-foreground)]", className)}
       {...props}
     />
   );
@@ -162,7 +162,7 @@ const FormMessage = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message) : children;
+  const body = error ? String(error?.message ?? "") : children;
 
   if (!body) {
     return null;
@@ -173,7 +173,7 @@ const FormMessage = React.forwardRef<
       ref={ref}
       id={formMessageId}
       className={cn(
-        "sdk:text-[12px] sdk:font-outfit sdk:text-destructive sdk:text-[#FF2E2E]",
+        "sdk:text-[12px] sdk:font-geist sdk:text-destructive sdk:text-[var(--sdk-warning-color)]",
         className
       )}
       {...props}>

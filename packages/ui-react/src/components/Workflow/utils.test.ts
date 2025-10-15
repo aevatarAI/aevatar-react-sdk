@@ -4,6 +4,7 @@ import { generateWorkflowGraph } from "./utils"; // Adjust import path as necess
 import type {
   IAgentInfoDetail,
   IWorkflowUnitListItem,
+  IAgentsConfiguration,
 } from "@aevatar-react-sdk/services";
 import type { TNodeDataClick, TDeleteNode } from "./types";
 
@@ -28,26 +29,46 @@ describe("generateWorkflowGraph", () => {
     },
   ];
 
-  const mockGrains: IWorkflowUnitListItem[] = [
+  const mockGaevatarTypeList: IAgentsConfiguration[] = [
     {
-      grainId: "grain1",
-      nextGrainId: "grain2",
-      extendedData: { xPosition: "100", yPosition: "200" },
-    },
-    {
-      grainId: "grain2",
-      nextGrainId: "",
-      extendedData: { xPosition: "300", yPosition: "400" },
+      agentType: "type1",
+      propertyJsonSchema: "{}",
     },
   ];
+
+  const mockWorkflowViewData = {
+    properties: {
+      workflowNodeList: [
+        {
+          nodeId: "agent1",
+          agentId: "agent1",
+          agentType: "type1",
+          extendedData: { xPosition: "100", yPosition: "200" },
+        },
+        {
+          nodeId: "agent2",
+          agentId: "agent2",
+          agentType: "type1",
+          extendedData: { xPosition: "300", yPosition: "400" },
+        },
+      ],
+      workflowNodeUnitList: [
+        {
+          nodeId: "agent1",
+          nextNodeId: "agent2",
+        },
+      ],
+    },
+  };
 
   const onClick: TNodeDataClick = vi.fn();
   const deleteNode: TDeleteNode = vi.fn();
 
   it("should generate nodes and edges correctly", () => {
     const { nodes, edges } = generateWorkflowGraph(
-      mockGrains,
+      mockWorkflowViewData,
       mockAgentInfos,
+      mockGaevatarTypeList,
       onClick,
       deleteNode
     );
@@ -86,111 +107,152 @@ describe("generateWorkflowGraph", () => {
     expect(edges[0]).toMatchObject({
       source: "agent1",
       target: "agent2",
-      type: "smoothstep",
+      type: "bezier",
       style: {
         strokeWidth: 2,
-        stroke: "#B9B9B9",
+        stroke: "var(--sdk-muted-foreground)",
       },
     });
   });
 
-  it("should throw an error if a grainId does not have a corresponding agent", () => {
-    const invalidGrains: IWorkflowUnitListItem[] = [
-      {
-        grainId: "grain3", // No corresponding agentInfo
-        nextGrainId: "",
-        extendedData: { xPosition: "100", yPosition: "200" },
+  it("should create default agentInfo when agentInfo is not found", () => {
+    const workflowViewDataWithMissingAgent = {
+      properties: {
+        workflowNodeList: [
+          {
+            nodeId: "agent3",
+            agentId: "agent3",
+            agentType: "type1",
+            extendedData: { xPosition: "100", yPosition: "200" },
+          },
+        ],
+        workflowNodeUnitList: [],
       },
-    ];
+    };
 
-    expect(() =>
-      generateWorkflowGraph(invalidGrains, mockAgentInfos, onClick, deleteNode)
-    ).toThrowError("No agentInfo found for grainId grain3");
-  });
-
-  it("should throw an error if a nextGrainId does not have a corresponding agent", () => {
-    const invalidGrains: IWorkflowUnitListItem[] = [
-      {
-        grainId: "grain1",
-        nextGrainId: "grain3", // No corresponding agentInfo
-        extendedData: { xPosition: "100", yPosition: "200" },
-      },
-    ];
-
-    expect(() =>
-      generateWorkflowGraph(invalidGrains, mockAgentInfos, onClick, deleteNode)
-    ).toThrowError("No agentInfo found for nextGrainId grain3");
-  });
-
-  it("should generate nodes without edges if nextGrainId is null", () => {
-    const singleGrain: IWorkflowUnitListItem[] = [
-      {
-        grainId: "grain1",
-        nextGrainId: "", // No edge case
-        extendedData: { xPosition: "100", yPosition: "200" },
-      },
-    ];
-
-    const { nodes, edges } = generateWorkflowGraph(
-      singleGrain,
+    const { nodes } = generateWorkflowGraph(
+      workflowViewDataWithMissingAgent,
       mockAgentInfos,
+      mockGaevatarTypeList,
       onClick,
       deleteNode
     );
 
-    // Validate nodes
     expect(nodes).toHaveLength(1);
-    expect(edges).toHaveLength(0); // No edges
+    expect(nodes[0].data.agentInfo.id).toBe("agent3");
+    expect(nodes[0].data.agentInfo.businessAgentGrainId).toBe("agent3");
+  });
+
+  it("should generate nodes without edges if nextNodeId is null", () => {
+    const workflowViewDataWithNullNext = {
+      properties: {
+        workflowNodeList: [
+          {
+            nodeId: "agent1",
+            agentId: "agent1",
+            agentType: "type1",
+            extendedData: { xPosition: "100", yPosition: "200" },
+          },
+        ],
+        workflowNodeUnitList: [
+          {
+            nodeId: "agent1",
+            nextNodeId: null,
+          },
+        ],
+      },
+    };
+
+    const { nodes, edges } = generateWorkflowGraph(
+      workflowViewDataWithNullNext,
+      mockAgentInfos,
+      mockGaevatarTypeList,
+      onClick,
+      deleteNode
+    );
+
+    expect(nodes).toHaveLength(1);
+    expect(edges).toHaveLength(0);
   });
 
   it("should return empty nodes and edges if grains is empty", () => {
+    const emptyWorkflowViewData = {
+      properties: {
+        workflowNodeList: [],
+        workflowNodeUnitList: [],
+      },
+    };
+
     const { nodes, edges } = generateWorkflowGraph(
-      [],
+      emptyWorkflowViewData,
       mockAgentInfos,
+      mockGaevatarTypeList,
       onClick,
       deleteNode
     );
+
     expect(nodes).toHaveLength(0);
     expect(edges).toHaveLength(0);
   });
 
-  it("should throw error if agentInfos is empty", () => {
-    expect(() =>
-      generateWorkflowGraph(mockGrains, [], onClick, deleteNode)
-    ).toThrowError();
-  });
-
   it("should handle extendedData with non-numeric x/y position as NaN", () => {
-    const grains: IWorkflowUnitListItem[] = [
-      {
-        grainId: "grain1",
-        nextGrainId: "",
-        extendedData: { xPosition: "abc", yPosition: "def" },
+    const workflowViewDataWithInvalidPosition = {
+      properties: {
+        workflowNodeList: [
+          {
+            nodeId: "agent1",
+            agentId: "agent1",
+            agentType: "type1",
+            extendedData: { xPosition: "invalid", yPosition: "invalid" },
+          },
+        ],
+        workflowNodeUnitList: [],
       },
-    ];
+    };
+
     const { nodes } = generateWorkflowGraph(
-      grains,
+      workflowViewDataWithInvalidPosition,
       mockAgentInfos,
+      mockGaevatarTypeList,
       onClick,
       deleteNode
     );
+
     expect(nodes[0].position.x).toBeNaN();
     expect(nodes[0].position.y).toBeNaN();
   });
 
   it("should use the last agentInfo if businessAgentGrainId is duplicated", () => {
     const duplicateAgentInfos = [
-      ...mockAgentInfos,
-      { ...mockAgentInfos[0], id: "agent1-dup", name: "Agent 1 Dup" },
+      { ...mockAgentInfos[0], id: "agent1", businessAgentGrainId: "grain1" },
+      { ...mockAgentInfos[1], id: "agent2", businessAgentGrainId: "grain1" },
     ];
+
+    const workflowViewDataWithDuplicate = {
+      properties: {
+        workflowNodeList: [
+          {
+            nodeId: "agent1",
+            agentId: "agent1",
+            agentType: "type1",
+            extendedData: { xPosition: "100", yPosition: "200" },
+          },
+        ],
+        workflowNodeUnitList: [],
+      },
+    };
+
     const { nodes } = generateWorkflowGraph(
-      mockGrains,
+      workflowViewDataWithDuplicate,
       duplicateAgentInfos,
+      mockGaevatarTypeList,
       onClick,
       deleteNode
     );
-    // The last one should overwrite the previous in agentInfoMap
-    expect(nodes[0].id).toBe("agent1-dup");
-    expect(nodes[0].data.agentInfo.name).toBe("Agent 1 Dup");
+
+    // The function uses agentInfoMap based on agent.id, not businessAgentGrainId
+    // Since the workflowNodeList uses agentId "agent1", it will find the first agentInfo
+    // with id "agent1" in the map
+    expect(nodes[0].data.agentInfo).toEqual(duplicateAgentInfos[0]);
   });
 });

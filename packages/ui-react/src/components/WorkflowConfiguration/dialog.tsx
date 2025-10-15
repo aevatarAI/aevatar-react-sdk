@@ -29,7 +29,7 @@ export default function WorkflowDialog({
     <DialogPrimitive.Content
       className={clsx(
         "sdk:z-6 sdk:left-[19px] sdk:sm:left-auto  sdk:workflow-common-bg sdk:w-auto sdk:sm:w-[380px]  sdk:workflow-common-border sdk:border sdk:flex",
-        "sdk:absolute sdk:right-[20px]  sdk:top-[58px] sdk:sm:right-[11px] sdk:sm:top-[58px] sdk:sm:bottom-[13px]"
+        "sdk:absolute sdk:right-[20px]  sdk:top-[58px] sdk:sm:right-[11px] sdk:sm:top-[58px] sdk:sm:bottom-[8px]"
       )}>
       <DialogClose
         className="sdk:border-none"
@@ -38,20 +38,17 @@ export default function WorkflowDialog({
           onClose?.();
         }}>
         <CloseIcon
-          className="sdk:absolute sdk:right-[15px] sdk:sm:right-[6px] sdk:top-[17px] sdk:sm:top-[6px] sdk:cursor-pointer"
+          className="sdk:text-[var(--sdk-primary-foreground-text)] sdk:absolute sdk:right-[15px] sdk:sm:right-[6px] sdk:top-[17px] sdk:sm:top-[6px] sdk:cursor-pointer"
           width={24}
           height={24}
         />
       </DialogClose>
-      <div className="sdk:h-[500px] sdk:sm:h-full sdk:flex sdk:flex-col sdk:gap-[8px] sdk:w-full  sdk:pt-[8px] sdk:sm:pt-[8px] sdk:pb-[19px]">
-        <DialogTitle className="sdk:pb-[8px] sdk:text-[15px] sdk:font-outfit sdk:font-semibold sdk:border-b sdk:border-[#303030] sdk:aevatar-title">
-          <p
-            className="sdk:bg-gradient-to-r sdk:px-[8px] sdk:sm:px-[8px]  sdk:from-white sdk:to-[#999] sdk:bg-clip-text sdk:text-transparent"
-            style={{ WebkitTextFillColor: "transparent" }}>
-            agent configuration
-          </p>
+      <div className="sdk:h-[500px] sdk:sm:h-full sdk:flex sdk:flex-col sdk:gap-[8px] sdk:w-full  sdk:pt-[8px] sdk:sm:pt-[8px]">
+        <DialogTitle className="sdk:text-[var(--sdk-color-text-primary)] sdk:pb-[8px] sdk:text-[15px] sdk:font-geist sdk:font-semibold sdk:border-b sdk:border-[var(--sdk-color-border-primary)] sdk:aevatar-title">
+          <p className="sdk:px-[8px] sdk:sm:px-[8px] ">Agent configuration</p>
         </DialogTitle>
         <WorkflowAevatarEdit
+          key={nodeId || "default"}
           disabled={disabled}
           isNew={isNew}
           agentItem={agentItem}

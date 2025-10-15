@@ -1,6 +1,5 @@
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 import {
-  Button,
   Form,
   FormControl,
   FormField,
@@ -16,7 +15,6 @@ import {
 } from "../ui";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
-import Loading from "../../assets/svg/loading.svg?react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { sleep } from "@aevatar-react-sdk/utils";
 import { handleErrorMessage } from "../../utils/error";
@@ -26,9 +24,13 @@ import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import { validateSchemaField } from "../../utils/jsonSchemaValidate";
 import { renderSchemaField } from "../utils/renderSchemaField";
 import { useUpdateEffect } from "react-use";
+import { TooltipProvider } from "../ui/tooltip";
+import { TooltipDescriptor } from "../TooltipDescriptor";
 
 export interface IWorkflowAevatarEditProps {
-  agentItem?: Partial<IAgentInfoDetail>;
+  agentItem?: Partial<
+    IAgentInfoDetail & { defaultValues?: Record<string, any[]> }
+  >;
   isNew?: boolean;
   nodeId?: string;
   disabled?: boolean;
@@ -42,7 +44,8 @@ export interface IWorkflowAevatarEditProps {
       };
       agentId?: string;
     },
-    nodeId: string
+    nodeId: string,
+    propertyJsonSchema: string
   ) => Promise<IAgentInfoDetail>;
 }
 
@@ -53,7 +56,7 @@ export default function WorkflowAevatarEdit({
   onGaevatarChange,
   disabled,
 }: IWorkflowAevatarEditProps) {
-  const form = useForm<any>();
+  const form = useForm<any>({ mode: "onBlur" });
   const [btnLoading, setBtnLoading] = useState<boolean>();
   const { toast } = useToast();
 
@@ -61,6 +64,32 @@ export default function WorkflowAevatarEdit({
   useEffect(() => {
     btnLoadingRef.current = btnLoading;
   }, [btnLoading]);
+
+  const onGaevatarChangeRef = useRef(onGaevatarChange);
+  useEffect(() => {
+    onGaevatarChangeRef.current = onGaevatarChange;
+  }, [onGaevatarChange]);
+
+  // Debounce timer reference
+  const debounceTimerRef = useRef<NodeJS.Timeout>();
+
+  // Store latest values to avoid circular triggers
+  const agentItemRef = useRef(agentItem);
+  const isNewRef = useRef(isNew);
+  const nodeIdRef = useRef(nodeId);
+
+  // Update refs with latest values
+  useEffect(() => {
+    agentItemRef.current = agentItem;
+  }, [agentItem]);
+
+  useEffect(() => {
+    isNewRef.current = isNew;
+  }, [isNew]);
+
+  useEffect(() => {
+    nodeIdRef.current = nodeId;
+  }, [nodeId]);
 
   // useUpdateEffect(() => {
   //   form.setValue("agentName", agentItem?.name);
@@ -71,22 +100,21 @@ export default function WorkflowAevatarEdit({
   // }, [agentItem?.agentType]);
 
   useUpdateEffect(() => {
-    form.reset({
-      agentName: agentItem?.name ?? "",
-      agentType: agentItem?.agentType ?? "",
-    });
-  }, [agentItem, nodeId]);
+    form.setValue("agentName", agentItem?.name ?? "");
+    form.setValue("agentType", agentItem?.agentType ?? "");
+  }, [agentItem?.name, agentItem?.agentType, nodeId]);
 
   const JSONSchemaProperties: [string, JSONSchemaType<any>][] = useMemo(() => {
     return jsonSchemaParse(
       agentItem?.propertyJsonSchema,
-      agentItem?.properties
+      agentItem?.properties,
+      isNew ? agentItem?.defaultValues : undefined
     );
-  }, [agentItem]);
+  }, [agentItem, isNew]);
 
   const agentTypeList = useMemo(
     () => (agentItem?.agentType ? [agentItem?.agentType] : []),
-    [agentItem]
+    [agentItem?.agentType]
   );
 
   const onSubmit = useCallback(
@@ -125,7 +153,8 @@ export default function WorkflowAevatarEdit({
         await onGaevatarChange(
           isNew,
           { params: submitParams, agentId: agentItem?.id },
-          nodeId
+          nodeId,
+          agentItem?.propertyJsonSchema
         );
         await sleep(2000);
         setBtnLoading(undefined);
@@ -149,101 +178,186 @@ export default function WorkflowAevatarEdit({
     ]
   );
 
-  return (
-    <div
-      className="sdk:px-[8px] sdk:sm:px-[8px] sdk:overflow-auto sdk:flex-1"
-      key={nodeId}>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className={clsx("sdk:bg-[#141415] sdk:pb-[60px]")}>
-            <div className="sdk:flex sdk:flex-col sdk:gap-y-[16px]  sdk:items-start sdk:content-start sdk:self-stretch">
-              <FormField
-                key={"agentName"}
-                control={form.control}
-                disabled={disabled}
-                defaultValue={agentItem?.name}
-                name={"agentName"}
-                render={({ field }) => (
-                  <FormItem aria-labelledby="agentNameLabel">
-                    <FormLabel id="agentNameLabel">agent name</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="atomic-aevatar name"
-                        {...field}
-                        value={field?.value}
-                        onChange={field?.onChange}
-                        className={clsx(field?.disabled && "sdk:bg-[#303030]")}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="agentType"
-                defaultValue={agentItem?.agentType}
-                disabled={true}
-                render={({ field }) => (
-                  <FormItem aria-labelledby="agentTypeLabel">
-                    <FormLabel id="agentTypeLabel">agent Type</FormLabel>
-                    <Select
-                      value={field?.value}
-                      disabled={field?.disabled}
-                      // onValueChange={(values) => {
-                      //   onAgentTypeChange(values, field);
-                      // }}
-                    >
-                      <FormControl>
-                        <SelectTrigger 
-                          aria-disabled={field?.disabled}
-                          className={clsx(field?.disabled && "sdk:bg-[#303030]")}>
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="sdk:w-[192px]!">
-                        {agentTypeList.map((agentType) => (
-                          <SelectItem key={agentType} value={agentType}>
-                            {agentType}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+  // Actual submit function (will be called after debounce)
+  const actualSubmit = useCallback((values: any) => {
+    // Get current form values inside function to avoid frequent triggers
+    const currentFormValues = values;
+    // Calculate JSONSchemaProperties inside function to avoid dependency issues
+    const currentJSONSchemaProperties = jsonSchemaParse(
+      agentItemRef.current?.propertyJsonSchema,
+      agentItemRef.current?.properties
+    );
 
-              {/* Render schema fields recursively */}
-              {JSONSchemaProperties?.map(([name, schema]) =>
-                renderSchemaField({
-                  form,
-                  name,
-                  schema,
-                  selectContentCls: "sdk:w-[192px]!",
-                  disabled,
-                })
-              )}
+    const params: any = {};
+    currentJSONSchemaProperties?.forEach(([name, schema]) => {
+      const { param } = validateSchemaField(
+        name,
+        schema,
+        currentFormValues[name]
+      );
+      if (param !== undefined) params[name] = param;
+    });
+
+    const submitParams = {
+      agentType: currentFormValues.agentType ?? agentItemRef.current?.agentType,
+      name: currentFormValues.agentName,
+      properties: params,
+    };
+
+    onGaevatarChangeRef.current(
+      isNewRef.current,
+      {
+        params: submitParams,
+        agentId: agentItemRef.current?.id || nodeIdRef.current,
+      },
+      nodeIdRef.current,
+      agentItemRef.current?.propertyJsonSchema
+    );
+  }, []);
+
+  // Debounced submit function with actual debounce logic
+  const debouncedSubmit = useCallback(
+    (values: any) => {
+      // Clear previous timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+
+      // Set new timer for debounced execution
+      debounceTimerRef.current = setTimeout(() => {
+        actualSubmit(values);
+      }, 500); // 500ms debounce delay
+    },
+    [actualSubmit]
+  );
+
+  // Use form.subscribe to listen to form changes
+  useEffect(() => {
+    // make sure to unsubscribe;
+    const callback = form.subscribe({
+      formState: {
+        values: true,
+        isDirty: true,
+      },
+      callback: ({ values }) => {
+        debouncedSubmit(values);
+      },
+    });
+
+    return () => {
+      // Clean up subscription
+      callback();
+      // Clean up debounce timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [form, debouncedSubmit]);
+
+  return (
+    <TooltipProvider delayDuration={0}>
+      <div
+        className="sdk:px-[8px] sdk:sm:px-[8px] sdk:overflow-auto sdk:flex-1"
+        key={nodeId}>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div
+              className={clsx(
+                "sdk:bg-[var(--sdk-sidebar-background)] sdk:pb-[60px]"
+              )}>
+              <div className="sdk:flex sdk:flex-col sdk:gap-y-[16px]  sdk:items-start sdk:content-start sdk:self-stretch">
+                <FormField
+                  key={"agentName"}
+                  control={form.control}
+                  disabled={disabled}
+                  defaultValue={agentItem?.name}
+                  name={"agentName"}
+                  rules={{
+                    validate: (value: any) => {
+                      if (!value) return "required";
+                      return true;
+                    },
+                  }}
+                  render={({ field }) => (
+                    <FormItem aria-labelledby="agentNameLabel">
+                      <FormLabel
+                        id="agentNameLabel"
+                        className="sdk:flex sdk:gap-[4px]">
+                        <span>Agent name</span>
+                        <TooltipDescriptor type="agentName" />
+                      </FormLabel>
+
+                      <FormControl>
+                        <Input
+                          placeholder="Atomic-aevatar name"
+                          {...field}
+                          value={field?.value}
+                          onChange={field?.onChange}
+                          className={clsx(
+                            "sdk:bg-[var(--sdk-bg-background)]",
+                            field?.disabled &&
+                              "sdk:bg-[var(--sdk-bg-black-light)]"
+                          )}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="agentType"
+                  defaultValue={agentItem?.agentType}
+                  disabled={true}
+                  render={({ field }) => (
+                    <FormItem aria-labelledby="agentTypeLabel">
+                      <FormLabel
+                        id="agentTypeLabel"
+                        className="sdk:flex sdk:gap-[4px]">
+                        <span>Agent Type</span>
+                        <TooltipDescriptor type="agentType" />
+                      </FormLabel>
+                      <Select value={field?.value} disabled={field?.disabled}>
+                        <FormControl>
+                          <SelectTrigger
+                            aria-disabled={field?.disabled}
+                            className={clsx(
+                              "sdk:bg-[var(--sdk-bg-background)]",
+                              field?.disabled &&
+                                "sdk:bg-[var(--sdk-bg-black-light)]"
+                            )}>
+                            <SelectValue placeholder="Select" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="sdk:w-[192px]!">
+                          {agentTypeList.map((agentType) => (
+                            <SelectItem key={agentType} value={agentType}>
+                              {agentType}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Render schema fields recursively */}
+                {JSONSchemaProperties?.map(([name, schema]) =>
+                  renderSchemaField({
+                    form,
+                    name,
+                    schema,
+                    selectContentCls:
+                      "sdk:w-[var(--radix-popper-anchor-width)]!",
+                    disabled,
+                  })
+                )}
+              </div>
             </div>
-          </div>
-          <Button
-            key={"save"}
-            className="sdk:workflow-title-button-save sdk:cursor-pointer sdk:absolute sdk:bottom-[20px] sdk:w-[calc(100%-16px)]"
-            type="submit"
-            disabled={disabled}>
-            {btnLoading && (
-              <Loading
-                key={"save"}
-                className={clsx("aevatarai-loading-icon")}
-                style={{ width: 14, height: 14 }}
-              />
-            )}
-            <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
-              save
-            </span>
-          </Button>
-        </form>
-      </Form>
-    </div>
+          </form>
+        </Form>
+      </div>
+    </TooltipProvider>
   );
 }

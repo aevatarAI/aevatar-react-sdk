@@ -32,6 +32,7 @@ import { validateSchemaField } from "../../utils/jsonSchemaValidate";
 import { renderSchemaField } from "../utils/renderSchemaField";
 import { AgentError } from "../../constants/error/agentError";
 import DeleteGAevatarConfirm from "../DeleteGAevatarConfirm";
+import { TooltipProvider } from "../ui/tooltip";
 
 export type TEditGaevatarSuccessType = "create" | "edit" | "delete";
 
@@ -110,8 +111,6 @@ function EditGAevatarInnerCom({
       const result = await aevatarAI.services.agent.removeAllSubAgent(agentId);
 
       await onDelete(true);
-
-      console.log(result, "result==removeAllSubAgent");
     } catch (error) {
       console.error("removeAllSubAgent:", error);
       toast({
@@ -120,22 +119,22 @@ function EditGAevatarInnerCom({
         duration: 3000,
       });
     }
-    console.log("onDeleteConfirm");
   }, [onDelete, toast, agentId]);
 
   const rightEle = useMemo(() => {
     let text = "create";
     if (type === "create") {
-      text = btnLoading === "saving" ? "creating" : "create";
+      text = btnLoading === "saving" ? "Creating" : "Create";
     } else {
-      text = btnLoading === "saving" ? "saving" : "save";
+      text = btnLoading === "saving" ? "Saving" : "Save";
     }
     return (
       <div
         data-testid="edit-gaevatar-inner"
         className="sdk:flex sdk:items-center sdk:gap-[8px]">
         <Button
-          className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]"
+          variant="primary"
+          className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px]"
           type="submit">
           {btnLoading === "saving" && (
             <Loading
@@ -144,13 +143,14 @@ function EditGAevatarInnerCom({
               style={{ width: 14, height: 14 }}
             />
           )}
-          <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
+          <span className="sdk:text-center sdk:font-geist sdk:text-[12px] sdk:font-semibold  sdk:leading-[14px]">
             {text}
           </span>
         </Button>
         <Button
+          variant="outline"
           className={clsx(
-            "sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]",
+            "sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px]",
             type === "create" && "sdk:hidden"
           )}
           onClick={() => onDelete(false)}>
@@ -161,8 +161,8 @@ function EditGAevatarInnerCom({
               style={{ width: 14, height: 14 }}
             />
           )}
-          <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
-            delete
+          <span className="sdk:text-center sdk:font-geist sdk:text-[12px] sdk:font-semibold  sdk:leading-[14px]">
+            Delete
           </span>
         </Button>
       </div>
@@ -180,21 +180,17 @@ function EditGAevatarInnerCom({
           />
         )}
         <span className="sdk:hidden sdk:sm:inline-block">
-          g-agents configuration
+          G-Agents Configuration
         </span>
-        <span className="sdk:inline-block sdk:sm:hidden">configuration</span>
+        <span className="sdk:inline-block sdk:sm:hidden">Configuration</span>
       </div>
     );
   }, [onBack]);
-
-  console.log(JSON.parse(jsonSchemaString ?? "{}"), "jsonSchemaString===");
 
   // Use recursively parsed schema
   const JSONSchemaProperties: [string, any][] = useMemo(() => {
     return jsonSchemaParse(jsonSchemaString, properties);
   }, [jsonSchemaString, properties]);
-
-  console.log(JSONSchemaProperties, "JSONSchemaProperties=");
 
   const form = useForm<any>();
   useEffect(() => {
@@ -209,7 +205,6 @@ function EditGAevatarInnerCom({
 
   const onSubmit = useCallback(
     async (values: any) => {
-      console.log("onSubmit====", values);
       form.clearErrors();
       try {
         if (btnLoadingRef.current) return;
@@ -221,7 +216,6 @@ function EditGAevatarInnerCom({
             schema,
             values[name]
           );
-          console.log(errors, param, "errors===onSubmit");
           errorFields.push(...errors);
           if (param !== undefined) params[name] = param;
         });
@@ -240,7 +234,6 @@ function EditGAevatarInnerCom({
           name: values.agentName,
           properties: params,
         };
-        console.log(submitParams, defaultAgentType, "params==updateAgentInfo");
         if (type === "create") {
           const result = await aevatarAI.services.agent.createAgent(
             submitParams
@@ -285,22 +278,22 @@ function EditGAevatarInnerCom({
   );
 
   return (
-    <>
+    <TooltipProvider delayDuration={0}>
       <Form {...form}>
         <form
-          className="sdk:h-full sdk:flex sdk:flex-col sdk:font-outfit"
+          className="sdk:h-full sdk:flex sdk:flex-col sdk:font-geist"
           onSubmit={form.handleSubmit(onSubmit)}>
           <CommonHeader leftEle={leftEle} rightEle={rightEle} />
           <div
             className={clsx(
-              "sdk:flex-1 sdk:w-full sdk:m-auto sdk:bg-[#141415] sdk:pt-[22px] sdk:pb-[14px]",
-              "sdk:md:pt-[0] sdk:md:px-[40px] sdk:font-outfit"
+              "sdk:flex-1 sdk:w-full sdk:m-auto sdk:bg-[var(--sdk-color-bg-primary)] sdk:pt-[22px] sdk:pb-[14px]",
+              "sdk:md:pt-[0] sdk:md:px-[40px] sdk:font-geist"
             )}>
-            <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-white sdk:self-stretch">
-              <div className="sdk:text-black sdk:font-outfit sdk:text-sm sdk:font-semibold sdk:leading-normal sdk:lowercase">
-                settings
+            <div className="sdk:flex sdk:flex-col sdk:justify-center sdk:gap-[2px] sdk:p-[8px] sdk:px-[10px] sdk:bg-[var(--sdk-color-bg-primary)] sdk:self-stretch">
+              <div className="sdk:text-[var(--sdk-color-text-primary)] sdk:font-geist sdk:text-sm sdk:font-semibold sdk:leading-normal ">
+                Settings
               </div>
-              <div className="sdk:text-[#606060] sdk:font-mono sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:lowercase">
+              <div className="sdk:text-[var(--sdk-muted-foreground)] sdk:font-mono sdk:text-[12px] sdk:font-normal sdk:leading-normal ">
                 Manage your aevatar settings and preferences
               </div>
             </div>
@@ -322,13 +315,16 @@ function EditGAevatarInnerCom({
                         form.clearErrors();
                       }}>
                       <FormControl>
-                        <SelectTrigger 
+                        <SelectTrigger
                           aria-disabled={field?.disabled}
-                          className={clsx(field?.disabled && "sdk:bg-[#303030]")}>
+                          className={clsx(
+                            field?.disabled &&
+                              "sdk:bg-[var(--sdk-color-border-primary)]"
+                          )}>
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent className="sdk:w-[var(--radix-popper-anchor-width)]!">
                         {agentTypeList.map((agentType) => (
                           <SelectItem key={agentType} value={agentType}>
                             {agentType}
@@ -348,15 +344,19 @@ function EditGAevatarInnerCom({
                 render={({ field }) => (
                   <FormItem aria-labelledby="agentNameLabel">
                     <FormLabel id="agentNameLabel">
-                      *atomic-aevatar name
+                      *Atomic-aevatar name
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="atomic-aevatar name"
+                        placeholder="Atomic-aevatar name"
                         {...field}
                         value={field?.value}
                         onChange={field?.onChange}
-                        className={clsx(field?.disabled && "sdk:bg-[#303030]")}
+                        className={clsx(
+                          "sdk:w-full sdk:bg-[var(--sdk-bg-background)]",
+                          field?.disabled &&
+                            "sdk:bg-[var(--sdk-color-border-primary)]"
+                        )}
                       />
                     </FormControl>
                     <FormMessage />
@@ -383,7 +383,7 @@ function EditGAevatarInnerCom({
           setDeleteOpen(false);
         }}
       />
-    </>
+    </TooltipProvider>
   );
 }
 
@@ -394,7 +394,7 @@ export default function EditGAevatarInner({
   return (
     <div
       className={clsx(
-        "sdk:relative sdk:bg-black sdk:overflow-auto sdk:lg:pb-[40px] sdk:pb-[16px] aevatarai-edit-gaevatar-wrapper",
+        "sdk:relative sdk:bg-[var(--sdk-bg-background)] sdk:overflow-auto sdk:lg:pb-[40px] sdk:pb-[16px] aevatarai-edit-gaevatar-wrapper",
         className
       )}>
       <ErrorBoundary>

@@ -11,9 +11,24 @@ importers:
       '@changesets/cli':
         specifier: ^2.28.1
         version: 2.29.3
+      '@tanstack/react-query':
+        specifier: ^5.83.0
+        version: 5.83.0(react@18.3.1)
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
+      monaco-editor:
+        specifier: ^0.52.2
+        version: 0.52.2
+      react-day-picker:
+        specifier: ^9.8.0
+        version: 9.8.0
       react-fullscreen:
         specifier: ^0.1.0
         version: 0.1.0
+      react18-json-view:
+        specifier: ^0.2.9
+        version: 0.2.9
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
@@ -96,7 +111,7 @@ importers:
         version: 6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)
       vite-plugin-dts:
         specifier: latest
-        version: 4.5.3(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.7.3)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
+        version: 4.5.4(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.7.3)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
       vitest:
         specifier: ^3.0.6
         version: 3.1.3(@types/node@22.15.16)(@vitest/ui@2.1.9(vitest@2.1.9))(happy-dom@17.4.6)(jiti@2.4.2)(jsdom@26.1.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(lightningcss@1.29.2)
@@ -105,13 +120,13 @@ importers:
     dependencies:
       '@aelf-web-login/utils':
         specifier: 0.3.2-alpha.0
-        version: 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@2.30.0)(eslint@8.57.1)(query-string@7.1.3)(utf-8-validate@5.0.10)
+        version: 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@4.1.0)(eslint@8.57.1)(query-string@7.1.3)(utf-8-validate@5.0.10)
       '@aelf-web-login/wallet-adapter-base':
         specifier: 0.3.2-alpha.0
         version: 0.3.2-alpha.0
       '@aelf-web-login/wallet-adapter-bridge':
         specifier: 0.3.2-alpha.0
-        version: 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@2.30.0)(eslint@8.57.1)(query-string@7.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(utf-8-validate@5.0.10)
+        version: 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@4.1.0)(eslint@8.57.1)(query-string@7.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(utf-8-validate@5.0.10)
       '@aelf-web-login/wallet-adapter-night-elf':
         specifier: 0.3.2-alpha.0
         version: 0.3.2-alpha.0(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(query-string@7.1.3)(utf-8-validate@5.0.10)
@@ -123,10 +138,10 @@ importers:
         version: 0.3.2-alpha.0(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(query-string@7.1.3)
       '@aelf-web-login/wallet-adapter-portkey-web':
         specifier: 0.3.2-alpha.0
-        version: 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@2.30.0)(eslint@8.57.1)(query-string@7.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@4.1.0)(eslint@8.57.1)(query-string@7.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@aelf-web-login/wallet-adapter-react':
         specifier: 0.3.2-alpha.0
-        version: 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@2.30.0)(eslint@8.57.1)(query-string@7.1.3)(utf-8-validate@5.0.10)
+        version: 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@4.1.0)(eslint@8.57.1)(query-string@7.1.3)(utf-8-validate@5.0.10)
       '@aevatar-react-sdk/services':
         specifier: workspace:*
         version: link:../services
@@ -145,6 +160,9 @@ importers:
       '@rjsf/validator-ajv8':
         specifier: ^5.24.3
         version: 5.24.10(@rjsf/utils@5.24.10(react@18.3.1))
+      '@tanstack/react-query':
+        specifier: ^5.83.0
+        version: 5.83.0(react@18.3.1)
       aelf-sdk:
         specifier: 3.4.16-alpha.7
         version: 3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1)
@@ -195,7 +213,7 @@ importers:
         specifier: ^0.4.220
         version: 0.4.229(react-streaming@0.3.50(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
       vike-react:
-        specifier: ^0.5.12
+        specifier: ^0.5.13
         version: 0.5.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vike@0.4.229(react-streaming@0.3.50(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)))
       vite:
         specifier: ^6.1.0
@@ -239,7 +257,7 @@ importers:
         version: 6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)
       vite-plugin-dts:
         specifier: latest
-        version: 4.5.3(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.8.2)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
+        version: 4.5.4(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.8.2)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
       vitest:
         specifier: ^3.0.6
         version: 3.1.3(@types/node@22.15.16)(@vitest/ui@2.1.9(vitest@2.1.9))(happy-dom@17.4.6)(jiti@2.4.2)(jsdom@26.1.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(lightningcss@1.29.2)
@@ -257,7 +275,7 @@ importers:
         version: 6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)
       vite-plugin-dts:
         specifier: latest
-        version: 4.5.3(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.8.2)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
+        version: 4.5.4(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.8.2)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
       vitest:
         specifier: ^3.0.6
         version: 3.1.3(@types/node@22.15.16)(@vitest/ui@2.1.9(vitest@2.1.9))(happy-dom@17.4.6)(jiti@2.4.2)(jsdom@26.1.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(lightningcss@1.29.2)
@@ -276,6 +294,9 @@ importers:
       '@aevatar-react-sdk/utils':
         specifier: workspace:*
         version: link:../utils
+      '@fontsource/geist':
+        specifier: ^5.2.7
+        version: 5.2.7
       '@hookform/resolvers':
         specifier: ^3.9.1
         version: 3.10.0(react-hook-form@7.56.3)
@@ -333,6 +354,12 @@ importers:
       '@xyflow/react':
         specifier: ^12.4.2
         version: 12.6.0(@types/react@18.3.21)(immer@10.1.1)
+      ajv:
+        specifier: ^8.17.1
+        version: 8.17.1
+      ajv-formats:
+        specifier: ^3.0.1
+        version: 3.0.1(ajv@8.17.1)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -378,6 +405,9 @@ importers:
       tailwind-merge:
         specifier: ^2.5.5
         version: 2.6.0
+      uuid:
+        specifier: ^11.1.0
+        version: 11.1.0
       zod:
         specifier: ^3.24.1
         version: 3.25.20
@@ -409,6 +439,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.5
         version: 18.3.7(@types/react@18.3.21)
+      '@types/uuid':
+        specifier: ^10.0.0
+        version: 10.0.0
       '@vitejs/plugin-react':
         specifier: ^4.3.4
         version: 4.4.1(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
@@ -472,7 +505,7 @@ importers:
         version: 6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)
       vite-plugin-dts:
         specifier: latest
-        version: 4.5.3(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.8.2)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
+        version: 4.5.4(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.8.2)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2))
       vitest:
         specifier: ^3.0.6
         version: 3.1.3(@types/node@22.15.16)(@vitest/ui@2.1.9(vitest@2.1.9))(happy-dom@17.4.6)(jiti@2.4.2)(jsdom@26.1.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))(lightningcss@1.29.2)
@@ -866,6 +899,9 @@ packages:
   '@ctrl/tinycolor@3.6.1':
     resolution: {integrity: sha512-SITSV6aIXsuVNV3f3O0f2n/cgyEDWoSqtZMYiAmcsYHydcKrOz3gUxB/iXd/Qf08+IZX4KpgNbvUdMBmWz+kcA==}
     engines: {node: '>=10'}
+
+  '@date-fns/tz@1.2.0':
+    resolution: {integrity: sha512-LBrd7MiJZ9McsOgxqWX7AaxrDjcFVjWH/tIKJd7pnR7McaslGYOP1QmmiBXdJH/H/yLCT+rcQ7FaPBUxRGUtrg==}
 
   '@emnapi/runtime@1.4.3':
     resolution: {integrity: sha512-pBPWdu6MLKROBX05wSNKcNb++m5Er+KQ9QkB+WVM+pW2Kx9hoSrVTnu3BdkI5eBLZoKu/J6mW/B6i6bJB2ytXQ==}
@@ -1299,6 +1335,9 @@ packages:
 
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
+
+  '@fontsource/geist@5.2.7':
+    resolution: {integrity: sha512-6NqGID9XWbKPWHQc60EjhNUk2Ze3DOBxCQpuRaMsmdSPx0iYLgQq4uakNz/xOaTt4BvJlrry1yv4FmwavUYp9A==}
 
   '@fontsource/source-code-pro@5.2.5':
     resolution: {integrity: sha512-1k7b9IdhVSdK/rJ8CkqqGFZ01C3NaXNynPZqKaTetODog/GPJiMYd6E8z+LTwSUTIX8dm2QZORDC+Uh91cjXSg==}
@@ -2585,6 +2624,14 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6
 
+  '@tanstack/query-core@5.83.0':
+    resolution: {integrity: sha512-0M8dA+amXUkyz5cVUm/B+zSk3xkQAcuXuz5/Q/LveT4ots2rBpPTZOzd7yJa2Utsf8D2Upl5KyjhHRY+9lB/XA==}
+
+  '@tanstack/react-query@5.83.0':
+    resolution: {integrity: sha512-/XGYhZ3foc5H0VM2jLSD/NyBRIOK4q9kfeml4+0x2DlL6xVuAcVEW+hTlTapAmejObg0i3eNqhkr2dT+eciwoQ==}
+    peerDependencies:
+      react: ^18 || ^19
+
   '@tanstack/react-table@8.21.3':
     resolution: {integrity: sha512-5nNMTSETP4ykGegmVkhjcS8tTLW6Vl4axfEGQN3v0zdHYbK4UfoqfPChclTrJ4EoK9QynqAu9oUf8VEmrpZ5Ww==}
     engines: {node: '>=12'}
@@ -2735,6 +2782,9 @@ packages:
 
   '@types/secp256k1@4.0.6':
     resolution: {integrity: sha512-hHxJU6PAEUn0TP4S/ZOzuTUvJWuZ6eIKeNKb5RBpODvSl6hp1Wrw4s7ATY50rklRCScUDpHzVA/DQdSjJ3UoYQ==}
+
+  '@types/uuid@10.0.0':
+    resolution: {integrity: sha512-7gqG38EyHgyP1S+7+xomFtL+ZNHcKv6DwNaCZmJmo1vgMugyF3TCnXVg4t1uk89mLNwnLtnY3TpOpCOyp1/xHQ==}
 
   '@typescript-eslint/parser@5.62.0':
     resolution: {integrity: sha512-VlJEV0fOQ7BExOsHYAGrgbEiZoi8D+Bl2+f6V2RrXerRSylnp+ZBHmPvaIa8cz0Ajx7WO7Z5RqfgYg7ED1nRhA==}
@@ -3582,9 +3632,15 @@ packages:
     resolution: {integrity: sha512-ZYP5VBHshaDAiVZxjbRVcFJpc+4xGgT0bK3vzy1HLN8jTO975HEbuYzZJcHoQEY5K1a0z8YayJkyVETa08eNTg==}
     engines: {node: '>=18'}
 
+  date-fns-jalali@4.1.0-0:
+    resolution: {integrity: sha512-hTIP/z+t+qKwBDcmmsnmjWTduxCg+5KfdqWQvb2X/8C9+knYY6epN/pfxdDuyVlSVeFz0sM5eEfwIUQ70U4ckg==}
+
   date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
+
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
   dayjs@1.11.13:
     resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
@@ -4944,6 +5000,9 @@ packages:
   moment@2.30.1:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
 
+  monaco-editor@0.52.2:
+    resolution: {integrity: sha512-GEQWEZmfkOGLdd3XK8ryrfWz3AIP8YymVXiPHEdewrUq7mh0qrKrfHLNCXcbB6sTnMLnOZ3ztSiKcciFUkIJwQ==}
+
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
     engines: {node: '>=4'}
@@ -5802,6 +5861,12 @@ packages:
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
 
+  react-day-picker@9.8.0:
+    resolution: {integrity: sha512-E0yhhg7R+pdgbl/2toTb0xBhsEAtmAx1l7qjIWYfcxOy8w4rTSVfbtBoSzVVhPwKP/5E9iL38LivzoE3AQDhCQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: '>=16.8.0'
+
   react-dnd-html5-backend@16.0.1:
     resolution: {integrity: sha512-Wu3dw5aDJmOGw8WjH1I1/yTH+vlXEL4vmjk5p+MHxP8HuHJS1lAGeIdG/hze1AvNeXWo/JgULV87LyQOr+r5jw==}
 
@@ -5945,6 +6010,11 @@ packages:
     peerDependencies:
       react: '*'
       react-dom: '*'
+
+  react18-json-view@0.2.9:
+    resolution: {integrity: sha512-z3JQgCwZRKbmWh54U94loCU6vE0ZoDBK7C8ZpcMYQB8jYMi+mR/fcgMI9jKgATeF0I6+OAF025PD+UKkXIqueQ==}
+    peerDependencies:
+      react: '>=16.8.0'
 
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
@@ -6754,6 +6824,15 @@ packages:
       vite:
         optional: true
 
+  vite-plugin-dts@4.5.4:
+    resolution: {integrity: sha512-d4sOM8M/8z7vRXHHq/ebbblfaxENjogAAekcfcDCCwAyvGqnPrc7f4NZbvItS+g4WTgerW0xDwSz5qz11JT3vg==}
+    peerDependencies:
+      typescript: '*'
+      vite: '*'
+    peerDependenciesMeta:
+      vite:
+        optional: true
+
   vite-plugin-mkcert@1.17.8:
     resolution: {integrity: sha512-S+4tNEyGqdZQ3RLAG54ETeO2qyURHWrVjUWKYikLAbmhh/iJ+36gDEja4OWwFyXNuvyXcZwNt5TZZR9itPeG5Q==}
     engines: {node: '>=v16.7.0'}
@@ -7193,10 +7272,10 @@ snapshots:
 
   '@adobe/css-tools@4.4.2': {}
 
-  '@aelf-web-login/utils@0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@2.30.0)(eslint@8.57.1)(query-string@7.1.3)(utf-8-validate@5.0.10)':
+  '@aelf-web-login/utils@0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@4.1.0)(eslint@8.57.1)(query-string@7.1.3)(utf-8-validate@5.0.10)':
     dependencies:
       '@aelf-web-login/wallet-adapter-base': 0.3.2-alpha.0
-      '@aelf-web-login/wallet-adapter-react': 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@2.30.0)(eslint@8.57.1)(query-string@7.1.3)(utf-8-validate@5.0.10)
+      '@aelf-web-login/wallet-adapter-react': 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@4.1.0)(eslint@8.57.1)(query-string@7.1.3)(utf-8-validate@5.0.10)
       bignumber.js: 9.3.0
       dayjs: 1.11.13
       react: 18.3.1
@@ -7221,11 +7300,11 @@ snapshots:
     dependencies:
       eventemitter3: 5.0.1
 
-  '@aelf-web-login/wallet-adapter-bridge@0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@2.30.0)(eslint@8.57.1)(query-string@7.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(utf-8-validate@5.0.10)':
+  '@aelf-web-login/wallet-adapter-bridge@0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@4.1.0)(eslint@8.57.1)(query-string@7.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(utf-8-validate@5.0.10)':
     dependencies:
       '@aelf-web-login/wallet-adapter-base': 0.3.2-alpha.0
-      '@aelf-web-login/wallet-adapter-portkey-web': 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@2.30.0)(eslint@8.57.1)(query-string@7.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@portkey/connect-web-wallet': 2.19.0-alpha.24(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@2.30.0)(eslint@8.57.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@aelf-web-login/wallet-adapter-portkey-web': 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@4.1.0)(eslint@8.57.1)(query-string@7.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@portkey/connect-web-wallet': 2.19.0-alpha.24(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@4.1.0)(eslint@8.57.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@portkey/contracts': 2.19.0-alpha.24(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(query-string@7.1.3)
       '@portkey/services': 2.19.0-alpha.24(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(query-string@7.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(utf-8-validate@5.0.10)
       '@reduxjs/toolkit': 2.8.1(react@18.3.1)
@@ -7285,10 +7364,10 @@ snapshots:
       - aelf-sdk
       - query-string
 
-  '@aelf-web-login/wallet-adapter-portkey-web@0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@2.30.0)(eslint@8.57.1)(query-string@7.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@aelf-web-login/wallet-adapter-portkey-web@0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@4.1.0)(eslint@8.57.1)(query-string@7.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@aelf-web-login/wallet-adapter-base': 0.3.2-alpha.0
-      '@portkey/connect-web-wallet': 2.19.0-alpha.24(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@2.30.0)(eslint@8.57.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@portkey/connect-web-wallet': 2.19.0-alpha.24(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@4.1.0)(eslint@8.57.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@portkey/contracts': 2.19.0-alpha.24(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(query-string@7.1.3)
       '@portkey/detect-provider': 2.4.0-alpha.12
       '@portkey/provider-types': 2.4.0-alpha.12
@@ -7307,11 +7386,11 @@ snapshots:
       - react-dom
       - supports-color
 
-  '@aelf-web-login/wallet-adapter-react@0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@2.30.0)(eslint@8.57.1)(query-string@7.1.3)(utf-8-validate@5.0.10)':
+  '@aelf-web-login/wallet-adapter-react@0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@4.1.0)(eslint@8.57.1)(query-string@7.1.3)(utf-8-validate@5.0.10)':
     dependencies:
       '@aelf-web-login/wallet-adapter-base': 0.3.2-alpha.0
-      '@aelf-web-login/wallet-adapter-bridge': 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@2.30.0)(eslint@8.57.1)(query-string@7.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(utf-8-validate@5.0.10)
-      '@portkey/connect-web-wallet': 2.19.0-alpha.24(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@2.30.0)(eslint@8.57.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@aelf-web-login/wallet-adapter-bridge': 0.3.2-alpha.0(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(@types/react@18.3.21)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(bufferutil@4.0.9)(date-fns@4.1.0)(eslint@8.57.1)(query-string@7.1.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(utf-8-validate@5.0.10)
+      '@portkey/connect-web-wallet': 2.19.0-alpha.24(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@4.1.0)(eslint@8.57.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@portkey/utils': 2.19.0-alpha.24(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(query-string@7.1.3)
       antd: 4.24.14(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
@@ -7825,6 +7904,8 @@ snapshots:
 
   '@ctrl/tinycolor@3.6.1': {}
 
+  '@date-fns/tz@1.2.0': {}
+
   '@emnapi/runtime@1.4.3':
     dependencies:
       tslib: 2.8.1
@@ -8254,6 +8335,8 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
+  '@fontsource/geist@5.2.7': {}
+
   '@fontsource/source-code-pro@5.2.5': {}
 
   '@graphql-typed-document-node/core@3.2.0(graphql@16.11.0)':
@@ -8498,13 +8581,13 @@ snapshots:
       - query-string
       - supports-color
 
-  '@portkey/connect-web-wallet@2.19.0-alpha.24(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@2.30.0)(eslint@8.57.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@portkey/connect-web-wallet@2.19.0-alpha.24(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(date-fns@4.1.0)(eslint@8.57.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@portkey/iframe-provider': 2.4.0-alpha.12(@babel/core@7.27.1)(@portkey/request@2.19.0-alpha.24)(eslint@8.57.1)(query-string@7.1.3)
       '@portkey/provider-types': 2.4.0-alpha.12
       '@portkey/utils': 2.19.0-alpha.24(@portkey/request@2.19.0-alpha.24)(aelf-sdk@3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1))(query-string@7.1.3)
       aelf-sdk: 3.4.16-alpha.7(@babel/core@7.27.1)(eslint@8.57.1)
-      antd: 5.22.7(date-fns@2.30.0)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      antd: 5.22.7(date-fns@4.1.0)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       bignumber.js: 9.3.0
       clsx: 1.2.1
       lottie-web: 5.9.6
@@ -9649,6 +9732,13 @@ snapshots:
       tailwindcss: 4.1.5
       vite: 6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)
 
+  '@tanstack/query-core@5.83.0': {}
+
+  '@tanstack/react-query@5.83.0(react@18.3.1)':
+    dependencies:
+      '@tanstack/query-core': 5.83.0
+      react: 18.3.1
+
   '@tanstack/react-table@8.21.3':
     dependencies:
       '@tanstack/table-core': 8.21.3
@@ -9814,6 +9904,8 @@ snapshots:
   '@types/secp256k1@4.0.6':
     dependencies:
       '@types/node': 22.15.16
+
+  '@types/uuid@10.0.0': {}
 
   '@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.7.3)':
     dependencies:
@@ -10228,6 +10320,10 @@ snapshots:
     optionalDependencies:
       ajv: 8.13.0
 
+  ajv-formats@3.0.1(ajv@8.17.1):
+    optionalDependencies:
+      ajv: 8.17.1
+
   ajv@6.12.6:
     dependencies:
       fast-deep-equal: 3.1.3
@@ -10353,7 +10449,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       scroll-into-view-if-needed: 2.2.31
 
-  antd@5.22.7(date-fns@2.30.0)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  antd@5.22.7(date-fns@4.1.0)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@ant-design/colors': 7.2.0
       '@ant-design/cssinjs': 1.23.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -10385,7 +10481,7 @@ snapshots:
       rc-motion: 2.9.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rc-notification: 5.6.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rc-pagination: 5.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      rc-picker: 4.8.3(date-fns@2.30.0)(dayjs@1.11.13)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      rc-picker: 4.8.3(date-fns@4.1.0)(dayjs@1.11.13)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rc-progress: 4.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rc-rate: 2.13.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       rc-resize-observer: 1.4.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -10997,9 +11093,13 @@ snapshots:
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.2.0
 
+  date-fns-jalali@4.1.0-0: {}
+
   date-fns@2.30.0:
     dependencies:
       '@babel/runtime': 7.27.1
+
+  date-fns@4.1.0: {}
 
   dayjs@1.11.13: {}
 
@@ -12445,6 +12545,8 @@ snapshots:
 
   moment@2.30.1: {}
 
+  monaco-editor@0.52.2: {}
+
   mri@1.2.0: {}
 
   mrmime@2.0.1: {}
@@ -13178,7 +13280,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       shallowequal: 1.1.0
 
-  rc-picker@4.8.3(date-fns@2.30.0)(dayjs@1.11.13)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  rc-picker@4.8.3(date-fns@4.1.0)(dayjs@1.11.13)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.27.1
       '@rc-component/trigger': 2.2.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -13189,7 +13291,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     optionalDependencies:
-      date-fns: 2.30.0
+      date-fns: 4.1.0
       dayjs: 1.11.13
       moment: 2.30.1
 
@@ -13488,6 +13590,12 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
+  react-day-picker@9.8.0:
+    dependencies:
+      '@date-fns/tz': 1.2.0
+      date-fns: 4.1.0
+      date-fns-jalali: 4.1.0-0
+
   react-dnd-html5-backend@16.0.1:
     dependencies:
       dnd-core: 16.0.1
@@ -13619,6 +13727,10 @@ snapshots:
       throttle-debounce: 3.0.1
       ts-easing: 0.2.0
       tslib: 2.8.1
+
+  react18-json-view@0.2.9:
+    dependencies:
+      copy-to-clipboard: 3.3.3
 
   react@18.3.1:
     dependencies:
@@ -14561,7 +14673,26 @@ snapshots:
       - rollup
       - supports-color
 
-  vite-plugin-dts@4.5.3(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.8.2)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)):
+  vite-plugin-dts@4.5.4(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.7.3)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)):
+    dependencies:
+      '@microsoft/api-extractor': 7.52.7(@types/node@22.15.16)
+      '@rollup/pluginutils': 5.1.4(rollup@4.40.2)
+      '@volar/typescript': 2.4.13
+      '@vue/language-core': 2.2.0(typescript@5.7.3)
+      compare-versions: 6.1.1
+      debug: 4.4.0
+      kolorist: 1.8.0
+      local-pkg: 1.1.1
+      magic-string: 0.30.17
+      typescript: 5.7.3
+    optionalDependencies:
+      vite: 6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)
+    transitivePeerDependencies:
+      - '@types/node'
+      - rollup
+      - supports-color
+
+  vite-plugin-dts@4.5.4(@types/node@22.15.16)(rollup@4.40.2)(typescript@5.8.2)(vite@6.3.5(@types/node@22.15.16)(jiti@2.4.2)(lightningcss@1.29.2)):
     dependencies:
       '@microsoft/api-extractor': 7.52.7(@types/node@22.15.16)
       '@rollup/pluginutils': 5.1.4(rollup@4.40.2)

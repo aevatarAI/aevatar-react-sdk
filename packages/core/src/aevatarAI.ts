@@ -130,6 +130,22 @@ export class AevatarAI implements IAevatarAI, IAevatarAIMethods {
     };
   }
 
+  async getWorkflowViewDataByAgentId(agentId: string) {
+    const result = await this.services.agent.getAgentInfo(agentId);
+
+    return {
+      workflowName: result?.name,
+      workflowId: result?.properties?.workflowCoordinatorGAgentId,
+      workflowViewData: {
+        name: result?.name,
+        properties: {
+          workflowNodeList: result?.properties?.workflowNodeList,
+          workflowNodeUnitList: result?.properties?.workflowNodeUnitList,
+        },
+      },
+    };
+  }
+
   setConfig(options: IConfig) {
     this.config.setConfig(options);
   }

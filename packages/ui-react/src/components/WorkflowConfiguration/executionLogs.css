@@ -1,0 +1,8 @@
+.aevatarai-execution-logs-wrapper .json-view--property {
+  color: var(--sdk-accent-teal);
+}
+
+.aevatarai-execution-logs-wrapper .json-view--string {
+  color: var(--sdk-accent-pink);
+  word-break: break-all;
+}

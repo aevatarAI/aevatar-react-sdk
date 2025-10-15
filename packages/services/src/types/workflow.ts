@@ -1,5 +1,18 @@
 import type { IAgentInfo, IAgentInfoDetail, IUpdateAgentInfo } from "./agent";
 
+export interface IGenerateWorkflowProps {
+  userGoal: string;
+}
+
+export interface IFetchAgentDetailsProps {
+  formattedBusinessAgentGrainId: string;
+  stateName: string;
+}
+export interface IFetchExecutionLogsProps {
+  stateName: string;
+  workflowId: string;
+  roundId: number;
+}
 export interface IWorkUnitRelationsItem {
   grainId: string;
   nextGrainId: string;
@@ -18,14 +31,14 @@ export interface IWorkflowUnitListItem {
   extendedData: Record<string, string> & IWorkflowUnitPosition;
 }
 
-export interface ICreateWorkflowProps {
+export interface ICreateWorkflowParams {
   name: string;
   properties: {
     workflowUnitList: IWorkflowUnitListItem[];
   };
 }
 
-export interface ISimulateWorkflowProps {
+export interface ISimulateWorkflowParams {
   workflowGrainId: string;
   workUnitRelations: IWorkUnitRelationsItem[];
 }
@@ -34,20 +47,20 @@ export interface IResetWorkflowEventProperties {
   workflowUnitList: IWorkflowUnitListItem[];
 }
 
-export interface IEditWorkflowProps {
+export interface IEditWorkflowParams {
   agentId: string;
   eventProperties: IResetWorkflowEventProperties;
 }
 
-export interface IStartWorkflowProps {
+export interface IStartWorkflowParams {
   agentId: string;
   eventProperties: any;
 }
 
 export enum WorkflowStatus {
-  pending = '0',
-  running = '1',
-  failed = '2',
+  pending = "0",
+  running = "1",
+  failed = "2",
 }
 
 export interface IWorkflowCoordinatorState {
@@ -57,6 +70,7 @@ export interface IWorkflowCoordinatorState {
   workflowStatus: WorkflowStatus; // 0: pending 1；running 2：failed
   currentWorkUnitInfos: string;
   ctime: string;
+  createTime: string;
   term: number;
   blackboardId: string;
   backupWorkUnitInfos: string;
@@ -97,13 +111,74 @@ export interface IGetWorkflowResult<T = any> {
   items: T[];
 }
 
+export interface IWorkflowNode {
+  nodeId: string;
+  agentId?: string;
+  name: string;
+  agentType: string;
+  jsonProperties: string;
+  extendedData: IWorkflowUnitPosition;
+}
+
+export interface IWorkflowNodeUnit {
+  nodeId: string;
+  nextNodeId?: string;
+}
+
+export interface IWorkflowViewDataParams {
+  name: string;
+  properties: {
+    workflowNodeList: IWorkflowNode[];
+    workflowNodeUnitList: IWorkflowNodeUnit[];
+  };
+}
+
+export interface IWorkflowViewUpdateDataParams {
+  name: string;
+  properties: {
+    workflowCoordinatorGAgentId: string;
+    workflowNodeList: IWorkflowNode[];
+    workflowNodeUnitList: IWorkflowNodeUnit[];
+  };
+}
+
+export interface IGetAIModelsProps {
+  [key: string]: string;
+}
+export interface IFetchAutoCompleteProps {
+  userGoal: string;
+}
+export interface IRunWorkflowParams {
+  viewAgentId: string;
+  eventProperties: any;
+}
+
+export interface IRunWorkflowResponse {
+  isSuccess: boolean;
+  message: string;
+  workflowId: string;
+  publishedAgent: IAgentInfo;
+}
+
 export interface IWorkflowService {
-  create(props: ICreateWorkflowProps): Promise<IAgentInfo>;
-  simulate(props: ISimulateWorkflowProps): Promise<string>;
-  edit(id: string, props: IUpdateAgentInfo): Promise<IAgentInfoDetail>;
-  editPublishEvent(props: IEditWorkflowProps): Promise<IAgentInfo>;
+  create(params: ICreateWorkflowParams): Promise<IAgentInfo>;
+  simulate(params: ISimulateWorkflowParams): Promise<string>;
+  edit(id: string, params: IUpdateAgentInfo): Promise<IAgentInfoDetail>;
+  editPublishEvent(params: IEditWorkflowParams): Promise<IAgentInfo>;
   getWorkflow<T = any>(
     query: IGetWorkflowQuery
   ): Promise<IGetWorkflowResult<T>>;
-  start<T = any>(props: IStartWorkflowProps): Promise<T>;
+  getAIModels<T = any>(props: IGetAIModelsProps): Promise<T>;
+  fetchAutoComplete<T = any>(props: IFetchAutoCompleteProps): Promise<T>;
+  fetchExecutionLogs<T = any>(props: IFetchExecutionLogsProps): Promise<T>;
+  fetchAgentDetails<T = any>(props: IFetchAgentDetailsProps): Promise<T>;
+  generate<T = any>(props: IGenerateWorkflowProps): Promise<T>;
+  start<T = any>(params: IStartWorkflowParams): Promise<T>;
+  runWorkflow<T = IRunWorkflowResponse>(params: IRunWorkflowParams): Promise<T>;
+  createWorkflowViewData(params: IWorkflowViewDataParams): Promise<IAgentInfo>;
+  updateWorkflowViewData(
+    id: string,
+    params: IWorkflowViewUpdateDataParams
+  ): Promise<IAgentInfo>;
+  publishWorkflowViewData(id: string): Promise<IAgentInfo>;
 }

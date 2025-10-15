@@ -1,21 +1,26 @@
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
-import Delete from "../../assets/svg/delete.svg?react";
+import SuccessCheck from "../../assets/svg/successCheck.svg?react";
 import Hypotenuse from "../../assets/svg/hypotenuse.svg?react";
+import ErrorIcon from "../../assets/svg/errorIcon.svg?react";
 import "./index.css";
 import { useCallback, useMemo } from "react";
-import DeleteWorkflowGAevatar from "../DeleteWorkflowGAevatar";
 import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import type { JSONSchemaType } from "../types";
 import clsx from "clsx";
 import type { TNodeDataClick } from "../Workflow/types";
+import HoverMenu from "./HoverMenu";
+import type { ExecutionLogStatus } from "@aevatar-react-sdk/types";
+import Loading from "../../assets/svg/loading.svg?react";
 export interface IAevatarCardInnerProps {
   className?: string;
   isNew?: boolean;
   onClick?: TNodeDataClick;
   deleteNode: (nodeId: string) => void;
   nodeId?: string;
-  agentInfo?: IAgentInfoDetail;
+  agentInfo?: IAgentInfoDetail & { defaultValues?: Record<string, any[]> };
   selected?: boolean;
+  agentStatus?: ExecutionLogStatus;
+  disabled?: boolean;
 }
 
 export default function AevatarCardInner({
@@ -26,6 +31,8 @@ export default function AevatarCardInner({
   nodeId,
   agentInfo,
   selected,
+  agentStatus,
+  disabled,
 }: IAevatarCardInnerProps) {
   const handleDeleteClick = useCallback(
     (e: any) => {
@@ -36,47 +43,71 @@ export default function AevatarCardInner({
   );
 
   const propertiesInfo = useMemo(
-    () => jsonSchemaParse(agentInfo?.propertyJsonSchema, agentInfo?.properties),
-    [agentInfo]
+    () =>
+      jsonSchemaParse(
+        agentInfo?.propertyJsonSchema,
+        agentInfo?.properties,
+        isNew ? agentInfo?.defaultValues : undefined
+      ).slice(0, 3), // Only take first 3 properties
+    [agentInfo, isNew]
   );
 
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
       data-testid="aevatar-card"
-      className="sdk:group"
+      className="sdk:group sdk:relative"
       onClick={(e) => {
         onClick?.(agentInfo, isNew, nodeId);
       }}>
+      <HoverMenu
+        triggerClassName="sdk:group-hover:block sdk:hidden sdk:absolute sdk:-top-0 sdk:right-[0px]"
+        disabled={disabled}
+        onDelete={handleDeleteClick}
+      />
       <div
         className={clsx(
-          "sdk:aevatar-item-background sdk:w-[234px]  sdk:border sdk:border-[#141415]  sdk:group-hover:border-[#303030]",
-          selected && "sdk:border-[#AFC6DD]! ",
-          "sdk:border-b-[0px]!",
+          "sdk:aevatar-item-background sdk:w-[234px]  sdk:border sdk:border-[var(--sdk-color-bg-primary)]  sdk:group-hover:border-[var(--sdk-border-foreground)]",
+          selected && "sdk:border-[var(--sdk-border-foreground)]! ",
+          "sdk:border-b-[var(--sdk-bg-accent)]!",
+          "sdk:max-h-[300px] sdk:overflow-y-auto",
           className
-        )}>
+        )}
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}>
         <div className="sdk:pb-[12px] sdk:pt-[16px] sdk:pr-[14px] sdk:pl-[14px] sdk:border-b sdk:border-[var(--sdk-border-color)] sdk:border-solid">
           <div className="sdk:flex sdk:justify-between sdk:items-center sdk:pb-[9px]">
             <div
-              className="sdk:font-outfit sdk:text-white sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
-            >{`${agentInfo?.name ?? "agent name"}`}</div>
+              className="sdk:font-geist sdk:text-[var(--sdk-color-text-primary)] sdk:text-[15px] sdk:font-semibold sdk:leading-normal sdk:truncate sdk:max-w-[calc(100%-32px)]" /* Single line, overflow ellipsis */
+            >{`${agentInfo?.name || "agent name"}`}</div>
 
-            {isNew ? (
-              <DeleteWorkflowGAevatar handleDeleteClick={handleDeleteClick} />
-            ) : (
-              <Delete
-                className="sdk:cursor-pointer sdk:text-[#606060]"
-                onClick={handleDeleteClick}
+            {agentStatus === "success" && (
+              <SuccessCheck
+                className="sdk:text-[var(--sdk-bg-background)]"
+                width={14}
+                height={14}
+              />
+            )}
+            {agentStatus === "failed" && (
+              <ErrorIcon className="sdk:text-[var(--sdk-bg-background)]" />
+            )}
+            {(agentStatus === "pending" || agentStatus === "running") && (
+              <Loading
+                key={"save"}
+                className={clsx("aevatarai-loading-icon")}
+                style={{ width: 14, height: 14 }}
               />
             )}
           </div>
-          <div className="sdk:font-outfit sdk:text-[#B9B9B9] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:truncate">
+          <div className="sdk:font-geist sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:font-normal sdk:leading-normal sdk:truncate">
             {agentInfo?.agentType
               ? agentInfo?.agentType?.split(".")?.pop()
               : "--"}
           </div>
         </div>
-        <div className="sdk:font-outfit sdk:pb-[6px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
+        <div className="sdk:font-geist sdk:pb-[6px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch">
           {(propertiesInfo ?? []).map((item: [string, JSONSchemaType<any>]) => {
             // Extract property name and schema
             const [propName, schema] = item;
@@ -86,15 +117,15 @@ export default function AevatarCardInner({
             let value = schema.value;
 
             let valueList = [value];
-            if (isNew) {
-              valueList = [];
-            } else if (value === undefined || value === null || value === "") {
+            if (value === undefined || value === null || value === "") {
               valueList = [null];
             } else if (schema.enum) {
               const valueIndex = schema.enum.indexOf(schema.value);
 
               value = schema["x-enumNames"]?.[valueIndex];
-              valueList = [typeof value === "string" ? value : JSON.stringify(value)];
+              valueList = [
+                typeof value === "string" ? value : JSON.stringify(value),
+              ];
               // const firstThree = value?.slice(0, 3);
               // const remainingCount = value?.length - 3;
 
@@ -119,11 +150,10 @@ export default function AevatarCardInner({
             } else {
               valueList = [value ?? ""];
             }
-            console.log(valueList, value, schema, propName, "valueList==");
 
             return (
-              <div key={propName} className={clsx(isNew && "sdk:w-full")}>
-                <div className="sdk:text-[#6F6F6F] sdk:text-[12px] sdk:pb-[10px]">
+              <div key={propName} className={clsx("sdk:w-full")}>
+                <div className="sdk:text-[var(--sdk-muted-foreground)] sdk:text-[12px] sdk:pb-[10px]">
                   {propName}
                 </div>
                 <div
@@ -131,7 +161,7 @@ export default function AevatarCardInner({
                     (!isNew || value) && "sdk:flex sdk:flex-wrap sdk:gap-[10px]"
                   )}>
                   {/* Render array values if type is array, else render single value */}
-                  {valueList.map((info) => {
+                  {valueList.map((info: string | null | number) => {
                     // Prefer a unique value for key, fallback to propName+info
                     const key =
                       typeof info === "string" || typeof info === "number"
@@ -141,17 +171,17 @@ export default function AevatarCardInner({
                       <div
                         key={key}
                         className={clsx(
-                          "sdk:p-[4px] sdk:bg-[var(--sdk-border-color)] sdk:text-[12px] sdk:text-white "
+                          "sdk:p-[4px] sdk:bg-[var(--sdk-bg-black-light)] sdk:text-[12px] sdk:text-[var(--sdk-color-text-primary)] "
                         )}>
-                        {!info && (
+                        {!info && info !== 0 && (
                           <div
                             className={clsx(
-                              "sdk:h-[23px] sdk:w-full sdk:bg-[#303030]",
+                              "sdk:h-[23px] sdk:w-full sdk:bg-[var(--sdk-bg-black-light)]",
                               "sdk:w-[100px]!"
                             )}
                           />
                         )}
-                        {info && (
+                        {(info || info === 0) && (
                           <pre
                             style={{
                               whiteSpace: "pre-wrap",
@@ -171,14 +201,14 @@ export default function AevatarCardInner({
                     );
                   })}
                   {/* When isNew and valueList is empty, render a placeholder div for visual consistency */}
-                  {isNew && valueList.length === 0 && (
+                  {/* {isNew && valueList.length === 0 && (
                     <div
                       className={clsx(
-                        "sdk:h-[23px] sdk:w-full sdk:bg-[#303030]",
+                        "sdk:h-[23px] sdk:w-full sdk:bg-[var(--sdk-bg-black-light)]",
                         schema.type !== "string" && "sdk:w-[100px]!"
                       )}
                     />
-                  )}
+                  )} */}
                 </div>
               </div>
             );
@@ -188,15 +218,15 @@ export default function AevatarCardInner({
       <div className="sdk:h-[14px] sdk:relative sdk:flex ">
         <div
           className={clsx(
-            " sdk:bg-[#141415] sdk:flex-1 sdk:border sdk:border-[#141415] sdk:group-hover:border-[#303030]",
-            " sdk:border-t-[0px] sdk:border-r-[0px]",
-            selected && "sdk:border-[#AFC6DD]!"
+            " sdk:bg-[var(--sdk-bg-accent)] sdk:flex-1 sdk:border sdk:border-[var(--sdk-color-bg-primary)] sdk:group-hover:border-[var(--sdk-border-foreground)]",
+            "sdk:border-t-[var(--sdk-bg-accent)]! sdk:border-r-[var(--sdk-bg-accent)]!",
+            selected && "sdk:border-[var(--sdk-border-foreground)]!"
           )}
         />
         <Hypotenuse
           className={clsx(
-            "sdk:w-[17px] sdk:h-[14px] sdk:text-[#141415]  sdk:group-hover:text-[#303030]",
-            selected && "sdk:text-[#AFC6DD]!"
+            "sdk:w-[17px] sdk:h-[14px] sdk:text-[var(--sdk-color-bg-primary)]  sdk:group-hover:text-[var(--sdk-color-text-secondary)]",
+            selected && "sdk:text-[var(--sdk-border-foreground)]!"
           )}
         />
       </div>

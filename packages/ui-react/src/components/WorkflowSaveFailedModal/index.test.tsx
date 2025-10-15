@@ -60,7 +60,7 @@ describe("WorkflowSaveFailedModal", () => {
     ).toBeInTheDocument();
 
     // Verify the action button text
-    expect(screen.getByText("ok")).toBeInTheDocument();
+    expect(screen.getByText("OK")).toBeInTheDocument();
   });
 
   it("calls 'onOpenChange' with false when the close icon is clicked", () => {

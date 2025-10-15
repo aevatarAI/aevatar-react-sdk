@@ -22,7 +22,7 @@ class ErrorBoundary extends Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="sdk:text-white sdk:text-[15px] sdk:font-semibold sdk:text-center sdk:pt-[20px]">
+        <div className="sdk:text-[var(--sdk-color-text-primary)] sdk:text-[15px] sdk:font-semibold sdk:text-center sdk:pt-[20px]">
           An error occurred, please check the console
         </div>
       );

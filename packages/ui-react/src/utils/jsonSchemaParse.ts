@@ -58,6 +58,18 @@ export function parseJsonSchema(
     return parseJsonSchema(schema.anyOf[0], rootSchema, definitions, value);
   }
   if (schema.oneOf && Array.isArray(schema.oneOf)) {
+    // If there are exactly two options, check if one is null type
+    if (schema.oneOf.length === 2) {
+      const hasNullType = schema.oneOf.some(item => item.type === "null");
+      const hasNonNullType = schema.oneOf.some(item => item.type !== "null" || item.$ref);
+      
+      if (hasNullType && hasNonNullType) {
+        // Find the non-null option
+        const nonNullOption = schema.oneOf.find(item => item.type !== "null");
+        return parseJsonSchema(nonNullOption, rootSchema, definitions, value);
+      }
+    }
+    // Default behavior: use the first option
     return parseJsonSchema(schema.oneOf[0], rootSchema, definitions, value);
   }
   // Handle object
@@ -143,7 +155,8 @@ export function parseJsonSchema(
 // Main entry: parse jsonSchemaString to [name, schema] pairs (top-level properties)
 export const jsonSchemaParse = (
   jsonSchemaString?: string,
-  properties?: Record<string, any>
+  properties?: Record<string, any>,
+  defaultValues?: Record<string, any>
 ): [string, any][] => {
   const jsonSchema = JSON.parse(
     (jsonSchemaString === "" ? "{}" : jsonSchemaString) ?? "{}"
@@ -168,14 +181,26 @@ export const jsonSchemaParse = (
 
     const propWithRequired = { ...((prop as any) ?? {}), required: isRequired };
 
+    const value = properties?.[name] ?? defaultValues?.[name];
+
     return [
       name,
       parseJsonSchema(
         propWithRequired,
         jsonSchema,
         definitions,
-        properties?.[name]
+        value
       ),
     ];
   });
+};
+
+export const getPropertiesByDefaultValues = (
+  defaultValues?: Record<string, any>
+) => {
+  const properties = {};
+  Object.entries(defaultValues ?? {}).forEach(([key, value]) => {
+    properties[key] = value;
+  });
+  return properties;
 };

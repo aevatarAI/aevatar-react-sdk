@@ -1,6 +1,5 @@
 "use client";
 
-import DownIcon from "../../assets/svg/down.svg?react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import React from "react";
@@ -19,26 +18,28 @@ const SelectPrimitiveIcon: React.ElementType = SelectPrimitive.Icon;
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
-    React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => {
+    React.HTMLAttributes<HTMLDivElement> & {
+      downIcon?: React.ReactNode;
+    }
+>(({ className, children, downIcon, ...props }, ref) => {
   return (
     <SelectPrimitiveTrigger
       ref={ref}
       className={cn(
-        "sdk:flex sdk:font-outfit sdk:min-h-10 sdk:w-full sdk:items-center sdk:justify-center sdk:gap-[10px] sdk:border sdk:border-[#303030] sdk:bg-background sdk:px-3 sdk:py-2 sdk:text-sm sdk:ring-offset-background sdk:placeholder:text-muted-foreground sdk:focus:outline-none sdk:disabled:cursor-not-allowed sdk:disabled:opacity-50",
-        "sdk:text-white sdk:text-center sdk:font-outfit sdk:text-xs sdk:font-semibold sdk:leading-normal sdk:lowercase",
+        "sdk:flex sdk:rounded-md sdk:font-geist sdk:min-h-10 sdk:w-full sdk:items-center sdk:justify-center sdk:gap-[10px] sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:bg-background sdk:px-3 sdk:py-2 sdk:text-sm sdk:ring-offset-background sdk:placeholder:text-[var(--sdk-muted-foreground)] sdk:focus:outline-none sdk:disabled:cursor-not-allowed sdk:disabled:opacity-50",
+        "sdk:text-[var(--sdk-color-text-primary)] sdk:text-center sdk:font-geist sdk:text-xs sdk:font-semibold sdk:leading-normal ",
         className
       )}
       {...props}>
-      <span
-        className="sdk:block sdk:w-full sdk:whitespace-normal sdk:break-all sdk:[overflow-wrap:anywhere]"
-      >
+      <span className="sdk:block sdk:w-full sdk:whitespace-normal sdk:break-all sdk:[overflow-wrap:anywhere]">
         {children}
       </span>
       <SelectPrimitiveIcon
         asChild
         className={props["aria-disabled"] ? "hidden" : undefined}>
-        <DownIcon />
+        {downIcon ?? (
+          <ChevronDown className="sdk:text-[var(--sdk-color-text-foreground)]" />
+        )}
       </SelectPrimitiveIcon>
     </SelectPrimitiveTrigger>
   );
@@ -92,31 +93,40 @@ const SelectPrimitiveViewport: React.ElementType = SelectPrimitive.Viewport;
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content> &
-    React.HTMLAttributes<HTMLDivElement>
->(({ className, children, position = "popper", ...props }, ref) => (
-  <SelectPrimitive.Portal>
-    <SelectPrimitiveContent
-      ref={ref}
-      className={cn(
-        "sdk:relative sdk:font-outfit sdk:max-h-[248px] sdk:overflow-auto sdk:z-50  sdk:bg-[#303030] sdk:text-popover-foreground sdk:shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-        "sdk:border-none sdk:w-[319px] sdk:md:w-[329px] sdk:p-[20px] sdk:md:p-[16px] sdk:md:px-[22px]",
-        position === "popper" &&
-          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
-        className
-      )}
-      position={position}
-      {...props}>
-      {/* <SelectScrollUpButton /> */}
-      <SelectPrimitiveViewport
+    React.HTMLAttributes<HTMLDivElement> & {
+      align?: "center" | "start" | "end";
+    }
+>(
+  (
+    { className, children, position = "popper", align = "center", ...props },
+    ref
+  ) => (
+    <SelectPrimitive.Portal>
+      <SelectPrimitiveContent
+        ref={ref}
         className={cn(
-          position === "popper" && "sdk:h-[var(--radix-select-trigger-height)]"
-        )}>
-        {children}
-      </SelectPrimitiveViewport>
-      {/* <SelectScrollDownButton /> */}
-    </SelectPrimitiveContent>
-  </SelectPrimitive.Portal>
-));
+          "sdk:relative sdk:rounded-md sdk:font-geist sdk:max-h-[248px] sdk:overflow-auto sdk:z-50  sdk:bg-[var(--sdk-bg-popover)] sdk:text-popover-foreground sdk:shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sdk:data-[side=bottom]:slide-in-from-top-2 sdk:data-[side=left]:slide-in-from-right-2 sdk:data-[side=right]:slide-in-from-left-2 sdk:data-[side=top]:slide-in-from-bottom-2",
+          "sdk:border sdk:border-[var(--sdk-color-border-primary)] sdk:w-[319px] sdk:md:w-[329px] sdk:p-[20px] sdk:md:p-[16px] sdk:md:px-[22px]",
+          position === "popper" &&
+            "sdk:data-[side=bottom]:translate-y-1 sdk:data-[side=left]:-translate-x-1 sdk:data-[side=right]:translate-x-1 sdk:data-[side=top]:-translate-y-1",
+          className
+        )}
+        position={position}
+        align={align}
+        {...props}>
+        {/* <SelectScrollUpButton /> */}
+        <SelectPrimitiveViewport
+          className={cn(
+            position === "popper" &&
+              "sdk:h-[var(--radix-select-trigger-height)]"
+          )}>
+          {children}
+        </SelectPrimitiveViewport>
+        {/* <SelectScrollDownButton /> */}
+      </SelectPrimitiveContent>
+    </SelectPrimitive.Portal>
+  )
+);
 SelectContent.displayName = SelectPrimitive.Content.displayName;
 
 const SelectPrimitiveLabel: React.ElementType = SelectPrimitive.Label;
@@ -148,7 +158,7 @@ const SelectItem = React.forwardRef<
     ref={ref}
     className={cn(
       "sdk:relative sdk:cursor-pointer sdk:select-none sdk:items-center sdk:text-sm sdk:outline-none sdk:focus:bg-accent sdk:focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      "sdk:text-[#B9B9B9] sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-bold sdk:leading-normal sdk:lowercase sdk:py-[7px]",
+      "sdk:text-[var(--sdk-muted-foreground)] sdk:text-left sdk:font-geist sdk:text-[12px] sdk:font-bold sdk:leading-normal  sdk:py-[7px]",
       "select-item-wrapper",
       className
     )}

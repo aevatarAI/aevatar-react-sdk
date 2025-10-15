@@ -6,28 +6,65 @@ import {
 } from "../types";
 import type { IBaseRequest } from "@aevatar-react-sdk/types";
 import type {
-  ICreateWorkflowProps,
-  IEditWorkflowProps,
-  ISimulateWorkflowProps,
+  ICreateWorkflowParams,
+  IEditWorkflowParams,
+  ISimulateWorkflowParams,
   IWorkflowService,
-  IStartWorkflowProps,
+  IStartWorkflowParams,
   IGetWorkflowQuery,
   IGetWorkflowResult,
+  IGenerateWorkflowProps,
+  IWorkflowViewDataParams,
+  IFetchExecutionLogsProps,
+  IFetchAgentDetailsProps,
+  IGetAIModelsProps,
+  IFetchAutoCompleteProps,
+  IRunWorkflowParams,
+  IRunWorkflowResponse,
 } from "../types/workflow";
 
 export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   extends BaseService<T>
   implements IWorkflowService
 {
-  edit(id: string, props: IUpdateAgentInfo): Promise<IAgentInfoDetail> {
+  createWorkflowViewData(params: IWorkflowViewDataParams): Promise<IAgentInfo> {
+    return this._request.send({
+      method: "POST",
+      url: "/api/agent",
+      params: {
+        ...params,
+        agentType:
+          "Aevatar.GAgents.GroupChat.GAgent.Coordinator.WorkflowView.WorkflowViewGAgent",
+      },
+    });
+  }
+  updateWorkflowViewData(
+    id: string,
+    params: IWorkflowViewDataParams,
+  ): Promise<IAgentInfo> {
     return this._request.send({
       method: "PUT",
       url: `/api/agent/${id}`,
-      params: props,
+      params: {
+        ...params,
+      },
+    });
+  }
+  publishWorkflowViewData(id: string): Promise<IAgentInfo> {
+    return this._request.send({
+      method: "POST",
+      url: `/api/workflow-view/${id}/publish-workflow`,
+    });
+  }
+  edit(id: string, params: IUpdateAgentInfo): Promise<IAgentInfoDetail> {
+    return this._request.send({
+      method: "PUT",
+      url: `/api/agent/${id}`,
+      params,
     });
   }
 
-  create(params: ICreateWorkflowProps): Promise<IAgentInfo> {
+  create(params: ICreateWorkflowParams): Promise<IAgentInfo> {
     return this._request.send({
       method: "POST",
       url: "/api/agent",
@@ -39,7 +76,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
     });
   }
 
-  simulate(params: ISimulateWorkflowProps): Promise<string> {
+  simulate(params: ISimulateWorkflowParams): Promise<string> {
     return this._request.send({
       method: "POST",
       url: "/api/agent/workflow/simulate",
@@ -47,7 +84,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
     });
   }
 
-  editPublishEvent(params: IEditWorkflowProps): Promise<IAgentInfo> {
+  editPublishEvent(params: IEditWorkflowParams): Promise<IAgentInfo> {
     return this._request.send({
       method: "POST",
       url: "/api/agent/publishEvent",
@@ -60,7 +97,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   }
 
   getWorkflow<T = any>(
-    query: IGetWorkflowQuery
+    query: IGetWorkflowQuery,
   ): Promise<IGetWorkflowResult<T>> {
     const params = new URLSearchParams();
     params.append("stateName", query.stateName);
@@ -78,7 +115,47 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
     });
   }
 
-  start<T = any>(params: IStartWorkflowProps): Promise<T> {
+  getAIModels<T = any>(_: IGetAIModelsProps): Promise<T> {
+    return this._request.send({
+      method: "GET",
+      url: "/api/agent/agent-type-info-list",
+    });
+  }
+
+  fetchAutoComplete<T = any>(params: IFetchAutoCompleteProps): Promise<T> {
+    return this._request.send({
+      method: "POST",
+      url: "/api/workflow/text-completion/generate",
+      params,
+    });
+  }
+
+  fetchAgentDetails<T = any>(query: IFetchAgentDetailsProps): Promise<T> {
+    const params = new URLSearchParams({
+      queryString: `formattedBusinessAgentGrainId:"${query.formattedBusinessAgentGrainId}"`,
+      stateName: query.stateName,
+    });
+
+    return this._request.send({
+      method: "GET",
+      url: `/api/query/es?${params.toString()}`,
+    });
+  }
+
+  fetchExecutionLogs<T = any>(query: IFetchExecutionLogsProps): Promise<T> {
+    const params = new URLSearchParams({
+      queryString: `workflowId:${query.workflowId}`,
+      stateName: query.stateName,
+      roundId: String(query.roundId),
+    });
+
+    return this._request.send({
+      method: "GET",
+      url: `/api/query/es?${params.toString()}`,
+    });
+  }
+
+  start<T = any>(params: IStartWorkflowParams): Promise<T> {
     return this._request.send({
       method: "POST",
       url: "/api/agent/publishEvent",
@@ -87,6 +164,23 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
           "Aevatar.GAgents.GroupChat.WorkflowCoordinator.GEvent.StartWorkflowCoordinatorEvent",
         ...params,
       },
+    });
+  }
+  runWorkflow<T = IRunWorkflowResponse>(
+    params: IRunWorkflowParams,
+  ): Promise<T> {
+    return this._request.send({
+      method: "POST",
+      url: "/api/workflow/run",
+      params,
+    });
+  }
+
+  generate<T = any>(params: IGenerateWorkflowProps): Promise<T> {
+    return this._request.send({
+      method: "POST",
+      url: "/api/workflow/generate",
+      params,
     });
   }
 }

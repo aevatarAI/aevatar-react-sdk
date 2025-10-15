@@ -10,6 +10,8 @@ export interface IAgentInfo {
   agentType: string;
   name: string;
   properties: Record<string, any>;
+  createTime?: string;
+  updateTime?: string;
   businessAgentGrainId: string;
 }
 
@@ -20,6 +22,8 @@ export interface IAgentInfoDetail extends IAgentInfo {
 }
 
 export interface IGetAgentsParams {
+  name?: string;
+  status?: string;
   pageIndex: number;
   pageSize: number;
   agentType?: string;
@@ -62,6 +66,7 @@ export interface IAgentsConfiguration {
   agentType: string;
   fullName: string;
   description?: string;
+  defaultValues?: Record<string, any[]>;
   agentParams?: IAgentParams[];
   propertyJsonSchema?: string;
 }

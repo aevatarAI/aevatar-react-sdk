@@ -68,7 +68,7 @@ export default function MyGAevatar({
       try {
         currentPageData = await aevatarAI.services.agent.getAgents({
           pageIndex,
-          pageSize: 10,
+          pageSize: 20,
         });
       } catch (error) {
         toast({
@@ -118,11 +118,12 @@ export default function MyGAevatar({
   const newGA = useMemo(
     () => (
       <Button
-        className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px] sdk:text-[#fff] sdk:hover:text-[#303030]"
+        variant="primary"
+        className="sdk:p-[8px] sdk:px-[18px] sdk:gap-[10px]"
         onClick={onNewGAevatar}>
-        <AddIcon className="text-[#606060]" style={{ width: 14, height: 14 }} />
-        <span className="sdk:text-center sdk:font-outfit sdk:text-[12px] sdk:font-semibold sdk:lowercase sdk:leading-[14px]">
-          new g-agent
+        <AddIcon className="text-[var(--sdk-color-text-tertiary)]" style={{ width: 14, height: 14 }} />
+        <span className="sdk:text-center sdk:font-geist sdk:text-[12px] sdk:font-semibold sdk:leading-[14px]">
+          New G-Agent
         </span>
       </Button>
     ),
@@ -147,12 +148,12 @@ export default function MyGAevatar({
   return (
     <div
       className={clsx(
-        "sdk:relative sdk:bg-black sdk:flex sdk:flex-col sdk:font-outfit aevatarai-gaevatar-list-wrapper",
+        "sdk:relative sdk:bg-[var(--sdk-bg-background)] sdk:flex sdk:flex-col sdk:font-geist aevatarai-gaevatar-list-wrapper",
         className
       )}
       style={{ height, width }}>
       <CommonHeader
-        leftEle={"my g-agents"}
+        leftEle={"my G-Agents"}
         rightEle={
           aevatarList &&
           (maxGAevatarCount ? maxGAevatarCount > aevatarList.length : true) &&

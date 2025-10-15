@@ -57,12 +57,12 @@ export default function DropzoneItem({
           <div
             {...getRootProps({
               className: cn(
-                "sdk:border sdk:border-dashed sdk:border-[#303030] sdk:py-[29px] sdk:flex sdk:items-center sdk:justify-center sdk:cursor-pointer"
+                "sdk:border sdk:border-dashed sdk:border-[var(--sdk-bg-black-light)] sdk:py-[29px] sdk:flex sdk:items-center sdk:justify-center sdk:cursor-pointer"
               ),
               "data-testid": "dropzone-id",
             })}>
             <input {...getInputProps()} />
-            <p className="sdk:font-outfit sdk:text-[12px] sdk:text-[#606060] sdk:flex sdk:flex-col sdk:gap-[4px] sdk:items-center">
+            <p className="sdk:font-geist sdk:text-[12px] sdk:text-[var(--sdk-color-text-tertiary)] sdk:flex sdk:flex-col sdk:gap-[4px] sdk:items-center">
               <UploadIcon />
               <div>Click to upload (PDF)</div>
             </p>
@@ -78,10 +78,10 @@ export default function DropzoneItem({
             <div>
               <div
                 data-testid="field-name-dropzoneItem"
-                className="sdk:font-outfit sdk:text-[12px] sdk:text-[#B9B9B9]">
+                className="sdk:font-geist sdk:text-[12px] sdk:text-[var(--sdk-muted-foreground)]">
                 {field.name}
               </div>
-              <div className="sdk:font-outfit sdk:text-[12px] sdk:text-[#606060]">
+              <div className="sdk:font-geist sdk:text-[12px] sdk:text-[var(--sdk-color-text-tertiary)]">
                 {field.content?.size && `${field.content?.size} bytes`}
               </div>
             </div>

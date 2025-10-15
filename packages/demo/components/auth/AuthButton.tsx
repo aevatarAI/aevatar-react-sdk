@@ -8,11 +8,11 @@ export default function AuthButton({ onFinish }: { onFinish: () => void }) {
   console.log(walletInfo, "walletInfo==");
   const getAuthToken = useAuthToken();
 
-  useEffect(() => {
-    ConfigProvider.setConfig({
-      getAevatarAuthToken: getAuthToken,
-    });
-  }, [getAuthToken]);
+  // useEffect(() => {
+  //   ConfigProvider.setConfig({
+  //     getAevatarAuthToken: getAuthToken,
+  //   });
+  // }, [getAuthToken]);
 
   const onGetAuthToken = useCallback(async () => {
     await getAuthToken();
