@@ -20,7 +20,8 @@ const INITIAL_STATE = {
   theme: "dark",
   hiddenGAevatarType: [
     "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
-    "Aevatar.GAgents.GroupChat.GAgent.Coordinator.WorkflowView.WorkflowViewGAgent"
+    "Aevatar.GAgents.GroupChat.GAgent.Coordinator.WorkflowView.WorkflowViewGAgent",
+    "Aevatar.GAgents.Workflow.WorkflowViewGAgentPlus",
   ],
 };
 const AevatarContext = createContext<any>(INITIAL_STATE);
@@ -33,15 +34,18 @@ export function useAevatar(): [AevatarState, BasicActions] {
 // Custom hook for theme management
 export function useTheme() {
   const [{ theme }, { dispatch }] = useAevatar();
-  
+
   const toggleTheme = useCallback(() => {
     const newTheme: Theme = theme === "dark" ? "light" : "dark";
     dispatch({ type: "SET_THEME", payload: { theme: newTheme } });
   }, [theme, dispatch]);
 
-  const setTheme = useCallback((newTheme: Theme) => {
-    dispatch({ type: "SET_THEME", payload: { theme: newTheme } });
-  }, [dispatch]);
+  const setTheme = useCallback(
+    (newTheme: Theme) => {
+      dispatch({ type: "SET_THEME", payload: { theme: newTheme } });
+    },
+    [dispatch]
+  );
 
   return {
     theme: theme || "dark",
@@ -77,7 +81,7 @@ export default function Provider({
   hiddenGAevatarType = INITIAL_STATE.hiddenGAevatarType,
 }: ProviderProps) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-  
+
   useEffectOnce(() => {
     if (aevatarAI.config.storageMethod) {
       ConfigProvider.setConfig({});
@@ -95,16 +99,16 @@ export default function Provider({
   useEffect(() => {
     const currentTheme = theme || state.theme;
     if (currentTheme) {
-      document.documentElement.setAttribute('data-theme', currentTheme);
+      document.documentElement.setAttribute("data-theme", currentTheme);
     }
   }, [theme, state.theme]);
 
   // Initialize theme on mount
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-    useEffect(() => {
+  useEffect(() => {
     const currentTheme = theme || state.theme;
     if (currentTheme) {
-      document.documentElement.setAttribute('data-theme', currentTheme);
+      document.documentElement.setAttribute("data-theme", currentTheme);
     }
   }, []); // Only run on mount
 
@@ -116,7 +120,10 @@ export default function Provider({
   return (
     <AevatarContext.Provider
       value={useMemo(
-        () => [{ ...state, hiddenGAevatarType, theme: theme || state.theme }, { dispatch }],
+        () => [
+          { ...state, hiddenGAevatarType, theme: theme || state.theme },
+          { dispatch },
+        ],
         [state, hiddenGAevatarType, theme]
       )}>
       {children}

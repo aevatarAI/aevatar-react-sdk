@@ -221,7 +221,6 @@ export interface IGetWorkflowLogsItem {
 }
 
 export interface IWorkflowService {
-  create(params: ICreateWorkflowParams): Promise<IAgentInfo>;
   simulate(params: ISimulateWorkflowParams): Promise<string>;
   edit(id: string, params: IUpdateAgentInfo): Promise<IAgentInfoDetail>;
   editPublishEvent(params: IEditWorkflowParams): Promise<IAgentInfo>;

@@ -51,8 +51,7 @@ export default forwardRef(function WorkflowList(
         currentPageData = await aevatarAI.services.agent.getAgents({
           pageIndex,
           pageSize: 100,
-          agentType:
-            "Aevatar.GAgents.GroupChat.GAgent.Coordinator.WorkflowView.WorkflowViewGAgent",
+          agentType: "Aevatar.GAgents.Workflow.WorkflowViewGAgentPlus",
         });
       } catch (error) {
         break;

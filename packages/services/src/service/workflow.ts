@@ -6,7 +6,6 @@ import {
 } from "../types";
 import type { IBaseRequest } from "@aevatar-react-sdk/types";
 import type {
-  ICreateWorkflowParams,
   IEditWorkflowParams,
   ISimulateWorkflowParams,
   IWorkflowService,
@@ -37,8 +36,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
       url: "/api/agent",
       params: {
         ...params,
-        agentType:
-          "Aevatar.GAgents.GroupChat.GAgent.Coordinator.WorkflowView.WorkflowViewGAgent",
+        agentType: "Aevatar.GAgents.Workflow.WorkflowViewGAgentPlus",
       },
     });
   }
@@ -65,18 +63,6 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
       method: "PUT",
       url: `/api/agent/${id}`,
       params,
-    });
-  }
-
-  create(params: ICreateWorkflowParams): Promise<IAgentInfo> {
-    return this._request.send({
-      method: "POST",
-      url: "/api/agent",
-      params: {
-        agentType:
-          "Aevatar.GAgents.GroupChat.WorkflowCoordinator.WorkflowCoordinatorGAgent",
-        ...params,
-      },
     });
   }
 
