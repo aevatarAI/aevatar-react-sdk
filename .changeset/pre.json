@@ -1,13 +1,13 @@
 {
-  "mode": "exit",
+  "mode": "pre",
   "tag": "alpha",
   "initialVersions": {
-    "@aevatar-react-sdk/core": "0.4.39",
+    "@aevatar-react-sdk/core": "0.4.40-alpha.0",
     "demo": "0.1.3-alpha.0",
-    "@aevatar-react-sdk/services": "0.4.39",
-    "@aevatar-react-sdk/types": "0.4.39",
-    "@aevatar-react-sdk/ui-react": "0.4.39",
-    "@aevatar-react-sdk/utils": "0.4.39"
+    "@aevatar-react-sdk/services": "0.4.40-alpha.0",
+    "@aevatar-react-sdk/types": "0.4.40-alpha.0",
+    "@aevatar-react-sdk/ui-react": "0.4.40-alpha.0",
+    "@aevatar-react-sdk/utils": "0.4.40-alpha.0"
   },
   "changesets": []
 }
