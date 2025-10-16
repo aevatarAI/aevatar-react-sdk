@@ -47,8 +47,16 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { getPropertiesByDefaultValues } from "../../utils/jsonSchemaParse";
+import { applyHorizontalLayout } from "./layoutUtils";
 
 const getId = () => `${uuidv4()}`;
+
+const fitViewOptions = {
+  padding: 0.1,
+  includeHiddenNodes: false,
+  minZoom: 0.1,
+  maxZoom: 1,
+};
 
 interface IProps {
   gaevatarList?: IAgentInfoDetail[];
@@ -200,7 +208,7 @@ export const Workflow = forwardRef(
       [onRemoveNode, setNodes, setEdges]
     );
 
-    const { screenToFlowPosition } = useReactFlow();
+    const { screenToFlowPosition, fitView } = useReactFlow();
     const [dragInfo] = useDnD();
     const nodesRef = useRef<INode[]>(nodes);
     const gaevatarListRef = useRef<IAgentInfoDetail[]>([]);
@@ -547,7 +555,7 @@ export const Workflow = forwardRef(
                 },
                 measured: {
                   width: 234,
-                  height: 301,
+                  height: 100,
                 },
               }
             : {
@@ -563,7 +571,7 @@ export const Workflow = forwardRef(
                 },
                 measured: {
                   width: 234,
-                  height: 301,
+                  height: 100,
                 },
               };
         setNodes((nds) => nds.concat(newNode as any));
@@ -607,7 +615,11 @@ export const Workflow = forwardRef(
     const edgeTypes = useMemo(
       () => ({
         bezier: (edgeProps) => (
-          <CustomEdge {...edgeProps} isRunning={isRunning} setEdges={setEdges} />
+          <CustomEdge
+            {...edgeProps}
+            isRunning={isRunning}
+            setEdges={setEdges}
+          />
         ),
       }),
       [setEdges, isRunning]
@@ -647,6 +659,16 @@ export const Workflow = forwardRef(
       }
     }, [redo, setNodes, setEdges, onRedoAction]);
 
+    const onFormatLayoutHandler = useCallback(() => {
+      if (nodes.length === 0) return;
+
+      const { nodes: layoutedNodes, edges: layoutedEdges } =
+        applyHorizontalLayout(nodes, edges);
+      setNodes(layoutedNodes);
+      setEdges(layoutedEdges);
+      fitView(fitViewOptions);
+    }, [nodes, edges, setNodes, fitView, setEdges]);
+
     return (
       <div
         className={clsx(
@@ -670,12 +692,7 @@ export const Workflow = forwardRef(
             // onDrop={onDrop} // Remove native onDrop
             onDragOver={onDragOver}
             fitView
-            fitViewOptions={{
-              padding: 0.1,
-              includeHiddenNodes: false,
-              minZoom: 0.1,
-              maxZoom: 1,
-            }}
+            fitViewOptions={fitViewOptions}
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes}
             defaultEdgeOptions={{ type: "bezier" }}
@@ -741,6 +758,53 @@ export const Workflow = forwardRef(
                     )}
                     side="top">
                     Redo
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={clsx(
+                        "sdk:cursor-pointer sdk:p-[7px]",
+                        (nodes.length === 0 || isRunning) &&
+                          "sdk:opacity-50 sdk:cursor-not-allowed"
+                      )}
+                      onClick={onFormatLayoutHandler}
+                      disabled={nodes.length === 0 || isRunning}
+                      aria-label="format layout">
+                      {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round">
+                        <rect
+                          x="3"
+                          y="3"
+                          width="18"
+                          height="18"
+                          rx="2"
+                          ry="2"
+                        />
+                        <line x1="9" y1="9" x2="15" y2="9" />
+                        <line x1="9" y1="15" x2="15" y2="15" />
+                      </svg>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className={clsx(
+                      "sdk:z-1000 sdk:text-[12px] sdk:font-geist sdk:text-[var(--sdk-muted-foreground)] sdk:bg-[var(--sdk-color-bg-primary)] sdk:p-[4px]",
+                      "sdk:whitespace-pre-wrap sdk:break-words sdk:text-left"
+                    )}
+                    side="top">
+                    Format Layout
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
