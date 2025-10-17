@@ -75,7 +75,7 @@ export default function AevatarCardInner({
             "sdk:aevatar-item-background sdk:border sdk:border-[var(--sdk-color-bg-primary)]  sdk:group-hover:border-[var(--sdk-border-foreground)]",
             selected && "sdk:border-[var(--sdk-border-foreground)]! ",
             // "sdk:border-b-[var(--sdk-bg-accent)]!",
-            'sdk:pb-[6px]',
+            "sdk:pb-[6px]",
             "sdk:max-h-[300px] sdk:overflow-y-auto",
             className
           )}
@@ -97,7 +97,8 @@ export default function AevatarCardInner({
                 <ChevronDown
                   className={clsx(
                     "sdk:w-[16px] sdk:h-[16px] sdk:cursor-pointer sdk:transition-all sdk:duration-200 sdk:ease-in-out",
-                    showMore && "sdk:rotate-180"
+                    showMore && "sdk:rotate-180",
+                    propertiesInfo.length <= 0 && "sdk:hidden"
                   )}
                   onClick={(e) => {
                     e.stopPropagation();
