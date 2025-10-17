@@ -77,7 +77,7 @@ export const generateWorkflowGraph = (
       },
       measured: {
         width: 234,
-        height: 301,
+        height: 100,
       },
     });
   }
