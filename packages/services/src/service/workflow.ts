@@ -122,7 +122,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   getAIModels<T = any>(_: IGetAIModelsProps): Promise<T> {
     return this._request.send({
       method: "GET",
-      url: "/api/workflow/agent-type-info-list",
+      url: "/api/agent/agent-type-info-list",
     });
   }
 
@@ -212,7 +212,7 @@ export class WorkflowService<T extends IBaseRequest = IBaseRequest>
   ): Promise<IGetWorkflowLogsItem[]> {
     return this._request.send({
       method: "GET",
-      url: "/api/host/log/workflow",
+      url: "/api/host/workflow-log",
       params: props,
     });
   }

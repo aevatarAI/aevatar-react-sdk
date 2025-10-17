@@ -76,7 +76,7 @@ export class AgentService<T extends IBaseRequest = IBaseRequest>
   getAllAgentsConfiguration(): Promise<IAgentsConfiguration[]> {
     return this._request.send({
       method: "GET",
-      url: "/api/workflow/agent-type-info-list",
+      url: "/api/agent/agent-type-info-list",
     });
   }
   getAgents(params: IGetAgentsParams): Promise<IAgentInfoDetail[]> {
