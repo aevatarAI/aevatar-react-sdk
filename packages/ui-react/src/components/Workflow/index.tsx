@@ -48,6 +48,7 @@ import {
 } from "../ui/tooltip";
 import { getPropertiesByDefaultValues } from "../../utils/jsonSchemaParse";
 import { applyHorizontalLayout } from "./layoutUtils";
+import { LayoutDashboard } from "lucide-react";
 
 const getId = () => `${uuidv4()}`;
 
@@ -775,27 +776,7 @@ export const Workflow = forwardRef(
                       onClick={onFormatLayoutHandler}
                       disabled={nodes.length === 0 || isRunning}
                       aria-label="format layout">
-                      {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round">
-                        <rect
-                          x="3"
-                          y="3"
-                          width="18"
-                          height="18"
-                          rx="2"
-                          ry="2"
-                        />
-                        <line x1="9" y1="9" x2="15" y2="9" />
-                        <line x1="9" y1="15" x2="15" y2="15" />
-                      </svg>
+                      <LayoutDashboard className="sdk:w-[14px] sdk:h-[14px]" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent
