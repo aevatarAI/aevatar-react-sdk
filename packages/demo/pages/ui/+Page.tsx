@@ -31,7 +31,7 @@ ConfigProvider.setConfig({
     timeout: 15000,
     baseURL:
       // "https://station-developer-dev-staging.aevatar.ai/testproject-client",
-      "https://station-developer-testing.aevatar.ai/default-project-2a9a-b17730ff-44fd-client",
+      "https://station-developer-dev-staging.aevatar.ai/default-project-113b-5a7ed924-client",
   },
 });
 
@@ -119,7 +119,7 @@ export default function UI() {
 
   const getTokenByclient = useCallback(async () => {
     const TOKEN =
-      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjZERTNDMzQzNTgxNEIxQ0NDQkQ2RkIyMzk2RjQxRjEyMjVFRUVGOEMiLCJ4NXQiOiJiZVBEUTFnVXNjekwxdnNqbHZRZkVpWHU3NHciLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODIvIiwiZXhwIjoxNzYwNzY0ODMzLCJpYXQiOjE3NjA1OTIwMzQsImF1ZCI6IkFldmF0YXIiLCJzY29wZSI6IkFldmF0YXIgb2ZmbGluZV9hY2Nlc3MiLCJqdGkiOiI2YjkyNDk4Yi1hMTdlLTQ2ZGMtODY2Yy0zYTZkZWJiZmU1YTMiLCJzdWIiOiJkZDJkZjhjNC1lMDc0LTI5MzAtNzgwZS0zYTFjZmRhMjc5NzAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJydW51bHIiLCJlbWFpbCI6InJ1bnVsckBzbmFwbWFpbC5jYyIsInJvbGUiOlsiMGIzYWY3YTktODlkZi1hMTQ5LWIzYjctM2ExY2ZkYTI5YTllX093bmVyIiwiYmFzaWNVc2VyIiwiYjE3NzMwZmYtNmIzOS01MjQ1LTY0Y2MtM2ExY2ZkYTI5OTk2X093bmVyIl0sInBob25lX251bWJlcl92ZXJpZmllZCI6IkZhbHNlIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsInVuaXF1ZV9uYW1lIjoicnVudWxyIiwic2VjdXJpdHlfc3RhbXAiOiJKSU42Wk1UQTZDSU9OS1QyQ0hXRU1SR1RBUUlWSkZESSIsIm9pX3Byc3QiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX2F1X2lkIjoiMTczNTQ5ZDItNjI4Yy05OGY4LWIxMzQtM2ExY2ZkYTI3ZWYxIiwiY2xpZW50X2lkIjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV90a25faWQiOiI0MjQyZjNhMy00ODg3LTE5YjQtOGM1OC0zYTFjZmRhMzU0OWYifQ.IrwJncCMtd7vbZfAXfB3yBKNtopCe0mvD3VbA636-aYdLu4w54RbgiW52RRlqQSOGXcn1rsvcu8N-2p1UgajE-17r3MaAOjT63vPgW5xNEOrzfm__2kzR6Znw1IfBgMYm_onmD7iENR4fhxKVQsW0bGH9Btlch-6zzOY24eimRdjaVJZ-qUezEJa8jycNm7uOlUKYDhnP7ZiVxdZL-m29iwDZX_kBzZfCLnB9KkGvw3D94cB56LzhalaIARv044-lJUHJ8jKI_8Rh9JdBsKh1syQ5fkqj_vmWWiC32FKZEqHD_vWKHFobDCXYQJG4b_Gv4XigtN4tNsCQv_IwwarsQ";
+      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg5QzAwNzc1RTlGNDhEQUZGN0QzQzZGMjBBNkZDQTdDN0FDMzNDQjIiLCJ4NXQiOiJpY0FIZGVuMGphXzMwOGJ5Q21fS2ZIckRQTEkiLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwczovL2F1dGgtc3RhdGlvbi1kZXYtc3RhZ2luZy5hZXZhdGFyLmFpLyIsImV4cCI6MTc2MTExNDQ1MCwiaWF0IjoxNzYwOTQxNjUxLCJhdWQiOiJBZXZhdGFyIiwic2NvcGUiOiJBZXZhdGFyIG9mZmxpbmVfYWNjZXNzIiwianRpIjoiNzVlNTAzNzQtMDAwYS00OWUzLWFlZDYtOGM0N2IwN2YzYzFjIiwic3ViIjoiNTdiYWIyMjAtOTVkZS1kNDYxLTFlODMtM2ExY2VlOGYwYzIzIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiYWZ2b2ppIiwiZW1haWwiOiJhZnZvamlAc25hcG1haWwuY2MiLCJyb2xlIjpbImJhc2ljVXNlciIsIjgwNmQzY2M2LTI2OTMtYTg0NS05Y2FhLTNhMWNlZThmNDY2ZV9Pd25lciIsIjVhN2VkOTI0LTM4NWYtMDA2YS04OWU2LTNhMWNlZThmNDU1NV9Pd25lciJdLCJwaG9uZV9udW1iZXJfdmVyaWZpZWQiOiJGYWxzZSIsImVtYWlsX3ZlcmlmaWVkIjoiRmFsc2UiLCJ1bmlxdWVfbmFtZSI6ImFmdm9qaSIsInNlY3VyaXR5X3N0YW1wIjoiR1NCNE4ySUIyTElBWk5CRzUyM0tGNVo0T0YyUUo3WDIiLCJvaV9wcnN0IjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV9hdV9pZCI6ImFlNzQ5Yzk4LTg0YzgtODFmMy1lZTkzLTNhMWNlZThmMGUxMiIsImNsaWVudF9pZCI6IkFldmF0YXJBdXRoU2VydmVyIiwib2lfdGtuX2lkIjoiZGY1MTBmMWQtZWQ2ZS1kZmE5LTZlOTYtM2ExZDEyN2EwZjE1In0.LQp9Exri0cOToeXWrf8_eRl7CwBw0bCk1Wt5ypfIF-G6V7dG96I7jvaSRGub_a1EtQAz3yOZvqGyt9Qq-vayyzNITnFm05a2Ry4fkjCM_n7LS1HwDo3CRkkLkv0CsDKhL2-XI-2dmDXw9CX552UyUVC3ouqNY1VOsVATX1h29ZqozxInWHzm2MIN_KqOBDrWe36M1j5jaT0ZcHRxgIB7rr3PCw-IxrIsaUJUidVL1vuMiqRFmdtfse8F1tveeZLl6LP9UnrEsbjYnhAdguNEudUETmt4_NxYfO6zOKGJnhxvAWFE34Q7BmVuGULg2RURgDOTsUyEemmC3QNz62POZw";
     aevatarAI.fetchRequest.setHeaders({
       Authorization: TOKEN,
     });
@@ -284,8 +284,8 @@ export default function UI() {
               onEditWorkflow={(workflowAgentId) => {
                 onEditWorkflow(workflowAgentId);
               }}
-              onNewWorkflow={(workflow) => {
-                setEditWorkflow(workflow);
+              onNewWorkflow={() => {
+                setEditWorkflow(undefined);
                 onShowWorkflow();
               }}
             />
