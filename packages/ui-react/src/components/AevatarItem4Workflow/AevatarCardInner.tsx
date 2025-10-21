@@ -50,11 +50,11 @@ export default function AevatarCardInner({
         agentInfo?.propertyJsonSchema,
         agentInfo?.properties,
         isNew ? agentInfo?.defaultValues : undefined
-      ).slice(0, 3), // Only take first 3 properties
+      ).slice(0, 2), // Only take first 3 properties
     [agentInfo, isNew]
   );
 
-  const [showMore, setShowMore] = useState(false);
+  const [showMore, setShowMore] = useState(true);
 
   return (
     <div className="sdk:w-[234px]">
@@ -98,6 +98,7 @@ export default function AevatarCardInner({
                   className={clsx(
                     "sdk:w-[16px] sdk:h-[16px] sdk:cursor-pointer sdk:transition-all sdk:duration-200 sdk:ease-in-out",
                     showMore && "sdk:rotate-180",
+                    "sdk:hidden",
                     propertiesInfo.length <= 0 && "sdk:hidden"
                   )}
                   onClick={(e) => {
