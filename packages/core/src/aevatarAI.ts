@@ -109,7 +109,7 @@ export class AevatarAI implements IAevatarAI, IAevatarAIMethods {
     const [result, workUnitRelationsByES] = await Promise.all([
       this.services.agent.getAgentInfo(agentId),
       this.services.workflow.getWorkflow({
-        stateName: "WorkflowCoordinatorState",
+        stateName: "WorkflowCoordinatorStatePlus",
         queryString: `_id:${agentId}`,
       }),
     ]);

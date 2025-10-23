@@ -209,7 +209,7 @@ IWorkflowConfigurationProps) => {
     data: fetchedExecutionLogsData,
     refetch: refetchLatestExecutionLogs,
   } = useLatestExecutionLogs({
-    stateName: "WorkflowExecutionRecordState",
+    stateName: "WorkflowExecutionRecordStatePlus",
     workflowId: workflowIdRef.current,
   });
 

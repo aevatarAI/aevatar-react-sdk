@@ -17,7 +17,7 @@ const fetchExecutionLogsWithTime = async ({
   if (!workflowId || workflowId === IS_NULL_ID) return results;
   try {
     const response = await aevatarAI.services.workflow.fetchExecutionLogs({
-      stateName: "WorkflowExecutionRecordState",
+      stateName: "WorkflowExecutionRecordStatePlus",
       queryString: `workflowId:${workflowId} AND startTime:[now-30d/d TO now]`,
       pageIndex,
       pageSize,

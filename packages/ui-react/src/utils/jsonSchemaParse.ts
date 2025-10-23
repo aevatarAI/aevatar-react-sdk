@@ -1,4 +1,5 @@
 import type { JSONSchemaType } from "../components";
+import { WORKFLOW_FILTER_KEY_NAME } from "../constants/workflow";
 
 // Recursively resolve $ref in schema
 type SchemaMap = Record<string, any>;
@@ -60,12 +61,14 @@ export function parseJsonSchema(
   if (schema.oneOf && Array.isArray(schema.oneOf)) {
     // If there are exactly two options, check if one is null type
     if (schema.oneOf.length === 2) {
-      const hasNullType = schema.oneOf.some(item => item.type === "null");
-      const hasNonNullType = schema.oneOf.some(item => item.type !== "null" || item.$ref);
-      
+      const hasNullType = schema.oneOf.some((item) => item.type === "null");
+      const hasNonNullType = schema.oneOf.some(
+        (item) => item.type !== "null" || item.$ref
+      );
+
       if (hasNullType && hasNonNullType) {
         // Find the non-null option
-        const nonNullOption = schema.oneOf.find(item => item.type !== "null");
+        const nonNullOption = schema.oneOf.find((item) => item.type !== "null");
         return parseJsonSchema(nonNullOption, rootSchema, definitions, value);
       }
     }
@@ -169,7 +172,7 @@ export const jsonSchemaParse = (
   if (_properties) {
     _properties = Object.fromEntries(
       Object.entries(_properties).filter(
-        ([key]) => key !== "correlationId" && key !== "publisherGrainId"
+        ([key]) => !WORKFLOW_FILTER_KEY_NAME.includes(key)
       )
     );
   }
@@ -185,12 +188,7 @@ export const jsonSchemaParse = (
 
     return [
       name,
-      parseJsonSchema(
-        propWithRequired,
-        jsonSchema,
-        definitions,
-        value
-      ),
+      parseJsonSchema(propWithRequired, jsonSchema, definitions, value),
     ];
   });
 };

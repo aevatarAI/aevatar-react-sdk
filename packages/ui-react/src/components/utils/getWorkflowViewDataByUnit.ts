@@ -6,6 +6,7 @@ import type {
 } from "@aevatar-react-sdk/services";
 import type { INode } from "../Workflow/types";
 import { getPropertiesByDefaultValues } from "../../utils/jsonSchemaParse";
+import { WORKFLOW_FILTER_KEY_NAME } from "../../constants/workflow";
 
 export const getWorkflowViewDataByUnit = (
   gaevatarList: IAgentInfoDetail[],
@@ -50,6 +51,11 @@ export const getWorkflowViewDataByUnit = (
       // biome-ignore lint/performance/noDelete: <explanation>
       delete properties.correlationId;
     }
+    WORKFLOW_FILTER_KEY_NAME.forEach((key) => {
+      if (key in properties) {
+        delete properties[key];
+      }
+    });
     _workflowNode = {
       ..._workflowNode,
       name: agentInfo?.name,

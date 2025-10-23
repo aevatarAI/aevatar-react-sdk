@@ -15,7 +15,7 @@ export const useWorkflowState = () => {
       try {
         const response =
           await aevatarAI.services.workflow.fetchLatestExecutionLogs({
-            stateName: "WorkflowExecutionRecordState",
+            stateName: "WorkflowExecutionRecordStatePlus",
             workflowId,
           });
 

@@ -103,7 +103,7 @@ export default forwardRef(function WorkflowList(
         const workflowList =
           await aevatarAI.services.workflow.getWorkflow<IWorkflowCoordinatorState>(
             {
-              stateName: "WorkflowCoordinatorState",
+              stateName: "WorkflowCoordinatorStatePlus",
               queryString,
             }
           );

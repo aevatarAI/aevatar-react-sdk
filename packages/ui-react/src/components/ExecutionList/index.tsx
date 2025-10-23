@@ -76,7 +76,7 @@ export default function ExecutionList({
   className,
   onNewWorkflow,
 }: IExecutionListProps) {
-  const stateName = "WorkflowCoordinatorState";
+  const stateName = "WorkflowCoordinatorStatePlus";
   const [filter, setFilter] = useState({
     pageIndex: 0,
     pageSize: 100,
