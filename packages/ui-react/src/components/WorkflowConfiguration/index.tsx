@@ -54,6 +54,7 @@ import { IS_NULL_ID } from "../../constants";
 import { useFetchExecutionLogsWithTime } from "../Workflow/hooks/useFetchExecutionLogsWithTime";
 import WorkflowAgentLogsDialog from "../WorkflowAgentLogs";
 import WorkflowMenu from "./workflowMenu";
+import { v4 as uuidv4 } from "uuid";
 
 export interface IWorkflowConfigurationState {
   workflowAgentId?: string;
@@ -715,7 +716,7 @@ IWorkflowConfigurationProps) => {
   );
 
   const onDuplicateHandler = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
+    async (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
       const data = getWorkflowViewData();
       data.properties.workflowNodeList = data.properties.workflowNodeList.map(
@@ -726,11 +727,18 @@ IWorkflowConfigurationProps) => {
           };
         }
       );
-      const workflowName = `${data.name}_1`;
+      const randomId = uuidv4().replace(/-/g, "").substring(0, 6);
+
+      const workflowName = `${data.name}_${randomId}`;
       data.name = workflowName;
       data.properties.name = workflowName;
+
+      const result = await aevatarAI.services.workflow.createWorkflowViewData(
+        data
+      );
       const newState = {
         workflowName,
+        workflowAgentId: result.id,
         workflowViewData: data,
       };
       setNewWorkflowState(newState);

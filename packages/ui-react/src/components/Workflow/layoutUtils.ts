@@ -1,10 +1,13 @@
 import dagre from "@dagrejs/dagre";
 import type { Node, Edge } from "@xyflow/react";
+import {
+  WORKFLOW_NODE_WIDTH,
+  WORKFLOW_NODE_HEIGHT,
+  WORKFLOW_NODE_SPACING,
+} from "../../constants/workflow";
 const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
 // Define node dimensions for layout calculation
-const NODE_WIDTH = 234;
-const NODE_HEIGHT = 120;
 /**
  * Apply horizontal layout to workflow nodes using dagre
  * @param nodes - Array of ReactFlow nodes
@@ -16,11 +19,17 @@ export const applyHorizontalLayout = (
   edges: Edge[],
   direction: "LR" | "TB" = "LR"
 ): { nodes: Node[]; edges: Edge[] } => {
+  console.log(nodes, "nodes==applyHorizontalLayout");
   const isHorizontal = direction === "LR";
-  dagreGraph.setGraph({ rankdir: direction });
+  dagreGraph.setGraph({
+    rankdir: direction,
+  });
 
   nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, { width: NODE_WIDTH, height: NODE_HEIGHT });
+    dagreGraph.setNode(node.id, {
+      width: WORKFLOW_NODE_WIDTH,
+      height: WORKFLOW_NODE_HEIGHT,
+    });
   });
 
   edges.forEach((edge) => {
@@ -38,8 +47,8 @@ export const applyHorizontalLayout = (
       // We are shifting the dagre node position (anchor=center center) to the top left
       // so it matches the React Flow node anchor point (top left).
       position: {
-        x: nodeWithPosition.x - NODE_WIDTH / 2,
-        y: nodeWithPosition.y - NODE_HEIGHT / 2,
+        x: nodeWithPosition.x - WORKFLOW_NODE_WIDTH / 2,
+        y: nodeWithPosition.y - WORKFLOW_NODE_HEIGHT / 2,
       },
     };
 

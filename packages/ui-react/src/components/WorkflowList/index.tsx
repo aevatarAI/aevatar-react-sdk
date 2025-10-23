@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { v4 as uuidv4 } from "uuid";
 import WorkflowListInner from "../WorkflowListInner";
 import { aevatarAI } from "../../utils";
 import type {
@@ -22,11 +23,12 @@ import clsx from "clsx";
 import Loading from "../../assets/svg/loading.svg?react";
 import { IS_NULL_ID } from "../../constants";
 import type { IWorkflowConfigurationState } from "../WorkflowConfiguration";
+import { useToastLoading } from "../../hooks/useToastLoading";
 
 export interface IWorkflowListProps {
   className?: string;
   onEditWorkflow?: (workflowId: string) => void;
-  onNewWorkflow?: (workflow?: IWorkflowConfigurationState) => void;
+  onNewWorkflow?: () => void;
 }
 
 export interface IWorkflowListRef {
@@ -158,6 +160,8 @@ export default forwardRef(function WorkflowList(
   const deleteWorkflowViewIdRef = useRef<string>();
   const deleteWorkflowIdRef = useRef<string>();
 
+  const toastLoading = useToastLoading();
+
   const onDelete = useCallback(async () => {
     const { dismiss } = toast({
       description: (
@@ -258,7 +262,8 @@ export default forwardRef(function WorkflowList(
   const onDuplicateWorkflow = useCallback(
     async (workflow: IWorkflowCoordinatorState & IAgentInfoDetail) => {
       console.log("workflowId===", workflow);
-      const workflowName = `${workflow.name}_1`;
+      const randomId = uuidv4().replace(/-/g, '').substring(0, 6)
+      const workflowName = `${workflow.name}_${randomId}`;
       const workflowNodeList = workflow.properties?.workflowNodeList?.map(
         (item) => {
           return {
@@ -267,19 +272,31 @@ export default forwardRef(function WorkflowList(
           };
         }
       );
-      const data: IWorkflowViewDataParams = {
+
+      const workflowViewData = {
         name: workflowName,
         properties: {
-          workflowNodeList: workflowNodeList,
+          workflowNodeList,
           workflowNodeUnitList: workflow.properties?.workflowNodeUnitList,
+          name: workflowName,
         },
       };
-      onNewWorkflow?.({
-        workflowViewData: data,
-        workflowName,
-      });
+      const { dismiss } = toastLoading("Copying workflow");
+
+      try {
+        const result = await aevatarAI.services.workflow.createWorkflowViewData(
+          workflowViewData
+        );
+        dismiss();
+        if (result.id) onEditWorkflow?.(result?.id);
+      } catch (error) {
+        dismiss();
+        toast({
+          description: handleErrorMessage(error, "Something went wrong."),
+        });
+      }
     },
-    [onNewWorkflow]
+    [onEditWorkflow, toastLoading, toast]
   );
 
   return (

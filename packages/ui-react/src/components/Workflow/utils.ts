@@ -5,6 +5,7 @@ import type {
 } from "@aevatar-react-sdk/services";
 import type { Edge, INode, TDeleteNode, TNodeDataClick } from "./types";
 import { IS_NULL_ID } from "../../constants";
+import { WORKFLOW_NODE_HEIGHT, WORKFLOW_NODE_WIDTH } from "../../constants/workflow";
 let id = 0;
 const getId = () => `edge_id_${id++}`;
 
@@ -76,8 +77,8 @@ export const generateWorkflowGraph = (
         deleteNode,
       },
       measured: {
-        width: 234,
-        height: 100,
+        width: WORKFLOW_NODE_WIDTH,
+        height: WORKFLOW_NODE_HEIGHT,
       },
     });
   }

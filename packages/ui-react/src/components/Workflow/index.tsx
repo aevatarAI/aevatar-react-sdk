@@ -49,6 +49,7 @@ import {
 import { getPropertiesByDefaultValues } from "../../utils/jsonSchemaParse";
 import { applyHorizontalLayout } from "./layoutUtils";
 import { LayoutDashboard } from "lucide-react";
+import { WORKFLOW_NODE_HEIGHT, WORKFLOW_NODE_WIDTH } from "../../constants/workflow";
 
 const getId = () => `${uuidv4()}`;
 
@@ -555,8 +556,8 @@ export const Workflow = forwardRef(
                   deleteNode,
                 },
                 measured: {
-                  width: 234,
-                  height: 100,
+                  width: WORKFLOW_NODE_WIDTH,
+                  height: WORKFLOW_NODE_HEIGHT,
                 },
               }
             : {
@@ -571,8 +572,8 @@ export const Workflow = forwardRef(
                   deleteNode,
                 },
                 measured: {
-                  width: 234,
-                  height: 100,
+                  width: WORKFLOW_NODE_WIDTH,
+                  height: WORKFLOW_NODE_HEIGHT,
                 },
               };
         setNodes((nds) => nds.concat(newNode as any));
