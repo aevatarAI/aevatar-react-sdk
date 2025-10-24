@@ -31,7 +31,7 @@ ConfigProvider.setConfig({
     timeout: 15000,
     baseURL:
       // "https://station-developer-dev-staging.aevatar.ai/testproject-client",
-      "https://station-developer-testing.aevatar.ai/default-project-618b-a23e2262-1c3a-client",
+      "https://station-developer-testing.aevatar.ai/test-work-7d33c579-40e1-client",
   },
 });
 
@@ -119,7 +119,7 @@ export default function UI() {
 
   const getTokenByclient = useCallback(async () => {
     const TOKEN =
-      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg4MzZFOERDQjM2QkZERUUwMDY1QTg2MTE3QTE1N0FDNTUxMjhBNUEiLCJ4NXQiOiJpRGJvM0xOcl9lNEFaYWhoRjZGWHJGVVNpbG8iLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODIvIiwiZXhwIjoxNzYxMzczNzg4LCJpYXQiOjE3NjEyMDA5ODksImF1ZCI6IkFldmF0YXIiLCJzY29wZSI6IkFldmF0YXIgb2ZmbGluZV9hY2Nlc3MiLCJqdGkiOiJmYzVlYzAxYi1hZTYyLTQ4YjktYjQ1OC00YzMwN2Q5YjMzMmUiLCJzdWIiOiI1ZjRkZThlYS1hNjg1LTAyODktMWY4OC0zYTFkMjFlZjE2ZjUiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJydW51bHIiLCJlbWFpbCI6InJ1bnVsckBzbmFwbWFpbC5jYyIsInJvbGUiOlsiYTIzZTIyNjItY2FhYy0wODMyLWVlYjktM2ExZDIxZWYzMmRjX093bmVyIiwiMzdhMGVlOTktNTFlZS1kYWU0LTIwY2QtM2ExZDIxZWYzNDgzX093bmVyIiwiYmFzaWNVc2VyIl0sInBob25lX251bWJlcl92ZXJpZmllZCI6IkZhbHNlIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsInVuaXF1ZV9uYW1lIjoicnVudWxyIiwic2VjdXJpdHlfc3RhbXAiOiI2VVJZQ1UzWllDNlZWTUZEM1hKM0JIREtQTFE2VlRPSSIsIm9pX3Byc3QiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX2F1X2lkIjoiNGQ0MGE5YjUtOWI2Zi02MTE2LTA4NWMtM2ExZDIxZWYxYWZiIiwiY2xpZW50X2lkIjoiQWV2YXRhckF1dGhTZXJ2ZXIiLCJvaV90a25faWQiOiI3NDc3YmE2Zi01YjgwLTdkNGUtZTkxZC0zYTFkMjFlZjNiNmIifQ.Ifs6QvZgqaQu75IjJg6EB-XyTzUO_ZdOTzLEoKmhf1jt9-gkomyPXEyj-4EP2qQhpJGSd4mf5DqPO742H6FOMuQ155meomM4-l18unM0JEK4gYOm2DAtQiOxnD0s_oQG2mfdMIsiOH8rMIAJN62C0247_ACwFzP4Q3F_ERjz5Ab0g9QGo-xDI_1Pw4un76RJ2bJVzFYWK3JqFDlXB4U6ErrOPO5OtIL8rZu4CLr-udy7KmKwSU6Jrws--BU9kuuT-Xd-1JOZ8c2YS0q4FTcbtSUUKfb_qOy1dEd6PEIQGPBX49fZ8QuslNbqDQT_GPyq6hRJc3SSSOdF60EmKXKHAQ";
+      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg4MzZFOERDQjM2QkZERUUwMDY1QTg2MTE3QTE1N0FDNTUxMjhBNUEiLCJ4NXQiOiJpRGJvM0xOcl9lNEFaYWhoRjZGWHJGVVNpbG8iLCJ0eXAiOiJhdCtqd3QifQ.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODIvIiwiZXhwIjoxNzYxNDU0NTIxLCJpYXQiOjE3NjEyODE3MjIsImF1ZCI6IkFldmF0YXIiLCJzY29wZSI6IkFldmF0YXIgb2ZmbGluZV9hY2Nlc3MiLCJqdGkiOiI0MTBlZDA0Yy0zZDM4LTQ1ODgtOWQ0Ni04ZWE1ZDRkNGZhZTYiLCJzdWIiOiI3NTczY2Y5MS00NmJhLWFkNTctZTU1Yi0zYTFkMTJhMjcxZGUiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJsb3VpcyIsImVtYWlsIjoibGl5aW5ncGVpMzNAMTYzLmNvbSIsInJvbGUiOlsiN2QzM2M1NzktMjg0NC0wM2M1LTIwOWMtM2ExZDEyYTI5MGUyX093bmVyIiwiODQ4MGNkZTgtOWE4Mi1kOTJhLTI3NjMtM2ExZDI2YmYxNmE0X093bmVyIiwiYmFzaWNVc2VyIiwiN2JlZTk5NWItYTY4YS0yMTNiLTE3ZWEtM2ExZDI2YWMwNzI3X093bmVyIl0sInBob25lX251bWJlcl92ZXJpZmllZCI6IkZhbHNlIiwiZW1haWxfdmVyaWZpZWQiOiJGYWxzZSIsInVuaXF1ZV9uYW1lIjoibG91aXMiLCJzZWN1cml0eV9zdGFtcCI6IlVTWU9RTVZDSFJKUzNaQ1YzN1pUS0ZWR1k0RVBITkFZIiwib2lfcHJzdCI6IkFldmF0YXJBdXRoU2VydmVyIiwib2lfYXVfaWQiOiIwOWQ5ODI1MS0zZjZiLTY4Y2YtMmYzNi0zYTFkMTJhMjc3NGUiLCJjbGllbnRfaWQiOiJBZXZhdGFyQXV0aFNlcnZlciIsIm9pX3Rrbl9pZCI6ImZiOWIxN2ZmLWVlODQtNWQxNC02MTEzLTNhMWQyNmJmMWVmZCJ9.MK3k5haJdiyUsVM5nrbyXiePY9t3OvzPQit34oYWJ0uyNnEalilIR1FuaZGEjPTj6U2Ha51o3NwwxdBX8I-qBvYO6EoNaScgs1ed09BM0YO_dj8YsNFB0Z_PG6_BziZe0xHmlOU2PYY-urNopNBMJYvvH6TlusnlSTA2P1SXt_5WNKLFOCUIo6rt9F7cslz9_9BaU08yjnkmeH9QccMRqIrMcEXkqkqXB-jJrH0uCNy3NtmCLn6aXenZNv2kk6v6Xnq-2Bx2cOVCLqz6CxzFXQ-GswUvljZ6fIvXpk2uRlRUg3x6MYcTQtPl_87rSU8mq6IX6V0qvNEHOF56Br5zZA";
     aevatarAI.fetchRequest.setHeaders({
       Authorization: TOKEN,
     });
@@ -268,12 +268,6 @@ export default function UI() {
                 setStage(undefined);
               }}
               editWorkflow={editWorkflow}
-              onDuplicateWorkflow={async (workflow) => {
-                setStage(undefined);
-                await sleep(1000);
-                setEditWorkflow(workflow);
-                onShowWorkflow();
-              }}
             />
           </FullScreen>
         )}

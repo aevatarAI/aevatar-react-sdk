@@ -68,7 +68,7 @@ export const columns = [
   {
     id: "execId",
     header: "exec.id",
-    cell: ({ row }) => row.original.blackboardId || "-",
+    cell: ({ row }) => row.original.workflowId || "-",
   },
 ];
 
@@ -90,7 +90,7 @@ export default function ExecutionList({
 
   const mergedData = data.map((datum) => {
     const matchingDetail = workflowDetails?.find(
-      (detail) => detail.blackboardId === datum.id
+      (detail) => detail.workflowId === datum.id
     );
 
     return matchingDetail

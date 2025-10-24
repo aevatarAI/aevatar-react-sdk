@@ -93,6 +93,8 @@ export interface IWorkflowCoordinatorState {
   createTime: string;
   term: number;
   blackboardId: string;
+  workflowId: string;
+  workflowCoordinatorId: string;
   backupWorkUnitInfos: string;
   version: number;
 }
@@ -120,6 +122,10 @@ export interface IWorkflowItem {
   term: number;
   /** Blackboard ID as string */
   blackboardId: string;
+
+  workflowId: string;
+
+  workflowName: string;
   /** JSON array string, each item structure defined by backend */
   backupWorkUnitInfos: string;
   /** Version number */

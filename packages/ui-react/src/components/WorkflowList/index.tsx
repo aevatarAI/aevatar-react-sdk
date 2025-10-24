@@ -109,7 +109,7 @@ export default forwardRef(function WorkflowList(
           );
 
         workflowList.items.forEach((item) => {
-          workflowListAgentInfoMap.set(item.blackboardId, item);
+          workflowListAgentInfoMap.set(item.workflowId, item);
         });
       }
 
@@ -124,7 +124,7 @@ export default forwardRef(function WorkflowList(
       });
 
       // const workflowListWithAgentInfo = workflowList.items.map((item) => {
-      //   const agentInfo = workflowAgentMap.get(item.blackboardId);
+      //   const agentInfo = workflowAgentMap.get(item.workflowId);
       //   return {
       //     ...item,
       //     ...agentInfo,
