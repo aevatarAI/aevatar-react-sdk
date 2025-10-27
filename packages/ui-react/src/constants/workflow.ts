@@ -1,3 +1,3 @@
 export const WORKFLOW_NODE_HEIGHT = 200;
 export const WORKFLOW_NODE_WIDTH = 234;
-export const WORKFLOW_NODE_SPACING = 50;
+export const WORKFLOW_NODE_SPACING = 80;

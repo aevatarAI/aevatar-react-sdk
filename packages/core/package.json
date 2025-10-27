@@ -1,6 +1,6 @@
 {
   "name": "@aevatar-react-sdk/core",
-  "version": "0.4.39-alpha.3",
+  "version": "0.4.39-alpha.4",
   "description": "",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
