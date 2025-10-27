@@ -5,7 +5,6 @@ import {
   WORKFLOW_NODE_HEIGHT,
   WORKFLOW_NODE_SPACING,
 } from "../../constants/workflow";
-const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
 
 // Define node dimensions for layout calculation
 /**
@@ -19,10 +18,13 @@ export const applyHorizontalLayout = (
   edges: Edge[],
   direction: "LR" | "TB" = "LR"
 ): { nodes: Node[]; edges: Edge[] } => {
+  const dagreGraph = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
   console.log(nodes, "nodes==applyHorizontalLayout");
   const isHorizontal = direction === "LR";
   dagreGraph.setGraph({
     rankdir: direction,
+    nodesep: WORKFLOW_NODE_SPACING,
+    ranksep: WORKFLOW_NODE_SPACING,
   });
 
   nodes.forEach((node) => {
