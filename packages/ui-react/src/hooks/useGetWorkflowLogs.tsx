@@ -82,7 +82,7 @@ export const useGetWorkflowLogs = ({
           }
 
           if (selectedAgentGrainId && selectedAgentGrainId !== "all") {
-            params.grainId = selectedAgentGrainId;
+            params.grainIdString = selectedAgentGrainId;
           }
 
           if (searchValue?.trim()) {

@@ -194,7 +194,7 @@ export enum IGetWorkflowLogsLevel {
 export interface IGetWorkflowLogsProps {
   workflowId: string;
   roundId?: number;
-  grainId?: string;
+  grainIdString?: string;
   level?: IGetWorkflowLogsLevel;
   messagePattern?: string;
   pageIndex?: number;
