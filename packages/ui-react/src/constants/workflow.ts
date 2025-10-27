@@ -11,4 +11,4 @@ export const WORKFLOW_FILTER_KEY_NAME = [
   "message",
   "publishers",
 ];
-export const WORKFLOW_NODE_SPACING = 80;
+export const WORKFLOW_NODE_SPACING = 125;
