@@ -8,7 +8,7 @@ import {
 } from "react";
 import { v4 as uuidv4 } from "uuid";
 import WorkflowListInner from "../WorkflowListInner";
-import { aevatarAI } from "../../utils";
+import { aevatarAI, validateWorkflowData } from "../../utils";
 import type {
   IAgentInfoDetail,
   IWorkflowCoordinatorState,
@@ -24,6 +24,7 @@ import Loading from "../../assets/svg/loading.svg?react";
 import { IS_NULL_ID } from "../../constants";
 import type { IWorkflowConfigurationState } from "../WorkflowConfiguration";
 import { useToastLoading } from "../../hooks/useToastLoading";
+import dayjs from "dayjs";
 
 export interface IWorkflowListProps {
   className?: string;
@@ -260,10 +261,9 @@ export default forwardRef(function WorkflowList(
     }
   }, [onDelete, toast]);
 
-  const onDuplicateWorkflow = useCallback(
-    async (workflow: IWorkflowCoordinatorState & IAgentInfoDetail) => {
-      console.log("workflowId===", workflow);
-      const randomId = uuidv4().replace(/-/g, '').substring(0, 6)
+  const copyWorkflowViewData = useCallback(
+    (workflow: IWorkflowCoordinatorState & IAgentInfoDetail) => {
+      const randomId = uuidv4().replace(/-/g, "").substring(0, 6);
       const workflowName = `${workflow.name}_${randomId}`;
       const workflowNodeList = workflow.properties?.workflowNodeList?.map(
         (item) => {
@@ -282,6 +282,16 @@ export default forwardRef(function WorkflowList(
           name: workflowName,
         },
       };
+      return workflowViewData;
+    },
+    []
+  );
+
+  const onDuplicateWorkflow = useCallback(
+    async (workflow: IWorkflowCoordinatorState & IAgentInfoDetail) => {
+      console.log("workflowId===", workflow);
+
+      const workflowViewData = copyWorkflowViewData(workflow);
       const { dismiss } = toastLoading("Copying workflow");
 
       try {
@@ -297,7 +307,120 @@ export default forwardRef(function WorkflowList(
         });
       }
     },
-    [onEditWorkflow, toastLoading, toast]
+    [onEditWorkflow, toastLoading, toast, copyWorkflowViewData]
+  );
+
+  const onExportWorkflow = useCallback(
+    async (workflow: IWorkflowCoordinatorState & IAgentInfoDetail) => {
+      const workflowViewData = copyWorkflowViewData(workflow);
+
+      try {
+        // Convert workflow data to JSON string
+        const jsonString = JSON.stringify(workflowViewData, null, 2);
+
+        // Create Blob and download link
+        const blob = new Blob([jsonString], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+
+        // Generate filename with workflow name and timestamp
+        const timestamp = dayjs().format("YYYYMMDDHHmmss");
+        const filename = `${workflow.name}_${timestamp}.json`;
+        link.download = filename;
+
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+
+        // Cleanup
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        // Show success toast
+        toast({
+          description: `Workflow exported successfully as ${filename}`,
+          duration: 3000,
+        });
+      } catch (error) {
+        toast({
+          title: "error",
+          description: handleErrorMessage(error, "Failed to export workflow."),
+          duration: 3000,
+        });
+      }
+    },
+    [copyWorkflowViewData, toast]
+  );
+
+  const onImportWorkflow = useCallback(
+    async (file: File) => {
+      try {
+        // Read and parse file
+        const text = await file.text();
+        let workflowData: any;
+        
+        try {
+          workflowData = JSON.parse(text);
+        } catch {
+          toast({
+            title: "error",
+            description: "Invalid JSON file format. Please ensure the file is valid JSON.",
+            duration: 3000,
+          });
+          return;
+        }
+
+        // Validate workflow data structure
+        const validation = validateWorkflowData(workflowData);
+        if (!validation.isValid) {
+          toast({
+            title: "error",
+            description: validation.error || "Invalid workflow file format.",
+            duration: 3000,
+          });
+          return;
+        }
+
+        // Show loading toast
+        const { dismiss } = toastLoading("Importing workflow");
+
+        try {
+          // Create workflow from imported data
+          const result = await aevatarAI.services.workflow.createWorkflowViewData(
+            workflowData as IWorkflowViewDataParams
+          );
+          dismiss();
+
+          // Show success toast and refresh list
+          toast({
+            description: `Workflow imported successfully as ${workflowData.name}`,
+            duration: 3000,
+          });
+
+          // Refresh workflow list
+          await sleep(500);
+          getWorkflowsLoop();
+
+          // Navigate to edit page if onEditWorkflow is provided
+          if (result.id) onEditWorkflow?.(result.id);
+        } catch (error) {
+          dismiss();
+          toast({
+            title: "error",
+            description: handleErrorMessage(error, "Failed to import workflow."),
+            duration: 3000,
+          });
+        }
+      } catch (error) {
+        toast({
+          title: "error",
+          description: handleErrorMessage(error, "Failed to import workflow."),
+          duration: 3000,
+        });
+      }
+    },
+    [toast, toastLoading, getWorkflowsLoop, onEditWorkflow]
   );
 
   return (
@@ -310,6 +433,8 @@ export default forwardRef(function WorkflowList(
         onEditWorkflow={onEditWorkflow}
         onDeleteWorkflow={onDeleteWorkflow}
         onDuplicateWorkflow={onDuplicateWorkflow}
+        onExportWorkflow={onExportWorkflow}
+        onImportWorkflow={onImportWorkflow}
       />
       <DeleteGAevatarConfirm
         open={deleteOpen}

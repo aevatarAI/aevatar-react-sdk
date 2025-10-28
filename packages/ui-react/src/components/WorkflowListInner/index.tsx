@@ -12,7 +12,9 @@ import type {
 import { workflowColumns } from "./columns";
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../ui/select";
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, Import } from "lucide-react";
+import Dropzone from "react-dropzone";
+import { toast } from "../../hooks/use-toast";
 
 interface WorkflowListInnerProps {
   workflowsList: (IWorkflowCoordinatorState & IAgentInfoDetail)[];
@@ -25,7 +27,13 @@ interface WorkflowListInnerProps {
   ) => void;
   onViewExecutions?: (workflowId: string) => void;
   onNewWorkflow: () => void;
-  onDuplicateWorkflow: (workflow: IWorkflowCoordinatorState & IAgentInfoDetail) => void;
+  onDuplicateWorkflow: (
+    workflow: IWorkflowCoordinatorState & IAgentInfoDetail
+  ) => void;
+  onExportWorkflow: (
+    workflow: IWorkflowCoordinatorState & IAgentInfoDetail
+  ) => void;
+  onImportWorkflow: (file: File) => void;
 }
 
 const actionItemCls =
@@ -49,6 +57,7 @@ enum ActionType {
   ViewExecutions = "ViewExecutions",
   DuplicateWorkflow = "DuplicateWorkflow",
   DeleteWorkflow = "deleteWorkflow",
+  ExportWorkflow = "exportWorkflow",
 }
 
 export default function WorkflowListInner({
@@ -61,6 +70,8 @@ export default function WorkflowListInner({
   onViewExecutions,
   onNewWorkflow,
   onDuplicateWorkflow,
+  onExportWorkflow,
+  onImportWorkflow,
 }: WorkflowListInnerProps) {
   const [deleteItemId, setDeleteItemId] = useState<string | null>(null);
   const tableData = useMemo(
@@ -90,6 +101,8 @@ export default function WorkflowListInner({
                   onViewExecutions?.(item.id);
                 } else if (value === ActionType.DeleteWorkflow) {
                   setDeleteItemId(item.id);
+                } else if (value === ActionType.ExportWorkflow) {
+                  onExportWorkflow?.(item);
                 }
               }}>
               <SelectTrigger
@@ -133,6 +146,14 @@ export default function WorkflowListInner({
                   <SelectItem
                     className={clsx(
                       actionItemCls,
+                      "aevatar-workflow-action-select-export"
+                    )}
+                    value={ActionType.ExportWorkflow}>
+                    Export
+                  </SelectItem>
+                  <SelectItem
+                    className={clsx(
+                      actionItemCls,
                       "sdk:text-[var(--sdk-warning-color)] sdk:hover:text-[var(--sdk-warning-color)]",
                       "aevatar-workflow-action-select-delete"
                     )}
@@ -145,7 +166,13 @@ export default function WorkflowListInner({
           </div>
         ),
       })),
-    [workflowsList, onEditWorkflow, onViewExecutions, onDuplicateWorkflow]
+    [
+      workflowsList,
+      onEditWorkflow,
+      onViewExecutions,
+      onDuplicateWorkflow,
+      onExportWorkflow,
+    ]
   );
 
   return (
@@ -163,7 +190,39 @@ export default function WorkflowListInner({
           id="node-6202_82361">
           <p>Workflows</p>
         </div>
-        <div>
+        <div className="sdk:flex sdk:items-center sdk:gap-[10px]">
+          <Dropzone
+            accept={{
+              "application/json": [".json"],
+            }}
+            onDropAccepted={async (acceptedFiles) => {
+              onImportWorkflow(acceptedFiles[0]);
+            }}
+            onDropRejected={(error) => {
+              toast({
+                description:
+                  error[0]?.errors?.[0]?.message ?? "Upload file error",
+              });
+            }}
+            multiple={false}>
+            {({ getRootProps, getInputProps }) => (
+              <div
+                {...getRootProps({
+                  className: clsx(
+                    "sdk:flex sdk:items-center sdk:justify-center sdk:cursor-pointer"
+                  ),
+                  "data-testid": "dropzone-workflow-import-id",
+                })}>
+                <input {...getInputProps()} />
+                <Button
+                  variant="outline"
+                  className="sdk:text-[12px] sdk:font-geist sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:cursor-pointer">
+                  <Import style={{ width: 14, height: 14 }} />
+                  Import Workflow
+                </Button>
+              </div>
+            )}
+          </Dropzone>
           <Button
             variant="primary"
             className="sdk:text-[12px] sdk:font-geist sdk:font-semibold sdk:flex sdk:items-center sdk:gap-[5px] sdk:cursor-pointer"
