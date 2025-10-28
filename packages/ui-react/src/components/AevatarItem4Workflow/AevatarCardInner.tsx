@@ -2,15 +2,16 @@ import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 
 import Hypotenuse from "../../assets/svg/hypotenuse.svg?react";
 import "./index.css";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { jsonSchemaParse } from "../../utils/jsonSchemaParse";
 import type { JSONSchemaType } from "../types";
 import clsx from "clsx";
 import type { TNodeDataClick } from "../Workflow/types";
 import HoverMenu from "./HoverMenu";
 import type { ExecutionLogItem } from "@aevatar-react-sdk/types";
-import AccordionLogs from "./AccordionLogs";
+import AccordionLogs, { type AccordionLogsRef } from "./AccordionLogs";
 import { ChevronDown } from "lucide-react";
+import { eventBus } from "@aevatar-react-sdk/utils";
 export interface IAevatarCardInnerProps {
   className?: string;
   isNew?: boolean;
@@ -55,7 +56,16 @@ export default function AevatarCardInner({
   );
 
   const [showMore, setShowMore] = useState(true);
-
+  const accordionLogsRef = useRef<AccordionLogsRef>(null);
+  useEffect(() => {
+    const listener = () => {
+      accordionLogsRef.current?.setOpen(false);
+    };
+    eventBus.addListener("formatLayout", listener);
+    return () => {
+      eventBus.removeListener("formatLayout", listener);
+    };
+  }, []);
   return (
     <div className="sdk:w-[234px]">
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
@@ -250,6 +260,7 @@ export default function AevatarCardInner({
       <div className="sdk:relative ">
         {agentLogs && (
           <AccordionLogs
+            ref={accordionLogsRef}
             agentLogs={agentLogs}
             onShowLogsDialog={onShowLogsDialog}
           />
