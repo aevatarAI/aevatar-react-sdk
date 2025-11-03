@@ -49,7 +49,10 @@ import {
 import { getPropertiesByDefaultValues } from "../../utils/jsonSchemaParse";
 import { applyHorizontalLayout } from "./layoutUtils";
 import { LayoutDashboard } from "lucide-react";
-import { WORKFLOW_NODE_HEIGHT, WORKFLOW_NODE_WIDTH } from "../../constants/workflow";
+import {
+  WORKFLOW_NODE_HEIGHT,
+  WORKFLOW_NODE_WIDTH,
+} from "../../constants/workflow";
 
 const getId = () => `${uuidv4()}`;
 
@@ -92,6 +95,7 @@ interface IProps {
   extraControlBar?: React.ReactNode;
   onUndoAction?: () => void;
   onRedoAction?: () => void;
+  onFormatLayout?: () => void;
 }
 
 export interface IWorkflowInstance {
@@ -123,6 +127,7 @@ export const Workflow = forwardRef(
       gaevatarTypeList,
       onUndoAction,
       onRedoAction,
+      onFormatLayout,
     }: IProps,
     ref
   ) => {
@@ -669,7 +674,8 @@ export const Workflow = forwardRef(
       setNodes(layoutedNodes);
       setEdges(layoutedEdges);
       fitView(fitViewOptions);
-    }, [nodes, edges, setNodes, fitView, setEdges]);
+      onFormatLayout?.();
+    }, [nodes, edges, setNodes, fitView, setEdges, onFormatLayout]);
 
     return (
       <div

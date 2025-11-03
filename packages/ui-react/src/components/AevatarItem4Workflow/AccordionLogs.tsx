@@ -11,6 +11,11 @@ import Loading from "../../assets/svg/loading.svg?react";
 import clsx from "clsx";
 import ToCopy from "../Copy";
 import { Copy } from "lucide-react";
+import { useState, forwardRef, useImperativeHandle } from "react";
+
+export interface AccordionLogsRef {
+  setOpen: (open: boolean) => void;
+}
 
 // Helper function to format object keys for preview
 const formatObjectPreview = (
@@ -139,16 +144,28 @@ const renderDataContent = (data: unknown) => {
   );
 };
 
-export default function AccordionLogs({
-  agentLogs,
-  onShowLogsDialog,
-}: {
+interface AccordionLogsProps {
   agentLogs: ExecutionLogItem;
   onShowLogsDialog: (e: React.MouseEvent<HTMLDivElement>) => void;
-}) {
+}
+
+const AccordionLogs = forwardRef<AccordionLogsRef, AccordionLogsProps>(({
+  agentLogs,
+  onShowLogsDialog,
+}, ref) => {
+  const [open, setOpen] = useState(false);
+  
+  useImperativeHandle(ref, () => ({
+    setOpen,
+  }), []);
+  
+  const handleOpenChange = (value: string) => {
+    setOpen(value === "item-1");
+  };
+  
   return (
     <div className="sdk:absolute sdk:top-0 sdk:left-0 sdk:w-full sdk:h-full">
-      <Accordion type="single" collapsible>
+      <Accordion type="single" value={open ? "item-1" : ""} onValueChange={handleOpenChange} collapsible>
         <AccordionItem value="item-1">
           <AccordionTrigger>
             <div className="sdk:flex sdk:items-center sdk:gap-[6px]">
@@ -262,4 +279,8 @@ export default function AccordionLogs({
       </Accordion>
     </div>
   );
-}
+});
+
+AccordionLogs.displayName = "AccordionLogs";
+
+export default AccordionLogs;

@@ -24,7 +24,7 @@ import type {
   IWorkflowViewDataParams,
 } from "@aevatar-react-sdk/services";
 import type { IWorkflowAevatarEditProps } from "../WorkflowAevatarEdit";
-import { sleep } from "@aevatar-react-sdk/utils";
+import { eventBus, sleep } from "@aevatar-react-sdk/utils";
 import { aevatarAI } from "../../utils";
 import { useToast } from "../../hooks/use-toast";
 import type { INode } from "../Workflow/types";
@@ -746,6 +746,9 @@ IWorkflowConfigurationProps) => {
     },
     [getWorkflowViewData, onDuplicateWorkflow]
   );
+  const onFormatLayout = useCallback(() => {
+    eventBus.emit("formatLayout");
+  }, []);
 
   return (
     <>
@@ -830,6 +833,7 @@ IWorkflowConfigurationProps) => {
               onRedoAction={() => {
                 setEditAgentOpen(undefined);
               }}
+              onFormatLayout={onFormatLayout}
             />
             <Dialog
               open={Boolean(editAgentOpen)}
