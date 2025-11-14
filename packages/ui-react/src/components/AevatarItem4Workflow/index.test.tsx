@@ -4,13 +4,13 @@ import { ReactFlowProvider } from "@xyflow/react";
 import { describe, it, vi, expect } from "vitest";
 import AevatarItem4Workflow from "./index";
 import AevatarCardInner from "./AevatarCardInner";
-import React from "react";
+import type React from "react";
 import WorkflowProvider from "../context/WorkflowProvider";
 
 // Mock the `AevatarCardInner` component to simplify testing
 vi.mock("./AevatarCardInner", () => ({
   __esModule: true,
-  default: (props: any) => {
+  default: (props: { agentInfo?: unknown; isNew?: boolean }) => {
     const { agentInfo, isNew } = props;
     return (
       <div data-testid="aevatar-card-inner">
@@ -26,7 +26,7 @@ vi.mock("@xyflow/react", async () => {
   const actual = await vi.importActual("@xyflow/react");
   return {
     ...actual, // Retain all original exports
-    Handle: ({ type, position, style, id }: any) => (
+    Handle: ({ type, position, style, id }: { type?: string; position?: string; style?: React.CSSProperties; id?: string }) => (
       <div
         aria-label={`${type} handle`}
         data-position={position}

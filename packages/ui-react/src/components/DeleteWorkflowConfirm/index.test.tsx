@@ -9,8 +9,18 @@ vi.mock("../../assets/svg/delete-tip-logo.svg?react", () => ({
 }));
 
 vi.mock("../../assets/svg/close.svg?react", () => ({
-  default: ({ onClick }: any) => (
-    <div data-testid="close-icon" onClick={onClick}>
+  default: ({ onClick }: { onClick?: () => void }) => (
+    <div 
+      data-testid="close-icon" 
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onClick?.();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+    >
       Close Icon
     </div>
   ),

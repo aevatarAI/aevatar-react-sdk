@@ -3,7 +3,7 @@ import "./index.css";
 
 function MonacoEditor({ data }: { data: any }) {
   const editorRef = useRef<HTMLDivElement | null>(null);
-  const editorInstanceRef = useRef<any>();
+  const editorInstanceRef = useRef<any>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {

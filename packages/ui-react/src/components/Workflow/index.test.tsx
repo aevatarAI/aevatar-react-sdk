@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import React, { createRef } from "react";
+import type React from "react";
+import { createRef } from "react";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { Workflow } from "./index";
 import { DndProvider } from "react-dnd";

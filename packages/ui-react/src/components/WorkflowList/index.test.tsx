@@ -7,7 +7,7 @@ import {
   act,
   waitFor,
 } from "@testing-library/react";
-import WorkflowList, { IWorkflowListRef } from "./index";
+import WorkflowList, { type IWorkflowListRef } from "./index";
 import type {
   IAgentInfoDetail,
   IWorkflowCoordinatorState,

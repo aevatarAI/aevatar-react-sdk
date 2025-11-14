@@ -43,7 +43,7 @@ export default function AevatarCardInner({
       </div>
       <div className="sdk:pb-[6px] sdk:pt-[12px] sdk:pr-[14px] sdk:pl-[14px] sdk:flex sdk:flex-col sdk:items-start sdk:gap-[12px] sdk:self-stretch sdk:flex-1">
         {/* Render properties using enhanced logic: support array, enum, object, and filter empty values */}
-        {(propertiesInfo ?? []).map((item: [string, any]) => {
+        {(propertiesInfo ?? []).map((item) => {
           // Extract property name and schema
           const [propName, schema] = item;
           const isArray = schema.type === "array";

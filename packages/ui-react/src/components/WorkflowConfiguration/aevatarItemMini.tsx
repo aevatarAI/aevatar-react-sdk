@@ -69,7 +69,7 @@ export default function AevatarItem(props: IProps) {
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
     <div
-      ref={dragRef}
+      ref={dragRef as unknown as React.Ref<HTMLDivElement>}
       className={clsx(
         "sdk:relative sdk:w-[124px] sdk:h-[45px] sdk:cursor-grab sdk:active:cursor-grabbing sdk:group",
         disabled && "sdk:cursor-not-allowed! opacity-50",

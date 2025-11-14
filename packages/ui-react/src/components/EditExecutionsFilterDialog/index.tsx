@@ -39,8 +39,8 @@ interface Workflow {
 
 interface CustomDialogProps {
   data?: Workflow[];
-  filter: any;
-  onChange: (filter: any) => void;
+  filter: Record<string, unknown>;
+  onChange: (filter: Record<string, unknown>) => void;
 }
 
 const STATUSES = ["all", "pending", "running", "failed", "success"];
@@ -190,13 +190,13 @@ export const EditExecutionsFilterDialog = ({
                       <FormControl>
                         <div className="flex items-center justify-between border border-[var(--sdk-bg-black-light)]">
                           <DatePickerWithoutRange
-                            onDateChange={(date: any) => {
+                            onDateChange={(date: Date | null) => {
                               field.onChange(date);
                             }}
                           />
                           <span>-</span>
                           <DatePickerWithoutRange
-                            onDateChange={(date: any) => {
+                            onDateChange={(date: Date | null) => {
                               field.onChange(date);
                             }}
                           />

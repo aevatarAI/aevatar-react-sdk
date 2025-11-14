@@ -71,7 +71,7 @@ export default function WorkflowAevatarEdit({
   }, [onGaevatarChange]);
 
   // Debounce timer reference
-  const debounceTimerRef = useRef<NodeJS.Timeout>();
+  const debounceTimerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Store latest values to avoid circular triggers
   const agentItemRef = useRef(agentItem);

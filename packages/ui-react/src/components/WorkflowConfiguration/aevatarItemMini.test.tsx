@@ -1,7 +1,7 @@
 import { render, fireEvent, screen } from "@testing-library/react";
 import { describe, it, vi, expect } from "vitest";
 import AevatarItem from "./aevatarItemMini";
-import React from "react";
+import type React from "react";
 import "@testing-library/jest-dom";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";

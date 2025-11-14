@@ -118,7 +118,7 @@ IWorkflowConfigurationProps) => {
   const [newWorkflowState, setNewWorkflowState] =
     useState<IWorkflowConfigurationProps["editWorkflow"]>();
 
-  const workflowIdRef = useRef<string>();
+  const workflowIdRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     workflowIdRef.current =
@@ -133,7 +133,7 @@ IWorkflowConfigurationProps) => {
 
   const [autoSavedTime, setAutoSavedTime] = useState<number>(Date.now());
 
-  const workflowRef = useRef<IWorkflowInstance>();
+  const workflowRef = useRef<IWorkflowInstance | undefined>(undefined);
 
   const gaevatarListRef = useRef<IAgentInfoDetail[]>(gaevatarList);
   useEffect(() => {
@@ -167,7 +167,7 @@ IWorkflowConfigurationProps) => {
     agent: Partial<IAgentInfoDetail>;
     isNew?: boolean;
     nodeId: string;
-  }>();
+  } | undefined>(undefined);
 
   useEffect(() => {
     selectAgentInfoRef.current = selectAgentInfo;
@@ -187,7 +187,7 @@ IWorkflowConfigurationProps) => {
     editWorkflow?.workflowName ?? "untitled_workflow"
   );
   const [nodeList, setNodeList] = useState<INode[]>();
-  const nodeListRef = useRef<INode[]>();
+  const nodeListRef = useRef<INode[] | undefined>(undefined);
   useEffect(() => {
     nodeListRef.current = nodeList;
   }, [nodeList]);
@@ -335,7 +335,7 @@ IWorkflowConfigurationProps) => {
   }, [getWorkflowViewData, newWorkflowState, editWorkflow]);
 
   // Auto save with debounce when nodeList changes
-  const autoSaveTimerRef = useRef<NodeJS.Timeout>();
+  const autoSaveTimerRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const onSaveRef = useRef(onSaveHandler);
 
   const [isStopping, setIsStopping] = useState(false);
@@ -356,7 +356,7 @@ IWorkflowConfigurationProps) => {
     return !isWorkflowDataEqual(viewData, preViewData);
   }, [getWorkflowViewData, editWorkflow?.workflowViewData]);
 
-  const workflowViewDataRef = useRef<IWorkflowViewDataParams>();
+  const workflowViewDataRef = useRef<IWorkflowViewDataParams | undefined>(undefined);
 
   const getIsStageRef = useRef(getIsStage);
   useEffect(() => {
@@ -519,7 +519,7 @@ IWorkflowConfigurationProps) => {
   }, [selectAgentInfo?.agent]);
 
   const { getWorkflowState } = useWorkflowState();
-  const looperWorkflowIdRef = useRef<string>();
+  const looperWorkflowIdRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     return () => {

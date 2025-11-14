@@ -5,8 +5,8 @@ interface IAevatarTypeItemVisualProps {
   agentType?: string;
   disabled?: boolean;
   onClick?: () => void;
-  dragRef?: React.Ref<HTMLDivElement>;
-  previewRef?: React.Ref<HTMLDivElement>;
+  dragRef?: React.Ref<HTMLDivElement> | ((instance: HTMLDivElement | null) => void) | null;
+  previewRef?: React.Ref<HTMLDivElement> | ((instance: HTMLDivElement | null) => void) | null;
   className?: string;
 }
 

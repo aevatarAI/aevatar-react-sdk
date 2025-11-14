@@ -23,7 +23,7 @@ AccordionItem.displayName = "AccordionItem";
 const AccordionPrimitiveHeader: React.ElementType = AccordionPrimitive.Header;
 const AccordionPrimitiveTrigger: React.ElementType = AccordionPrimitive.Trigger;
 const AccordionTrigger = React.forwardRef<
-  React.ElementRef<typeof AccordionPrimitiveTrigger>,
+  React.ElementRef<typeof AccordionPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger> &
     React.HTMLAttributes<HTMLButtonElement>
 >(({ className, children, ...props }, ref) => (
@@ -44,8 +44,9 @@ AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
 
 const AccordionPrimitiveContent: React.ElementType = AccordionPrimitive.Content;
 const AccordionContent = React.forwardRef<
-  React.ElementRef<typeof AccordionPrimitiveContent>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitiveContent>
+  React.ComponentRef<typeof AccordionPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content> &
+    React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => (
   <AccordionPrimitiveContent
     ref={ref}

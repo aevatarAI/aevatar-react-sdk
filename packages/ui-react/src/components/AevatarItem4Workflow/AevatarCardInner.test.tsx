@@ -2,21 +2,20 @@ import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, vi, expect } from "vitest";
 import AevatarCardInner from "./AevatarCardInner";
-import React from "react";
+import type React from "react";
 import type { IAgentInfoDetail } from "@aevatar-react-sdk/services";
 
 // Mock SVG imports and utilities
 vi.mock("../../assets/svg/delete.svg?react", () => ({
   __esModule: true,
-  default: (props: any) => <svg {...props} data-testid="delete-icon" />,
+  default: (props: React.SVGProps<SVGSVGElement>) => <svg {...props} data-testid="delete-icon" />,
 }));
 
 vi.mock("./HoverMenu", () => ({
   __esModule: true,
-  default: ({ onDelete }: any) => (
-    // biome-ignore lint/a11y/useButtonType: <explanation>
+  default: ({ onDelete }: { onDelete?: () => void }) => (
     <div>
-      <button data-testid="delete-workflow-icon" onClick={onDelete}>
+      <button type="button" data-testid="delete-workflow-icon" onClick={onDelete}>
         DeleteWorkflow
       </button>
     </div>

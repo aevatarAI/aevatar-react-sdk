@@ -18,7 +18,7 @@ export interface IAevatarCardInnerProps {
   onClick?: TNodeDataClick;
   deleteNode: (nodeId: string) => void;
   nodeId?: string;
-  agentInfo?: IAgentInfoDetail & { defaultValues?: Record<string, any[]> };
+  agentInfo?: IAgentInfoDetail & { defaultValues?: Record<string, unknown[]> };
   selected?: boolean;
   agentLogs?: ExecutionLogItem;
   disabled?: boolean;
@@ -38,7 +38,7 @@ export default function AevatarCardInner({
   disabled,
 }: IAevatarCardInnerProps) {
   const handleDeleteClick = useCallback(
-    (e: any) => {
+    (e: React.MouseEvent<HTMLDivElement>) => {
       e.stopPropagation();
       deleteNode(nodeId);
     },
@@ -132,7 +132,7 @@ export default function AevatarCardInner({
               showMore && "sdk:flex!"
             )}>
             {(propertiesInfo ?? []).map(
-              (item: [string, JSONSchemaType<any>]) => {
+              (item: [string, JSONSchemaType<unknown>]) => {
                 // Extract property name and schema
                 const [propName, schema] = item;
 

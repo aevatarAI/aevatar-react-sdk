@@ -159,8 +159,8 @@ export default forwardRef(function WorkflowList(
   }, [getWorkflowsLoop]);
 
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const deleteWorkflowViewIdRef = useRef<string>();
-  const deleteWorkflowIdRef = useRef<string>();
+  const deleteWorkflowViewIdRef = useRef<string | undefined>(undefined);
+  const deleteWorkflowIdRef = useRef<string | undefined>(undefined);
 
   const toastLoading = useToastLoading();
 

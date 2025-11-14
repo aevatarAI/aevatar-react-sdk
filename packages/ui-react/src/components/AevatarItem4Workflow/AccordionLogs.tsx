@@ -26,7 +26,7 @@ const formatObjectPreview = (
   const hasMore = entries.length > 2;
   const object = {};
 
-  previewEntries.forEach((item) => {
+  for (const item of previewEntries) {
     let valueStr: string;
     if (typeof item[1] === "string") {
       valueStr = `"${item[1]}"`;
@@ -36,7 +36,7 @@ const formatObjectPreview = (
       valueStr = String(item[1]);
     }
     object[item[0]] = valueStr;
-  });
+  }
 
   return { object, hasMore };
 };

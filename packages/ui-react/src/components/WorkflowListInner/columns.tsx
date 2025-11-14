@@ -1,5 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
+import type React from "react";
 import {
   type IAgentInfoDetail,
   type IWorkflowCoordinatorState,
@@ -14,8 +15,8 @@ export const workflowStatusMap = {
 };
 
 export interface IWorkflowTable {
-  name?: JSX.Element;
-  operation?: JSX.Element;
+  name?: React.ReactElement;
+  operation?: React.ReactElement;
 }
 
 export const workflowColumns: ColumnDef<
