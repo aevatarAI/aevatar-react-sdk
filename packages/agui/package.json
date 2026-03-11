@@ -1,7 +1,7 @@
 {
-  "name": "@aevatar-react-sdk/utils",
+  "name": "@aevatar-react-sdk/agui",
   "version": "0.5.0",
-  "description": "",
+  "description": "AGUI protocol client — SSE, WebSocket, event normalization, React hooks",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -12,20 +12,22 @@
       "require": "./dist/index.cjs"
     }
   },
-  "author": "",
+  "author": "AevatarAI",
   "license": "ISC",
+  "keywords": ["aevatar", "agui", "agent-ui", "sse", "websocket", "react", "hooks", "workflow"],
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
   "files": [
-    "dist/*"
+    "dist/*",
+    "README.md"
   ],
   "homepage": "https://aevatar.ai/",
   "repository": {
     "type": "git",
     "url": "https://github.com/aevatarAI/aevatar-react-sdk.git",
-    "directory": "packages/utils"
+    "directory": "packages/agui"
   },
   "scripts": {
     "dev": "vite",
@@ -37,15 +39,17 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@aevatar-react-sdk/types": "workspace:*",
-    "aelf-sdk": "3.4.16-alpha.7",
-    "events": "^3.3.0"
+    "@aevatar-react-sdk/types": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@types/elliptic": "^6.4.14",
-    "@vitest/coverage-v8": "3.0.6",
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0",
     "vite": "^6.1.0",
     "vite-plugin-dts": "latest",
+    "@vitest/coverage-v8": "3.0.6",
     "vitest": "^3.0.6"
   }
 }

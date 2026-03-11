@@ -2,6 +2,7 @@
   "mode": "exit",
   "tag": "alpha",
   "initialVersions": {
+    "@aevatar-react-sdk/agui": "0.0.0-alpha.1",
     "@aevatar-react-sdk/core": "0.4.39",
     "demo": "0.1.3-alpha.0",
     "@aevatar-react-sdk/services": "0.4.39",
